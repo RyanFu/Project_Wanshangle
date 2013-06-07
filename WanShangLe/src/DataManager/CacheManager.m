@@ -4,6 +4,7 @@
 static CacheManager *_sharedInstance = nil;
 
 @implementation CacheManager
+@synthesize mUserDefaults;
 
 @synthesize cache;
 
@@ -29,7 +30,7 @@ static CacheManager *_sharedInstance = nil;
     self = [super init];
     
     if (self) {
-        
+        self.mUserDefaults = [NSMutableDictionary dictionaryWithCapacity:10];
         self.cache = [[[NSCache alloc] init] autorelease];
     }
     
@@ -54,6 +55,8 @@ static CacheManager *_sharedInstance = nil;
     
     [cache release];
     cache = nil;
+    
+    self.mUserDefaults = nil;
     
     [super dealloc];
 }

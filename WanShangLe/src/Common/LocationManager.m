@@ -26,6 +26,7 @@
 {
     self.geoCoder = nil;
     self.map = nil;
+    self.userCityCallBack = nil;
     
     [super dealloc];
 }

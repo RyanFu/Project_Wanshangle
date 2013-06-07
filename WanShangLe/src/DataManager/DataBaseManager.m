@@ -162,13 +162,13 @@ static DataBaseManager *_sharedInstance = nil;
 /****************************************** 电影 *********************************************/
 - (ApiCmdMovie_getAllMovies *)getAllMoviesListFromWeb:(id<ApiNotify>)delegate{
     ABLoggerMethod();
-    
-    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    BOOL isUpdated = [[DataBaseManager sharedInstance] isToday:[userDefault objectForKey:IsUpdatedMoviesList]];
-    if ([[userDefault objectForKey:UpdatingMoviesList] boolValue] || isUpdated) {
+           
+    if ([[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingMoviesList] intValue]) {
+        ABLoggerWarn(@"不能请求数据，因为已经请求了");
         return nil;
     }
     
+    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:UpdatingMoviesList];
     ApiClient* apiClient = [ApiClient defaultClient];
     
     ApiCmdMovie_getAllMovies* apiCmdMovie_getAllMovies = [[ApiCmdMovie_getAllMovies alloc] init];
