@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   repos="https://code.huishow.net:444/svn/huishow"
+   name=""
+   revision="4927"
+   last-author="yujing.ma"
+   url="https://code.huishow.net:444/svn/huishow/TestIphone/trunk/mobileapi/mobileapi"
+   uuid="d478a782-ecf2-4a02-8452-1a270bd22194"
+   committed-rev="4568"
+   kind="dir"
+   committed-date="2013-01-06T06:53:23.008329Z"/>
+<entry
+   name="ApiClient.h"
+   checksum="8e86304d0bafdd73f4172f8a0542b0e4"
+   last-author="jingxuan.dou"
+   committed-rev="3764"
+   text-time="2012-11-01T10:27:18.000000Z"
+   kind="file"
+   committed-date="2012-11-01T10:27:18.281273Z"/>
+<entry
+   name="ApiClient.m"
+   checksum="1eac7baee459d690abae963386f330b6"
+   last-author="yujing.ma"
+   committed-rev="4568"
+   text-time="2013-01-06T06:53:23.000000Z"
+   kind="file"
+   committed-date="2013-01-06T06:53:23.008329Z"/>
+<entry
+   name="ApiCmd.h"
+   checksum="9bfed37180c0629229ea230a5c6e558a"
+   last-author="jingxuan.dou"
+   committed-rev="1200"
+   text-time="2012-05-30T02:47:17.000000Z"
+   kind="file"
+   committed-date="2012-05-30T02:47:17.313730Z"/>
+<entry
+   name="ApiCmd.m"
+   checksum="0b77dc3c2cfa9652a99117c6d8bde857"
+   last-author="yujing.ma"
+   committed-rev="4358"
+   text-time="2012-12-12T05:30:32.000000Z"
+   kind="file"
+   committed-date="2012-12-12T05:30:32.669753Z"/>
+<entry
+   name="ApiCmdBindingHuiShowAccount.h"
+   checksum="d5284db26437fc20026ab90982a1351f"
+   last-author="jingxuan.dou"
+   committed-rev="3702"
+   text-time="2012-10-30T08:41:47.000000Z"
+   kind="file"
+   committed-date="2012-10-30T08:41:47.639820Z"/>
+<entry
+   name="ApiCmdBindingHuiShowAccount.m"
+   checksum="3f1671ae2db4b6995e732cbd11197d86"
+   last-author="jingxuan.dou"
+   committed-rev="3702"
+   text-time="2012-10-30T08:41:47.000000Z"
+   kind="file"
+   committed-date="2012-10-30T08:41:47.639820Z"/>
+<entry
+   name="ApiCmdCreateQRCodeWithImage.h"
+   checksum="8a7d40d5b43d222b9888a202b8cdc883"
+   last-author="jingxuan.dou"
+   committed-rev="3731"
+   text-time="2012-10-31T11:13:32.000000Z"
+   kind="file"
+   committed-date="2012-10-31T11:13:32.641072Z"/>
+<entry
+   name="ApiCmdCreateQRCodeWithImage.m"
+   checksum="808555def7e23e69b3cbd49f60dab190"
+   last-author="jingxuan.dou"
+   committed-rev="3731"
+   text-time="2012-10-31T11:13:32.000000Z"
+   kind="file"
+   committed-date="2012-10-31T11:13:32.641072Z"/>
+<entry
+   name="ApiCmdExtAccountList.h"
+   checksum="d88a9559a275b93785114a7508210313"
+   last-author="jingxuan.dou"
+   committed-rev="3691"
+   text-time="2012-10-29T15:39:35.000000Z"
+   kind="file"
+   committed-date="2012-10-29T15:39:35.518089Z"/>
+<entry
+   name="ApiCmdExtAccountList.m"
+   checksum="5eef5477024a4aaf88fd77084d2de360"
+   last-author="jingxuan.dou"
+   committed-rev="3691"
+   text-time="2012-10-29T15:39:35.000000Z"
+   kind="file"
+   committed-date="2012-10-29T15:39:35.518089Z"/>
+<entry
+   name="ApiCmdImageUpload.h"
+   checksum="b5108dcc045ea24e52a6f571b786eba6"
+   last-author="jingxuan.dou"
+   committed-rev="3731"
+   text-time="2012-10-31T11:13:32.000000Z"
+   kind="file"
+   committed-date="2012-10-31T11:13:32.641072Z"/>
+<entry
+   name="ApiCmdImageUpload.m"
+   checksum="401e3c31a70ee65cc64e7ae1e1357297"
+   last-author="jingxuan.dou"
+   committed-rev="3731"
+   text-time="2012-10-31T11:13:32.000000Z"
+   kind="file"
+   committed-date="2012-10-31T11:13:32.641072Z"/>
+<entry
+   name="ApiCmdUserAccountUpdate.h"
+   checksum="28c60d00e8180170405334782e5f3978"
+   last-author="jingxuan.dou"
+   committed-rev="3653"
+   text-time="2012-10-26T07:16:02.000000Z"
+   kind="file"
+   committed-date="2012-10-26T07:16:02.180438Z"/>
+<entry
+   name="ApiCmdUserAccountUpdate.m"
+   checksum="e800ab2b9d9d2dcdcf9b44523cfdf0ed"
+   last-author="jingxuan.dou"
+   committed-rev="3653"
+   text-time="2012-10-26T07:16:02.000000Z"
+   kind="file"
+   committed-date="2012-10-26T07:16:02.180438Z"/>
+<entry
+   name="ApiCmdUserAuthBinding.h"
+   checksum="178ffa822a9f22a14fc92480db09e0a8"
+   last-author="jingxuan.dou"
+   committed-rev="3693"
+   text-time="2012-10-30T03:49:13.000000Z"
+   kind="file"
+   committed-date="2012-10-30T03:49:13.410401Z"/>
+<entry
+   name="ApiCmdUserAuthBinding.m"
+   checksum="a504c65f97f8b559f6b352cdbe259ae4"
+   last-author="jingxuan.dou"
+   committed-rev="3838"
+   text-time="2012-11-08T09:56:02.000000Z"
+   kind="file"
+   committed-date="2012-11-08T09:56:02.674447Z"/>
+<entry
+   name="ApiCmdUserAuthLogin.h"
+   checksum="6046a5a6a4779a98a587ba25fe2b91f2"
+   last-author="jingxuan.dou"
+   committed-rev="3668"
+   text-time="2012-10-29T02:58:18.000000Z"
+   kind="file"
+   committed-date="2012-10-29T02:58:18.050646Z"/>
+<entry
+   name="ApiCmdUserAuthLogin.m"
+   checksum="985dcd909b2e677cfa9df7e48d3f44a5"
+   last-author="jingxuan.dou"
+   committed-rev="3914"
+   text-time="2012-11-14T10:00:05.000000Z"
+   kind="file"
+   committed-date="2012-11-14T10:00:05.188172Z"/>
+<entry
+   name="ApiCmdUserChangePassWord.h"
+   checksum="b1563b51169088389a2ca829a70f6eb5"
+   last-author="jingxuan.dou"
+   committed-rev="3665"
+   text-time="2012-10-26T10:18:56.000000Z"
+   kind="file"
+   committed-date="2012-10-26T10:18:56.139747Z"/>
+<entry
+   name="ApiCmdUserChangePassWord.m"
+   checksum="7fe1c1f0f4ff6cf102fb490b1805922a"
+   last-author="jingxuan.dou"
+   committed-rev="3708"
+   text-time="2012-10-30T10:58:20.000000Z"
+   kind="file"
+   committed-date="2012-10-30T10:58:20.612117Z"/>
+<entry
+   name="ApiCmdUserLogin.h"
+   checksum="73af14c4d9e1a2a54552aa00c3a8fafe"
+   last-author="jingxuan.dou"
+   committed-rev="1353"
+   text-time="2012-06-08T02:05:04.000000Z"
+   kind="file"
+   committed-date="2012-06-08T02:05:04.727189Z"/>
+<entry
+   name="ApiCmdUserLogin.m"
+   checksum="d1e9a67160ca7c25da473a95f4457476"
+   last-author="jingxuan.dou"
+   committed-rev="3638"
+   text-time="2012-10-25T10:17:14.000000Z"
+   kind="file"
+   committed-date="2012-10-25T10:17:14.401581Z"/>
+<entry
+   name="ApiCmdUserQuery.h"
+   checksum="de2f578d4163da5be94c29de55f79cca"
+   last-author="jingxuan.dou"
+   committed-rev="3688"
+   text-time="2012-10-29T08:22:34.000000Z"
+   kind="file"
+   committed-date="2012-10-29T08:22:34.438134Z"/>
+<entry
+   name="ApiCmdUserQuery.m"
+   checksum="a984b07aa55e184c53452534e700c646"
+   last-author="jingxuan.dou"
+   committed-rev="3708"
+   text-time="2012-10-30T10:58:20.000000Z"
+   kind="file"
+   committed-date="2012-10-30T10:58:20.612117Z"/>
+<entry
+   name="ApiCmdUserRegister.h"
+   checksum="ce134c7342c763a33cbee82ee0b4f080"
+   last-author="jingxuan.dou"
+   committed-rev="3663"
+   text-time="2012-10-26T09:35:22.000000Z"
+   kind="file"
+   committed-date="2012-10-26T09:35:22.296362Z"/>
+<entry
+   name="ApiCmdUserRegister.m"
+   checksum="367c9d85a11ab7c1848e869e3a1181fa"
+   last-author="jingxuan.dou"
+   committed-rev="3663"
+   text-time="2012-10-26T09:35:22.000000Z"
+   kind="file"
+   committed-date="2012-10-26T09:35:22.296362Z"/>
+<entry
+   name="ApiCmdUserUnBinding.h"
+   checksum="1312eb17d7ba18066554c972c5362ffb"
+   last-author="jingxuan.dou"
+   committed-rev="3636"
+   text-time="2012-10-25T08:58:59.000000Z"
+   kind="file"
+   committed-date="2012-10-25T08:58:59.148917Z"/>
+<entry
+   name="ApiCmdUserUnBinding.m"
+   checksum="c132401baa19e8073cca263b9359ea5e"
+   last-author="jingxuan.dou"
+   committed-rev="3640"
+   text-time="2012-10-26T02:23:59.000000Z"
+   kind="file"
+   committed-date="2012-10-26T02:23:59.429048Z"/>
+<entry
+   name="ApiConfig.h"
+   checksum="86cb5da7222fbb9cc07b12659f8a3140"
+   last-author="qiang.yu"
+   committed-rev="1020"
+   text-time="2012-05-21T03:59:06.000000Z"
+   kind="file"
+   committed-date="2012-05-21T03:59:06.549931Z"/>
+<entry
+   name="ApiConfig.m"
+   checksum="b2d83744622e15d6826194a929cd81e2"
+   last-author="jingxuan.dou"
+   committed-rev="3831"
+   text-time="2012-11-08T07:46:57.000000Z"
+   kind="file"
+   committed-date="2012-11-08T07:46:57.453318Z"/>
+<entry
+   name="ApiFault.h"
+   checksum="641bb54648f64d373d2570afae3006e6"
+   last-author="qiang.yu"
+   committed-rev="1020"
+   text-time="2012-05-21T03:59:06.000000Z"
+   kind="file"
+   committed-date="2012-05-21T03:59:06.549931Z"/>
+<entry
+   name="ApiFault.m"
+   checksum="2bdeff8fc76497a07a0e211dcfe1b5f5"
+   last-author="qiang.yu"
+   committed-rev="1020"
+   text-time="2012-05-21T03:59:06.000000Z"
+   kind="file"
+   committed-date="2012-05-21T03:59:06.549931Z"/>
+<entry
+   name="ApiNotify.h"
+   checksum="743f3bb8b5232a1a3b99859a0e817549"
+   last-author="qiang.yu"
+   committed-rev="1020"
+   text-time="2012-05-21T03:59:06.000000Z"
+   kind="file"
+   committed-date="2012-05-21T03:59:06.549931Z"/>
+<entry
+   name="DomainProtocol.h"
+   checksum="6c65129559842377aae24d8a40ea0e60"
+   last-author="qiang.yu"
+   committed-rev="1020"
+   text-time="2012-05-21T03:59:06.000000Z"
+   kind="file"
+   committed-date="2012-05-21T03:59:06.549931Z"/>
+<entry
+   name="HuishowListInfo.h"
+   checksum="bd08eab13d2c745e748ad14942c86714"
+   last-author="jingxuan.dou"
+   committed-rev="3693"
+   text-time="2012-10-30T03:49:13.000000Z"
+   kind="file"
+   committed-date="2012-10-30T03:49:13.410401Z"/>
+<entry
+   name="HuishowListInfo.m"
+   checksum="ba7db7c2faa5eb0fa4d397352ca1a66e"
+   last-author="jingxuan.dou"
+   committed-rev="4050"
+   text-time="2012-11-20T07:12:33.000000Z"
+   kind="file"
+   committed-date="2012-11-20T07:12:33.228334Z"/>
+<entry
+   name="HuishowResultInfo.h"
+   checksum="b186a400d1374e7746e3e17b881f0ca7"
+   last-author="jingxuan.dou"
+   committed-rev="3693"
+   text-time="2012-10-30T03:49:13.000000Z"
+   kind="file"
+   committed-date="2012-10-30T03:49:13.410401Z"/>
+<entry
+   name="HuishowResultInfo.m"
+   checksum="43601732fbf9e01382ab85bb6cc86450"
+   last-author="jingxuan.dou"
+   committed-rev="3693"
+   text-time="2012-10-30T03:49:13.000000Z"
+   kind="file"
+   committed-date="2012-10-30T03:49:13.410401Z"/>
+<entry
+   name="MobileApi.h"
+   checksum="7df12403086a45db59986bfbcd8aec82"
+   last-author="qiang.yu"
+   committed-rev="1020"
+   text-time="2012-05-21T03:59:06.000000Z"
+   kind="file"
+   committed-date="2012-05-21T03:59:06.549931Z"/>
+<entry
+   name="UserInfo.h"
+   checksum="3a651f759447c94f9aacac389eb1e2eb"
+   last-author="jingxuan.dou"
+   committed-rev="2602"
+   text-time="2012-08-10T06:37:02.000000Z"
+   kind="file"
+   committed-date="2012-08-10T06:37:02.515962Z"/>
+<entry
+   name="UserInfo.m"
+   checksum="bb292cc1b03ffac0db6067a128165ac7"
+   last-author="jingxuan.dou"
+   committed-rev="3708"
+   text-time="2012-10-30T10:58:20.000000Z"
+   kind="file"
+   committed-date="2012-10-30T10:58:20.612117Z"/>
+<entry
+   name="mobileapi-Prefix.pch"
+   checksum="be16c453c8a8f43098a75662043328c5"
+   last-author="qiang.yu"
+   committed-rev="1020"
+   text-time="2012-05-21T03:59:06.000000Z"
+   kind="file"
+   committed-date="2012-05-21T03:59:06.549931Z"/>
+</wc-entries>

@@ -1,0 +1,38 @@
+//
+//  ApiCmdUserLogin.h
+//  Gaopeng
+//
+//  Created by yuqiang on 11-10-12.
+//  Copyright 2011年 GP. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+#import "ApiCmd.h"
+#import "UserInfo.h"
+
+/**
+ *  @author yuqiang
+ **/
+@interface ApiCmdUserLogin : ApiCmd {
+    
+@private
+    NSString* username;
+    NSString* password;
+    
+    // output result
+    UserInfo* userInfo;
+    
+}
+
+@property(nonatomic, retain) NSString* username;
+@property(nonatomic, retain) NSString* password;
+
+// output result, readonly
+@property(nonatomic, retain) UserInfo* userInfo;
+
+- (NSMutableDictionary*) getParamDict;
+- (void) parseResultData:(NSDictionary*) dictionary;
+
+
+@end

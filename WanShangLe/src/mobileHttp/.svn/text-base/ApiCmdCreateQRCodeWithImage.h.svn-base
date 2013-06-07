@@ -1,0 +1,24 @@
+//
+//  ApiCmdCreateQRCodeWithImage.h
+//  mobileapi
+//
+//  Created by doujingxuan on 10/31/12.
+//
+//
+
+#import "ApiCmd.h"
+
+@interface ApiCmdCreateQRCodeWithImage : ApiCmd
+{
+@private
+    NSString    *  content;
+    NSString    *  shortUrl;
+}
+
+@property(nonatomic, retain) NSString * content;
+@property(nonatomic, retain) NSString * shortUrl;
+
+- (NSMutableDictionary*) getParamDict;
+- (void) parseResultData:(NSDictionary*) dictionary;
+
+@end

@@ -1,0 +1,39 @@
+//
+//  ApiCmdUserAccountUpdate.h
+//  mobileapi
+//
+//  Created by 首 回 on 12-5-30.
+//  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
+//
+
+#import "ApiCmd.h"
+#import "UserInfo.h"
+
+@interface ApiCmdUserAccountUpdate : ApiCmd
+{
+@private
+    NSString  * email;
+    NSString  * nickname;
+    NSString  * province;
+    NSString  * city;
+    NSString  * sex;
+    NSString  * phone;
+    // output result
+    UserInfo* userInfo;
+}
+@property(nonatomic, retain) NSString * email;
+@property(nonatomic, retain) NSString * nickname;
+@property(nonatomic, retain) NSString * province;
+@property(nonatomic, retain) NSString * city;
+@property(nonatomic, retain) NSString * sex;
+@property(nonatomic, retain) NSString * phone;
+
+// output result, readonly
+@property(nonatomic, retain) UserInfo* userInfo;
+
+- (NSMutableDictionary*) getParamDict;
+- (void) parseResultData:(NSDictionary*) dictionary;
+
+
+@end
+

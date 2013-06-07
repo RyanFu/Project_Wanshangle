@@ -1,0 +1,33 @@
+//
+//  ApiCmdUserRegister.h
+//  mobileapi
+//
+//  Created by 首 回 on 12-5-29.
+//  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
+//
+
+#import "ApiCmd.h"
+#import "UserInfo.h"
+
+@interface ApiCmdUserRegister : ApiCmd
+{
+@private
+    NSString* username;
+    NSString* password;
+    NSString* nickname;
+    
+    // output result
+    UserInfo* userInfo;
+}
+
+@property(nonatomic, retain) NSString* username;
+@property(nonatomic, retain) NSString* password;
+@property(nonatomic, retain) NSString* nickname;
+
+// output result, readonly
+@property(nonatomic, retain) UserInfo* userInfo;
+
+- (NSMutableDictionary*) getParamDict;
+- (void) parseResultData:(NSDictionary*) dictionary;
+@end
+

@@ -1,0 +1,101 @@
+//
+//  UserInfo.m
+//  TestApiGaoPeng
+//
+//  Created by yuqiang on 11-10-12.
+//  Copyright 2011年 GP. All rights reserved.
+//
+
+#import "common.h"
+#import "ApiLogger.h"
+#import "UserInfo.h"
+#import "NSDictionary+BSJSONAdditions.h"
+
+#define Tencent_ExpirationTime   @"tencent_expirationTime"
+static const char* _fileName = "huishowInfo.data";
+//static NSString * _filePath = nil;
+#define Tencent_Access_token	@"tencent_access_token"
+#define Tencent_Code	        @"tencent_code"
+#define Tencent_Expires_in	    @"tencent_expires_in"
+#define Tencent_Openid	        @"tencent_openid"
+#define Tencent_TencentUserName  @"tencent_tencentUserName"
+#define Tencent_nickName         @"tencent_nickName"
+
+@implementation UserInfo
+
+@synthesize uid = _uid,email = _email,password = _password,salt = _salt,random = _random,realname = _realname,nickname = _nickname,phone = _phone,logo = _logo,status = _status,last_login_time = _last_login_time,create_time = _create_time,update_time = _update_time,sina_weibo_identifier= _sina_weibo_identifier,tencent_weibo_identifier = _tencent_weibo_identifier,tencent_qq_identifier = _tencent_qq_identifier,renren_sns_identifier = _renren_sns_identifier,kind = _kind,province = _province,city = _city,sex = _sex,sina_weibo_data=_sina_weibo_data,renren_sns_data = _renren_sns_data,tencent_weibo_data=_tencent_weibo_data;
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        // Initialization code here.
+    }
+    
+    return self;
+}
+
+- (void) dealloc {
+    [_sina_weibo_data release];
+    [_renren_sns_data release];
+    [_tencent_weibo_data release];
+    [_filePath release];
+    [_uid release];
+    [_email release];
+    [_password release];
+    [_salt release];
+    [_random release];
+    [_realname release];
+    [_nickname release];
+    [_phone release];
+    [_logo release];
+    [_status release];
+    [_last_login_time release];
+    [_create_time release];
+    [_update_time release];
+    [_sina_weibo_identifier release];
+    [_tencent_weibo_identifier release];
+    [_tencent_qq_identifier release];
+    [_renren_sns_identifier release];
+    [_kind release];
+    [_province release];
+    [_city release];
+    [_sex release];
+	[super dealloc];
+}
+-(void)turnDictToUserInfo:(NSDictionary*)dict
+{
+    self.uid = defaultNilObject([dict objectForKey:@"id"]);
+    self.email = defaultNilObject([dict objectForKey:@"email"]);
+    self.password = defaultNilObject([dict objectForKey:@"password"]);
+    self.salt = defaultNilObject([dict objectForKey:@"salt"]);
+    self.random = defaultNilObject([dict objectForKey:@"random"]);
+    self.realname = defaultNilObject([dict objectForKey:@"realname"]); 
+    self.nickname = defaultNilObject([dict objectForKey:@"nickname"]);
+    self.phone = defaultNilObject([dict objectForKey:@"phone"]);
+    self.logo = defaultNilObject([dict objectForKey:@"logo"]);
+    self.status= defaultNilObject([dict objectForKey:@"status"]);
+    self.last_login_time = parseDateFromNSNumber(defaultNilObject([dict objectForKey:@"last_login_time"]));
+    self.create_time = parseDateFromNSNumber(defaultNilObject([dict objectForKey:@"create_time"]));
+    self.update_time = parseDateFromNSNumber(defaultNilObject([dict objectForKey:@"update_time"]));
+
+    self.kind= defaultNilObject([dict objectForKey:@"kind"]);
+    self.province = defaultNilObject([dict objectForKey:@"province"]);
+    self.city = defaultNilObject([dict objectForKey:@"city"]);
+    self.sex = defaultNilObject([dict objectForKey:@"sex"]);
+    
+}
+
+- (void) parseData:(id) data {
+    
+    if (nil == data) {
+        return;
+    }
+    
+    NSDictionary* dict  = data;
+    _filePath = [getDocumentsFilePath([NSString stringWithUTF8String:_fileName]) retain];
+    [dict writeToFile:_filePath atomically:YES];
+    [self turnDictToUserInfo:dict];
+}
+
+@end

@@ -1,0 +1,28 @@
+//
+//  ApiCmdExtAccountList.h
+//  mobileapi
+//
+//  Created by doujingxuan on 10/29/12.
+//
+//
+
+#import "ApiCmd.h"
+#import "HuishowListInfo.h"
+
+@interface ApiCmdExtAccountList : ApiCmd
+{
+@private
+    
+    // output result
+    HuishowListInfo * listUserInfo;
+    
+}
+
+// output result, readonly
+@property(nonatomic, retain)HuishowListInfo * listUserInfo;
+
+- (NSMutableDictionary*) getParamDict;
+- (void) parseResultData:(NSDictionary*) dictionary;
+
+
+@end

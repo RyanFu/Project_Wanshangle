@@ -1,0 +1,38 @@
+//
+//  ApiCmdUserAuthLogin.h
+//  mobileapi
+//
+//  Created by 首 回 on 12-5-30.
+//  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
+//
+
+#import "ApiCmd.h"
+#import "UserInfo.h"
+
+@interface ApiCmdUserAuthLogin : ApiCmd
+{
+@private
+    NSString  * exttype;
+    NSString  * extid;
+    NSString  * nickname;
+    NSString  * sex;
+    NSString  * auth_data;
+    
+    // output result
+    UserInfo* userInfo;
+    
+}
+
+@property(nonatomic, retain) NSString * exttype;
+@property(nonatomic, retain) NSString * extid;
+@property(nonatomic, retain) NSString * nickname;
+@property(nonatomic, retain) NSString * auth_data;
+@property(nonatomic, retain) NSString * sex;
+
+
+// output result, readonly
+@property(nonatomic, retain) UserInfo* userInfo;
+
+- (NSMutableDictionary*) getParamDict;
+- (void) parseResultData:(NSDictionary*) dictionary;
+@end

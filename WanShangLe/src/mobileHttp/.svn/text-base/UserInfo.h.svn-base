@@ -1,0 +1,77 @@
+//
+//  UserInfo.h
+//  TestApiGaoPeng
+//
+//  Created by yuqiang on 11-10-12.
+//  Copyright 2011年 GP. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+#import "DomainProtocol.h"
+
+@interface UserInfo : NSObject<DomainProtocol> {
+    
+@private
+    NSNumber* _uid;
+    NSString* _email;
+    NSString* _password;
+    NSString* _salt;
+    NSString* _random;
+    NSString* _realname;
+    NSString* _nickname;
+    NSString* _phone;
+    NSString* _logo;
+    NSNumber* _status;
+    
+    NSDate* _last_login_time;
+    NSDate* _create_time;
+    NSDate* _update_time;
+    NSString* _sina_weibo_identifier;
+    NSString* _tencent_weibo_identifier;
+    NSString* _tencent_qq_identifier;
+    NSString* _renren_sns_identifier;
+    NSNumber* _kind;
+    NSNumber* _province;
+    NSNumber* _city;
+    NSNumber* _sex;
+
+    NSString * _filePath;
+    NSString * _tencent_weibo_data;
+    NSString * _sina_weibo_data;
+    NSString * _renren_sns_data;
+}
+
+@property(nonatomic, retain) NSNumber* uid;
+@property(nonatomic, retain) NSString* email;
+@property(nonatomic, retain) NSString* password;
+@property(nonatomic, retain) NSString* salt;
+@property(nonatomic, retain) NSString* random;
+@property(nonatomic, retain) NSString * realname;
+@property(nonatomic, retain) NSString * nickname;
+@property(nonatomic, retain) NSString * phone;
+@property(nonatomic, retain) NSString * logo;
+@property(nonatomic, retain) NSNumber * status;
+
+@property(nonatomic, retain) NSDate * last_login_time;
+@property(nonatomic, retain) NSDate * create_time;
+@property(nonatomic, retain) NSDate * update_time;
+@property(nonatomic, retain) NSString * sina_weibo_identifier;
+@property(nonatomic, retain) NSString * tencent_weibo_identifier;
+@property(nonatomic, retain) NSString * tencent_qq_identifier;
+@property(nonatomic, retain) NSString * renren_sns_identifier;
+@property(nonatomic, retain) NSNumber * kind;
+@property(nonatomic, retain) NSNumber * province;
+@property(nonatomic, retain) NSNumber * city;
+@property(nonatomic, retain) NSNumber * sex;
+@property(nonatomic, retain) NSString * tencent_weibo_data;
+@property(nonatomic, retain) NSString * sina_weibo_data;
+@property(nonatomic, retain) NSString * renren_sns_data;
+
+
+
+- (void) parseData:(id) data;
+-(void)turnDictToUserInfo:(NSDictionary*)dict;
+
+
+@end

@@ -1,0 +1,25 @@
+//
+//  ApiCmdImageUpload.h
+//  mobileapi
+//
+//  Created by doujingxuan on 10/31/12.
+//
+//
+
+#import "ApiCmd.h"
+#import "UserInfo.h"
+
+@interface ApiCmdImageUpload : ApiCmd
+{
+@private
+    NSString * imageLocalURL;
+    NSString * fileUrl;
+}
+
+@property(nonatomic, retain) NSString    * imageLocalURL;
+// output result, readonly
+@property(nonatomic, retain) NSString  * fileUrl;
+
+- (NSMutableDictionary*) getParamDict;
+- (void) parseResultData:(NSDictionary*) dictionary;
+@end

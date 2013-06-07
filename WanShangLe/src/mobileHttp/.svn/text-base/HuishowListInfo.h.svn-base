@@ -1,0 +1,33 @@
+//
+//  HuishowListInfo.h
+//  mobileapi
+//
+//  Created by doujingxuan on 10/29/12.
+//
+//
+
+#import <Foundation/Foundation.h>
+#import "DomainProtocol.h"
+
+
+@interface HuishowListInfo : NSObject<DomainProtocol>
+{
+@private
+    NSString* sina_weibo_identifier;
+    NSString* tencent_weibo_identifier;
+    NSString* tencent_qq_identifier;
+    NSString* renren_sns_identifier;
+    
+    NSString * _filePath;
+}
+@property(nonatomic, retain) NSString * sina_weibo_identifier;
+@property(nonatomic, retain) NSString * tencent_weibo_identifier;
+@property(nonatomic, retain) NSString * tencent_qq_identifier;
+@property(nonatomic, retain) NSString * renren_sns_identifier;
+
+
+- (void) parseData:(id) data;
+-(void)turnDictToUserInfo:(NSDictionary*)dict;
+
+
+@end

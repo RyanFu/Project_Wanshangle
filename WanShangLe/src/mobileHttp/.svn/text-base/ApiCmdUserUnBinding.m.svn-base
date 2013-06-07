@@ -1,0 +1,91 @@
+//
+//  ApiCmdUserUnBinding.m
+//  mobileapi
+//
+//  Created by doujingxuan on 6/4/12.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//
+
+#import "ApiCmdUserUnBinding.h"
+#import "common.h"
+@implementation ApiCmdUserUnBinding
+@synthesize exttype,extid,auth_data,userInfo;
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        // Initialization code here.
+    }
+    
+    return self;
+}
+
+- (void) dealloc {
+    [auth_data release];
+    [extid release];
+    [exttype release];
+    [userInfo release];
+    [super dealloc];
+}
+
+- (NSMutableDictionary*) getParamDict {
+    NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
+    
+    [paramDict setObject:@"extaccount.unbind" forKey:@"api"];
+    
+    [paramDict setValue:self.exttype forKey:@"exttype"];
+    [paramDict setValue:self.extid forKey:@"extid"];
+    [paramDict setValue:self.auth_data forKey:@"auth_data"];
+    return paramDict;
+}
+
+
+- (void) parseResultData:(NSDictionary*) dictionary {
+    
+    /***************************
+     {
+     cookie: "{"uid":"1","timestamp":1337568828}",
+     errors: [ ],
+     data: {
+     user: {
+     id: 1,
+     email: "dev@huishow.com",
+     nickname: "",
+     phone: "",
+     logo: "gp",
+     last_login_time: 1337568828,
+     create_time: 32767,
+     update_time: 1337568828,
+     sina_weibo_token: "",
+     qq_weibo_token: "",
+     qq_token: "",
+     renren_token: ""
+     }
+     }
+     }
+     ***/
+    
+    // get the data
+    NSDictionary* retData = defaultNilObject([dictionary objectForKey:@"data"]);
+    
+    if (nil == retData) {
+        return;
+    }
+    
+    // get user
+    NSDictionary* userInfoDict = defaultNilObject([retData objectForKey:@"userInfo"]);
+    
+    if (nil == userInfoDict) {
+        return;
+    }
+    
+    // do parse
+    UserInfo* tmpUserInfo = [[UserInfo alloc] init];  // no release here
+    [tmpUserInfo parseData:userInfoDict];
+    
+    // relase the old one
+    [userInfo release];
+    userInfo = tmpUserInfo;
+}
+
+@end

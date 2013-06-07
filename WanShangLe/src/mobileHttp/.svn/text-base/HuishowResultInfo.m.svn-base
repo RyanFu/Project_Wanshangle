@@ -1,0 +1,61 @@
+//
+//  HuishowResultInfo.m
+//  mobileapi
+//
+//  Created by doujingxuan on 10/29/12.
+//
+//
+
+#import "HuishowResultInfo.h"
+#import "common.h"
+#import "ApiLogger.h"
+#import "ApiClient.h"
+
+static const char* _fileName = "resultHuishowInfo.data";
+@implementation HuishowResultInfo
+@synthesize identifier,userId,create_time,externalType,oauthInfo;
+- (void)dealloc
+{
+    [identifier release];
+    [userId release];
+    [create_time release];
+    [externalType  release];
+    [oauthInfo release];
+    [super dealloc];
+}
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        // Initialization code here.
+    }
+    return self;
+}
+-(void)turnDictToUserInfo:(NSDictionary*)dict
+{
+    self.externalType = [dict objectForKey:@"externalType"];
+    apiLogDebug(@"self.externalType is %@",self.externalType);
+    self.identifier = [dict objectForKey:@"identifier"];
+     apiLogDebug(@"self.identifier is %@",self.identifier);
+    if ([self.externalType isEqualToString:@"sina_weibo_identifier"]) {
+        [[ApiClient defaultClient] listHuiShowInfo].sina_weibo_identifier = self.identifier;
+    }
+    if ([self.externalType isEqualToString:@"tencent_weibo_identifier"]) {
+        [[ApiClient defaultClient] listHuiShowInfo].tencent_weibo_identifier = self.identifier;
+    }
+    if ([self.externalType isEqualToString:@"renren_sns_identifier"]){
+        [[ApiClient defaultClient] listHuiShowInfo].renren_sns_identifier = self.identifier;
+    }
+}
+- (void) parseData:(id) data {
+    
+    if (nil == data) {
+        return;
+    }
+    
+    NSDictionary* dict  = data;
+    _filePath = [getDocumentsFilePath([NSString stringWithUTF8String:_fileName]) retain];
+    [dict writeToFile:_filePath atomically:YES];
+    [self turnDictToUserInfo:dict];
+}
+@end

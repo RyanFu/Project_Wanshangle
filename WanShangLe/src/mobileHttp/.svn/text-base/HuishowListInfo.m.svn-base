@@ -1,0 +1,108 @@
+//
+//  HuishowListInfo.m
+//  mobileapi
+//
+//  Created by doujingxuan on 10/29/12.
+//
+//
+
+#import "HuishowListInfo.h"
+#import "common.h"
+#import "ApiLogger.h"
+#import "Json.h"
+
+#define Tencent_ExpirationTime   @"tencent_expirationTime"
+#define Tencent_Access_token	@"tencent_access_token"
+#define Tencent_Code	        @"tencent_code"
+#define Tencent_Expires_in	    @"tencent_expires_in"
+#define Tencent_Openid	        @"tencent_openid"
+#define Tencent_TencentUserName  @"tencent_tencentUserName"
+#define Tencent_nickName         @"tencent_nickName"
+
+
+static const char* _fileName = "listHuishowInfo.data";
+@implementation HuishowListInfo
+@synthesize sina_weibo_identifier,renren_sns_identifier,tencent_weibo_identifier,tencent_qq_identifier;
+- (void)dealloc
+{
+    [sina_weibo_identifier release];
+    [tencent_qq_identifier release];
+    [tencent_weibo_identifier release];
+    [renren_sns_identifier   release];
+    [super dealloc];
+}
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        // Initialization code here.
+    }
+    return self;
+}
+-(void)turnDictToUserInfo:(NSDictionary*)dict
+{
+    NSArray * sinaArray = [dict objectForKey:@"sina_weibo_identifier"];
+    if ([sinaArray count] > 0) {
+        NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+       NSMutableDictionary * sinaDict = [sinaArray objectAtIndex:0];
+        self.sina_weibo_identifier = [sinaDict objectForKey:@"identifier"];
+       id  sinaAuthData = defaultNilObject([sinaDict objectForKey:@"oauthinfo"]);
+        apiLogDebug(@"sinaAuthData is %@",sinaAuthData);
+        if (!isEmpty(sinaAuthData)) {
+            [defaults setObject:(NSString*)sinaAuthData forKey:@"_sina_data_userDefaults"];
+        }
+               [defaults synchronize];
+    }
+    NSArray * renrenArray = [dict objectForKey:@"renren_sns_identifier"];
+    if ([renrenArray count] > 0) {
+        /*添加人人用户数据*/
+        NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+        NSDictionary * tmpRenrenDic = [renrenArray objectAtIndex:0];
+         self.renren_sns_identifier = [tmpRenrenDic objectForKey:@"identifier"];
+       id renrenAuthData = defaultNilObject([tmpRenrenDic objectForKey:@"oauthinfo"]);
+        if (!isEmpty(renrenAuthData)) {
+            NSMutableDictionary * renrenDic = [renrenAuthData JSONValue];
+            [defaults setObject:self.renren_sns_identifier forKey:@"session_UserId"];
+            [defaults setObject:[renrenDic objectForKey:@"renren_access_Token"] forKey:@"access_Token"];
+            [defaults setObject:[renrenDic objectForKey:@"renren_secret_Key"] forKey:@"secret_Key"];
+            [defaults setObject:[renrenDic objectForKey:@"renren_session_Key"] forKey:@"session_Key"];
+            NSDate *renren_expiration_date = [NSDate dateWithTimeIntervalSince1970:[[renrenDic objectForKey:@"renren_expiration_Date"] doubleValue]];
+            [defaults setObject:renren_expiration_date forKey:@"expiration_Date"];
+            [defaults synchronize];
+        }
+            }
+    NSArray * ttweiboArray = [dict objectForKey:@"tencent_weibo_identifier"];
+    if ([ttweiboArray count] > 0) {
+        NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+        NSDictionary * tmpTTWeiboDic = [ttweiboArray objectAtIndex:0];
+        self.tencent_weibo_identifier = [tmpTTWeiboDic objectForKey:@"identifier"];
+        apiLogDebug(@"self.tencent_qq_identifier is %@",self.tencent_weibo_identifier);
+        /*添加腾讯用户数据*/
+        id ttweiboAuthData = defaultNilObject([tmpTTWeiboDic objectForKey:@"oauthinfo"]);
+        apiLogDebug(@"ttweiboAuthData is %@",ttweiboAuthData);
+        if (!isEmpty(ttweiboAuthData)) {
+            NSMutableDictionary * tencentDic = [ttweiboAuthData JSONValue];
+            [defaults setObject:self.tencent_weibo_identifier forKey:Tencent_TencentUserName];
+            [defaults setObject:[tencentDic objectForKey:Tencent_nickName] forKey:Tencent_nickName];
+            [defaults setObject:[tencentDic objectForKey:Tencent_Access_token] forKey:Tencent_Access_token];
+            [defaults setObject:[tencentDic objectForKey:Tencent_Openid] forKey:Tencent_Openid];
+            [defaults setObject:[tencentDic objectForKey:Tencent_Expires_in] forKey:Tencent_Expires_in];
+            [defaults setObject:[tencentDic objectForKey:Tencent_Code] forKey:Tencent_Code];
+            
+            [defaults setObject:[tencentDic objectForKey:Tencent_ExpirationTime] forKey:Tencent_ExpirationTime];
+            [defaults synchronize];
+        }
+    }
+}
+- (void) parseData:(id) data {
+    
+    if (nil == data) {
+        return;
+    }
+    
+    NSDictionary* dict  = data;
+    _filePath = [getDocumentsFilePath([NSString stringWithUTF8String:_fileName]) retain];
+    [dict writeToFile:_filePath atomically:YES];
+    [self turnDictToUserInfo:dict];
+}
+@end

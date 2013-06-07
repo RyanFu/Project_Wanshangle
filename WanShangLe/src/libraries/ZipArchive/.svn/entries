@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   repos="https://code.huishow.net:444/svn/huishow"
+   name=""
+   revision="4927"
+   last-author="jingxuan.dou"
+   url="https://code.huishow.net:444/svn/huishow/TestIphone/trunk/common/common/ZipArchive"
+   uuid="d478a782-ecf2-4a02-8452-1a270bd22194"
+   committed-rev="3808"
+   kind="dir"
+   committed-date="2012-11-06T08:54:23.891903Z"/>
+<entry
+   name="ZipArchive.h"
+   checksum="6d54af2266e311c8afd1f8c363c63ac3"
+   last-author="jingxuan.dou"
+   committed-rev="3808"
+   text-time="2012-11-06T08:54:23.000000Z"
+   kind="file"
+   committed-date="2012-11-06T08:54:23.891903Z"/>
+<entry
+   name="ZipArchive.mm"
+   checksum="ffe07e759bfc34add543777a8a732b79"
+   last-author="jingxuan.dou"
+   committed-rev="3804"
+   text-time="2012-11-06T07:12:28.000000Z"
+   kind="file"
+   committed-date="2012-11-06T07:12:28.128208Z"/>
+<entry
+   name="crypt.h"
+   checksum="6b19101600a00dad85360d4d19f240aa"
+   last-author="jingxuan.dou"
+   committed-rev="3804"
+   text-time="2012-11-06T07:12:28.000000Z"
+   kind="file"
+   committed-date="2012-11-06T07:12:28.128208Z"/>
+<entry
+   name="ioapi.c"
+   checksum="8adffe86593395acffcf20b2589aed9d"
+   last-author="jingxuan.dou"
+   committed-rev="3804"
+   text-time="2012-11-06T07:12:28.000000Z"
+   kind="file"
+   committed-date="2012-11-06T07:12:28.128208Z"/>
+<entry
+   name="ioapi.h"
+   checksum="b86ae4b3a0d459c8b232aae47c9869ac"
+   last-author="jingxuan.dou"
+   committed-rev="3804"
+   text-time="2012-11-06T07:12:28.000000Z"
+   kind="file"
+   committed-date="2012-11-06T07:12:28.128208Z"/>
+<entry
+   name="mztools.c"
+   checksum="5f35a4fc54a5b19a1ade4f0133b45a0f"
+   last-author="jingxuan.dou"
+   committed-rev="3804"
+   text-time="2012-11-06T07:12:28.000000Z"
+   kind="file"
+   committed-date="2012-11-06T07:12:28.128208Z"/>
+<entry
+   name="mztools.h"
+   checksum="bdf8dbff157a17e3e64df50cbd0e691f"
+   last-author="jingxuan.dou"
+   committed-rev="3804"
+   text-time="2012-11-06T07:12:28.000000Z"
+   kind="file"
+   committed-date="2012-11-06T07:12:28.128208Z"/>
+<entry
+   name="unzip.c"
+   checksum="7bc59a66dbc8d3fc2c97b7827b5db8e3"
+   last-author="jingxuan.dou"
+   committed-rev="3804"
+   text-time="2012-11-06T07:12:28.000000Z"
+   kind="file"
+   committed-date="2012-11-06T07:12:28.128208Z"/>
+<entry
+   name="unzip.h"
+   checksum="f8dbf52fff414afddc5af0af36c5dc25"
+   last-author="jingxuan.dou"
+   committed-rev="3804"
+   text-time="2012-11-06T07:12:28.000000Z"
+   kind="file"
+   committed-date="2012-11-06T07:12:28.128208Z"/>
+<entry
+   name="zip.c"
+   checksum="c0936123c499f2f3e777a182215aff20"
+   last-author="jingxuan.dou"
+   committed-rev="3804"
+   text-time="2012-11-06T07:12:28.000000Z"
+   kind="file"
+   committed-date="2012-11-06T07:12:28.128208Z"/>
+<entry
+   name="zip.h"
+   checksum="b6357a4b8ff836ea4e7098bedc2f3d35"
+   last-author="jingxuan.dou"
+   committed-rev="3804"
+   text-time="2012-11-06T07:12:28.000000Z"
+   kind="file"
+   committed-date="2012-11-06T07:12:28.128208Z"/>
+</wc-entries>

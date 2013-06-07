@@ -1,0 +1,50 @@
+//
+//  HuishowResultInfo.h
+//  mobileapi
+//
+//  Created by doujingxuan on 10/29/12.
+//
+//
+
+#import <Foundation/Foundation.h>
+#import "HuishowListInfo.h"
+/*
+ {
+ "httpCode" : 200,
+ "errors" : [
+ 
+ ],
+ "data" : {
+ "result" : {
+ "userId" : "4",
+ "identifier" : "1837664465",
+ "externalType" : "sina_weibo_identifier",
+ "createTime" : 1351564941,
+ "id" : "16",
+ "oauthInfo" : null
+ }
+ },
+ "token" : "2727343576294f17031000052708061f0174404a47021f5a1e41503d061c55545d171012755254534f461f4d5d46331b11121c0245496f2f050f0b121511551605541e24352d286163"
+ }
+*/
+@interface HuishowResultInfo : NSObject
+{
+@private
+    NSString * userId;
+    NSString * identifier;
+    NSString * externalType;
+    NSString * oauthInfo;
+    NSDate   * create_time;
+    
+    NSString * _filePath;
+}
+@property(nonatomic, retain) NSString * userId;
+@property(nonatomic, retain) NSString * identifier;
+@property(nonatomic, retain) NSString * externalType;
+@property(nonatomic, retain) NSString * oauthInfo;
+@property(nonatomic, retain) NSDate   * create_time;
+
+
+- (void) parseData:(id) data;
+-(void)turnDictToUserInfo:(NSDictionary*)dict;
+@end

@@ -1,0 +1,31 @@
+//
+//  ApiCmdUserUnBinding.h
+//  mobileapi
+//
+//  Created by doujingxuan on 6/4/12.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//
+
+#import "ApiCmd.h"
+#import "UserInfo.h"
+
+@interface ApiCmdUserUnBinding : ApiCmd
+{
+@private
+    NSString  * exttype;
+    NSString  * extid;
+    NSString  * auth_data;
+     UserInfo* userInfo;
+}
+
+@property(nonatomic, retain) NSString * exttype;
+@property(nonatomic, retain) NSString * extid;
+@property(nonatomic, retain) NSString * auth_data;
+
+
+// output result, readonly
+@property(nonatomic, retain) UserInfo* userInfo;
+
+- (NSMutableDictionary*) getParamDict;
+- (void) parseResultData:(NSDictionary*) dictionary;
+@end

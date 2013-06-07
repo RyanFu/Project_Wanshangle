@@ -1,0 +1,52 @@
+//
+//  ApiClient.h
+//  Gaopeng
+//
+//  Created by yuqiang on 11-10-11.
+//  Copyright 2011年 GP. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+#import "ApiNotify.h"
+#import "ApiCmd.h"
+#import "UserInfo.h"
+#import "HuishowListInfo.h"
+#import "ASIFormDataRequest.h"
+
+/**
+ *  @author yuqiang
+ *
+ *  This is the ApiClient , You should keep this Object 
+ *  as a singleton , reuse it , and use it one at a time
+ *
+ *  This class is NOT-Thread safe
+ */
+@interface ApiClient : NSObject<ApiNotify>{
+
+@private
+    NSString * token;
+    UserInfo * huishowInfo;
+    HuishowListInfo * listHuiShowInfo;
+    ASIFormDataRequest * request;
+}
+
+@property(nonatomic,retain) NSString* token;
+@property(nonatomic,retain) UserInfo* huishowInfo;
+@property(nonatomic,retain) HuishowListInfo * listHuiShowInfo;
+@property(nonatomic,retain) ASIFormDataRequest * request;
+
++ (id) defaultClient;
+-(void)cancelASIDataFormRequest;
+
+/**
+ *  execute ApiCmd asynchrouse
+ **/
+- (void) executeApiCmdAsync:(ApiCmd*) cmd;
+
+/**
+ *  execute ApiCmd sync
+ **/
+- (NSError*) executeApiCmd:(ApiCmd*) cmd;
+-(NSString*)errorInfo:(NSNumber*)errorNumber;
+@end

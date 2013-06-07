@@ -1,0 +1,34 @@
+//
+//  ApiCmdBindingHuiShowAccount.h
+//  mobileapi
+//
+//  Created by doujingxuan on 10/30/12.
+//
+//
+
+#import "ApiCmd.h"
+#import "UserInfo.h"
+
+@interface ApiCmdBindingHuiShowAccount : ApiCmd
+{
+    
+@private
+    NSString* email;
+    NSString* password;
+    
+    // output result
+    UserInfo* userInfo;
+    
+}
+
+@property(nonatomic, retain) NSString* email;
+@property(nonatomic, retain) NSString* password;
+
+// output result, readonly
+@property(nonatomic, retain) UserInfo* userInfo;
+
+- (NSMutableDictionary*) getParamDict;
+- (void) parseResultData:(NSDictionary*) dictionary;
+
+
+@end
