@@ -144,6 +144,9 @@ static DataBaseManager *_sharedInstance = nil;
 {
     City *city = nil;
     NSString *name = [[LocationManager defaultLocationManager] getUserCity];
+    
+    if (isEmpty(name))return nil;
+    
     city = [City MR_findFirstByAttribute:@"name" withValue:name inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     
     if (city == nil)
