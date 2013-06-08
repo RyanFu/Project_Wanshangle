@@ -116,6 +116,7 @@
 }
 
 - (void)clickCinemaButton:(id)sender{
+    
     [self cleanUpButtonBackground];
     [cinemaButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
     

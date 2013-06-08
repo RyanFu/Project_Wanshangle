@@ -137,9 +137,9 @@
     {
         NSDictionary *dic = [_parentViewController.cinemasArray objectAtIndex:indexPath.section];
         NSArray *list = [dic objectForKey:@"list"];
-        NSString *item = [list objectAtIndex:indexPath.row-1];
-        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:item message:nil delegate:nil cancelButtonTitle:@"取消" otherButtonTitles: nil] autorelease];
-        [alert show];
+        MCinema *item = [list objectAtIndex:indexPath.row-1];
+        ABLoggerMethod();
+        
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }

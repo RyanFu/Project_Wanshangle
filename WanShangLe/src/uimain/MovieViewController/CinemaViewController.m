@@ -10,6 +10,7 @@
 #import "ApiCmdMovie_getAllCinemas.h"
 #import "MovieListTableViewDelegate.h"
 #import "CinemaListTableViewDelegate.h"
+#import "CinemaSearchViewController.h"
 #import "ASIHTTPRequest.h"
 #import "MCinema.h"
 
@@ -19,6 +20,7 @@
     UIButton *allButton;
 }
 @property(nonatomic,retain)CinemaListTableViewDelegate *cinemaDelegate;
+@property(nonatomic,retain)CinemaSearchViewController *cinemaSearchViewControlelr;
 @end
 
 @implementation CinemaViewController
@@ -35,6 +37,7 @@
 - (void)dealloc{
     self.cinemaDelegate = nil;
     self.cinemaTableView = nil;
+    self.cinemaSearchViewControlelr = nil;
     [super dealloc];
 }
 
@@ -101,15 +104,27 @@
     _cinemaTableView.sectionHeaderHeight = 0;
     _cinemaDelegate.isOpen = NO;
     
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-    [footerView setBackgroundColor:[UIColor colorWithRed:1.000 green:0.329 blue:0.663 alpha:1.000]];
-    _cinemaTableView.tableFooterView = footerView;
-    [footerView release];
+    UIButton *tableHeaderView = [UIButton buttonWithType:UIButtonTypeCustom];
+    tableHeaderView.frame = CGRectMake(0, 0, 320, 40);
+    [tableHeaderView setBackgroundColor:[UIColor colorWithRed:1.000 green:0.329 blue:0.663 alpha:1.000]];
+    [tableHeaderView setTitle:@"搜索" forState:UIControlStateNormal];
+    [tableHeaderView addTarget:self action:@selector(clickSearchBar:) forControlEvents:UIControlEventTouchUpInside];
+    _cinemaTableView.tableHeaderView = tableHeaderView;
+    [tableHeaderView release];
     
     [self.view addSubview:_cinemaTableView];
     
     [favoriteButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
     
+}
+
+- (void)clickSearchBar:(id)sender{
+    if (!_cinemaSearchViewControlelr) {
+        _cinemaSearchViewControlelr = [[CinemaSearchViewController alloc] initWithNibName:nil bundle:nil];
+    }
+    
+    _cinemaSearchViewControlelr.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [self presentModalViewController:_cinemaSearchViewControlelr animated:YES];
 }
 
 #pragma mark-

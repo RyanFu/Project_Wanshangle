@@ -38,6 +38,21 @@
 		5A1BDCF81763259900D610AA /* DownAccessory@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A1BDCF41763259900D610AA /* DownAccessory@2x.png */; };
 		5A1BDCF91763259900D610AA /* UpAccessory.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A1BDCF51763259900D610AA /* UpAccessory.png */; };
 		5A1BDCFA1763259900D610AA /* UpAccessory@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A1BDCF61763259900D610AA /* UpAccessory@2x.png */; };
+		5A1BDCFF1763306900D610AA /* CinemaSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BDCFD1763306800D610AA /* CinemaSearchViewController.m */; };
+		5A1BDD001763306900D610AA /* CinemaSearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A1BDCFE1763306800D610AA /* CinemaSearchViewController.xib */; };
+		5A1BDD091763311000D610AA /* Array.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BDD031763311000D610AA /* Array.mm */; };
+		5A1BDD0A1763311000D610AA /* multipy_unicode.dat in Resources */ = {isa = PBXBuildFile; fileRef = 5A1BDD041763311000D610AA /* multipy_unicode.dat */; };
+		5A1BDD0B1763311000D610AA /* SearchCore.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BDD061763311000D610AA /* SearchCore.mm */; };
+		5A1BDD0C1763311000D610AA /* SearchCoreManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BDD081763311000D610AA /* SearchCoreManager.mm */; };
+		5A1BDD21176331C000D610AA /* CoreTextUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BDD10176331C000D610AA /* CoreTextUtils.m */; };
+		5A1BDD22176331C000D610AA /* NSAttributedString+Attributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BDD13176331C000D610AA /* NSAttributedString+Attributes.m */; };
+		5A1BDD23176331C000D610AA /* NSTextCheckingResult+ExtendedURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BDD15176331C000D610AA /* NSTextCheckingResult+ExtendedURL.m */; };
+		5A1BDD24176331C000D610AA /* OHAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BDD17176331C000D610AA /* OHAttributedLabel.m */; };
+		5A1BDD25176331C000D610AA /* OHParagraphStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BDD19176331C000D610AA /* OHParagraphStyle.m */; };
+		5A1BDD26176331C000D610AA /* OHASBasicHTMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BDD1C176331C000D610AA /* OHASBasicHTMLParser.m */; };
+		5A1BDD27176331C000D610AA /* OHASBasicMarkupParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BDD1E176331C000D610AA /* OHASBasicMarkupParser.m */; };
+		5A1BDD28176331C000D610AA /* OHASMarkupParserBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BDD20176331C000D610AA /* OHASMarkupParserBase.m */; };
+		5A1BDD2A1763361200D610AA /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A1BDD291763361100D610AA /* CoreText.framework */; };
 		5A246F37175DD0D100C000CA /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A246F36175DD0D100C000CA /* MapKit.framework */; };
 		5A246F39175DD0D600C000CA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A246F38175DD0D600C000CA /* CoreLocation.framework */; };
 		5A5A865E1762D274004E3FF7 /* MCinema.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A865D1762D274004E3FF7 /* MCinema.m */; };
@@ -216,6 +231,33 @@
 		5A1BDCF41763259900D610AA /* DownAccessory@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DownAccessory@2x.png"; sourceTree = "<group>"; };
 		5A1BDCF51763259900D610AA /* UpAccessory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UpAccessory.png; sourceTree = "<group>"; };
 		5A1BDCF61763259900D610AA /* UpAccessory@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UpAccessory@2x.png"; sourceTree = "<group>"; };
+		5A1BDCFC1763306700D610AA /* CinemaSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaSearchViewController.h; sourceTree = "<group>"; };
+		5A1BDCFD1763306800D610AA /* CinemaSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaSearchViewController.m; sourceTree = "<group>"; };
+		5A1BDCFE1763306800D610AA /* CinemaSearchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaSearchViewController.xib; sourceTree = "<group>"; };
+		5A1BDD021763311000D610AA /* Array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Array.h; sourceTree = "<group>"; };
+		5A1BDD031763311000D610AA /* Array.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Array.mm; sourceTree = "<group>"; };
+		5A1BDD041763311000D610AA /* multipy_unicode.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = multipy_unicode.dat; sourceTree = "<group>"; };
+		5A1BDD051763311000D610AA /* SearchCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchCore.h; sourceTree = "<group>"; };
+		5A1BDD061763311000D610AA /* SearchCore.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SearchCore.mm; sourceTree = "<group>"; };
+		5A1BDD071763311000D610AA /* SearchCoreManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchCoreManager.h; sourceTree = "<group>"; };
+		5A1BDD081763311000D610AA /* SearchCoreManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SearchCoreManager.mm; sourceTree = "<group>"; };
+		5A1BDD0F176331C000D610AA /* CoreTextUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTextUtils.h; sourceTree = "<group>"; };
+		5A1BDD10176331C000D610AA /* CoreTextUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreTextUtils.m; sourceTree = "<group>"; };
+		5A1BDD12176331C000D610AA /* NSAttributedString+Attributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+Attributes.h"; sourceTree = "<group>"; };
+		5A1BDD13176331C000D610AA /* NSAttributedString+Attributes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+Attributes.m"; sourceTree = "<group>"; };
+		5A1BDD14176331C000D610AA /* NSTextCheckingResult+ExtendedURL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTextCheckingResult+ExtendedURL.h"; sourceTree = "<group>"; };
+		5A1BDD15176331C000D610AA /* NSTextCheckingResult+ExtendedURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTextCheckingResult+ExtendedURL.m"; sourceTree = "<group>"; };
+		5A1BDD16176331C000D610AA /* OHAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OHAttributedLabel.h; sourceTree = "<group>"; };
+		5A1BDD17176331C000D610AA /* OHAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHAttributedLabel.m; sourceTree = "<group>"; };
+		5A1BDD18176331C000D610AA /* OHParagraphStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OHParagraphStyle.h; sourceTree = "<group>"; };
+		5A1BDD19176331C000D610AA /* OHParagraphStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHParagraphStyle.m; sourceTree = "<group>"; };
+		5A1BDD1B176331C000D610AA /* OHASBasicHTMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OHASBasicHTMLParser.h; sourceTree = "<group>"; };
+		5A1BDD1C176331C000D610AA /* OHASBasicHTMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHASBasicHTMLParser.m; sourceTree = "<group>"; };
+		5A1BDD1D176331C000D610AA /* OHASBasicMarkupParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OHASBasicMarkupParser.h; sourceTree = "<group>"; };
+		5A1BDD1E176331C000D610AA /* OHASBasicMarkupParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHASBasicMarkupParser.m; sourceTree = "<group>"; };
+		5A1BDD1F176331C000D610AA /* OHASMarkupParserBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OHASMarkupParserBase.h; sourceTree = "<group>"; };
+		5A1BDD20176331C000D610AA /* OHASMarkupParserBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHASMarkupParserBase.m; sourceTree = "<group>"; };
+		5A1BDD291763361100D610AA /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		5A246F36175DD0D100C000CA /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		5A246F38175DD0D600C000CA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		5A246F42175DE9CC00C000CA /* CoreManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreManager.h; sourceTree = "<group>"; };
@@ -424,6 +466,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A1BDD2A1763361200D610AA /* CoreText.framework in Frameworks */,
 				5AAC70FC17601C32004B7395 /* ImageIO.framework in Frameworks */,
 				5AAC70F917601BF6004B7395 /* CoreData.framework in Frameworks */,
 				5A246F39175DD0D600C000CA /* CoreLocation.framework in Frameworks */,
@@ -577,6 +620,67 @@
 			path = arrowImage;
 			sourceTree = "<group>";
 		};
+		5A1BDD011763311000D610AA /* SearchCore */ = {
+			isa = PBXGroup;
+			children = (
+				5A1BDD021763311000D610AA /* Array.h */,
+				5A1BDD031763311000D610AA /* Array.mm */,
+				5A1BDD041763311000D610AA /* multipy_unicode.dat */,
+				5A1BDD051763311000D610AA /* SearchCore.h */,
+				5A1BDD061763311000D610AA /* SearchCore.mm */,
+				5A1BDD071763311000D610AA /* SearchCoreManager.h */,
+				5A1BDD081763311000D610AA /* SearchCoreManager.mm */,
+			);
+			path = SearchCore;
+			sourceTree = "<group>";
+		};
+		5A1BDD0D176331C000D610AA /* OHAttributedLabel */ = {
+			isa = PBXGroup;
+			children = (
+				5A1BDD0E176331C000D610AA /* PrivateUtils */,
+				5A1BDD11176331C000D610AA /* Source */,
+				5A1BDD1A176331C000D610AA /* TagParsers */,
+			);
+			path = OHAttributedLabel;
+			sourceTree = "<group>";
+		};
+		5A1BDD0E176331C000D610AA /* PrivateUtils */ = {
+			isa = PBXGroup;
+			children = (
+				5A1BDD0F176331C000D610AA /* CoreTextUtils.h */,
+				5A1BDD10176331C000D610AA /* CoreTextUtils.m */,
+			);
+			path = PrivateUtils;
+			sourceTree = "<group>";
+		};
+		5A1BDD11176331C000D610AA /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				5A1BDD12176331C000D610AA /* NSAttributedString+Attributes.h */,
+				5A1BDD13176331C000D610AA /* NSAttributedString+Attributes.m */,
+				5A1BDD14176331C000D610AA /* NSTextCheckingResult+ExtendedURL.h */,
+				5A1BDD15176331C000D610AA /* NSTextCheckingResult+ExtendedURL.m */,
+				5A1BDD16176331C000D610AA /* OHAttributedLabel.h */,
+				5A1BDD17176331C000D610AA /* OHAttributedLabel.m */,
+				5A1BDD18176331C000D610AA /* OHParagraphStyle.h */,
+				5A1BDD19176331C000D610AA /* OHParagraphStyle.m */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		5A1BDD1A176331C000D610AA /* TagParsers */ = {
+			isa = PBXGroup;
+			children = (
+				5A1BDD1B176331C000D610AA /* OHASBasicHTMLParser.h */,
+				5A1BDD1C176331C000D610AA /* OHASBasicHTMLParser.m */,
+				5A1BDD1D176331C000D610AA /* OHASBasicMarkupParser.h */,
+				5A1BDD1E176331C000D610AA /* OHASBasicMarkupParser.m */,
+				5A1BDD1F176331C000D610AA /* OHASMarkupParserBase.h */,
+				5A1BDD20176331C000D610AA /* OHASMarkupParserBase.m */,
+			);
+			path = TagParsers;
+			sourceTree = "<group>";
+		};
 		5A558702175DFFC600D3237F /* res */ = {
 			isa = PBXGroup;
 			children = (
@@ -611,6 +715,7 @@
 		5A76C4CC175DBE8B0067BC30 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5A1BDD291763361100D610AA /* CoreText.framework */,
 				5A76C57D175DC6A10067BC30 /* libz.dylib */,
 				5A76C57B175DC69B0067BC30 /* libxml2.dylib */,
 				5A76C579175DC6910067BC30 /* libiconv.2.4.0.dylib */,
@@ -747,6 +852,8 @@
 		5AAC6FF217601BDB004B7395 /* libraries */ = {
 			isa = PBXGroup;
 			children = (
+				5A1BDD0D176331C000D610AA /* OHAttributedLabel */,
+				5A1BDD011763311000D610AA /* SearchCore */,
 				5AAC6FF317601BDB004B7395 /* ASIHttpRequest */,
 				5AAC700B17601BDB004B7395 /* MagicalRecord */,
 				5AAC704717601BDB004B7395 /* SDWebImage */,
@@ -1046,6 +1153,9 @@
 				5A1BDCEF1763230D00D610AA /* CinemaTableViewCellSection.xib */,
 				5A5A86621762E455004E3FF7 /* CinemaListTableViewDelegate.h */,
 				5A5A86631762E456004E3FF7 /* CinemaListTableViewDelegate.m */,
+				5A1BDCFC1763306700D610AA /* CinemaSearchViewController.h */,
+				5A1BDCFD1763306800D610AA /* CinemaSearchViewController.m */,
+				5A1BDCFE1763306800D610AA /* CinemaSearchViewController.xib */,
 			);
 			path = MovieViewController;
 			sourceTree = "<group>";
@@ -1161,6 +1271,8 @@
 				5A1BDCF81763259900D610AA /* DownAccessory@2x.png in Resources */,
 				5A1BDCF91763259900D610AA /* UpAccessory.png in Resources */,
 				5A1BDCFA1763259900D610AA /* UpAccessory@2x.png in Resources */,
+				5A1BDD001763306900D610AA /* CinemaSearchViewController.xib in Resources */,
+				5A1BDD0A1763311000D610AA /* multipy_unicode.dat in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1295,6 +1407,18 @@
 				5A1BDCE61762FC2B00D610AA /* CinemaViewController.m in Sources */,
 				5A1BDCEB1762FCBF00D610AA /* CinemaTableViewCell.m in Sources */,
 				5A1BDCF01763230D00D610AA /* CinemaTableViewCellSection.m in Sources */,
+				5A1BDCFF1763306900D610AA /* CinemaSearchViewController.m in Sources */,
+				5A1BDD091763311000D610AA /* Array.mm in Sources */,
+				5A1BDD0B1763311000D610AA /* SearchCore.mm in Sources */,
+				5A1BDD0C1763311000D610AA /* SearchCoreManager.mm in Sources */,
+				5A1BDD21176331C000D610AA /* CoreTextUtils.m in Sources */,
+				5A1BDD22176331C000D610AA /* NSAttributedString+Attributes.m in Sources */,
+				5A1BDD23176331C000D610AA /* NSTextCheckingResult+ExtendedURL.m in Sources */,
+				5A1BDD24176331C000D610AA /* OHAttributedLabel.m in Sources */,
+				5A1BDD25176331C000D610AA /* OHParagraphStyle.m in Sources */,
+				5A1BDD26176331C000D610AA /* OHASBasicHTMLParser.m in Sources */,
+				5A1BDD27176331C000D610AA /* OHASBasicMarkupParser.m in Sources */,
+				5A1BDD28176331C000D610AA /* OHASMarkupParserBase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
