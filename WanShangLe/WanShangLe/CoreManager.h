@@ -19,20 +19,27 @@
 #import "DataBaseManager.h"
 #import "CacheManager.h"
 
-//电影数据
-#define UpdatingMoviesList @"UpdatingMoviesList" //正在抓取数据
-#define IsUpdatedMoviesList @"IsUpdatedMoviesList" //正在抓取数据
-
-//数据升级
-#import "SystemDataUpdater.h"
-#import "SystemDataUpdater1_0.h"  // updator for version 1.0
-
 //网络API
 #import "ApiNotify.h"
 #import "ApiConfig.h"
 #import "ApiFault.h"
 #import "ApiClient.h"
 #import "ApiCmd.h"
+
+//数据升级
+#import "SystemDataUpdater.h"
+#import "SystemDataUpdater1_0.h"  // updator for version 1.0
+
+//API HTTPRequest Tag
+#define API_MMovieCmd  100 //电影
+#define API_MCinemaCmd 200 //影院
+
+#define TestCode
+
+//电影数据
+#define UpdatingMoviesList @"UpdatingMoviesList" //正在抓取 电影数据
+//影院数据
+#define UpdatingCinemasList @"UpdatingCinemasList" //正在抓取 影院数据
 
 //用户选择的城市
 #define UserState @"administrativeArea"

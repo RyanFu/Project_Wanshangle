@@ -2,7 +2,7 @@
 //  MCinema.m
 //  WanShangLe
 //
-//  Created by stephenliu on 13-6-7.
+//  Created by stephenliu on 13-6-8.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -15,10 +15,12 @@
 
 @dynamic address;
 @dynamic favorite;
-@dynamic gps;
+@dynamic longitue;
 @dynamic name;
 @dynamic phoneNumber;
 @dynamic uid;
+@dynamic latitude;
+@dynamic district;
 @dynamic city;
 @dynamic movie_cinemas;
 

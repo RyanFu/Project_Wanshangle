@@ -8,14 +8,15 @@
 
 #import <Foundation/Foundation.h>
 #import "ApiNotify.h"
+
 /**
 	数据库管理类
 	@author stephenliu
  */
 
-@class ApiCmdMovie_getAllMovies;
+@class ApiCmdMovie_getAllMovies,ApiCmdMovie_getAllCinemas;
 @class City;
-@class MMovie;
+@class MMovie,MCinema;
 @class MMovie_City;
 @class MMovie_Cinema;
 
@@ -55,5 +56,12 @@
 - (ApiCmdMovie_getAllMovies *)getAllMoviesListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllMoviesListFromCoreData;
 - (void)insertMoviesIntoCoreDataFromObject:(NSDictionary *)objectData;
+- (void)importMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData;
+
+/************ 影院 ***************/
+- (ApiCmdMovie_getAllCinemas *)getAllCinemasListFromWeb:(id<ApiNotify>)delegate;
+- (NSArray *)getAllCinemasListFromCoreData;
+- (void)insertCinemasIntoCoreDataFromObject:(NSDictionary *)objectData;
+- (void)importCinema:(MCinema *)mCinema ValuesForKeysWithObject:(NSDictionary *)aCinemaData;
 
 @end

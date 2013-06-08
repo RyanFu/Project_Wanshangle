@@ -4,7 +4,7 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="cinemas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MCinema" inverseName="city" inverseEntity="MCinema" syncable="YES"/>
-        <relationship name="movie_city" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MMovie_City" inverseName="city" inverseEntity="MMovie_City" syncable="YES"/>
+        <relationship name="movie_citys" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MMovie_City" inverseName="city" inverseEntity="MMovie_City" syncable="YES"/>
     </entity>
     <entity name="MBuyTicketInfo" representedClassName="MBuyTicketInfo" syncable="YES">
         <attribute name="groupBuyInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
@@ -12,10 +12,12 @@
     </entity>
     <entity name="MCinema" representedClassName="MCinema" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="district" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="favorite" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <attribute name="gps" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="longitue" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="phoneNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="phoneNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="city" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="City" inverseName="cinemas" inverseEntity="City" syncable="YES"/>
         <relationship name="movie_cinemas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MMovie_Cinema" inverseName="cinema" inverseEntity="MMovie_Cinema" syncable="YES"/>
@@ -33,7 +35,7 @@
         <attribute name="uid" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="webImg" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="movie_cinemas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MMovie_Cinema" inverseName="movie" inverseEntity="MMovie_Cinema" syncable="YES"/>
-        <relationship name="movie_city" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MMovie_City" inverseName="movie" inverseEntity="MMovie_City" syncable="YES"/>
+        <relationship name="movie_citys" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MMovie_City" inverseName="movie" inverseEntity="MMovie_City" syncable="YES"/>
         <relationship name="movieDetail" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovieDetail" inverseName="movie" inverseEntity="MMovieDetail" syncable="YES"/>
     </entity>
     <entity name="MMovie_Cinema" representedClassName="MMovie_Cinema" syncable="YES">
@@ -44,8 +46,8 @@
     </entity>
     <entity name="MMovie_City" representedClassName="MMovie_City" syncable="YES">
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="city" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="City" inverseName="movie_city" inverseEntity="City" syncable="YES"/>
-        <relationship name="movie" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovie" inverseName="movie_city" inverseEntity="MMovie" syncable="YES"/>
+        <relationship name="city" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="City" inverseName="movie_citys" inverseEntity="City" syncable="YES"/>
+        <relationship name="movie" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovie" inverseName="movie_citys" inverseEntity="MMovie" syncable="YES"/>
     </entity>
     <entity name="MMovieDetail" representedClassName="MMovieDetail" syncable="YES">
         <attribute name="fromCountry" optional="YES" attributeType="String" syncable="YES"/>
@@ -67,13 +69,13 @@
         <relationship name="movie_cinema" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovie_Cinema" inverseName="schedule" inverseEntity="MMovie_Cinema" syncable="YES"/>
     </entity>
     <elements>
-        <element name="City" positionX="-146" positionY="-537" width="128" height="105"/>
+        <element name="City" positionX="-146" positionY="-537" width="128" height="103"/>
         <element name="MBuyTicketInfo" positionX="106" positionY="54" width="128" height="73"/>
-        <element name="MCinema" positionX="117" positionY="-297" width="128" height="163"/>
-        <element name="MMovie" positionX="-443" positionY="-351" width="128" height="255"/>
+        <element name="MCinema" positionX="117" positionY="-297" width="128" height="193"/>
+        <element name="MMovie" positionX="-443" positionY="-351" width="128" height="253"/>
         <element name="MMovie_Cinema" positionX="-173" positionY="-313" width="128" height="103"/>
+        <element name="MMovie_City" positionX="-450" positionY="-531" width="128" height="88"/>
         <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="148"/>
         <element name="MSchedule" positionX="-189" positionY="-67" width="128" height="165"/>
-        <element name="MMovie_City" positionX="-441" positionY="-543" width="128" height="88"/>
     </elements>
 </model>

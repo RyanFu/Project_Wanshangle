@@ -226,9 +226,6 @@
     }else{
         [self apiNotifyResult:self error:nil];
     }
-    
-    [[[ApiClient defaultClient] requestArray] removeObject:self];
-    ABLoggerDebug(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
 }
 
 /**
@@ -244,15 +241,16 @@
     }else{
         [self apiNotifyResult:self error:error];
     }
-    
-    [[[ApiClient defaultClient] requestArray] removeObject:self];
-    ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
 }
 
 /**
  *  Implement ApiNotify Protocol
  **/
 - (void) apiNotifyResult:(id) apiCmd  error:(NSError*) error {
+    
+    [[[ApiClient defaultClient] requestArray] removeObject:self];
+    ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    
     ABLoggerWarn(@"apiNotifyResult called, you should override this method to have your own implementation");
 }
 

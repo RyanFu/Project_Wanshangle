@@ -10,24 +10,24 @@
 #import "MovieTableViewCell.h"
 #import "ApiCmdMovie_getAllMovies.h"
 #import "ApiCmdMovie_getAllCinemas.h"
-#import "UIImageView+WebCache.h"
-#import "MMovie.h"
+#import "MovieListTableViewDelegate.h"
+#import "CinemaViewController.h"
+#import "ASIHTTPRequest.h"
 
 #define MovieButtonTag 10
 #define CinemaButtonTag 11
 
-@interface MovieViewController ()<UITableViewDataSource,UITableViewDelegate,ApiNotify>{
-    NSArray *moviesArray;
+@interface MovieViewController ()<ApiNotify>{
+    UIButton *movieButton;
+    UIButton *cinemaButton;
 }
-@property(nonatomic,retain)UITableView *movieTableView;
-@property(nonatomic,retain)NSArray *moviesArray;
-@property(nonatomic,assign)ApiCmd *mapiCmd;
+@property(nonatomic,retain)MovieListTableViewDelegate *movieDelegate;
+@property(nonatomic,retain)CinemaViewController *cinemaViewController;
 @end
 
 @implementation MovieViewController
 @synthesize movieTableView = _movieTableView;
 @synthesize moviesArray = _moviesArray;
-@synthesize mapiCmd = _mapiCmd;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -36,10 +36,9 @@
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             
-            self.mapiCmd = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+            [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
             
         });
-        
     }
     return self;
 }
@@ -48,22 +47,25 @@
     
     self.moviesArray = nil;
     self.movieTableView = nil;
-    self.mapiCmd = nil;
-    
+    self.movieDelegate = nil;
+
     [super dealloc];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [self.navigationController setNavigationBarHidden:NO];
 
-    self.mapiCmd = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+    [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
     
-    [self updatData];
+#ifdef TestCode
+    //[self updatData];//测试代码
+#endif
+    
 }
 
 - (void)updatData{
-    for (int i=0; i<100; i++) {
-        self.mapiCmd = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+    for (int i=0; i<10; i++) {
+        [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
     }
 }
 
@@ -84,6 +86,7 @@
     [cinemabt setBackgroundColor:[UIColor clearColor]];
     [moviebt addTarget:self action:@selector(clickMovieButton:) forControlEvents:UIControlEventTouchUpInside];
     [cinemabt addTarget:self action:@selector(clickCinemaButton:) forControlEvents:UIControlEventTouchUpInside];
+    [moviebt setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
     [moviebt setFrame:CGRectMake(0, 0, 70, 30)];
     [cinemabt setFrame:CGRectMake(70, 0, 70, 30)];
     [topView addSubview:moviebt];
@@ -95,8 +98,11 @@
     _movieTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, iPhoneAppFrame.size.width, iPhoneAppFrame.size.height-44)
                                                    style:UITableViewStylePlain];
     
-    _movieTableView.dataSource = self;
-    _movieTableView.delegate = self;
+    _movieDelegate = [[MovieListTableViewDelegate alloc] init];
+    _movieDelegate.parentViewController = self;
+    
+    _movieTableView.dataSource = _movieDelegate;
+    _movieTableView.delegate = _movieDelegate;
     _movieTableView.backgroundColor = [UIColor colorWithRed:0.880 green:0.963 blue:0.925 alpha:1.000];
     _movieTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
@@ -105,86 +111,55 @@
 }
 
 - (void)clickMovieButton:(id)sender{
-    UIButton *bt = (UIButton *)sender;
-    UIButton *cinemabt = (UIButton *)[[sender superview] viewWithTag:CinemaButtonTag];
-    [cinemabt setBackgroundColor:[UIColor clearColor]];
-    [bt setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
+    [self cleanUpButtonBackground];
+    [movieButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
 }
 
 - (void)clickCinemaButton:(id)sender{
-    UIButton *bt = (UIButton *)sender;
-    UIButton *moviebt = (UIButton *)[[sender superview] viewWithTag:MovieButtonTag];
-    [moviebt setBackgroundColor:[UIColor clearColor]];
-    [bt setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
-}
-
-#pragma mark -
-#pragma mark UITableViewDataSource
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return [_moviesArray count];
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    ABLoggerMethod();
-    static NSString *CellIdentifier = @"mMovieCell";
-    static BOOL nibsRegistered = NO;
-    if (!nibsRegistered) {
-        UINib *nib = [UINib nibWithNibName:@"MovieTableViewCell" bundle:nil];
-        [tableView registerNib:nib forCellReuseIdentifier:CellIdentifier];
-        nibsRegistered = YES;
+    [self cleanUpButtonBackground];
+    [cinemaButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
+    
+    if (!_cinemaViewController) {
+        _cinemaViewController = [[CinemaViewController alloc] initWithNibName:nil bundle:nil];
     }
     
-    MovieTableViewCell * cell = (MovieTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [self createNewMocieCell];
-    }
-    
-    [self configureCell:cell atIndexPath:indexPath];
-    
-    return cell;
+    [self.navigationController pushViewController:_cinemaViewController animated:YES];
 }
 
-- (void)configureCell:(MovieTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    
-    MMovie *movie = [_moviesArray objectAtIndex:indexPath.row];
-    [cell.movie_imageView setImageWithURL:[NSURL URLWithString:movie.webImg]
-                         placeholderImage:[UIImage imageNamed:@"placeholder"] options:SDWebImageRetryFailed];
-    cell.movie_name.text = movie.name;
-    cell.movie_new.hidden = YES;
-    if ([movie.newMovie boolValue]) {
-        cell.movie_new.hidden = NO;
-    }
-    cell.movie_rating.text = [NSString stringWithFormat:@"%@ : %0.1f (%d 万人)",movie.ratingFrom,[movie.rating floatValue],[movie.ratingpeople intValue]/10000];
-    cell.movie_word.text = movie.aword;
-
-}
-
--(MovieTableViewCell *)createNewMocieCell{
-    ABLoggerMethod();
-    MovieTableViewCell * cell = [[[MovieTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"mMovieCell"] autorelease];
-    [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
-    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-    //    cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"history_menu_cell_background"]] autorelease];
-    return cell;
-}
-
-#pragma mark -
-#pragma mark UITableViewDelegate
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 80.0f;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+- (void)cleanUpButtonBackground{
+    [movieButton setBackgroundColor:[UIColor clearColor]];
+    [cinemaButton setBackgroundColor:[UIColor clearColor]];
 }
 
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
-    NSArray *array = [[DataBaseManager sharedInstance] getAllMoviesListFromCoreData];
-    self.moviesArray = array;
-    ABLoggerDebug(@"count ==== %d",[self.moviesArray count]);
+    int tag = [[apiCmd httpRequest] tag];
     
-    [self.movieTableView reloadData];
+    ABLogger_int(tag);
+    switch (tag) {
+        case API_MMovieCmd:
+        {
+            NSArray *array = [[DataBaseManager sharedInstance] getAllMoviesListFromCoreData];
+            self.moviesArray = array;
+            ABLoggerDebug(@"count ==== %d",[self.moviesArray count]);
+            
+            [self.movieTableView reloadData];
+        }
+            break;
+        case API_MCinemaCmd:
+        {
+        }
+            break;
+        default:
+        {
+            NSAssert(0, @"没有从网络抓取到数据");
+        }
+            break;
+    }
+
+    
+    [[[ApiClient defaultClient] requestArray] removeObject:self];
+    ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
 }
 
 - (void)didReceiveMemoryWarning
