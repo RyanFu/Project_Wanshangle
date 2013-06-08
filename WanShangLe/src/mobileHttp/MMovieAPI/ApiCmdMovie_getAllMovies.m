@@ -52,7 +52,7 @@
     dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[DataBaseManager sharedInstance] insertMoviesIntoCoreDataFromObject:dictionary];
         
-        [[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:UpdatingMoviesList];
+        [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingMoviesList];
         [[NSUserDefaults standardUserDefaults] setObject:[[DataBaseManager sharedInstance] getTodayTimeStamp] forKey:IsUpdatedMoviesList];
     });
     

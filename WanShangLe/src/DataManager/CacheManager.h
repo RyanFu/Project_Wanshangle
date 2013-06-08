@@ -8,8 +8,9 @@
 @interface CacheManager : NSObject {
     
     NSCache *cache;
+    NSMutableDictionary *mUserDefaults;
 }
-
+ @property (retain, nonatomic) NSMutableDictionary *mUserDefaults;
 @property (retain, nonatomic) NSCache *cache;
 
 +(instancetype)sharedInstance;

@@ -21,13 +21,13 @@
 }
 @property(nonatomic,retain)UITableView *movieTableView;
 @property(nonatomic,retain)NSArray *moviesArray;
-@property(nonatomic,retain)ApiCmdMovie_getAllMovies *apiCmdMovie_getAllMovies;
+@property(nonatomic,assign)ApiCmd *mapiCmd;
 @end
 
 @implementation MovieViewController
 @synthesize movieTableView = _movieTableView;
 @synthesize moviesArray = _moviesArray;
-@synthesize apiCmdMovie_getAllMovies = _apiCmdMovie_getAllMovies;
+@synthesize mapiCmd = _mapiCmd;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -35,9 +35,8 @@
     if (self) {
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-//            self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesList:self];
             
-            [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+            self.mapiCmd = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
             
         });
         
@@ -49,15 +48,23 @@
     
     self.moviesArray = nil;
     self.movieTableView = nil;
-    self.apiCmdMovie_getAllMovies = nil;
+    self.mapiCmd = nil;
     
     [super dealloc];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [self.navigationController setNavigationBarHidden:NO];
+
+    self.mapiCmd = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
     
-    [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+    [self updatData];
+}
+
+- (void)updatData{
+    for (int i=0; i<100; i++) {
+        self.mapiCmd = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+    }
 }
 
 - (void)viewDidLoad

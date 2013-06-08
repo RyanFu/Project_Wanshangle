@@ -76,12 +76,12 @@
 - (IBAction)clickMovieButton:(id)sender{
     userClickStyle = WSLUserClickStyleMovie;
     
+     if (![self checkUserCity])return;
+    
     if (!_movieViewController) {
         _movieViewController = [[MovieViewController alloc] initWithNibName:nil bundle:nil];
     }
-    
-    if (![self checkUserCity])return;
-    
+
     [self.navigationController pushViewController:_movieViewController animated:YES];
 }
 
