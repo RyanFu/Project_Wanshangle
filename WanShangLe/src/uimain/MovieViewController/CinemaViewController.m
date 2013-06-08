@@ -96,7 +96,7 @@
     _cinemaTableView.dataSource = _cinemaDelegate;
     _cinemaTableView.delegate = _cinemaDelegate;
     _cinemaTableView.backgroundColor = [UIColor colorWithRed:0.880 green:0.963 blue:0.925 alpha:1.000];
-    _cinemaTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _cinemaTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     _cinemaTableView.sectionFooterHeight = 0;
     _cinemaTableView.sectionHeaderHeight = 0;
     _cinemaDelegate.isOpen = NO;
