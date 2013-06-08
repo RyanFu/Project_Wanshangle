@@ -15,6 +15,6 @@
 @dynamic name;
 @dynamic uid;
 @dynamic cinemas;
-@dynamic movie_city;
+@dynamic movie_citys;
 
 @end

@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MovieViewController : UIViewController
-
+@interface MovieViewController : UIViewController{
+    
+}
+@property(nonatomic,retain)UITableView *movieTableView;
+@property(nonatomic,retain)NSArray *moviesArray;
 @end

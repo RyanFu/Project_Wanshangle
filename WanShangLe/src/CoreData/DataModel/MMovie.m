@@ -26,6 +26,6 @@
 @dynamic webImg;
 @dynamic movie_cinemas;
 @dynamic movieDetail;
-@dynamic movie_city;
+@dynamic movie_citys;
 
 @end

@@ -53,7 +53,6 @@
         [[DataBaseManager sharedInstance] insertMoviesIntoCoreDataFromObject:dictionary];
         
         [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingMoviesList];
-        [[NSUserDefaults standardUserDefaults] setObject:[[DataBaseManager sharedInstance] getTodayTimeStamp] forKey:IsUpdatedMoviesList];
     });
     
     // get the data

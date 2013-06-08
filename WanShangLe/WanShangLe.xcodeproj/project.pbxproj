@@ -26,14 +26,24 @@
 		5A1747471761BA5300E155AB /* MMovie_Cinema.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1747461761BA5300E155AB /* MMovie_Cinema.m */; };
 		5A17474A1761BA5300E155AB /* MSchedule.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1747491761BA5300E155AB /* MSchedule.m */; };
 		5A17474D1761BA5300E155AB /* MMovie_City.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A17474C1761BA5300E155AB /* MMovie_City.m */; };
-		5A1747501761BA5400E155AB /* MCinema.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A17474F1761BA5400E155AB /* MCinema.m */; };
 		5A1747531761BA5400E155AB /* MMovieDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1747521761BA5400E155AB /* MMovieDetail.m */; };
-		5A1747731761F52E00E155AB /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A1747701761F52E00E155AB /* Default-568h@2x.png */; };
 		5A1747741761F52E00E155AB /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A1747711761F52E00E155AB /* Default.png */; };
-		5A1747751761F52E00E155AB /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A1747721761F52E00E155AB /* Default@2x.png */; };
+		5A1BDCE61762FC2B00D610AA /* CinemaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BDCE41762FC2B00D610AA /* CinemaViewController.m */; };
+		5A1BDCE71762FC2B00D610AA /* CinemaViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A1BDCE51762FC2B00D610AA /* CinemaViewController.xib */; };
+		5A1BDCEB1762FCBF00D610AA /* CinemaTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BDCE91762FCBF00D610AA /* CinemaTableViewCell.m */; };
+		5A1BDCEC1762FCBF00D610AA /* CinemaTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A1BDCEA1762FCBF00D610AA /* CinemaTableViewCell.xib */; };
+		5A1BDCF01763230D00D610AA /* CinemaTableViewCellSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BDCEE1763230D00D610AA /* CinemaTableViewCellSection.m */; };
+		5A1BDCF11763230D00D610AA /* CinemaTableViewCellSection.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A1BDCEF1763230D00D610AA /* CinemaTableViewCellSection.xib */; };
+		5A1BDCF71763259900D610AA /* DownAccessory.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A1BDCF31763259900D610AA /* DownAccessory.png */; };
+		5A1BDCF81763259900D610AA /* DownAccessory@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A1BDCF41763259900D610AA /* DownAccessory@2x.png */; };
+		5A1BDCF91763259900D610AA /* UpAccessory.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A1BDCF51763259900D610AA /* UpAccessory.png */; };
+		5A1BDCFA1763259900D610AA /* UpAccessory@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A1BDCF61763259900D610AA /* UpAccessory@2x.png */; };
 		5A246F37175DD0D100C000CA /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A246F36175DD0D100C000CA /* MapKit.framework */; };
 		5A246F39175DD0D600C000CA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A246F38175DD0D600C000CA /* CoreLocation.framework */; };
-		5A623EBB17621FA000E2BD31 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A623EBA17621FA000E2BD31 /* Default-568h@2x.png */; };
+		5A5A865E1762D274004E3FF7 /* MCinema.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A865D1762D274004E3FF7 /* MCinema.m */; };
+		5A5A86611762E43E004E3FF7 /* MovieListTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A86601762E43E004E3FF7 /* MovieListTableViewDelegate.m */; };
+		5A5A86641762E456004E3FF7 /* CinemaListTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A86631762E456004E3FF7 /* CinemaListTableViewDelegate.m */; };
+		5A5A86671762E7ED004E3FF7 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A5A86661762E7ED004E3FF7 /* Default-568h@2x.png */; };
 		5A76C4CE175DBE8B0067BC30 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A76C4CD175DBE8B0067BC30 /* UIKit.framework */; };
 		5A76C4D0175DBE8B0067BC30 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A76C4CF175DBE8B0067BC30 /* Foundation.framework */; };
 		5A76C4D2175DBE8B0067BC30 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A76C4D1175DBE8B0067BC30 /* CoreGraphics.framework */; };
@@ -187,18 +197,35 @@
 		5A1747491761BA5300E155AB /* MSchedule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSchedule.m; sourceTree = "<group>"; };
 		5A17474B1761BA5300E155AB /* MMovie_City.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMovie_City.h; sourceTree = "<group>"; };
 		5A17474C1761BA5300E155AB /* MMovie_City.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMovie_City.m; sourceTree = "<group>"; };
-		5A17474E1761BA5400E155AB /* MCinema.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCinema.h; sourceTree = "<group>"; };
-		5A17474F1761BA5400E155AB /* MCinema.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCinema.m; sourceTree = "<group>"; };
 		5A1747511761BA5400E155AB /* MMovieDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMovieDetail.h; sourceTree = "<group>"; };
 		5A1747521761BA5400E155AB /* MMovieDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMovieDetail.m; sourceTree = "<group>"; };
 		5A1747671761F11600E155AB /* DataBaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataBaseManager.h; sourceTree = "<group>"; };
 		5A1747701761F52E00E155AB /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		5A1747711761F52E00E155AB /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		5A1747721761F52E00E155AB /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		5A1BDCE31762FC2B00D610AA /* CinemaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaViewController.h; sourceTree = "<group>"; };
+		5A1BDCE41762FC2B00D610AA /* CinemaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaViewController.m; sourceTree = "<group>"; };
+		5A1BDCE51762FC2B00D610AA /* CinemaViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaViewController.xib; sourceTree = "<group>"; };
+		5A1BDCE81762FCBF00D610AA /* CinemaTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaTableViewCell.h; sourceTree = "<group>"; };
+		5A1BDCE91762FCBF00D610AA /* CinemaTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaTableViewCell.m; sourceTree = "<group>"; };
+		5A1BDCEA1762FCBF00D610AA /* CinemaTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaTableViewCell.xib; sourceTree = "<group>"; };
+		5A1BDCED1763230C00D610AA /* CinemaTableViewCellSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaTableViewCellSection.h; sourceTree = "<group>"; };
+		5A1BDCEE1763230D00D610AA /* CinemaTableViewCellSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaTableViewCellSection.m; sourceTree = "<group>"; };
+		5A1BDCEF1763230D00D610AA /* CinemaTableViewCellSection.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaTableViewCellSection.xib; sourceTree = "<group>"; };
+		5A1BDCF31763259900D610AA /* DownAccessory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DownAccessory.png; sourceTree = "<group>"; };
+		5A1BDCF41763259900D610AA /* DownAccessory@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DownAccessory@2x.png"; sourceTree = "<group>"; };
+		5A1BDCF51763259900D610AA /* UpAccessory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UpAccessory.png; sourceTree = "<group>"; };
+		5A1BDCF61763259900D610AA /* UpAccessory@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UpAccessory@2x.png"; sourceTree = "<group>"; };
 		5A246F36175DD0D100C000CA /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		5A246F38175DD0D600C000CA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		5A246F42175DE9CC00C000CA /* CoreManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreManager.h; sourceTree = "<group>"; };
-		5A623EBA17621FA000E2BD31 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		5A5A865C1762D274004E3FF7 /* MCinema.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCinema.h; sourceTree = "<group>"; };
+		5A5A865D1762D274004E3FF7 /* MCinema.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCinema.m; sourceTree = "<group>"; };
+		5A5A865F1762E43D004E3FF7 /* MovieListTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieListTableViewDelegate.h; sourceTree = "<group>"; };
+		5A5A86601762E43E004E3FF7 /* MovieListTableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieListTableViewDelegate.m; sourceTree = "<group>"; };
+		5A5A86621762E455004E3FF7 /* CinemaListTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaListTableViewDelegate.h; sourceTree = "<group>"; };
+		5A5A86631762E456004E3FF7 /* CinemaListTableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaListTableViewDelegate.m; sourceTree = "<group>"; };
+		5A5A86661762E7ED004E3FF7 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		5A76C4CA175DBE8B0067BC30 /* WanShangLe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WanShangLe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A76C4CD175DBE8B0067BC30 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		5A76C4CF175DBE8B0067BC30 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -461,8 +488,6 @@
 			children = (
 				5A1747511761BA5400E155AB /* MMovieDetail.h */,
 				5A1747521761BA5400E155AB /* MMovieDetail.m */,
-				5A17474E1761BA5400E155AB /* MCinema.h */,
-				5A17474F1761BA5400E155AB /* MCinema.m */,
 				5A17474B1761BA5300E155AB /* MMovie_City.h */,
 				5A17474C1761BA5300E155AB /* MMovie_City.m */,
 				5A1747481761BA5300E155AB /* MSchedule.h */,
@@ -471,6 +496,8 @@
 				5A1747461761BA5300E155AB /* MMovie_Cinema.m */,
 				5A1747421761BA5300E155AB /* MMovie.h */,
 				5A1747431761BA5300E155AB /* MMovie.m */,
+				5A5A865C1762D274004E3FF7 /* MCinema.h */,
+				5A5A865D1762D274004E3FF7 /* MCinema.m */,
 				5A17473F1761BA5300E155AB /* City.h */,
 				5A1747401761BA5300E155AB /* City.m */,
 				5A17473C1761BA5300E155AB /* MBuyTicketInfo.h */,
@@ -539,9 +566,21 @@
 			path = coreData;
 			sourceTree = "<group>";
 		};
+		5A1BDCF21763259900D610AA /* arrowImage */ = {
+			isa = PBXGroup;
+			children = (
+				5A1BDCF31763259900D610AA /* DownAccessory.png */,
+				5A1BDCF41763259900D610AA /* DownAccessory@2x.png */,
+				5A1BDCF51763259900D610AA /* UpAccessory.png */,
+				5A1BDCF61763259900D610AA /* UpAccessory@2x.png */,
+			);
+			path = arrowImage;
+			sourceTree = "<group>";
+		};
 		5A558702175DFFC600D3237F /* res */ = {
 			isa = PBXGroup;
 			children = (
+				5A1BDCF21763259900D610AA /* arrowImage */,
 				5A1747391761B6D300E155AB /* coreData */,
 			);
 			path = res;
@@ -550,7 +589,7 @@
 		5A76C4C1175DBE8A0067BC30 = {
 			isa = PBXGroup;
 			children = (
-				5A623EBA17621FA000E2BD31 /* Default-568h@2x.png */,
+				5A5A86661762E7ED004E3FF7 /* Default-568h@2x.png */,
 				5AAC6FDC17601BDB004B7395 /* src */,
 				5A558702175DFFC600D3237F /* res */,
 				5A76C4D3175DBE8B0067BC30 /* WanShangLe */,
@@ -994,6 +1033,19 @@
 				5A1746F917608CC500E155AB /* MovieTableViewCell.h */,
 				5A1746FA17608CC500E155AB /* MovieTableViewCell.m */,
 				5A1746FC17608CE400E155AB /* MovieTableViewCell.xib */,
+				5A5A865F1762E43D004E3FF7 /* MovieListTableViewDelegate.h */,
+				5A5A86601762E43E004E3FF7 /* MovieListTableViewDelegate.m */,
+				5A1BDCE31762FC2B00D610AA /* CinemaViewController.h */,
+				5A1BDCE41762FC2B00D610AA /* CinemaViewController.m */,
+				5A1BDCE51762FC2B00D610AA /* CinemaViewController.xib */,
+				5A1BDCE81762FCBF00D610AA /* CinemaTableViewCell.h */,
+				5A1BDCE91762FCBF00D610AA /* CinemaTableViewCell.m */,
+				5A1BDCEA1762FCBF00D610AA /* CinemaTableViewCell.xib */,
+				5A1BDCED1763230C00D610AA /* CinemaTableViewCellSection.h */,
+				5A1BDCEE1763230D00D610AA /* CinemaTableViewCellSection.m */,
+				5A1BDCEF1763230D00D610AA /* CinemaTableViewCellSection.xib */,
+				5A5A86621762E455004E3FF7 /* CinemaListTableViewDelegate.h */,
+				5A5A86631762E456004E3FF7 /* CinemaListTableViewDelegate.m */,
 			);
 			path = MovieViewController;
 			sourceTree = "<group>";
@@ -1100,10 +1152,15 @@
 				5A1746F7176057E400E155AB /* SIAlertView.bundle in Resources */,
 				5A1746FD17608CE400E155AB /* MovieTableViewCell.xib in Resources */,
 				5A17473B1761B6D300E155AB /* city.json in Resources */,
-				5A1747731761F52E00E155AB /* Default-568h@2x.png in Resources */,
 				5A1747741761F52E00E155AB /* Default.png in Resources */,
-				5A1747751761F52E00E155AB /* Default@2x.png in Resources */,
-				5A623EBB17621FA000E2BD31 /* Default-568h@2x.png in Resources */,
+				5A5A86671762E7ED004E3FF7 /* Default-568h@2x.png in Resources */,
+				5A1BDCE71762FC2B00D610AA /* CinemaViewController.xib in Resources */,
+				5A1BDCEC1762FCBF00D610AA /* CinemaTableViewCell.xib in Resources */,
+				5A1BDCF11763230D00D610AA /* CinemaTableViewCellSection.xib in Resources */,
+				5A1BDCF71763259900D610AA /* DownAccessory.png in Resources */,
+				5A1BDCF81763259900D610AA /* DownAccessory@2x.png in Resources */,
+				5A1BDCF91763259900D610AA /* UpAccessory.png in Resources */,
+				5A1BDCFA1763259900D610AA /* UpAccessory@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1231,8 +1288,13 @@
 				5A1747471761BA5300E155AB /* MMovie_Cinema.m in Sources */,
 				5A17474A1761BA5300E155AB /* MSchedule.m in Sources */,
 				5A17474D1761BA5300E155AB /* MMovie_City.m in Sources */,
-				5A1747501761BA5400E155AB /* MCinema.m in Sources */,
 				5A1747531761BA5400E155AB /* MMovieDetail.m in Sources */,
+				5A5A865E1762D274004E3FF7 /* MCinema.m in Sources */,
+				5A5A86611762E43E004E3FF7 /* MovieListTableViewDelegate.m in Sources */,
+				5A5A86641762E456004E3FF7 /* CinemaListTableViewDelegate.m in Sources */,
+				5A1BDCE61762FC2B00D610AA /* CinemaViewController.m in Sources */,
+				5A1BDCEB1762FCBF00D610AA /* CinemaTableViewCell.m in Sources */,
+				5A1BDCF01763230D00D610AA /* CinemaTableViewCellSection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

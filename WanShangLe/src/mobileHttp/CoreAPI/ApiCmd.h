@@ -29,8 +29,6 @@
     
     NSArray* errorArray;
     NSArray* warnArray;
-    
-    ASIHTTPRequest *httpRequest;
 }
 @property(nonatomic, assign) BOOL isFromCache;
 
@@ -49,11 +47,6 @@
 
 - (BOOL) hasError;
 - (BOOL) hasWarn;
-
-/**
- *  for synchrous call
- */
-- (void) parseHttpDataAll;
 
 /**
  *  parse api error

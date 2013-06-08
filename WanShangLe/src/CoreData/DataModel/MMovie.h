@@ -26,7 +26,7 @@
 @property (nonatomic, retain) NSString * webImg;
 @property (nonatomic, retain) NSSet *movie_cinemas;
 @property (nonatomic, retain) MMovieDetail *movieDetail;
-@property (nonatomic, retain) NSSet *movie_city;
+@property (nonatomic, retain) NSSet *movie_citys;
 @end
 
 @interface MMovie (CoreDataGeneratedAccessors)
