@@ -176,8 +176,7 @@
 
         int tag = [[apiCmd httpRequest] tag];
         [self updateData:tag];
-        
-         [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingCinemasList];
+    
     });
     
 
@@ -199,6 +198,8 @@
         case API_MCinemaCmd:
         {
            [self formatCinemaData];
+            [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingCinemasList];
+            ABLoggerWarn(@"可以请求 影院列表数据 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
         }
             break;
         default:
@@ -212,7 +213,7 @@
 - (void)formatCinemaData{
         
         NSArray *array_coreData = [[DataBaseManager sharedInstance] getAllCinemasListFromCoreData];
-        ABLoggerDebug(@"count ==== %d",[array_coreData count]);
+        ABLoggerDebug(@"主电影院count ==== %d",[array_coreData count]);
         
         NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:10];
         NSMutableArray *dataArray = [[NSMutableArray alloc] initWithCapacity:10];

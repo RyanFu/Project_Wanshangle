@@ -160,8 +160,6 @@
         
         int tag = [[apiCmd httpRequest] tag];
         [self updateData:tag];
-        
-        [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingMoviesList];
     });
  
 }
@@ -197,6 +195,7 @@
                 
                 [self.movieTableView reloadData];
             });
+            [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingMoviesList];
         }
             break;
             
@@ -204,6 +203,8 @@
         {
             NSArray *array = [[DataBaseManager sharedInstance] getAllCinemasListFromCoreData];
             ABLoggerDebug(@"影院 count ==== %d",[array count]);
+            [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingCinemasList];
+            ABLoggerWarn(@"可以请求 影院列表数据 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
         }
             break;
         default:
