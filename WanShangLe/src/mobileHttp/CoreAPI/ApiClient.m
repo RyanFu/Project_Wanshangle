@@ -122,9 +122,9 @@ static ASINetworkQueue *networkQueue = nil;
      ABLoggerMethod();
     self.request = [cmd prepareExecuteApiCmd];
     [_requestArray addObject:cmd];
-    //[request startAsynchronous];
+    [request startAsynchronous];
 
-    [networkQueue addOperation:request];
+    //[networkQueue addOperation:request];
     
      ABLoggerDebug(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
 }
