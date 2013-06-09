@@ -57,7 +57,7 @@
 
 -(MovieTableViewCell *)createNewMocieCell{
     ABLoggerMethod();
-    MovieTableViewCell * cell = [[[MovieTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"mMovieCell"] autorelease];
+     MovieTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"MovieTableViewCell" owner:self options:nil] objectAtIndex:0];
     [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
     cell.selectionStyle = UITableViewCellSelectionStyleBlue;
     //    cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"history_menu_cell_background"]] autorelease];

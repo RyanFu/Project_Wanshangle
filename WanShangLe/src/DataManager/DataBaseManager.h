@@ -19,6 +19,7 @@
 @class MMovie,MCinema;
 @class MMovie_City;
 @class MMovie_Cinema;
+@class ApiCmd;
 
 @interface DataBaseManager : NSObject{
     
@@ -47,21 +48,29 @@
 /************ 关联表 ***************/
 - (MMovie_City *)getFirstMMovie_CityFromCoreData:(NSString *)u_id;
 - (MMovie_City *)insertMMovie_CityWithMovie:(MMovie *)a_movie andCity:(City *)a_city;
+- (void)insertMMovie_CinemaWithMovie:(NSArray *)movies andCinema:(NSArray *)cinemas;
 
 /************ 城市 ***************/
 - (void)insertAllCitysIntoCoreData;
 - (City *)getNowUserCityFromCoreData;
+- (City *)getNowUserCityFromCoreDataWithName:(NSString *)name;
 
 /************ 电影 ***************/
 - (ApiCmdMovie_getAllMovies *)getAllMoviesListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllMoviesListFromCoreData;
-- (void)insertMoviesIntoCoreDataFromObject:(NSDictionary *)objectData;
+- (NSArray *)getAllMoviesListFromCoreDataWithCityName:(NSString *)cityName;
+- (NSUInteger)getCountOfMoviesListFromCoreData;
+- (NSUInteger)getCountOfMoviesListFromCoreDataWithCityName:(NSString *)cityName;
+- (void)insertMoviesIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData;
 
 /************ 影院 ***************/
 - (ApiCmdMovie_getAllCinemas *)getAllCinemasListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllCinemasListFromCoreData;
-- (void)insertCinemasIntoCoreDataFromObject:(NSDictionary *)objectData;
+- (NSArray *)getAllCinemasListFromCoreDataWithCityName:(NSString *)cityName;
+- (NSUInteger)getCountOfCinemasListFromCoreData;
+- (NSUInteger)getCountOfCinemasListFromCoreDataWithCityName:(NSString *)cityName;
+- (void)insertCinemasIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importCinema:(MCinema *)mCinema ValuesForKeysWithObject:(NSDictionary *)aCinemaData;
 
 @end

@@ -138,9 +138,6 @@ static ASINetworkQueue *networkQueue = nil;
     NSError *error = [request error];
     
     NSData *data = [request responseData];
-    NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    ABLoggerDebug(@"response data lenght ============= %d",[data length]);
-    ABLoggerDebug(@"response string ============= %@",string);
     
     if (error) {
         ABLoggerDebug(@"Error [%@]", [error localizedDescription]);

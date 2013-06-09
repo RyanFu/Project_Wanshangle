@@ -37,7 +37,7 @@
 #define ABLoggerFatal(format, ...)	[[ABLogger sharedLogger] fatal:[NSString stringWithFormat:@"- Line:%d] %s - %@",__LINE__, __PRETTY_FUNCTION__, [NSString stringWithFormat:format, ## __VA_ARGS__]]]
 
 #define ABLoggerAlert(format, ...) { UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%s\n [Line %d] ", __PRETTY_FUNCTION__, __LINE__] message:[NSString stringWithFormat:fmt, ##__VA_ARGS__] delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil]; [alert show]; }
-#define ABLoggerMethod() ABLoggerInfo(@"%s",[ [ [ [NSString alloc] initWithBytes:__FILE__ length:strlen(__FILE__) encoding:NSUTF8StringEncoding] lastPathComponent] UTF8String ]);
+#define ABLoggerMethod() ABLoggerInfo(@"%s",[ [ [[ [NSString alloc] initWithBytes:__FILE__ length:strlen(__FILE__) encoding:NSUTF8StringEncoding] autorelease] lastPathComponent] UTF8String]);
 #define ABLoggerSeparatorBold() NSLog(XCODE_COLORS_ESCAPE @"fg255,120,0;" XCODE_COLORS_ESCAPE @"bg255,190,0;"@"────────────────────────────────────────────────────────────────────────────" XCODE_COLORS_RESET);
 #define ABLoggerSeparator()  NSLog(XCODE_COLORS_ESCAPE @"fg255,120,0;" @"────────────────────────────────────────────────────────────────────────────" XCODE_COLORS_RESET);
 
