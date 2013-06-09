@@ -49,15 +49,15 @@
 
 - (void) parseResultData:(NSDictionary*) dictionary {
 
-    dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [[DataBaseManager sharedInstance] insertCinemasIntoCoreDataFromObject:dictionary];
-        
-        [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingCinemasList];
-    });
+
     
     // get the data
     //ABLoggerDebug(@"1111 responseJSONObject ======== %@",self.responseJSONObject);
     
+}
+
+-(void) notifyDelegate:(NSDictionary*) dictionary{
+
 }
 
 @end

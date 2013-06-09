@@ -55,9 +55,10 @@
     [[LocationManager defaultLocationManager] startLocationUserGPS];
     
     //inset all citys into coreData
-    dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         
-        [[DataBaseManager sharedInstance] insertAllCitysIntoCoreData];
+         [[DataBaseManager sharedInstance] insertAllCitysIntoCoreData];
+
     });
     
     

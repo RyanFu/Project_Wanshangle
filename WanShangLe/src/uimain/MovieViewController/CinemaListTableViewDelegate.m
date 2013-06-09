@@ -72,7 +72,7 @@
         
         CinemaTableViewCellSection *cell = (CinemaTableViewCellSection *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (!cell) {
-            cell = [[[NSBundle mainBundle] loadNibNamed:@"CinemaTableViewCellSection" owner:self options:nil] objectAtIndex:0];
+            [self createNewMocieCell];
         }
         
         NSString *name = [[_parentViewController.cinemasArray objectAtIndex:indexPath.section] objectForKey:@"name"];
@@ -94,7 +94,7 @@
 
 -(CinemaTableViewCell *)createNewMocieCell{
     ABLoggerMethod();
-    CinemaTableViewCell * cell = [[[CinemaTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"mCinemaCell"] autorelease];
+    CinemaTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"CinemaTableViewCellSection" owner:self options:nil] objectAtIndex:0];
     [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
     cell.selectionStyle = UITableViewCellSelectionStyleBlue;
     //    cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"history_menu_cell_background"]] autorelease];
@@ -137,9 +137,9 @@
     {
         NSDictionary *dic = [_parentViewController.cinemasArray objectAtIndex:indexPath.section];
         NSArray *list = [dic objectForKey:@"list"];
-        NSString *item = [list objectAtIndex:indexPath.row-1];
-        UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:item message:nil delegate:nil cancelButtonTitle:@"取消" otherButtonTitles: nil] autorelease];
-        [alert show];
+        MCinema *item = [list objectAtIndex:indexPath.row-1];
+        ABLoggerMethod();
+        
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }

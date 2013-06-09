@@ -13,6 +13,7 @@
 #import "MovieListTableViewDelegate.h"
 #import "CinemaViewController.h"
 #import "ASIHTTPRequest.h"
+#import "ApiCmd.h"
 
 #define MovieButtonTag 10
 #define CinemaButtonTag 11
@@ -34,9 +35,10 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             
             [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+            _cinemaViewController = [[CinemaViewController alloc] initWithNibName:nil bundle:nil];
             
         });
     }
@@ -48,14 +50,18 @@
     self.moviesArray = nil;
     self.movieTableView = nil;
     self.movieDelegate = nil;
-
+    
     [super dealloc];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [self.navigationController setNavigationBarHidden:NO];
-
-    [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+        [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
+    });
+    
     
 #ifdef TestCode
     //[self updatData];//测试代码
@@ -65,7 +71,9 @@
 
 - (void)updatData{
     for (int i=0; i<10; i++) {
-        [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+        });
     }
 }
 
@@ -101,13 +109,23 @@
     _movieDelegate = [[MovieListTableViewDelegate alloc] init];
     _movieDelegate.parentViewController = self;
     
-    _movieTableView.dataSource = _movieDelegate;
-    _movieTableView.delegate = _movieDelegate;
+    [self setTableViewDelegate];
+    
     _movieTableView.backgroundColor = [UIColor colorWithRed:0.880 green:0.963 blue:0.925 alpha:1.000];
     _movieTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     //    _moviesArray = [[NSMutableArray alloc] initWithObjects:@"11", @"22",@"33",@"44",@"55",@"66",@"77",@"88",@"99",@"100",nil];
     [self.view addSubview:_movieTableView];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+         [self updateData:0];
+    });
+   
+}
+
+- (void)setTableViewDelegate{
+    _movieTableView.dataSource = _movieDelegate;
+    _movieTableView.delegate = _movieDelegate;
 }
 
 - (void)clickMovieButton:(id)sender{
@@ -116,6 +134,7 @@
 }
 
 - (void)clickCinemaButton:(id)sender{
+    
     [self cleanUpButtonBackground];
     [cinemaButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
     
@@ -131,23 +150,60 @@
     [cinemaButton setBackgroundColor:[UIColor clearColor]];
 }
 
+#pragma mark -
+#pragma mark apiNotiry
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
-    int tag = [[apiCmd httpRequest] tag];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        [[DataBaseManager sharedInstance] insertMoviesIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+        
+        int tag = [[apiCmd httpRequest] tag];
+        [self updateData:tag];
+        
+        [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingMoviesList];
+    });
+ 
+}
+
+- (void) apiNotifyLocationResult:(id) apiCmd  error:(NSError*) error{
     
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        ABLoggerMethod();
+        int tag = [[apiCmd httpRequest] tag];
+        
+        CFTimeInterval time1 = Elapsed_Time;
+        [self updateData:tag];
+        CFTimeInterval time2 = Elapsed_Time;
+        ElapsedTime(time2, time1);
+        
+    });
+}
+
+- (void)updateData:(int)tag
+{
     ABLogger_int(tag);
     switch (tag) {
+        case 0:
         case API_MMovieCmd:
         {
             NSArray *array = [[DataBaseManager sharedInstance] getAllMoviesListFromCoreData];
             self.moviesArray = array;
-            ABLoggerDebug(@"count ==== %d",[self.moviesArray count]);
+            ABLoggerDebug(@"电影 count ==== %d",[self.moviesArray count]);
             
-            [self.movieTableView reloadData];
+            [self setTableViewDelegate];
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                
+                [self.movieTableView reloadData];
+            });
         }
             break;
+            
         case API_MCinemaCmd:
         {
+            NSArray *array = [[DataBaseManager sharedInstance] getAllCinemasListFromCoreData];
+            ABLoggerDebug(@"影院 count ==== %d",[array count]);
         }
             break;
         default:
@@ -156,12 +212,10 @@
         }
             break;
     }
-
-    
-    [[[ApiClient defaultClient] requestArray] removeObject:self];
-    ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
 }
 
+
+#pragma mark -
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

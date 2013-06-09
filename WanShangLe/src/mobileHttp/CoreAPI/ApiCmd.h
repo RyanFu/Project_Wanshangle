@@ -39,6 +39,7 @@
 @property(nonatomic,retain) NSArray* warnArray;
 
 @property(nonatomic,retain) ASIHTTPRequest *httpRequest;
+@property(nonatomic,retain) NSString *cityName;
 /**
  A JSON object constructed from the response data. If an error occurs while parsing, `nil` will be returned, and the `error` property will be set to the error.
  */
@@ -47,6 +48,8 @@
 
 - (BOOL) hasError;
 - (BOOL) hasWarn;
+
+-(void) notifyDelegate:(NSDictionary*) dictionary;
 
 /**
  *  parse api error

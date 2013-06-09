@@ -10,8 +10,10 @@
 #import "ApiCmdMovie_getAllCinemas.h"
 #import "MovieListTableViewDelegate.h"
 #import "CinemaListTableViewDelegate.h"
+#import "CinemaSearchViewController.h"
 #import "ASIHTTPRequest.h"
 #import "MCinema.h"
+#import "ApiCmd.h"
 
 @interface CinemaViewController()<ApiNotify>{
     UIButton *favoriteButton;
@@ -19,6 +21,7 @@
     UIButton *allButton;
 }
 @property(nonatomic,retain)CinemaListTableViewDelegate *cinemaDelegate;
+@property(nonatomic,retain)CinemaSearchViewController *cinemaSearchViewControlelr;
 @end
 
 @implementation CinemaViewController
@@ -27,7 +30,9 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
+        });
     }
     return self;
 }
@@ -35,13 +40,17 @@
 - (void)dealloc{
     self.cinemaDelegate = nil;
     self.cinemaTableView = nil;
+    self.cinemaSearchViewControlelr = nil;
     [super dealloc];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [self.navigationController setNavigationBarHidden:NO];
     
-    [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
+    });
+//    [self updateData:0];
     
 #ifdef TestCode
     //[self updatData];//测试代码
@@ -51,7 +60,9 @@
 
 - (void)updatData{
     for (int i=0; i<10; i++) {
-        [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
+        });
     }
 }
 
@@ -92,24 +103,47 @@
     
     _cinemaDelegate = [[CinemaListTableViewDelegate alloc] init];
     _cinemaDelegate.parentViewController = self;
-    
-    _cinemaTableView.dataSource = _cinemaDelegate;
-    _cinemaTableView.delegate = _cinemaDelegate;
+
+    [self setTableViewDelegate];
     _cinemaTableView.backgroundColor = [UIColor colorWithRed:0.880 green:0.963 blue:0.925 alpha:1.000];
     _cinemaTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     _cinemaTableView.sectionFooterHeight = 0;
     _cinemaTableView.sectionHeaderHeight = 0;
     _cinemaDelegate.isOpen = NO;
     
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-    [footerView setBackgroundColor:[UIColor colorWithRed:1.000 green:0.329 blue:0.663 alpha:1.000]];
-    _cinemaTableView.tableFooterView = footerView;
-    [footerView release];
+    UIButton *tableHeaderView = [UIButton buttonWithType:UIButtonTypeCustom];
+    tableHeaderView.frame = CGRectMake(0, 0, 320, 40);
+    [tableHeaderView setBackgroundColor:[UIColor colorWithRed:1.000 green:0.329 blue:0.663 alpha:1.000]];
+    [tableHeaderView setTitle:@"搜索" forState:UIControlStateNormal];
+    [tableHeaderView addTarget:self action:@selector(clickSearchBar:) forControlEvents:UIControlEventTouchUpInside];
+    _cinemaTableView.tableHeaderView = tableHeaderView;
+    [tableHeaderView release];
     
     [self.view addSubview:_cinemaTableView];
     
     [favoriteButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
+}
+
+- (void)setTableViewDelegate{
+    _cinemaTableView.dataSource = _cinemaDelegate;
+    _cinemaTableView.delegate = _cinemaDelegate;
+}
+
+- (void)clickSearchBar:(id)sender{
+    if (!_cinemaSearchViewControlelr) {
+        _cinemaSearchViewControlelr = [[CinemaSearchViewController alloc] initWithNibName:nil bundle:nil];
+    }
     
+    if ([[DataBaseManager sharedInstance] getCountOfCinemasListFromCoreData]) {
+        _cinemaSearchViewControlelr.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        [self.navigationController pushViewController:_cinemaSearchViewControlelr animated:YES];
+    }else{
+        ABLoggerWarn(@"======== 还没有电影院");
+    }
+
+//    [self presentModalViewController:_cinemaSearchViewControlelr animated:YES];
+//    CinemaSearchViewController *searchController = [[CinemaSearchViewController alloc] initWithNibName:nil bundle:nil];
+//    [searchController release];
 }
 
 #pragma mark-
@@ -132,20 +166,40 @@
     [allButton setBackgroundColor:[UIColor clearColor]];
 }
 
-#pragma mark-
-#pragma mark apiNotify
+#pragma mark -
+#pragma mark apiNotiry
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
-    int tag = [[apiCmd httpRequest] tag];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        [[DataBaseManager sharedInstance] insertCinemasIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+
+        int tag = [[apiCmd httpRequest] tag];
+        [self updateData:tag];
+        
+         [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingCinemasList];
+    });
     
+
+}
+
+- (void) apiNotifyLocationResult:(id) apiCmd  error:(NSError*) error{
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        int tag = [[apiCmd httpRequest] tag];
+        [self updateData:tag];
+    });
+}
+
+- (void)updateData:(int)tag
+{
     ABLogger_int(tag);
     switch (tag) {
+        case 0:
         case API_MCinemaCmd:
         {
-           
-            [self formatCinemaData];
+           [self formatCinemaData];
         }
-            
             break;
         default:
         {
@@ -153,15 +207,9 @@
         }
             break;
     }
-    
-    
-    [[[ApiClient defaultClient] requestArray] removeObject:self];
-    ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
 }
 
 - (void)formatCinemaData{
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         
         NSArray *array_coreData = [[DataBaseManager sharedInstance] getAllCinemasListFromCoreData];
         ABLoggerDebug(@"count ==== %d",[array_coreData count]);
@@ -189,16 +237,14 @@
             [dataArray addObject:dic];
             [dic release];
         }
-        
-        ABLoggerDebug(@"%@",dataArray);
         self.cinemasArray = dataArray;
         [dataArray release];
         [districtDic release];
         
         dispatch_sync(dispatch_get_main_queue(), ^{
+            [self setTableViewDelegate];
             [self.cinemaTableView reloadData];
         });
-    });
 }
 
 - (void)didReceiveMemoryWarning
