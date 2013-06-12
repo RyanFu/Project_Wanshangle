@@ -77,7 +77,7 @@
                 }else{
                     ABLoggerWarn(@"GPS 定位到城市 === %@",placeMark.administrativeArea);
                     [self setUserCity:placeMark.administrativeArea CallBack:nil];
-
+                    
                 }
             }
         };
@@ -180,6 +180,7 @@
             [alertView addButtonWithTitle:@"确定"
                                      type:SIAlertViewButtonTypeDefault
                                   handler:^(SIAlertView *alertView) {
+                                      [[DataBaseManager sharedInstance] cleanUp];
                                       [userDefaults setObject:newCity forKey:UserState];
                                       [userDefaults synchronize];
                                       
@@ -209,6 +210,7 @@
         [alertView addButtonWithTitle:@"确定"
                                  type:SIAlertViewButtonTypeDefault
                               handler:^(SIAlertView *alertView) {
+                                  [[DataBaseManager sharedInstance] cleanUp];
                                   [userDefaults setObject:newCity forKey:UserState];
                                   [userDefaults synchronize];
                                   [[LocationManager defaultLocationManager].cityLabel setTitle:newCity forState:UIControlStateNormal];

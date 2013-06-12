@@ -31,6 +31,7 @@
 
 - (void)didReceiveMemoryWarning
 {
+    ABLoggerWarn(@"接收到内存警告了");
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

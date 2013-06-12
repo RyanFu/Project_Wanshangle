@@ -17,6 +17,8 @@
 +(instancetype)sharedInstance;
 +(void)destroySharedInstance;
 
+-(void)cleanUp;
+
 -(void)setCache:(id)obj forKey:(NSString *)key;
 -(id)getCacheForKey:(NSString *)key;
 

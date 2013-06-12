@@ -45,10 +45,13 @@
 - (BOOL)isToday:(NSString *)timeStamp;
 - (NSString *)getTodayTimeStamp;
 
+- (void)cleanUp;
+
 /************ 关联表 ***************/
 - (MMovie_City *)getFirstMMovie_CityFromCoreData:(NSString *)u_id;
 - (MMovie_City *)insertMMovie_CityWithMovie:(MMovie *)a_movie andCity:(City *)a_city;
-- (void)insertMMovie_CinemaWithMovie:(NSArray *)movies andCinema:(NSArray *)cinemas;
+- (void)insertMMovie_CinemaWithMovies:(NSArray *)movies andCinemas:(NSArray *)cinemas;
+- (void)insertMMovie_CinemaWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema;
 
 /************ 城市 ***************/
 - (void)insertAllCitysIntoCoreData;
