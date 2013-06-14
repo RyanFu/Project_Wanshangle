@@ -29,7 +29,7 @@
     [super awakeFromNib];
     
     [self setSelectionStyle:UITableViewCellSelectionStyleGray];
-//    [self setAccessoryType:UITableViewCellAccessoryCheckmark];
+//    [self setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

@@ -38,7 +38,6 @@
             
             [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
             _cinemaViewController = [[CinemaViewController alloc] initWithNibName:nil bundle:nil];
-            [[CacheManager sharedInstance] setCinemaViewController:_cinemaViewController];
             
         });
     }
@@ -81,6 +80,8 @@
 {
     [super viewDidLoad];
     
+    [[CacheManager sharedInstance] setMovieViewController:self];
+    
     //创建TopView
     UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 7, 140, 30)];
     UIButton *moviebt = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -114,7 +115,6 @@
     _movieTableView.backgroundColor = [UIColor colorWithRed:0.880 green:0.963 blue:0.925 alpha:1.000];
     _movieTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-    //    _moviesArray = [[NSMutableArray alloc] initWithObjects:@"11", @"22",@"33",@"44",@"55",@"66",@"77",@"88",@"99",@"100",nil];
     [self.view addSubview:_movieTableView];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

@@ -9,7 +9,10 @@
 #import "ScheduleViewController.h"
 #import "ApiCmdMovie_getSchedule.h"
 #import "ScheduleTableViewDelegate.h"
+#import "CinemaViewController.h"
+#import "CinemaMovieViewController.h"
 #import "MMovie.h"
+#import "MCinema.h"
 
 @interface ScheduleViewController ()<ApiNotify>{
     
@@ -66,6 +69,7 @@
     [super viewDidLoad];
     
     self.title = _mMovie.name;
+    [self.cinemaButton setTitle:_mCinema.name forState:UIControlStateNormal];
     
     if (!_scheduleTableViewDelegate) {
         _scheduleTableViewDelegate = [[ScheduleTableViewDelegate alloc] init];
@@ -78,6 +82,25 @@
 
 - (IBAction)clickCinemaButton:(id)sender{
     
+    CinemaViewController *cinemaViewController = [CacheManager sharedInstance].cinemaViewController;
+    CinemaMovieViewController *cinemaMovieController = [[CinemaMovieViewController alloc]
+                                                        initWithNibName:(iPhone5?@"CinemaMovieViewController_5":@"CinemaMovieViewController")
+                                                        bundle:nil];
+    cinemaMovieController.mCinema = self.mCinema;
+    cinemaMovieController.mMovie = self.mMovie;
+    
+    NSArray *array = [NSArray arrayWithObjects:
+                      [CacheManager sharedInstance].rootViewController,
+                      [CacheManager sharedInstance].movieViewController,
+                      [CacheManager sharedInstance].cinemaViewController,
+                      cinemaMovieController,nil];
+    
+    cinemaViewController.mMovie = self.mMovie;
+    cinemaViewController.isMovie_Cinema = NO;
+    
+    ABLogger_bool(cinemaViewController.isMovie_Cinema);
+    [self.navigationController setViewControllers:array animated:YES];
+    [cinemaMovieController release];
 }
 
 - (void)cleanUpButtonBackground{

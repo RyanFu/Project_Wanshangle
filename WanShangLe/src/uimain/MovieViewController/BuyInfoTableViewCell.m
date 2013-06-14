@@ -36,7 +36,7 @@
 - (void)awakeFromNib{
     [super awakeFromNib];
     
-    [self setSelectionStyle:UITableViewCellSelectionStyleGray];
+    [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     [self setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
 }
 

@@ -83,6 +83,8 @@
 {
     [super viewDidLoad];
     
+    [[CacheManager sharedInstance] setCinemaViewController:self];
+    
     //创建TopView
     UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 7, 150, 30)];
     UIButton *bt1 = [UIButton buttonWithType:UIButtonTypeCustom];

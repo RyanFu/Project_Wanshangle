@@ -190,7 +190,7 @@ static CGFloat const kLabelVMargin = 10;
     
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:indentifier] autorelease];
-		cell.selectionStyle=UITableViewCellSelectionStyleBlue;
+		cell.selectionStyle=UITableViewCellSelectionStyleNone;
         
         attrLabel = [[OHAttributedLabel alloc] initWithFrame:CGRectMake(10,kLabelVMargin,kLabelWidth,tableView.rowHeight-2*kLabelVMargin)];
         attrLabel.centerVertically = YES;
