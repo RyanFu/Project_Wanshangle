@@ -220,7 +220,7 @@
         [apiClient apiNotifyResult:self error:nil];
     }
     
-    if (nil != delegate) {
+    if (delegate && [delegate respondsToSelector:@selector(apiNotifyResult:error:)]) {
         // call delegate
         [delegate apiNotifyResult:self error:nil];
     }else{
@@ -235,7 +235,7 @@
 {
     NSError *error = [request error];
 
-    if (nil != delegate) {
+    if (delegate && [delegate respondsToSelector:@selector(apiNotifyResult:error:)]) {
         // call delegate
         [delegate apiNotifyResult:self error:error];
     }else{

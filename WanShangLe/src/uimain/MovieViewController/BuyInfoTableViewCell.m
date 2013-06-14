@@ -37,7 +37,7 @@
     [super awakeFromNib];
     
     [self setSelectionStyle:UITableViewCellSelectionStyleGray];
-//    [self setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+    [self setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
 }
 
 - (void)dealloc{

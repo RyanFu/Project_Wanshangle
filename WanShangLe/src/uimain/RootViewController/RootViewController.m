@@ -53,6 +53,8 @@
 {
     [super viewDidLoad];
     
+    [[CacheManager sharedInstance] setRootViewController:self];
+    
     [LocationManager defaultLocationManager].cityLabel = _cityButton;
     
     [[SIAlertView appearance] setMessageFont:[UIFont systemFontOfSize:20]];
@@ -80,6 +82,7 @@
     
     if (!_movieViewController) {
         _movieViewController = [[MovieViewController alloc] initWithNibName:nil bundle:nil];
+        [[CacheManager sharedInstance] setMovieViewController:_movieViewController];
     }
 
     [self.navigationController pushViewController:_movieViewController animated:YES];

@@ -11,6 +11,7 @@
 #import "CinemaTableViewCell.h"
 #import "CinemaTableViewCellSection.h"
 #import "ScheduleViewController.h"
+#import "CinemaMovieViewController.h"
 #import "MCinema.h"
 
 @interface CinemaListTableViewDelegate(){
@@ -149,7 +150,13 @@
             [_parentViewController.navigationController pushViewController:scheduleViewController animated:YES];
             [scheduleViewController release];
         }else{
-            
+            CinemaMovieViewController *cinemaMovieController = [[CinemaMovieViewController alloc]
+                                                                initWithNibName:(iPhone5?@"CinemaMovieViewController_5":@"CinemaMovieViewController")
+                                                                bundle:nil];
+            cinemaMovieController.mCinema = mCinema;
+            cinemaMovieController.mMovie = _parentViewController.mMovie;
+            [_parentViewController.navigationController pushViewController:cinemaMovieController animated:YES];
+            [cinemaMovieController release];
         }
         
     }
