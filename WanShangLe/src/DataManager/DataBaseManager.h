@@ -15,10 +15,12 @@
  */
 
 @class ApiCmdMovie_getAllMovies,ApiCmdMovie_getAllCinemas;
+@class ApiCmdMovie_getSchedule;
 @class City;
 @class MMovie,MCinema;
 @class MMovie_City;
 @class MMovie_Cinema;
+@class MSchedule;
 @class ApiCmd;
 
 @interface DataBaseManager : NSObject{
@@ -45,10 +47,13 @@
 - (BOOL)isToday:(NSString *)timeStamp;
 - (NSString *)getTodayTimeStamp;
 
+- (void)cleanUp;
+
 /************ 关联表 ***************/
 - (MMovie_City *)getFirstMMovie_CityFromCoreData:(NSString *)u_id;
 - (MMovie_City *)insertMMovie_CityWithMovie:(MMovie *)a_movie andCity:(City *)a_city;
-- (void)insertMMovie_CinemaWithMovie:(NSArray *)movies andCinema:(NSArray *)cinemas;
+- (void)insertMMovie_CinemaWithMovies:(NSArray *)movies andCinemas:(NSArray *)cinemas;
+- (void)insertMMovie_CinemaWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema;
 
 /************ 城市 ***************/
 - (void)insertAllCitysIntoCoreData;
@@ -63,6 +68,21 @@
 - (NSUInteger)getCountOfMoviesListFromCoreDataWithCityName:(NSString *)cityName;
 - (void)insertMoviesIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData;
+
+//获得排期
+- (ApiCmdMovie_getSchedule *)getScheduleFromWebWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema delegate:(id<ApiNotify>)delegate;
+- (NSArray *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema isToday:(BOOL)isToday;
+- (void)insertScheduleIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd withaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema;
+
+//购买信息
+- (ApiCmdMovie_getBuyInfo *)getBuyInfoFromWebWithaMovie:(MMovie *)aMovie
+                                               aCinema:(MCinema *)aCinema
+                                                aSchedule:(NSString *)aSchedule
+                                                 delegate:(id<ApiNotify>)delegate;
+- (void)insertBuyInfoIntoCoreDataFromObject:(NSDictionary *)objectData
+                                 withApiCmd:(ApiCmd*)apiCmd
+                                 withaMovie:(MMovie *)aMovie
+                                 andaCinema:(MCinema *)aCinema;
 
 /************ 影院 ***************/
 - (ApiCmdMovie_getAllCinemas *)getAllCinemasListFromWeb:(id<ApiNotify>)delegate;

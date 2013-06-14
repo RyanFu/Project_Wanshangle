@@ -335,6 +335,7 @@ static CGFloat const kLabelVMargin = 10;
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+    ABLoggerWarn(@"接收到内存警告了");
     // Dispose of any resources that can be recreated.
 }
 

@@ -25,6 +25,10 @@ static CacheManager *_sharedInstance = nil;
     _sharedInstance = nil;
 }
 
+- (void)cleanUp{
+    [mUserDefaults removeAllObjects];
+}
+
 -(id)init {
     
     self = [super init];

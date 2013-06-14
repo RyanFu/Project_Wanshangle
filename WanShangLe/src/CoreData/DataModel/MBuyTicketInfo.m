@@ -12,6 +12,7 @@
 
 @implementation MBuyTicketInfo
 
+@synthesize uid;
 @dynamic groupBuyInfo;
 @dynamic schedule;
 

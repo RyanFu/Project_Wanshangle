@@ -13,6 +13,7 @@
 
 @implementation MSchedule
 
+@dynamic uid;
 @dynamic date;
 @dynamic isToday;
 @dynamic lowPrice;

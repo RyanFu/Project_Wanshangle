@@ -23,7 +23,6 @@
     UIButton *cinemaButton;
 }
 @property(nonatomic,retain)MovieListTableViewDelegate *movieDelegate;
-@property(nonatomic,retain)CinemaViewController *cinemaViewController;
 @end
 
 @implementation MovieViewController
@@ -118,9 +117,9 @@
     [self.view addSubview:_movieTableView];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-         [self updateData:0];
+        [self updateData:0];
     });
-   
+    
 }
 
 - (void)setTableViewDelegate{
@@ -142,6 +141,7 @@
         _cinemaViewController = [[CinemaViewController alloc] initWithNibName:nil bundle:nil];
     }
     
+    _cinemaViewController.isMovie_Cinema = NO;
     [self.navigationController pushViewController:_cinemaViewController animated:YES];
 }
 
@@ -161,7 +161,7 @@
         int tag = [[apiCmd httpRequest] tag];
         [self updateData:tag];
     });
- 
+    
 }
 
 - (void) apiNotifyLocationResult:(id) apiCmd  error:(NSError*) error{
@@ -220,6 +220,7 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+    ABLoggerWarn(@"接收到内存警告了");
     // Dispose of any resources that can be recreated.
 }
 

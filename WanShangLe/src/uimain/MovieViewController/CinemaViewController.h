@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class MMovie;
+
 typedef NS_ENUM(NSInteger, NSFilterCinemaListType) {
     NSFilterCinemaListTypeFavorite = 0,          
     NSFilterCinemaListTypeNearby,          
@@ -15,6 +17,8 @@ typedef NS_ENUM(NSInteger, NSFilterCinemaListType) {
 };
 
 @interface CinemaViewController : UIViewController
+@property(nonatomic,assign)BOOL isMovie_Cinema;
+@property(nonatomic,retain)MMovie *mMovie;
 @property(nonatomic,retain)UITableView *cinemaTableView;
 @property(nonatomic,retain)NSArray *cinemasArray;
 @end

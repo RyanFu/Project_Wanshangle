@@ -32,7 +32,9 @@
 
 //API HTTPRequest Tag
 #define API_MMovieCmd  100 //电影
-#define API_MCinemaCmd 200 //影院
+#define API_MCinemaCmd 101 //影院
+#define API_MScheduleCmd 102 //影院
+#define API_MBuyInfoCmd 103 //影院
 
 #define TestCode
 
@@ -40,6 +42,8 @@
 #define UpdatingMoviesList @"UpdatingMoviesList" //正在抓取 电影数据
 //影院数据
 #define UpdatingCinemasList @"UpdatingCinemasList" //正在抓取 影院数据
+//关联表
+#define InsertingMovie_CinemaList @"InsertingMovie_CinemaList" //正在抓取 影院数据
 
 //用户选择的城市
 #define UserState @"administrativeArea"

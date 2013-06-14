@@ -10,6 +10,7 @@
 #import "CinemaViewController.h"
 #import "CinemaTableViewCell.h"
 #import "CinemaTableViewCellSection.h"
+#import "ScheduleViewController.h"
 #import "MCinema.h"
 
 @interface CinemaListTableViewDelegate(){
@@ -137,8 +138,19 @@
     {
         NSDictionary *dic = [_parentViewController.cinemasArray objectAtIndex:indexPath.section];
         NSArray *list = [dic objectForKey:@"list"];
-        MCinema *item = [list objectAtIndex:indexPath.row-1];
-        ABLoggerMethod();
+        MCinema *mCinema = [list objectAtIndex:indexPath.row-1];
+
+        if (_parentViewController.isMovie_Cinema) {
+            ScheduleViewController *scheduleViewController = [[ScheduleViewController alloc]
+                                                              initWithNibName:(iPhone5?@"ScheduleViewController_5":@"ScheduleViewController")
+                                                              bundle:nil];
+            scheduleViewController.mCinema = mCinema;
+            scheduleViewController.mMovie = _parentViewController.mMovie;
+            [_parentViewController.navigationController pushViewController:scheduleViewController animated:YES];
+            [scheduleViewController release];
+        }else{
+            
+        }
         
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
