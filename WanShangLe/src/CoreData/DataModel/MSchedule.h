@@ -13,6 +13,7 @@
 
 @interface MSchedule : NSManagedObject
 
+@property (nonatomic, retain) NSString * uid;
 @property (nonatomic, retain) NSNumber * date;
 @property (nonatomic, retain) NSNumber * isToday;
 @property (nonatomic, retain) NSNumber * lowPrice;

@@ -23,7 +23,6 @@
     UIButton *cinemaButton;
 }
 @property(nonatomic,retain)MovieListTableViewDelegate *movieDelegate;
-@property(nonatomic,retain)CinemaViewController *cinemaViewController;
 @end
 
 @implementation MovieViewController
@@ -142,6 +141,7 @@
         _cinemaViewController = [[CinemaViewController alloc] initWithNibName:nil bundle:nil];
     }
     
+    _cinemaViewController.isMovie_Cinema = NO;
     [self.navigationController pushViewController:_cinemaViewController animated:YES];
 }
 

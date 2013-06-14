@@ -10,10 +10,13 @@
 #import "ASIHTTPRequest.h"
 #import "ApiCmdMovie_getAllMovies.h"
 #import "ApiCmdMovie_getAllCinemas.h"
+#import "ApiCmdMovie_getSchedule.h"
+#import "ApiCmdMovie_getBuyInfo.h"
 #import "MMovie_Cinema.h"
 #import "MMovie_City.h"
 #import "MMovie.h"
 #import "MCinema.h"
+#import "MSchedule.h"
 #import "City.h"
 
 
@@ -409,6 +412,186 @@ static DataBaseManager *_sharedInstance = nil;
     mMovie.twoD = [[amovieData objectForKey:@"viewtypes"] objectAtIndex:0];
     mMovie.threeD = [[amovieData objectForKey:@"viewtypes"] objectAtIndex:1];
     mMovie.iMaxD = [[amovieData objectForKey:@"viewtypes"] objectAtIndex:2];
+}
+
+#pragma mark 获得排期
+- (ApiCmdMovie_getSchedule *)getScheduleFromWebWithaMovie:(MMovie *)aMovie
+                                               andaCinema:(MCinema *)aCinema
+                                                 delegate:(id<ApiNotify>)delegate
+{
+    ABLoggerDebug(@"=== %@",[[CacheManager sharedInstance] mUserDefaults]);
+    
+//    if ([[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]) {
+//        ABLoggerWarn(@"不能请求影院列表数据，因为已经请求了 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
+//        return nil;
+//    }
+    
+//    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:UpdatingCinemasList];
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmdMovie_getSchedule* apiCmdMovie_getSchedule = [[ApiCmdMovie_getSchedule alloc] init];
+    apiCmdMovie_getSchedule.delegate = delegate;
+    apiCmdMovie_getSchedule.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    [apiClient executeApiCmdAsync:apiCmdMovie_getSchedule];
+    [apiCmdMovie_getSchedule.httpRequest setTag:API_MScheduleCmd];
+    
+     return [apiCmdMovie_getSchedule autorelease];
+}
+
+- (NSArray *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema isToday:(BOOL)isToday{
+    return nil;
+}
+
+/*
+ {
+ data =     {
+ schedule =         (
+ {
+ cinemaId = 10011;
+ count = 11;
+ lowprice = 35;
+ starts =                 (
+ "9:20",
+ "9:40",
+ "10:20",
+ "10:40",
+ "12:20",
+ "13:20",
+ "13:40",
+ "15:20",
+ "17:20",
+ "19:20",
+ "21:20"
+ );
+ viewtypes =                 (
+ 1,
+ 0,
+ 0
+ );
+ },
+ {
+ cinemaId = 10011;
+ count = 11;
+ lowprice = 35;
+ starts =                 (
+ "9:20",
+ "9:40",
+ "10:20",
+ "10:40",
+ "12:20",
+ "13:20",
+ "13:40",
+ "15:20",
+ "17:20",
+ "19:20",
+ "21:20"
+ );
+ viewtypes =                 (
+ 1,
+ 0,
+ 0
+ );
+ }
+ );
+ };
+ errors =     (
+ );
+ }[;
+ */
+
+- (void)insertScheduleIntoCoreDataFromObject:(NSDictionary *)objectData
+                                  withApiCmd:(ApiCmd*)apiCmd
+                                  withaMovie:(MMovie *)aMovie
+                                  andaCinema:(MCinema *)aCinema{
+    
+    NSDictionary *dataDic = [objectData objectForKey:@"data"];
+    
+    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%d",[aCinema.city name],[aCinema.uid intValue],[aMovie.uid intValue]];
+   MMovie_Cinema *movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    if (movie_cinema == nil) {
+        movie_cinema = [MMovie_Cinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    }
+    
+    if (!movie_cinema.schedule) {
+        movie_cinema.schedule = [MSchedule MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    }
+    
+    movie_cinema.schedule.scheduleInfo = dataDic;
+    
+    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"排期 保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
+    
+    [movie_cinema_uid release];
+}
+
+#pragma mark 购买信息
+- (ApiCmdMovie_getBuyInfo *)getBuyInfoFromWebWithaMovie:(MMovie *)aMovie
+                                                 aCinema:(MCinema *)aCinema
+                                               aSchedule:(NSString *)aSchedule
+                                                delegate:(id<ApiNotify>)delegate
+{
+    ABLoggerDebug(@"=== %@",[[CacheManager sharedInstance] mUserDefaults]);
+    
+    //    if ([[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]) {
+    //        ABLoggerWarn(@"不能请求影院列表数据，因为已经请求了 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
+    //        return nil;
+    //    }
+    
+    //    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:UpdatingCinemasList];
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmdMovie_getBuyInfo* apiCmdMovie_getBuyInfo = [[ApiCmdMovie_getBuyInfo alloc] init];
+    apiCmdMovie_getBuyInfo.delegate = delegate;
+    apiCmdMovie_getBuyInfo.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    [apiClient executeApiCmdAsync:apiCmdMovie_getBuyInfo];
+    [apiCmdMovie_getBuyInfo.httpRequest setTag:API_MBuyInfoCmd];
+    
+    return [apiCmdMovie_getBuyInfo autorelease];
+}
+
+/*
+ {
+ "errors":[],
+ "data":{
+ "count":6,
+ "vendors":[
+ {
+ "vendorId":"100001",
+ "name":"美团",
+ "price":30,
+ "channel":[1,0,0],
+ "img":"http://xxxxxx.jpg",
+ "url":"http://www.meituan.com/",
+ "clicks":2321,
+ "intro":"使用规则"
+ },
+ */
+- (void)insertBuyInfoIntoCoreDataFromObject:(NSDictionary *)objectData
+                                 withApiCmd:(ApiCmd*)apiCmd
+                                 withaMovie:(MMovie *)aMovie
+                                 andaCinema:(MCinema *)aCinema{
+    NSDictionary *dataDic = [objectData objectForKey:@"data"];
+    
+    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%d",[aCinema.city name],[aCinema.uid intValue],[aMovie.uid intValue]];
+    MMovie_Cinema *movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    if (movie_cinema == nil) {
+        movie_cinema = [MMovie_Cinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    }
+    
+    if (!movie_cinema.schedule) {
+        movie_cinema.schedule = [MSchedule MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    }
+    
+    movie_cinema.schedule.scheduleInfo = dataDic;
+    
+    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"排期 保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
+    
+    [movie_cinema_uid release];
 }
 //========================================= 电影 =========================================/
 

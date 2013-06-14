@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@class CinemaViewController;
+
 @interface MovieViewController : UIViewController{
     
 }
+@property(nonatomic,retain)CinemaViewController *cinemaViewController;
 @property(nonatomic,retain)UITableView *movieTableView;
 @property(nonatomic,retain)NSArray *moviesArray;
 @end

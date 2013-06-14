@@ -5,10 +5,10 @@
 //  Created by stephenliu on 13-6-8.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
-
 #import "MovieListTableViewDelegate.h"
 #import "MovieViewController.h"
 #import "MovieTableViewCell.h"
+#import "CinemaViewController.h"
 #import "UIImageView+WebCache.h"
 #import "MMovie.h"
 
@@ -72,6 +72,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    _parentViewController.cinemaViewController.isMovie_Cinema = YES;
+    _parentViewController.cinemaViewController.mMovie = [_parentViewController.moviesArray objectAtIndex:indexPath.row];
+    [_parentViewController.navigationController pushViewController:_parentViewController.cinemaViewController animated:YES];
 }
 
 

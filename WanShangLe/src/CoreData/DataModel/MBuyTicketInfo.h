@@ -13,6 +13,7 @@
 
 @interface MBuyTicketInfo : NSManagedObject
 
+@property (nonatomic, retain) NSString * uid;
 @property (nonatomic, retain) id groupBuyInfo;
 @property (nonatomic, retain) MSchedule *schedule;
 

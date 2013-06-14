@@ -19,7 +19,11 @@
     UIButton *favoriteButton;
     UIButton *nearbyButton;
     UIButton *allButton;
+    UIButton *movieDetailButton;
+    UIButton *searchButton;
 }
+@property(nonatomic,retain)UIView *headerView;
+@property(nonatomic,retain)UIButton *movieDetailButton;
 @property(nonatomic,retain)CinemaListTableViewDelegate *cinemaDelegate;
 @property(nonatomic,retain)CinemaSearchViewController *cinemaSearchViewControlelr;
 @end
@@ -41,16 +45,21 @@
     self.cinemaDelegate = nil;
     self.cinemaTableView = nil;
     self.cinemaSearchViewControlelr = nil;
+    self.mMovie = nil;
+    self.movieDetailButton = nil;
+    self.headerView = nil;
     [super dealloc];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [self.navigationController setNavigationBarHidden:NO];
     
+    [self initMovieCinemaView];
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
     });
-//    [self updateData:0];
+    //    [self updateData:0];
     
 #ifdef TestCode
     //[self updatData];//测试代码
@@ -98,12 +107,12 @@
     [topView release];
     
     //create movie tableview and init
-    _cinemaTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, iPhoneAppFrame.size.width, iPhoneAppFrame.size.height-44)
+    _cinemaTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 70, iPhoneAppFrame.size.width, iPhoneAppFrame.size.height-70)
                                                     style:UITableViewStylePlain];
     
     _cinemaDelegate = [[CinemaListTableViewDelegate alloc] init];
     _cinemaDelegate.parentViewController = self;
-
+    
     [self setTableViewDelegate];
     _cinemaTableView.backgroundColor = [UIColor colorWithRed:0.880 green:0.963 blue:0.925 alpha:1.000];
     _cinemaTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
@@ -111,15 +120,33 @@
     _cinemaTableView.sectionHeaderHeight = 0;
     _cinemaDelegate.isOpen = NO;
     
-    UIButton *tableHeaderView = [UIButton buttonWithType:UIButtonTypeCustom];
-    tableHeaderView.frame = CGRectMake(0, 0, 320, 40);
-    [tableHeaderView setBackgroundColor:[UIColor colorWithRed:1.000 green:0.329 blue:0.663 alpha:1.000]];
-    [tableHeaderView setTitle:@"搜索" forState:UIControlStateNormal];
-    [tableHeaderView addTarget:self action:@selector(clickSearchBar:) forControlEvents:UIControlEventTouchUpInside];
-    _cinemaTableView.tableHeaderView = tableHeaderView;
-    [tableHeaderView release];
+    _headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
     
+    UIButton *searchBt = [UIButton buttonWithType:UIButtonTypeCustom];
+    searchButton = searchBt;
+    searchBt.frame = CGRectMake(0, 0, 320, 40);
+    [searchBt setBackgroundColor:[UIColor colorWithRed:1.000 green:0.329 blue:0.663 alpha:1.000]];
+    [searchBt setTitle:@"搜索" forState:UIControlStateNormal];
+    [searchBt addTarget:self action:@selector(clickSearchBar:) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.movieDetailButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _movieDetailButton.frame = CGRectMake(0, 0, 320, 70);
+    [_movieDetailButton setBackgroundColor:[UIColor colorWithRed:0.801 green:1.000 blue:0.777 alpha:1.000]];
+    [_movieDetailButton addTarget:self action:@selector(clickMovieDetail:) forControlEvents:UIControlEventTouchUpInside];
+    UILabel *movieLabel = [[UILabel alloc] initWithFrame:_movieDetailButton.bounds];
+    [movieLabel setBackgroundColor:[UIColor clearColor]];
+    [movieLabel setTextAlignment:UITextAlignmentLeft];
+    [movieLabel setNumberOfLines:3];
+    [movieLabel setText:@"电影:钢铁侠   豆瓣评分:8.9 (12万人) \n\n 主演:范冰冰，唐尼        120分钟"];
+    [_movieDetailButton addSubview:movieLabel];
+    [movieLabel release];
+    
+    [_headerView addSubview:searchBt];
+    _cinemaTableView.tableHeaderView = _headerView;
+    
+    [self.view addSubview:_movieDetailButton];
     [self.view addSubview:_cinemaTableView];
+    [self initMovieCinemaView];
     
     [favoriteButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
 }
@@ -127,6 +154,26 @@
 - (void)setTableViewDelegate{
     _cinemaTableView.dataSource = _cinemaDelegate;
     _cinemaTableView.delegate = _cinemaDelegate;
+}
+
+- (void)initMovieCinemaView{
+    
+    
+    if (!_cinemaTableView.tableHeaderView) {
+        return;
+    }
+    
+    if (_isMovie_Cinema) {
+        movieDetailButton.hidden = NO;
+        _cinemaTableView.frame = CGRectMake(0, 70, self.view.bounds.size.width, self.view.bounds.size.height-70);
+    }else{
+        movieDetailButton.hidden = YES;
+        _cinemaTableView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    }
+}
+
+- (void)clickMovieDetail:(id)sender{
+    
 }
 
 - (void)clickSearchBar:(id)sender{
@@ -140,10 +187,10 @@
     }else{
         ABLoggerWarn(@"======== 还没有电影院");
     }
-
-//    [self presentModalViewController:_cinemaSearchViewControlelr animated:YES];
-//    CinemaSearchViewController *searchController = [[CinemaSearchViewController alloc] initWithNibName:nil bundle:nil];
-//    [searchController release];
+    
+    //    [self presentModalViewController:_cinemaSearchViewControlelr animated:YES];
+    //    CinemaSearchViewController *searchController = [[CinemaSearchViewController alloc] initWithNibName:nil bundle:nil];
+    //    [searchController release];
 }
 
 #pragma mark-
@@ -173,13 +220,13 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         [[DataBaseManager sharedInstance] insertCinemasIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
-
+        
         int tag = [[apiCmd httpRequest] tag];
         [self updateData:tag];
-    
+        
     });
     
-
+    
 }
 
 - (void) apiNotifyLocationResult:(id) apiCmd  error:(NSError*) error{
@@ -197,7 +244,7 @@
         case 0:
         case API_MCinemaCmd:
         {
-           [self formatCinemaData];
+            [self formatCinemaData];
             [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingCinemasList];
             ABLoggerWarn(@"可以请求 影院列表数据 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
         }
@@ -211,41 +258,41 @@
 }
 
 - (void)formatCinemaData{
+    
+    NSArray *array_coreData = [[DataBaseManager sharedInstance] getAllCinemasListFromCoreData];
+    ABLoggerDebug(@"主电影院count ==== %d",[array_coreData count]);
+    
+    NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:10];
+    NSMutableArray *dataArray = [[NSMutableArray alloc] initWithCapacity:10];
+    
+    for (MCinema *tcinema in array_coreData) {
+        NSString *key = tcinema.district;
         
-        NSArray *array_coreData = [[DataBaseManager sharedInstance] getAllCinemasListFromCoreData];
-        ABLoggerDebug(@"主电影院count ==== %d",[array_coreData count]);
-        
-        NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:10];
-        NSMutableArray *dataArray = [[NSMutableArray alloc] initWithCapacity:10];
-        
-        for (MCinema *tcinema in array_coreData) {
-            NSString *key = tcinema.district;
-
-            if (![districtDic objectForKey:key]) {
-                
-                NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:10];
-                [districtDic setObject:tarray forKey:key];
-                [tarray release];
-            }
+        if (![districtDic objectForKey:key]) {
             
-            [[districtDic objectForKey:key] addObject:tcinema];
+            NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:10];
+            [districtDic setObject:tarray forKey:key];
+            [tarray release];
         }
         
-        for (NSString *key in [districtDic allKeys]) {
-            NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                 [districtDic objectForKey:key],@"list",
-                                 key,@"name",nil];
-            [dataArray addObject:dic];
-            [dic release];
-        }
-        self.cinemasArray = dataArray;
-        [dataArray release];
-        [districtDic release];
-        
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            [self setTableViewDelegate];
-            [self.cinemaTableView reloadData];
-        });
+        [[districtDic objectForKey:key] addObject:tcinema];
+    }
+    
+    for (NSString *key in [districtDic allKeys]) {
+        NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:
+                             [districtDic objectForKey:key],@"list",
+                             key,@"name",nil];
+        [dataArray addObject:dic];
+        [dic release];
+    }
+    self.cinemasArray = dataArray;
+    [dataArray release];
+    [districtDic release];
+    
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [self setTableViewDelegate];
+        [self.cinemaTableView reloadData];
+    });
 }
 
 - (void)didReceiveMemoryWarning

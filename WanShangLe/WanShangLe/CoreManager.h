@@ -32,7 +32,9 @@
 
 //API HTTPRequest Tag
 #define API_MMovieCmd  100 //电影
-#define API_MCinemaCmd 200 //影院
+#define API_MCinemaCmd 101 //影院
+#define API_MScheduleCmd 102 //影院
+#define API_MBuyInfoCmd 103 //影院
 
 #define TestCode
 
