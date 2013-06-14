@@ -17,6 +17,7 @@
 #import "MMovie.h"
 #import "MCinema.h"
 #import "MSchedule.h"
+#import "MBuyTicketInfo.h"
 #import "City.h"
 
 
@@ -83,6 +84,11 @@ static DataBaseManager *_sharedInstance = nil;
     
     ABLoggerInfo(@"DataBase 数据库大小 ========= %f M",(fileSize/1024.0/1024.0));
     return fileSize;
+}
+
+- (NSString*)md5PathForKey:(NSString *) key{
+    
+    return md5(key);
 }
 
 #pragma mark -
@@ -421,12 +427,12 @@ static DataBaseManager *_sharedInstance = nil;
 {
     ABLoggerDebug(@"=== %@",[[CacheManager sharedInstance] mUserDefaults]);
     
-//    if ([[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]) {
-//        ABLoggerWarn(@"不能请求影院列表数据，因为已经请求了 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
-//        return nil;
-//    }
+    //    if ([[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]) {
+    //        ABLoggerWarn(@"不能请求影院列表数据，因为已经请求了 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
+    //        return nil;
+    //    }
     
-//    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:UpdatingCinemasList];
+    //    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:UpdatingCinemasList];
     ApiClient* apiClient = [ApiClient defaultClient];
     
     ApiCmdMovie_getSchedule* apiCmdMovie_getSchedule = [[ApiCmdMovie_getSchedule alloc] init];
@@ -435,7 +441,7 @@ static DataBaseManager *_sharedInstance = nil;
     [apiClient executeApiCmdAsync:apiCmdMovie_getSchedule];
     [apiCmdMovie_getSchedule.httpRequest setTag:API_MScheduleCmd];
     
-     return [apiCmdMovie_getSchedule autorelease];
+    return [apiCmdMovie_getSchedule autorelease];
 }
 
 - (NSArray *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema isToday:(BOOL)isToday{
@@ -507,7 +513,7 @@ static DataBaseManager *_sharedInstance = nil;
     NSDictionary *dataDic = [objectData objectForKey:@"data"];
     
     NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%d",[aCinema.city name],[aCinema.uid intValue],[aMovie.uid intValue]];
-   MMovie_Cinema *movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    MMovie_Cinema *movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     if (movie_cinema == nil) {
         movie_cinema = [MMovie_Cinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     }
@@ -528,9 +534,9 @@ static DataBaseManager *_sharedInstance = nil;
 
 #pragma mark 购买信息
 - (ApiCmdMovie_getBuyInfo *)getBuyInfoFromWebWithaMovie:(MMovie *)aMovie
-                                                 aCinema:(MCinema *)aCinema
-                                               aSchedule:(NSString *)aSchedule
-                                                delegate:(id<ApiNotify>)delegate
+                                                aCinema:(MCinema *)aCinema
+                                              aSchedule:(NSString *)aSchedule
+                                               delegate:(id<ApiNotify>)delegate
 {
     ABLoggerDebug(@"=== %@",[[CacheManager sharedInstance] mUserDefaults]);
     
@@ -571,27 +577,27 @@ static DataBaseManager *_sharedInstance = nil;
 - (void)insertBuyInfoIntoCoreDataFromObject:(NSDictionary *)objectData
                                  withApiCmd:(ApiCmd*)apiCmd
                                  withaMovie:(MMovie *)aMovie
-                                 andaCinema:(MCinema *)aCinema{
+                                 andaCinema:(MCinema *)aCinema
+                                  aSchedule:(NSString *)aSchedule{
+    
     NSDictionary *dataDic = [objectData objectForKey:@"data"];
     
-    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%d",[aCinema.city name],[aCinema.uid intValue],[aMovie.uid intValue]];
-    MMovie_Cinema *movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-    if (movie_cinema == nil) {
-        movie_cinema = [MMovie_Cinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    NSString *movie_cinema_schedule_uid = [[NSString alloc] initWithFormat:@"%d%d%@",[aCinema.uid intValue],[aMovie.uid intValue],aSchedule];
+    movie_cinema_schedule_uid = [self md5PathForKey:movie_cinema_schedule_uid];
+    MBuyTicketInfo *buyInfo = [MBuyTicketInfo MR_findFirstByAttribute:@"uid" withValue:movie_cinema_schedule_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    if (buyInfo == nil) {
+        buyInfo = [MBuyTicketInfo MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     }
-    
-    if (!movie_cinema.schedule) {
-        movie_cinema.schedule = [MSchedule MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-    }
-    
-    movie_cinema.schedule.scheduleInfo = dataDic;
+
+    buyInfo.uid = movie_cinema_schedule_uid;
+    buyInfo.groupBuyInfo = dataDic;
     
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         ABLoggerDebug(@"排期 保存是否成功 ========= %d",success);
         ABLoggerDebug(@"错误信息 ========= %@",[error description]);
     }];
     
-    [movie_cinema_uid release];
+    [movie_cinema_schedule_uid release];
 }
 //========================================= 电影 =========================================/
 

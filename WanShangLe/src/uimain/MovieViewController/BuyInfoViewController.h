@@ -11,7 +11,13 @@
 @class MMovie,MCinema;
 
 @interface BuyInfoViewController : UIViewController
+
 @property(nonatomic,retain) IBOutlet UITableView *mTableView;
+@property(nonatomic,retain) IBOutlet UILabel *movieName;
+@property(nonatomic,retain) IBOutlet UILabel *cinemaName;
+@property(nonatomic,retain) IBOutlet UILabel *movieInfo;
+@property(nonatomic,retain) IBOutlet UILabel *cinemaInfo;
+
 @property(nonatomic,retain) MMovie *mMovie;
 @property(nonatomic,retain) MCinema *mCinema;
 @property(nonatomic,retain) NSString *schedule;

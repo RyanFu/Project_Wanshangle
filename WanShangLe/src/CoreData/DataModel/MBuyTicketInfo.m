@@ -14,6 +14,5 @@
 
 @synthesize uid;
 @dynamic groupBuyInfo;
-@dynamic schedule;
 
 @end

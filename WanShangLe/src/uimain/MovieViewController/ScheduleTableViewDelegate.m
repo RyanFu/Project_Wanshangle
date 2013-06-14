@@ -8,6 +8,7 @@
 #import "ScheduleTableViewDelegate.h"
 #import "ScheduleTableViewCell.h"
 #import "ScheduleViewController.h"
+#import "BuyInfoViewController.h"
 #import "MSchedule.h"
 
 @implementation ScheduleTableViewDelegate
@@ -59,7 +60,13 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-
+    
+    BuyInfoViewController *buyInfoController = [[BuyInfoViewController alloc] initWithNibName:(iPhone5?@"BuyInfoViewController_5":@"BuyInfoViewController") bundle:nil];
+    buyInfoController.schedule = [_parentViewController.schedulesArray objectAtIndex:indexPath.row];
+    buyInfoController.mMovie = _parentViewController.mMovie;
+    buyInfoController.mCinema = _parentViewController.mCinema;
+    [_parentViewController.navigationController pushViewController:buyInfoController animated:YES];
+    [buyInfoController release];
 }
 
 

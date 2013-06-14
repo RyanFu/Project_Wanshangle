@@ -27,7 +27,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = _mMovie.name;
         [[DataBaseManager sharedInstance] getScheduleFromWebWithaMovie:_mMovie andaCinema:_mCinema delegate:self];
     }
     return self;
@@ -65,6 +64,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.title = _mMovie.name;
     
     if (!_scheduleTableViewDelegate) {
         _scheduleTableViewDelegate = [[ScheduleTableViewDelegate alloc] init];

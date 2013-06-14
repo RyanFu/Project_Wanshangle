@@ -15,7 +15,7 @@
  */
 
 @class ApiCmdMovie_getAllMovies,ApiCmdMovie_getAllCinemas;
-@class ApiCmdMovie_getSchedule;
+@class ApiCmdMovie_getSchedule,ApiCmdMovie_getBuyInfo;
 @class City;
 @class MMovie,MCinema;
 @class MMovie_City;
@@ -43,6 +43,9 @@
 	@returns res size
  */
 - (unsigned long long int)folderSize:(NSString *)folderPath;
+
+//database uid key
+- (NSString*)md5PathForKey:(NSString *) key;
 
 - (BOOL)isToday:(NSString *)timeStamp;
 - (NSString *)getTodayTimeStamp;
@@ -82,7 +85,8 @@
 - (void)insertBuyInfoIntoCoreDataFromObject:(NSDictionary *)objectData
                                  withApiCmd:(ApiCmd*)apiCmd
                                  withaMovie:(MMovie *)aMovie
-                                 andaCinema:(MCinema *)aCinema;
+                                 andaCinema:(MCinema *)aCinema
+                                 aSchedule:(NSString *)aSchedule;
 
 /************ 影院 ***************/
 - (ApiCmdMovie_getAllCinemas *)getAllCinemasListFromWeb:(id<ApiNotify>)delegate;

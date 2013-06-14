@@ -68,6 +68,7 @@
 		5A4342501769F93800F2C66F /* BuyInfoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A43424E1769F93700F2C66F /* BuyInfoTableViewCell.xib */; };
 		5A4342531769F97B00F2C66F /* BuyInfoTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4342521769F97700F2C66F /* BuyInfoTableViewDelegate.m */; };
 		5A4342561769FB2C00F2C66F /* ApiCmdMovie_getBuyInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4342551769FB2C00F2C66F /* ApiCmdMovie_getBuyInfo.m */; };
+		5A4EDD61176AB76F00FC6E27 /* BuyInfoViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A4EDD60176AB76F00FC6E27 /* BuyInfoViewController_5.xib */; };
 		5A5A865E1762D274004E3FF7 /* MCinema.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A865D1762D274004E3FF7 /* MCinema.m */; };
 		5A5A86611762E43E004E3FF7 /* MovieListTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A86601762E43E004E3FF7 /* MovieListTableViewDelegate.m */; };
 		5A5A86641762E456004E3FF7 /* CinemaListTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A86631762E456004E3FF7 /* CinemaListTableViewDelegate.m */; };
@@ -295,6 +296,7 @@
 		5A4342521769F97700F2C66F /* BuyInfoTableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuyInfoTableViewDelegate.m; sourceTree = "<group>"; };
 		5A4342541769FB2C00F2C66F /* ApiCmdMovie_getBuyInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCmdMovie_getBuyInfo.h; sourceTree = "<group>"; };
 		5A4342551769FB2C00F2C66F /* ApiCmdMovie_getBuyInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmdMovie_getBuyInfo.m; sourceTree = "<group>"; };
+		5A4EDD60176AB76F00FC6E27 /* BuyInfoViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BuyInfoViewController_5.xib; sourceTree = "<group>"; };
 		5A5A865C1762D274004E3FF7 /* MCinema.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCinema.h; sourceTree = "<group>"; };
 		5A5A865D1762D274004E3FF7 /* MCinema.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCinema.m; sourceTree = "<group>"; };
 		5A5A865F1762E43D004E3FF7 /* MovieListTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieListTableViewDelegate.h; sourceTree = "<group>"; };
@@ -1206,6 +1208,7 @@
 				5A4342471769F8EA00F2C66F /* BuyInfoViewController.h */,
 				5A4342481769F8EC00F2C66F /* BuyInfoViewController.m */,
 				5A4342491769F8EF00F2C66F /* BuyInfoViewController.xib */,
+				5A4EDD60176AB76F00FC6E27 /* BuyInfoViewController_5.xib */,
 				5A43424C1769F93400F2C66F /* BuyInfoTableViewCell.h */,
 				5A43424D1769F93500F2C66F /* BuyInfoTableViewCell.m */,
 				5A43424E1769F93700F2C66F /* BuyInfoTableViewCell.xib */,
@@ -1333,6 +1336,7 @@
 				5A4342451769E3E500F2C66F /* ScheduleTableViewCell.xib in Resources */,
 				5A43424B1769F8F100F2C66F /* BuyInfoViewController.xib in Resources */,
 				5A4342501769F93800F2C66F /* BuyInfoTableViewCell.xib in Resources */,
+				5A4EDD61176AB76F00FC6E27 /* BuyInfoViewController_5.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1557,8 +1561,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "D4076095-4F6E-44D6-AF20-506218E5C35B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D4076095-4F6E-44D6-AF20-506218E5C35B";
+				PROVISIONING_PROFILE = "6A85830D-D404-4672-A304-03521B979D26";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6A85830D-D404-4672-A304-03521B979D26";
 				SDKROOT = iphoneos6.1;
 			};
 			name = Debug;
@@ -1584,8 +1588,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "D4076095-4F6E-44D6-AF20-506218E5C35B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D4076095-4F6E-44D6-AF20-506218E5C35B";
+				PROVISIONING_PROFILE = "6A85830D-D404-4672-A304-03521B979D26";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6A85830D-D404-4672-A304-03521B979D26";
 				SDKROOT = iphoneos6.1;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1603,8 +1607,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DAB_LOGGER";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "D4076095-4F6E-44D6-AF20-506218E5C35B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D4076095-4F6E-44D6-AF20-506218E5C35B";
+				PROVISIONING_PROFILE = "6A85830D-D404-4672-A304-03521B979D26";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6A85830D-D404-4672-A304-03521B979D26";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1625,8 +1629,8 @@
 					"-DNS_BLOCK_ASSERTIONS=1",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "D4076095-4F6E-44D6-AF20-506218E5C35B";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D4076095-4F6E-44D6-AF20-506218E5C35B";
+				PROVISIONING_PROFILE = "6A85830D-D404-4672-A304-03521B979D26";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6A85830D-D404-4672-A304-03521B979D26";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
