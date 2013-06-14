@@ -8,7 +8,6 @@
 
 #import "ApiCmdMovie_getBuyInfo.h"
 #import "common.h"
-#import "MMovie.h"
 
 @implementation ApiCmdMovie_getBuyInfo
 
@@ -31,7 +30,7 @@
     [super prepareExecuteApiCmd];
     
     // prepare http request
-    NSURL *url = [NSURL URLWithString:@"https://github.com/zyallday/HelloWorld/blob/master/mobileapidemo/ticket-purchase-detail.json"];
+    NSURL *url = [NSURL URLWithString:@"https://raw.github.com/zyallday/HelloWorld/master/mobileapidemo/ticket-purchase-detail.json"];
     
     [self.httpRequest setURL:url];
     

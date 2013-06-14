@@ -38,6 +38,7 @@
             
             [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
             _cinemaViewController = [[CinemaViewController alloc] initWithNibName:nil bundle:nil];
+            [[CacheManager sharedInstance] setCinemaViewController:_cinemaViewController];
             
         });
     }
@@ -139,6 +140,7 @@
     
     if (!_cinemaViewController) {
         _cinemaViewController = [[CinemaViewController alloc] initWithNibName:nil bundle:nil];
+        [[CacheManager sharedInstance] setCinemaViewController:_cinemaViewController];
     }
     
     _cinemaViewController.isMovie_Cinema = NO;

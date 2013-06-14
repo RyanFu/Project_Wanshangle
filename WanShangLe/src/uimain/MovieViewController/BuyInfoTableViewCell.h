@@ -9,5 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @interface BuyInfoTableViewCell : UITableViewCell
+@property(nonatomic,retain) IBOutlet UIImageView *imgView;
+@property(nonatomic,retain) IBOutlet UILabel *vendorName;
+@property(nonatomic,retain) IBOutlet UILabel *type;
+@property(nonatomic,retain) IBOutlet UILabel *clickCount;
+@property(nonatomic,retain) IBOutlet UILabel *price;
 @property(nonatomic,retain) IBOutlet UIView *expansionView;
+@property(nonatomic,retain) IBOutlet UITextView *buyInfo_textView;
+
 @end

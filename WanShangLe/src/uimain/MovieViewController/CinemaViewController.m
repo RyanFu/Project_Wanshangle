@@ -13,6 +13,7 @@
 #import "CinemaSearchViewController.h"
 #import "ASIHTTPRequest.h"
 #import "MCinema.h"
+#import "MMovie.h"
 #import "ApiCmd.h"
 
 @interface CinemaViewController()<ApiNotify>{
@@ -22,6 +23,7 @@
     UIButton *movieDetailButton;
     UIButton *searchButton;
 }
+@property(nonatomic,retain)UILabel *movieLabel;
 @property(nonatomic,retain)UIView *headerView;
 @property(nonatomic,retain)UIButton *movieDetailButton;
 @property(nonatomic,retain)CinemaListTableViewDelegate *cinemaDelegate;
@@ -29,6 +31,7 @@
 @end
 
 @implementation CinemaViewController
+@synthesize isMovie_Cinema;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -48,6 +51,7 @@
     self.mMovie = nil;
     self.movieDetailButton = nil;
     self.headerView = nil;
+    self.movieLabel = nil;
     [super dealloc];
 }
 
@@ -133,13 +137,12 @@
     _movieDetailButton.frame = CGRectMake(0, 0, 320, 70);
     [_movieDetailButton setBackgroundColor:[UIColor colorWithRed:0.801 green:1.000 blue:0.777 alpha:1.000]];
     [_movieDetailButton addTarget:self action:@selector(clickMovieDetail:) forControlEvents:UIControlEventTouchUpInside];
-    UILabel *movieLabel = [[UILabel alloc] initWithFrame:_movieDetailButton.bounds];
-    [movieLabel setBackgroundColor:[UIColor clearColor]];
-    [movieLabel setTextAlignment:UITextAlignmentLeft];
-    [movieLabel setNumberOfLines:3];
-    [movieLabel setText:@"电影:钢铁侠   豆瓣评分:8.9 (12万人) \n\n 主演:范冰冰，唐尼        120分钟"];
-    [_movieDetailButton addSubview:movieLabel];
-    [movieLabel release];
+    _movieLabel = [[UILabel alloc] initWithFrame:_movieDetailButton.bounds];
+    [_movieLabel setBackgroundColor:[UIColor clearColor]];
+    [_movieLabel setTextAlignment:UITextAlignmentLeft];
+    [_movieLabel setNumberOfLines:3];
+    [_movieLabel setText:@"电影:钢铁侠   豆瓣评分:8.9 (12万人) \n\n 主演:范冰冰，唐尼        120分钟"];
+    [_movieDetailButton addSubview:_movieLabel];
     
     [_headerView addSubview:searchBt];
     _cinemaTableView.tableHeaderView = _headerView;
@@ -163,9 +166,12 @@
         return;
     }
     
-    if (_isMovie_Cinema) {
+    if (isMovie_Cinema) {
         movieDetailButton.hidden = NO;
         _cinemaTableView.frame = CGRectMake(0, 70, self.view.bounds.size.width, self.view.bounds.size.height-70);
+        NSString *info = [NSString stringWithFormat:@"电影:%@   豆瓣评分:%@ (%d万人) \n\n 主演:范冰冰，唐尼        120分钟",
+                          _mMovie.name,[_mMovie.rating stringValue],[_mMovie.ratingpeople integerValue]/10000];
+        _movieLabel.text = info;
     }else{
         movieDetailButton.hidden = YES;
         _cinemaTableView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);

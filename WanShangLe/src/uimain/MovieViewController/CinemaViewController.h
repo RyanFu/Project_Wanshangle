@@ -17,7 +17,7 @@ typedef NS_ENUM(NSInteger, NSFilterCinemaListType) {
 };
 
 @interface CinemaViewController : UIViewController
-@property(nonatomic,assign)BOOL isMovie_Cinema;
+@property(nonatomic,readwrite)BOOL isMovie_Cinema;
 @property(nonatomic,retain)MMovie *mMovie;
 @property(nonatomic,retain)UITableView *cinemaTableView;
 @property(nonatomic,retain)NSArray *cinemasArray;

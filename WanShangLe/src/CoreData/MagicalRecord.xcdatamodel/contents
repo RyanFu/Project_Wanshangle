@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12D78" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12C3103" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="City" representedClassName="City" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -9,7 +9,6 @@
     <entity name="MBuyTicketInfo" representedClassName="MBuyTicketInfo" syncable="YES">
         <attribute name="groupBuyInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="schedule" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MSchedule" inverseName="buyTicketInfo" inverseEntity="MSchedule" syncable="YES"/>
     </entity>
     <entity name="MCinema" representedClassName="MCinema" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
@@ -67,17 +66,22 @@
         <attribute name="scheduleInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
         <attribute name="seatPrice" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="buyTicketInfo" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MBuyTicketInfo" inverseName="schedule" inverseEntity="MBuyTicketInfo" syncable="YES"/>
         <relationship name="movie_cinema" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovie_Cinema" inverseName="schedule" inverseEntity="MMovie_Cinema" syncable="YES"/>
+    </entity>
+    <entity name="TimeStamp" syncable="YES">
+        <attribute name="localTimeStamp" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="webTimeStamp" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
         <element name="City" positionX="-146" positionY="-537" width="128" height="103"/>
-        <element name="MBuyTicketInfo" positionX="106" positionY="54" width="128" height="88"/>
+        <element name="MBuyTicketInfo" positionX="-27" positionY="-63" width="128" height="73"/>
         <element name="MCinema" positionX="99" positionY="-306" width="128" height="193"/>
         <element name="MMovie" positionX="-443" positionY="-351" width="128" height="253"/>
         <element name="MMovie_Cinema" positionX="-173" positionY="-313" width="128" height="103"/>
         <element name="MMovie_City" positionX="-450" positionY="-531" width="128" height="88"/>
         <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="148"/>
-        <element name="MSchedule" positionX="-189" positionY="-67" width="128" height="178"/>
+        <element name="MSchedule" positionX="-189" positionY="-67" width="128" height="163"/>
+        <element name="TimeStamp" positionX="-756" positionY="-475" width="128" height="88"/>
     </elements>
 </model>

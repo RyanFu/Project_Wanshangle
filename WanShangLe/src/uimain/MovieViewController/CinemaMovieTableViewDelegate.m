@@ -5,13 +5,13 @@
 //  Created by stephenliu on 13-6-8.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
-#import "ScheduleTableViewDelegate.h"
+#import "CinemaMovieTableViewDelegate.h"
 #import "ScheduleTableViewCell.h"
-#import "ScheduleViewController.h"
+#import "CinemaMovieViewController.h"
 #import "BuyInfoViewController.h"
 #import "MSchedule.h"
 
-@implementation ScheduleTableViewDelegate
+@implementation CinemaMovieTableViewDelegate
 
 #pragma mark -
 #pragma mark UITableViewDataSource
@@ -20,7 +20,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    ABLoggerMethod();
+    
     static NSString *CellIdentifier = @"mScheduleCell";
     static BOOL nibsRegistered = NO;
     if (!nibsRegistered) {
@@ -31,6 +31,7 @@
     
     ScheduleTableViewCell * cell = (ScheduleTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
+        ABLoggerMethod();
         cell = [self createNewMocieCell];
     }
     

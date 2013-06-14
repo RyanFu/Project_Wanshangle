@@ -22,7 +22,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = self.mMovie.name;
+        self.title = @"购票详情";
         [[DataBaseManager sharedInstance] getBuyInfoFromWebWithaMovie:_mMovie
                                                               aCinema:_mCinema
                                                             aSchedule:_schedule
@@ -44,6 +44,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.movieName.text = _mMovie.name;
+    self.movieInfo.text = _mMovie.aword;
+    self.cinemaName.text = _mCinema.name;
+    self.cinemaInfo.text = _mCinema.address;
 
     _buyInfoTableViewDelegate = [[BuyInfoTableViewDelegate alloc] init];
 }
@@ -63,7 +68,8 @@
         [[DataBaseManager sharedInstance] insertBuyInfoIntoCoreDataFromObject:[apiCmd responseJSONObject]
                                                                     withApiCmd:apiCmd
                                                                     withaMovie:_mMovie
-                                                                    andaCinema:_mCinema];
+                                                                    andaCinema:_mCinema
+                                                                    aSchedule:_schedule];
         
         int tag = [[apiCmd httpRequest] tag];
         [self updateData:tag responseData:[apiCmd responseJSONObject]];
@@ -100,6 +106,9 @@
 
 - (void)formatCinemaData:(NSDictionary *)responseDic{
     ABLoggerMethod();
+    
+    self.marray = [[responseDic objectForKey:@"data"] objectForKey:@"vendors"];
+    ABLoggerDebug(@"%@",self.marray);
     
     [self setTableViewDelegate];
     

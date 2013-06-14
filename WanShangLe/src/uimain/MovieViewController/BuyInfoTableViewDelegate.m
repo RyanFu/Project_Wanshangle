@@ -9,6 +9,7 @@
 #import "BuyInfoTableViewDelegate.h"
 #import "BuyInfoViewController.h"
 #import "BuyInfoTableViewCell.h"
+#import "UIImageView+WebCache.h"
 
 @interface BuyInfoTableViewDelegate()
 @property (nonatomic,retain)NSIndexPath *newselectIndex;
@@ -16,6 +17,15 @@
 @end
 
 @implementation BuyInfoTableViewDelegate
+
+- (id)init{
+    self = [super init];
+    if (self) {
+        self.newselectIndex = [NSIndexPath indexPathForRow:-1 inSection:-1];
+        self.oldselectIndex = [NSIndexPath indexPathForRow:-1 inSection:-1];
+    }
+    return self;
+}
 
 - (void)dealloc{
     self.newselectIndex = nil;
@@ -32,13 +42,13 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSLog(@"numberOfRowsInSection == %d",[_parentViewController.marray count]);
+    ABLoggerDebug(@"numberOfRowsInSection == %d",[_parentViewController.marray count]);
     return [_parentViewController.marray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    NSLog(@"cellForRowAtIndexPath ====== %d",indexPath.row);
+    ABLoggerDebug(@"cellForRowAtIndexPath ====== %d",indexPath.row);
     
     static NSString *CellIdentifier = @"BuyInfoTableViewCell";
     static BOOL nibsRegistered = NO;
@@ -55,24 +65,31 @@
     }
     
     cell.expansionView.hidden = YES;
-    
-    [self configureCell:cell cellForRowAtIndexPath:indexPath withObject:nil];
+    NSDictionary *cellData = [_parentViewController.marray objectAtIndex:indexPath.row];
+    [self configureCell:cell cellForRowAtIndexPath:indexPath withObject:cellData];
     
     return cell;
 }
 
 - (void)configureCell:(BuyInfoTableViewCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath withObject:(NSDictionary *)dataDic {
-    
+
     if (_newselectIndex.row == indexPath.row) {
         cell.expansionView.hidden = NO;
     }else if(_oldselectIndex.row == indexPath.row){
         cell.expansionView.hidden = YES;
     }
+    
+    [cell.imgView setImageWithURL:[NSURL URLWithString:[dataDic objectForKey:@"img"]]
+                         placeholderImage:[UIImage imageNamed:@"placeholder"] options:SDWebImageRetryFailed];
+    cell.vendorName.text = [dataDic objectForKey:@"name"];
+    cell.price.text = [[dataDic objectForKey:@"price"] stringValue];
+    cell.clickCount.text = [NSString stringWithFormat:@"%d人点击购买",[[dataDic objectForKey:@"clicks"] intValue]];
+    cell.buyInfo_textView.text = [dataDic objectForKey:@"intro"];
 }
 
 -(BuyInfoTableViewCell *)createNewMocieCell{
     
-    BuyInfoTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"CinemaTableViewCellSection" owner:self options:nil] objectAtIndex:0];
+    BuyInfoTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"BuyInfoTableViewCell" owner:self options:nil] objectAtIndex:0];
     [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
     cell.selectionStyle = UITableViewCellSelectionStyleBlue;
     //    cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"history_menu_cell_background"]] autorelease];
@@ -110,8 +127,8 @@
     }
     
     
-    NSLog(@"oldselectIndex section = %d row = %d",_oldselectIndex.section,_oldselectIndex.row);
-    NSLog(@"newselectIndex section = %d row = %d",_newselectIndex.section,_newselectIndex.row);
+    ABLoggerDebug(@"oldselectIndex section = %d row = %d",_oldselectIndex.section,_oldselectIndex.row);
+    ABLoggerDebug(@"newselectIndex section = %d row = %d",_newselectIndex.section,_newselectIndex.row);
     
     [self didExpansionCell];
 }

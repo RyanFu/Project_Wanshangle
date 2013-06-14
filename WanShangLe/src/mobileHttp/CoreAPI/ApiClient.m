@@ -137,7 +137,7 @@ static ASINetworkQueue *networkQueue = nil;
     
     NSError *error = [request error];
     
-    NSData *data = [request responseData];
+//    NSData *data = [request responseData];
     
     if (error) {
         ABLoggerDebug(@"Error [%@]", [error localizedDescription]);
