@@ -10,6 +10,7 @@
 #import "ApiCmdMovie_getSchedule.h"
 #import "CinemaMovieTableViewDelegate.h"
 #import "CinemaViewController.h"
+#import "ASIHTTPRequest.h"
 #import "MMovie.h"
 #import "MCinema.h"
 #import "iCarousel.h"
@@ -38,6 +39,11 @@
 }
 
 - (void)dealloc{
+    
+    [[self.apiCmdMovie_getSchedule httpRequest] clearDelegatesAndCancel];
+    [self.apiCmdMovie_getSchedule setDelegate:nil];
+    self.apiCmdMovie_getSchedule = nil;
+    
     self.todayButton = nil;
     self.tomorrowButton = nil;
     self.cinemaInfo = nil;
@@ -99,9 +105,12 @@
     ABLoggerInfo(@"");
     
     CinemaViewController *cinemaViewController = [CacheManager sharedInstance].cinemaViewController;
-    UIViewController *movieController = [[self.navigationController viewControllers] objectAtIndex:2];
     
-    NSArray *array = [NSArray arrayWithObjects:[CacheManager sharedInstance].rootViewController,movieController,cinemaViewController,nil];
+    
+    NSArray *array = [NSArray arrayWithObjects:
+                      [CacheManager sharedInstance].rootViewController,
+                      [CacheManager sharedInstance].movieViewController,
+                      [CacheManager sharedInstance].cinemaViewController,nil];
     
     cinemaViewController.mMovie = self.mMovie;
     cinemaViewController.isMovie_Cinema = YES;
@@ -203,7 +212,7 @@
     _movieRating.text = [NSString stringWithFormat:@"%@ : %0.1f (%d 万人)",aMovie.ratingFrom,[aMovie.rating floatValue],[aMovie.ratingpeople intValue]/10000];
     _movieTimeLong.text = @"120分钟";
     
-    [[DataBaseManager sharedInstance] getScheduleFromWebWithaMovie:_mMovie andaCinema:_mCinema delegate:self];
+    self.apiCmdMovie_getSchedule = [[DataBaseManager sharedInstance] getScheduleFromWebWithaMovie:_mMovie andaCinema:_mCinema delegate:self];
 }
 
 

@@ -82,7 +82,6 @@
     
     if (!_movieViewController) {
         _movieViewController = [[MovieViewController alloc] initWithNibName:nil bundle:nil];
-        [[CacheManager sharedInstance] setMovieViewController:_movieViewController];
     }
 
     [self.navigationController pushViewController:_movieViewController animated:YES];

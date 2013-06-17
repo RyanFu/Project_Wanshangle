@@ -122,6 +122,7 @@ static ASINetworkQueue *networkQueue = nil;
      ABLoggerMethod();
     self.request = [cmd prepareExecuteApiCmd];
     [_requestArray addObject:cmd];
+    
     [request startAsynchronous];
 
     //[networkQueue addOperation:request];
