@@ -15,12 +15,14 @@ static DataBaseManager *_sharedInstance = nil;
 #import "MovieViewController.h"
 #import "CinemaViewController.h"
 #import "ScheduleViewController.h"
+#import "BarViewController.h"
 
 #import "ApiCmdMovie_getAllMovies.h"
 #import "ApiCmdMovie_getAllCinemas.h"
 #import "ApiCmdMovie_getSchedule.h"
 #import "ApiCmdMovie_getBuyInfo.h"
 #import "ApiCmdShow_getAllShows.h"
+#import "ApiCmdBar_getAllBars.h"
 
 #import "MMovie_Cinema.h"
 #import "MMovie_City.h"
@@ -30,6 +32,7 @@ static DataBaseManager *_sharedInstance = nil;
 #import "MBuyTicketInfo.h"
 #import "City.h"
 #import "SShow.h"
+#import "BBar.h"
 #import "ApiCmd.h"
 
 @interface DataBaseManager(){
@@ -777,7 +780,7 @@ static DataBaseManager *_sharedInstance = nil;
 
 
 - (NSArray *)getAllShowsListFromCoreData{
-    return [self getAllShowsListFromCoreDataWithCityName:nil];;
+    return [self getAllShowsListFromCoreDataWithCityName:nil];
 }
 
 - (NSArray *)getAllShowsListFromCoreDataWithCityName:(NSString *)cityName{
@@ -874,4 +877,116 @@ static DataBaseManager *_sharedInstance = nil;
     
 }
 //========================================= 演出 =========================================/
+
+#pragma mark -
+#pragma mark 酒吧
+/****************************************** 酒吧 *********************************************/
+- (ApiCmdBar_getAllBars *)getAllBarsListFromWeb:(id<ApiNotify>)delegate;{
+    BarViewController *showViewController = (BarViewController *)delegate;
+    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:showViewController.apiCmdBar_getAllBars.httpRequest]) {
+        ABLoggerWarn(@"不能请求演出列表数据，因为已经请求了");
+        return showViewController.apiCmdBar_getAllBars;
+    }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmdBar_getAllBars* apiCmdBar_getAllBars = [[ApiCmdBar_getAllBars alloc] init];
+    apiCmdBar_getAllBars.delegate = delegate;
+    apiCmdBar_getAllBars.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    [apiClient executeApiCmdAsync:apiCmdBar_getAllBars];
+    [apiCmdBar_getAllBars.httpRequest setTag:API_BBarCmd];
+    
+    return [apiCmdBar_getAllBars autorelease];
+    
+}
+
+- (NSArray *)getAllBarsListFromCoreData{
+    return [self getAllBarsListFromCoreDataWithCityName:nil];
+}
+
+- (NSArray *)getAllBarsListFromCoreDataWithCityName:(NSString *)cityName{
+    if (isEmpty(cityName)) {
+        cityName = [[LocationManager defaultLocationManager] getUserCity];
+    }
+    
+    return [BBar MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+}
+
+- (NSUInteger)getCountOfBarsListFromCoreData{
+    return [self getCountOfBarsListFromCoreDataWithCityName:nil];
+}
+
+- (NSUInteger)getCountOfBarsListFromCoreDataWithCityName:(NSString *)cityName{
+    if (isEmpty(cityName)) {
+        cityName = [[LocationManager defaultLocationManager] getUserCity];
+    }
+    int count = [BBar MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return count;
+}
+
+- (void)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+    CFTimeInterval time1 = Elapsed_Time;
+    
+    NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"pubs"];
+    
+     BBar *bBar = nil;
+    for (int i=0; i<[array count]; i++) {
+        
+        bBar = [BBar MR_findFirstByAttribute:@"uid" withValue:[[array objectAtIndex:i] objectForKey:@"id"] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        if (bBar == nil)
+        {
+            ABLoggerInfo(@"插入 一条 酒吧 新数据 ======= %@",[[array objectAtIndex:i] objectForKey:@"name"]);
+            bBar = [BBar MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        }
+        [self importBar:bBar ValuesForKeysWithObject:[array objectAtIndex:i]];
+        
+        City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
+        bBar.city = city;
+    }
+    
+    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"酒吧 保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
+    
+    CFTimeInterval time2 = Elapsed_Time;
+    ElapsedTime(time2, time1);
+    
+    [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+    ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    
+}
+
+/*
+ {
+ "errors":[],
+ "data":{
+ "count":10,
+ "pubs":[
+ {
+ "id":40011,
+ "name":"万圣节女士Party1",
+ "popular":52,
+ "address":"希尔顿酒店",
+ "date":"2013-7-15",
+ "tel":13800383800,
+ "intro":"活动介绍：1，*****",
+ "recommended":100,
+ "like":100,
+ "scene":"http://sdjflsajlfaslf.png",
+ "longitude":34.2343,
+ "latitude":57.3445
+ },
+ */
+- (void)importBar:(BBar *)bBar ValuesForKeysWithObject:(NSDictionary *)aBarDic{
+    bBar.uid = [[aBarDic objectForKey:@"id"] stringValue];
+    bBar.name = [aBarDic objectForKey:@"name"];
+    bBar.popular = [aBarDic objectForKey:@"popular"];
+    bBar.address = [aBarDic objectForKey:@"address"];
+    bBar.date = [aBarDic objectForKey:@"date"];
+    bBar.phoneNumber = [[aBarDic objectForKey:@"tel"] stringValue];
+    bBar.longitude = [aBarDic objectForKey:@"longitude"];
+    bBar.latitude = [aBarDic objectForKey:@"latitude"];
+}
+//========================================= 酒吧 =========================================/
 @end

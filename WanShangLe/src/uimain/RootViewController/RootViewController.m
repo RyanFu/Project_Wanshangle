@@ -108,6 +108,14 @@
 //酒吧
 - (IBAction)clickBarButton:(id)sender{
     userClickStyle = WSLUserClickStyleBar;
+    
+    if (![self checkUserCity])return;
+    
+    if (!_showViewController) {
+        _barViewController = [[BarViewController alloc] initWithNibName:(iPhone5?@"BarViewController_5":@"BarViewController") bundle:nil];
+    }
+    
+    [self.navigationController pushViewController:_barViewController animated:YES];
 }
 
 //选择城市

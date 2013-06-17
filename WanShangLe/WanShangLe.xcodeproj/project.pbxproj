@@ -68,6 +68,13 @@
 		5A429507176ED87D00D9B987 /* NSArrayToNSValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A429506176ED87D00D9B987 /* NSArrayToNSValueTransformer.m */; };
 		5A42950A176EDEB400D9B987 /* ApiCmdShow_getAllShows.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A429509176EDEB400D9B987 /* ApiCmdShow_getAllShows.m */; };
 		5A42950C176EFA1200D9B987 /* ShowDetailViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A42950B176EFA1100D9B987 /* ShowDetailViewController_5.xib */; };
+		5A429512176EFB5600D9B987 /* BarTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A42950E176EFB5600D9B987 /* BarTableViewCell.m */; };
+		5A429513176EFB5600D9B987 /* BarTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A42950F176EFB5600D9B987 /* BarTableViewCell.xib */; };
+		5A429514176EFB5600D9B987 /* BarTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A429511176EFB5600D9B987 /* BarTableViewDelegate.m */; };
+		5A429517176EFBC000D9B987 /* ApiCmdBar_getAllBars.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A429516176EFBC000D9B987 /* ApiCmdBar_getAllBars.m */; };
+		5A42951A176EFE7100D9B987 /* BBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A429519176EFE7100D9B987 /* BBar.m */; };
+		5A42951D176EFE7100D9B987 /* BBarDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A42951C176EFE7100D9B987 /* BBarDetail.m */; };
+		5A429521176F054D00D9B987 /* BarViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A429520176F054C00D9B987 /* BarViewController_5.xib */; };
 		5A4342371769A27300F2C66F /* ApiCmdMovie_getSchedule.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4342361769A27300F2C66F /* ApiCmdMovie_getSchedule.m */; };
 		5A43423B1769A3B600F2C66F /* ScheduleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4342391769A3B400F2C66F /* ScheduleViewController.m */; };
 		5A43423C1769A3B600F2C66F /* ScheduleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A43423A1769A3B500F2C66F /* ScheduleViewController.xib */; };
@@ -315,6 +322,18 @@
 		5A429508176EDEB400D9B987 /* ApiCmdShow_getAllShows.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCmdShow_getAllShows.h; sourceTree = "<group>"; };
 		5A429509176EDEB400D9B987 /* ApiCmdShow_getAllShows.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmdShow_getAllShows.m; sourceTree = "<group>"; };
 		5A42950B176EFA1100D9B987 /* ShowDetailViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowDetailViewController_5.xib; sourceTree = "<group>"; };
+		5A42950D176EFB5600D9B987 /* BarTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarTableViewCell.h; sourceTree = "<group>"; };
+		5A42950E176EFB5600D9B987 /* BarTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BarTableViewCell.m; sourceTree = "<group>"; };
+		5A42950F176EFB5600D9B987 /* BarTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BarTableViewCell.xib; sourceTree = "<group>"; };
+		5A429510176EFB5600D9B987 /* BarTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarTableViewDelegate.h; sourceTree = "<group>"; };
+		5A429511176EFB5600D9B987 /* BarTableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BarTableViewDelegate.m; sourceTree = "<group>"; };
+		5A429515176EFBC000D9B987 /* ApiCmdBar_getAllBars.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCmdBar_getAllBars.h; sourceTree = "<group>"; };
+		5A429516176EFBC000D9B987 /* ApiCmdBar_getAllBars.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmdBar_getAllBars.m; sourceTree = "<group>"; };
+		5A429518176EFE7100D9B987 /* BBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBar.h; sourceTree = "<group>"; };
+		5A429519176EFE7100D9B987 /* BBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBar.m; sourceTree = "<group>"; };
+		5A42951B176EFE7100D9B987 /* BBarDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBarDetail.h; sourceTree = "<group>"; };
+		5A42951C176EFE7100D9B987 /* BBarDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBarDetail.m; sourceTree = "<group>"; };
+		5A429520176F054C00D9B987 /* BarViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BarViewController_5.xib; sourceTree = "<group>"; };
 		5A4342351769A27300F2C66F /* ApiCmdMovie_getSchedule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCmdMovie_getSchedule.h; sourceTree = "<group>"; };
 		5A4342361769A27300F2C66F /* ApiCmdMovie_getSchedule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmdMovie_getSchedule.m; sourceTree = "<group>"; };
 		5A4342381769A3B300F2C66F /* ScheduleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleViewController.h; sourceTree = "<group>"; };
@@ -627,6 +646,8 @@
 		5A17471F1761ADCA00E155AB /* BBarAPI */ = {
 			isa = PBXGroup;
 			children = (
+				5A429515176EFBC000D9B987 /* ApiCmdBar_getAllBars.h */,
+				5A429516176EFBC000D9B987 /* ApiCmdBar_getAllBars.m */,
 			);
 			path = BBarAPI;
 			sourceTree = "<group>";
@@ -763,6 +784,10 @@
 		5A4294D1176EBB0200D9B987 /* BBar */ = {
 			isa = PBXGroup;
 			children = (
+				5A42951B176EFE7100D9B987 /* BBarDetail.h */,
+				5A42951C176EFE7100D9B987 /* BBarDetail.m */,
+				5A429518176EFE7100D9B987 /* BBar.h */,
+				5A429519176EFE7100D9B987 /* BBar.m */,
 			);
 			path = BBar;
 			sourceTree = "<group>";
@@ -1275,6 +1300,12 @@
 				5AAC709017601BDB004B7395 /* BarViewController.h */,
 				5AAC709117601BDB004B7395 /* BarViewController.m */,
 				5AAC709217601BDB004B7395 /* BarViewController.xib */,
+				5A429520176F054C00D9B987 /* BarViewController_5.xib */,
+				5A42950D176EFB5600D9B987 /* BarTableViewCell.h */,
+				5A42950E176EFB5600D9B987 /* BarTableViewCell.m */,
+				5A42950F176EFB5600D9B987 /* BarTableViewCell.xib */,
+				5A429510176EFB5600D9B987 /* BarTableViewDelegate.h */,
+				5A429511176EFB5600D9B987 /* BarTableViewDelegate.m */,
 			);
 			path = BarViewController;
 			sourceTree = "<group>";
@@ -1477,6 +1508,8 @@
 				5A4294C1176EB3D200D9B987 /* ShowViewController_5.xib in Resources */,
 				5A429500176EBE1F00D9B987 /* ShowTableViewCell.xib in Resources */,
 				5A42950C176EFA1200D9B987 /* ShowDetailViewController_5.xib in Resources */,
+				5A429513176EFB5600D9B987 /* BarTableViewCell.xib in Resources */,
+				5A429521176F054D00D9B987 /* BarViewController_5.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1643,6 +1676,11 @@
 				5A429504176EC18100D9B987 /* SShow.m in Sources */,
 				5A429507176ED87D00D9B987 /* NSArrayToNSValueTransformer.m in Sources */,
 				5A42950A176EDEB400D9B987 /* ApiCmdShow_getAllShows.m in Sources */,
+				5A429512176EFB5600D9B987 /* BarTableViewCell.m in Sources */,
+				5A429514176EFB5600D9B987 /* BarTableViewDelegate.m in Sources */,
+				5A429517176EFBC000D9B987 /* ApiCmdBar_getAllBars.m in Sources */,
+				5A42951A176EFE7100D9B987 /* BBar.m in Sources */,
+				5A42951D176EFE7100D9B987 /* BBarDetail.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

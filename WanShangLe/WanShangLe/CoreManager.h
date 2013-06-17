@@ -39,7 +39,11 @@
 //-------------SShow----------------/
 #define API_SShowCmd  104 //演出
 #define API_SShowDetailCmd  105 //演出详情
+//-------------BBar----------------/
+#define API_BBarCmd  106 //演出
+#define API_BBarDetailCmd  107 //演出详情
 
+//测试宏标记
 #define TestCode
 
 //电影数据

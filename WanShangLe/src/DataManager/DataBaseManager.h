@@ -17,9 +17,9 @@
 @class ApiCmd;
 @class ApiCmdMovie_getAllMovies,ApiCmdMovie_getAllCinemas;
 @class ApiCmdMovie_getSchedule,ApiCmdMovie_getBuyInfo;
-@class ApiCmdShow_getAllShows;
+@class ApiCmdShow_getAllShows,ApiCmdBar_getAllBars;
 @class MMovie_City,MSchedule,MMovie_Cinema,MMovie,MCinema;
-@class SShow;
+@class SShow,BBar;
 
 @interface DataBaseManager : NSObject{
     
@@ -104,5 +104,12 @@
 - (void)insertShowsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importShow:(SShow *)sShow ValuesForKeysWithObject:(NSDictionary *)ashowDic;
 
-
+/************ 酒吧 ***************/
+- (ApiCmdBar_getAllBars *)getAllBarsListFromWeb:(id<ApiNotify>)delegate;
+- (NSArray *)getAllBarsListFromCoreData;
+- (NSArray *)getAllBarsListFromCoreDataWithCityName:(NSString *)cityName;
+- (NSUInteger)getCountOfBarsListFromCoreData;
+- (NSUInteger)getCountOfBarsListFromCoreDataWithCityName:(NSString *)cityName;
+- (void)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (void)importBar:(BBar *)bBar ValuesForKeysWithObject:(NSDictionary *)aBarDic;
 @end
