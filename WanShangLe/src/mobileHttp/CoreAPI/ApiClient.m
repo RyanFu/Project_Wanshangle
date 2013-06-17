@@ -124,7 +124,9 @@
     
 //      [request startAsynchronous];
 
+    @synchronized (_networkQueue) {
     [_networkQueue addOperation:request];
+    }
     
      ABLoggerDebug(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
 }

@@ -111,7 +111,7 @@
     
     if (![self checkUserCity])return;
     
-    if (!_showViewController) {
+    if (!_barViewController) {
         _barViewController = [[BarViewController alloc] initWithNibName:(iPhone5?@"BarViewController_5":@"BarViewController") bundle:nil];
     }
     
