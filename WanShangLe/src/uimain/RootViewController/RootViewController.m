@@ -95,6 +95,14 @@
 //演出
 - (IBAction)clickShowButton:(id)sender{
     userClickStyle = WSLUserClickStyleShow;
+    
+    if (![self checkUserCity])return;
+    
+    if (!_showViewController) {
+        _showViewController = [[ShowViewController alloc] initWithNibName:(iPhone5?@"ShowViewController_5":@"ShowViewController") bundle:nil];
+    }
+    
+    [self.navigationController pushViewController:_showViewController animated:YES];
 }
 
 //酒吧

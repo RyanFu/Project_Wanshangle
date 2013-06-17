@@ -8,7 +8,6 @@
 
 #import "ApiCmdMovie_getAllMovies.h"
 #import "common.h"
-#import "MMovie.h"
 
 @implementation ApiCmdMovie_getAllMovies
 

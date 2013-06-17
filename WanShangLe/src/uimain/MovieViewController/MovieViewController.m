@@ -35,11 +35,10 @@
     if (self) {
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            
-            [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
-            _cinemaViewController = [[CinemaViewController alloc] initWithNibName:nil bundle:nil];
-            
+            self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
         });
+        
+        _cinemaViewController = [[CinemaViewController alloc] initWithNibName:nil bundle:nil];
     }
     return self;
 }
@@ -50,20 +49,21 @@
     self.movieTableView = nil;
     self.movieDelegate = nil;
     
+    self.apiCmdMovie_getAllCinemas = nil;
+    self.apiCmdMovie_getAllMovies = nil;
+    
     [super dealloc];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [self.navigationController setNavigationBarHidden:NO];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
-        [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
-    });
+    self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+    self.apiCmdMovie_getAllCinemas =[[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
     
     
 #ifdef TestCode
-    //[self updatData];//测试代码
+    [self updatData];//测试代码
 #endif
     
 }
@@ -71,7 +71,7 @@
 - (void)updatData{
     for (int i=0; i<10; i++) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+             self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
         });
     }
 }
@@ -197,7 +197,7 @@
                 
                 [self.movieTableView reloadData];
             });
-            [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingMoviesList];
+//            [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingMoviesList];
         }
             break;
             
@@ -205,8 +205,8 @@
         {
             NSArray *array = [[DataBaseManager sharedInstance] getAllCinemasListFromCoreData];
             ABLoggerDebug(@"影院 count ==== %d",[array count]);
-            [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingCinemasList];
-            ABLoggerWarn(@"可以请求 影院列表数据 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
+//            [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingCinemasList];
+//            ABLoggerWarn(@"可以请求 影院列表数据 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
         }
             break;
         default:

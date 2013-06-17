@@ -5,6 +5,7 @@
         <attribute name="uid" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="cinemas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MCinema" inverseName="city" inverseEntity="MCinema" syncable="YES"/>
         <relationship name="movie_citys" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MMovie_City" inverseName="city" inverseEntity="MMovie_City" syncable="YES"/>
+        <relationship name="shows" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SShow" inverseName="city" inverseEntity="SShow" syncable="YES"/>
     </entity>
     <entity name="MBuyTicketInfo" representedClassName="MBuyTicketInfo" syncable="YES">
         <attribute name="groupBuyInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
@@ -14,8 +15,8 @@
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="district" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="favorite" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <attribute name="latitude" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="longitue" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
+        <attribute name="longitue" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phoneNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -68,13 +69,38 @@
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="movie_cinema" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovie_Cinema" inverseName="schedule" inverseEntity="MMovie_Cinema" syncable="YES"/>
     </entity>
-    <entity name="TimeStamp" syncable="YES">
+    <entity name="SShow" representedClassName="SShow" syncable="YES">
+        <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="price" optional="YES" attributeType="Transformable" valueTransformerName="NSArrayToNSValueTransformer" syncable="YES"/>
+        <attribute name="rating" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="ratingfrom" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ratingpeople" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="webImg" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="where" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="city" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="City" inverseName="shows" inverseEntity="City" syncable="YES"/>
+        <relationship name="showDetail" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="SShowDetail" inverseName="show" inverseEntity="SShowDetail" syncable="YES"/>
+    </entity>
+    <entity name="SShowDetail" representedClassName="SShowDetail" syncable="YES">
+        <attribute name="buyInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
+        <attribute name="introduce" optional="YES" attributeType="String" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
+        <attribute name="recommendation" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wantLook" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="show" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="SShow" inverseName="showDetail" inverseEntity="SShow" syncable="YES"/>
+    </entity>
+    <entity name="TimeStamp" representedClassName="TimeStamp" syncable="YES">
         <attribute name="localTimeStamp" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="webTimeStamp" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="City" positionX="-146" positionY="-537" width="128" height="103"/>
+        <element name="City" positionX="-162" positionY="-846" width="128" height="118"/>
         <element name="MBuyTicketInfo" positionX="-27" positionY="-63" width="128" height="73"/>
         <element name="MCinema" positionX="99" positionY="-306" width="128" height="193"/>
         <element name="MMovie" positionX="-443" positionY="-351" width="128" height="253"/>
@@ -83,5 +109,7 @@
         <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="148"/>
         <element name="MSchedule" positionX="-189" positionY="-67" width="128" height="163"/>
         <element name="TimeStamp" positionX="-756" positionY="-475" width="128" height="88"/>
+        <element name="SShow" positionX="-173" positionY="-1384" width="128" height="268"/>
+        <element name="SShowDetail" positionX="-371" positionY="-1377" width="128" height="133"/>
     </elements>
 </model>

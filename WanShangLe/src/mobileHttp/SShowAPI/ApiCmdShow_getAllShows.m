@@ -6,10 +6,10 @@
 //
 //
 
-#import "ApiCmdMovie_getAllCinemas.h"
+#import "ApiCmdShow_getAllShows.h"
 #import "common.h"
 
-@implementation ApiCmdMovie_getAllCinemas
+@implementation ApiCmdShow_getAllShows
 
 - (id)init
 {
@@ -30,7 +30,7 @@
     [super prepareExecuteApiCmd];
     
     // prepare http request
-    NSURL *url = [NSURL URLWithString:@"https://raw.github.com/zyallday/HelloWorld/master/mobileapidemo/all-cinemas-list.json"];
+    NSURL *url = [NSURL URLWithString:@"https://raw.github.com/zyallday/HelloWorld/master/mobileapidemo/performance-list.json"];
     
     [self.httpRequest setURL:url];
     
@@ -48,14 +48,12 @@
 
 - (void) parseResultData:(NSDictionary*) dictionary {
 
-
-    
     // get the data
-    //ABLoggerDebug(@"1111 responseJSONObject ======== %@",self.responseJSONObject);
-    
+    ABLoggerDebug(@"1111 responseJSONObject ======== %@",self.responseJSONObject);
 }
 
 -(void) notifyDelegate:(NSDictionary*) dictionary{
+    
 
 }
 

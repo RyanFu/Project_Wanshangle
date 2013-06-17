@@ -31,10 +31,14 @@
 #import "SystemDataUpdater1_0.h"  // updator for version 1.0
 
 //API HTTPRequest Tag
+//-------------MMovie----------------/
 #define API_MMovieCmd  100 //电影
 #define API_MCinemaCmd 101 //影院
-#define API_MScheduleCmd 102 //影院
-#define API_MBuyInfoCmd 103 //影院
+#define API_MScheduleCmd 102 //排期
+#define API_MBuyInfoCmd 103 //购买信息
+//-------------SShow----------------/
+#define API_SShowCmd  104 //演出
+#define API_SShowDetailCmd  105 //演出详情
 
 #define TestCode
 

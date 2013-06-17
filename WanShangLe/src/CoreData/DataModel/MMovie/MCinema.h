@@ -23,6 +23,7 @@
 @property (nonatomic, retain) NSString * district;
 @property (nonatomic, retain) City *city;
 @property (nonatomic, retain) NSSet *movie_cinemas;
+
 @end
 
 @interface MCinema (CoreDataGeneratedAccessors)

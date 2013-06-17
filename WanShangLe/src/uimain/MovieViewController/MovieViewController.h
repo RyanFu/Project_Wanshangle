@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @class CinemaViewController;
+@class ApiCmdMovie_getAllMovies;
+@class ApiCmdMovie_getAllCinemas;
 
 @interface MovieViewController : UIViewController{
     
@@ -16,4 +18,6 @@
 @property(nonatomic,retain)CinemaViewController *cinemaViewController;
 @property(nonatomic,retain)UITableView *movieTableView;
 @property(nonatomic,retain)NSArray *moviesArray;
+@property(nonatomic,retain)ApiCmdMovie_getAllMovies *apiCmdMovie_getAllMovies;
+@property(nonatomic,retain)ApiCmdMovie_getAllCinemas *apiCmdMovie_getAllCinemas;
 @end

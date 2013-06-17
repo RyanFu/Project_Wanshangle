@@ -6,12 +6,22 @@
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
+static DataBaseManager *_sharedInstance = nil;
+
 #import "DataBaseManager.h"
 #import "ASIHTTPRequest.h"
+
+#import "ShowViewController.h"
+#import "MovieViewController.h"
+#import "CinemaViewController.h"
+#import "ScheduleViewController.h"
+
 #import "ApiCmdMovie_getAllMovies.h"
 #import "ApiCmdMovie_getAllCinemas.h"
 #import "ApiCmdMovie_getSchedule.h"
 #import "ApiCmdMovie_getBuyInfo.h"
+#import "ApiCmdShow_getAllShows.h"
+
 #import "MMovie_Cinema.h"
 #import "MMovie_City.h"
 #import "MMovie.h"
@@ -19,9 +29,8 @@
 #import "MSchedule.h"
 #import "MBuyTicketInfo.h"
 #import "City.h"
-
-
-static DataBaseManager *_sharedInstance = nil;
+#import "SShow.h"
+#import "ApiCmd.h"
 
 @interface DataBaseManager(){
     NSString *updateTimeStamp;
@@ -265,14 +274,14 @@ static DataBaseManager *_sharedInstance = nil;
 #pragma mark 电影
 /****************************************** 电影 *********************************************/
 - (ApiCmdMovie_getAllMovies *)getAllMoviesListFromWeb:(id<ApiNotify>)delegate{
-    ABLoggerDebug(@"=== %@",[[CacheManager sharedInstance] mUserDefaults]);
     
-    if ([[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingMoviesList] intValue]) {
+    MovieViewController *movieViewController = (MovieViewController *)delegate;
+    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:movieViewController.apiCmdMovie_getAllMovies.httpRequest]) {
         ABLoggerWarn(@"不能请求电影列表数据，因为已经请求了");
-        return nil;
+        return movieViewController.apiCmdMovie_getAllMovies;
     }
     
-    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:UpdatingMoviesList];
+    //    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:UpdatingMoviesList];
     ApiClient* apiClient = [ApiClient defaultClient];
     
     ApiCmdMovie_getAllMovies* apiCmdMovie_getAllMovies = [[ApiCmdMovie_getAllMovies alloc] init];
@@ -588,7 +597,7 @@ static DataBaseManager *_sharedInstance = nil;
     if (buyInfo == nil) {
         buyInfo = [MBuyTicketInfo MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     }
-
+    
     buyInfo.uid = movie_cinema_schedule_uid;
     buyInfo.groupBuyInfo = dataDic;
     
@@ -606,14 +615,13 @@ static DataBaseManager *_sharedInstance = nil;
 /****************************************** 影院 *********************************************/
 - (ApiCmdMovie_getAllCinemas *)getAllCinemasListFromWeb:(id<ApiNotify>)delegate
 {
-    ABLoggerDebug(@"=== %@",[[CacheManager sharedInstance] mUserDefaults]);
-    
-    if ([[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]) {
-        ABLoggerWarn(@"不能请求影院列表数据，因为已经请求了 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
-        return nil;
+    CinemaViewController *cinemaViewController = (CinemaViewController *)delegate;
+    if ([[[[ApiClient defaultClient] networkQueue] operations] containsObject:cinemaViewController.apiCmdMovie_getAllCinemas.httpRequest]) {
+        ABLoggerWarn(@"不能请求影院列表数据，因为已经请求了");
+        return cinemaViewController.apiCmdMovie_getAllCinemas;
     }
     
-    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:UpdatingCinemasList];
+    //    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:UpdatingCinemasList];
     ApiClient* apiClient = [ApiClient defaultClient];
     
     ApiCmdMovie_getAllCinemas* apiCmdMovie_getAllCinemas = [[ApiCmdMovie_getAllCinemas alloc] init];
@@ -745,4 +753,125 @@ static DataBaseManager *_sharedInstance = nil;
 }
 //========================================= 影院 =========================================/
 
+#pragma mark -
+#pragma mark 演出
+/****************************************** 演出 *********************************************/
+- (ApiCmdShow_getAllShows *)getAllShowsListFromWeb:(id<ApiNotify>)delegate{
+    
+    ShowViewController *showViewController = (ShowViewController *)delegate;
+    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:showViewController.apiCmdShow_getAllShows.httpRequest]) {
+        ABLoggerWarn(@"不能请求演出列表数据，因为已经请求了");
+        return showViewController.apiCmdShow_getAllShows;
+    }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmdShow_getAllShows* apiCmdShow_getAllShows = [[ApiCmdShow_getAllShows alloc] init];
+    apiCmdShow_getAllShows.delegate = delegate;
+    apiCmdShow_getAllShows.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    [apiClient executeApiCmdAsync:apiCmdShow_getAllShows];
+    [apiCmdShow_getAllShows.httpRequest setTag:API_SShowCmd];
+    
+    return [apiCmdShow_getAllShows autorelease];
+}
+
+
+- (NSArray *)getAllShowsListFromCoreData{
+    return [self getAllShowsListFromCoreDataWithCityName:nil];;
+}
+
+- (NSArray *)getAllShowsListFromCoreDataWithCityName:(NSString *)cityName{
+    
+    if (isEmpty(cityName)) {
+        cityName = [[LocationManager defaultLocationManager] getUserCity];
+    }
+    
+    return [SShow MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+}
+
+- (NSUInteger)getCountOfShowsListFromCoreData{
+    return [self getCountOfShowsListFromCoreDataWithCityName: nil];
+}
+
+- (NSUInteger)getCountOfShowsListFromCoreDataWithCityName:(NSString *)cityName{
+    if (isEmpty(cityName)) {
+        cityName = [[LocationManager defaultLocationManager] getUserCity];
+    }
+    int count = [SShow MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return count;
+}
+
+/*
+ {
+ "errors":[],
+ "data":{
+ "count":10,
+ "performances":[
+ {
+ "id":30010,
+ "name":"赖声川话剧1",
+ "type":2,
+ "prices":[220,230,420,520],
+ "date":"2013-06-30",
+ "rating":8.0,
+ "ratingFrom":"豆瓣",
+ "ratingBy":120304,
+ "intro":"内容介绍",
+ "address":"地质礼堂话剧院",
+ "poster":"https://raw.github.com/zyallday/HelloWorld/master/mobileapidemo/poster.png",
+ "longitude":34.2343,
+ "latitude":57.3445
+ },
+ */
+- (void)insertShowsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+    CFTimeInterval time1 = Elapsed_Time;
+    
+    NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"performances"];
+    
+    SShow *sShow = nil;
+    for (int i=0; i<[array count]; i++) {
+        
+        sShow = [SShow MR_findFirstByAttribute:@"uid" withValue:[[array objectAtIndex:i] objectForKey:@"id"] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        if (sShow == nil)
+        {
+            ABLoggerInfo(@"插入 一条演出 新数据 ======= %@",[[array objectAtIndex:i] objectForKey:@"name"]);
+            sShow = [SShow MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        }
+        [self importShow:sShow ValuesForKeysWithObject:[array objectAtIndex:i]];
+        
+        City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
+        sShow.city = city;
+    }
+    
+    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"演出 保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
+    
+    CFTimeInterval time2 = Elapsed_Time;
+    ElapsedTime(time2, time1);
+    
+    [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+    ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    
+    
+}
+
+- (void)importShow:(SShow *)sShow ValuesForKeysWithObject:(NSDictionary *)ashowDic{
+    sShow.uid = [[ashowDic objectForKey:@"id"] stringValue];
+    sShow.name = [ashowDic objectForKey:@"name"];
+    sShow.where = @"体育中心";
+    sShow.type = [ashowDic objectForKey:@"type"];
+    sShow.price = [ashowDic objectForKey:@"prices"];
+    sShow.date = [ashowDic objectForKey:@"date"];
+    sShow.rating = [ashowDic objectForKey:@"rating"];
+    sShow.ratingfrom = [ashowDic objectForKey:@"ratingFrom"];
+    sShow.ratingpeople = [ashowDic objectForKey:@"ratingBy"];
+    sShow.address = [ashowDic objectForKey:@"address"];
+    sShow.webImg = [ashowDic objectForKey:@"poster"];
+    sShow.longitude = [ashowDic objectForKey:@"longitude"];
+    sShow.latitude = [ashowDic objectForKey:@"latitude"];
+    
+}
+//========================================= 演出 =========================================/
 @end

@@ -37,9 +37,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
-        });
+        self.apiCmdMovie_getAllCinemas = [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
     }
     return self;
 }
@@ -52,6 +50,7 @@
     self.movieDetailButton = nil;
     self.headerView = nil;
     self.movieLabel = nil;
+    self.apiCmdMovie_getAllCinemas = nil;
     [super dealloc];
 }
 
@@ -60,13 +59,11 @@
     
     [self initMovieCinemaView];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
-    });
+    self.apiCmdMovie_getAllCinemas = [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
     //    [self updateData:0];
     
 #ifdef TestCode
-    //[self updatData];//测试代码
+    [self updatData];//测试代码
 #endif
     
 }
@@ -74,7 +71,7 @@
 - (void)updatData{
     for (int i=0; i<10; i++) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
+            self.apiCmdMovie_getAllCinemas = [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
         });
     }
 }
@@ -253,8 +250,8 @@
         case API_MCinemaCmd:
         {
             [self formatCinemaData];
-            [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingCinemasList];
-            ABLoggerWarn(@"可以请求 影院列表数据 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
+//            [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingCinemasList];
+//            ABLoggerWarn(@"可以请求 影院列表数据 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
         }
             break;
         default:

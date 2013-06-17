@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "ApiNotify.h"
-@class ASIHTTPRequest,ApiCmd;
+@class ASIHTTPRequest,ApiCmd,ASINetworkQueue;
 
 /**
  *  @author yuqiang
@@ -25,7 +25,8 @@
     ASIHTTPRequest *request;
 }
 @property(nonatomic,assign) ASIHTTPRequest *request;
-@property(nonatomic,assign) NSMutableArray *requestArray;
+@property(nonatomic,retain) NSMutableArray *requestArray;
+@property(nonatomic,retain) ASINetworkQueue *networkQueue;
 
 + (id) defaultClient;
 -(void)cancelASIDataFormRequest;

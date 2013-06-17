@@ -13,8 +13,6 @@
 #import "ASINetworkQueue.h"
 #import "common.h"
 
-static ASINetworkQueue *networkQueue = nil;
-
 @implementation ApiClient
 
 // define getter/setter methods
@@ -38,10 +36,10 @@ static ASINetworkQueue *networkQueue = nil;
 {
     self = [super init];
     if (self) {
-        networkQueue = [[ASINetworkQueue alloc] init];
+        _networkQueue = [[ASINetworkQueue alloc] init];
         //[networkQueue setDelegate:self];
-        [networkQueue setShouldCancelAllRequestsOnFailure:NO];
-        [networkQueue go];
+        [_networkQueue setShouldCancelAllRequestsOnFailure:NO];
+        [_networkQueue go];
         
         _requestArray = [[NSMutableArray alloc] initWithCapacity:10];
     }
@@ -50,7 +48,7 @@ static ASINetworkQueue *networkQueue = nil;
 
 -(void)cancelASIDataFormRequest
 {
-    [networkQueue cancelAllOperations];
+    [_networkQueue cancelAllOperations];
 }
 
 - (void) apiNotifyResult:(id) apiCmd  error:(NSError*) error {
@@ -62,7 +60,7 @@ static ASINetworkQueue *networkQueue = nil;
  */
 - (void) dealloc {
     
-    [networkQueue release];networkQueue=nil;
+    self.networkQueue = nil;
     self.requestArray = nil;
     
 	[super dealloc];
@@ -121,11 +119,12 @@ static ASINetworkQueue *networkQueue = nil;
 - (void) executeApiCmdAsync:(ApiCmd*) cmd{
      ABLoggerMethod();
     self.request = [cmd prepareExecuteApiCmd];
+    
     [_requestArray addObject:cmd];
     
-    [request startAsynchronous];
+//      [request startAsynchronous];
 
-    //[networkQueue addOperation:request];
+    [_networkQueue addOperation:request];
     
      ABLoggerDebug(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
 }

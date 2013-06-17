@@ -13,15 +13,13 @@
 	数据库管理类
 	@author stephenliu
  */
-
+@class City;
+@class ApiCmd;
 @class ApiCmdMovie_getAllMovies,ApiCmdMovie_getAllCinemas;
 @class ApiCmdMovie_getSchedule,ApiCmdMovie_getBuyInfo;
-@class City;
-@class MMovie,MCinema;
-@class MMovie_City;
-@class MMovie_Cinema;
-@class MSchedule;
-@class ApiCmd;
+@class ApiCmdShow_getAllShows;
+@class MMovie_City,MSchedule,MMovie_Cinema,MMovie,MCinema;
+@class SShow;
 
 @interface DataBaseManager : NSObject{
     
@@ -96,5 +94,15 @@
 - (NSUInteger)getCountOfCinemasListFromCoreDataWithCityName:(NSString *)cityName;
 - (void)insertCinemasIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importCinema:(MCinema *)mCinema ValuesForKeysWithObject:(NSDictionary *)aCinemaData;
+
+/************ 演出 ***************/
+- (ApiCmdShow_getAllShows *)getAllShowsListFromWeb:(id<ApiNotify>)delegate;
+- (NSArray *)getAllShowsListFromCoreData;
+- (NSArray *)getAllShowsListFromCoreDataWithCityName:(NSString *)cityName;
+- (NSUInteger)getCountOfShowsListFromCoreData;
+- (NSUInteger)getCountOfShowsListFromCoreDataWithCityName:(NSString *)cityName;
+- (void)insertShowsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (void)importShow:(SShow *)sShow ValuesForKeysWithObject:(NSDictionary *)ashowDic;
+
 
 @end

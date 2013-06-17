@@ -8,7 +8,6 @@
 
 #import "ApiCmdMovie_getSchedule.h"
 #import "common.h"
-#import "MMovie.h"
 
 @implementation ApiCmdMovie_getSchedule
 
