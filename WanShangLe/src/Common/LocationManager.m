@@ -10,11 +10,12 @@
 #import "UIAlertView+MKBlockAdditions.h"
 #import "SIAlertView.h"
 
-@interface LocationManager()<MKMapViewDelegate,UIAlertViewDelegate>{
+@interface LocationManager()<MKMapViewDelegate,UIAlertViewDelegate,CLLocationManagerDelegate>{
     
 }
 @property (nonatomic, retain) CLGeocoder *geoCoder;
 @property (nonatomic, retain) MKMapView *map;
+@property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic, copy) SetUserCityCallBack userCityCallBack;
 @end
 
@@ -44,10 +45,62 @@
 - (id)init{
     self = [super init];
     if (self) {
-        _map = [[MKMapView alloc] init];
-        [_map setHidden:YES];
+
     }
     return self;
+}
+
+/*
+- (void)startLocationUserGPS{
+    ABLoggerMethod();
+    
+    if ([self checkGPSEnable]) {
+        if (!_map) {
+            _map = [[MKMapView alloc] init];
+            [_map setHidden:YES];
+        }
+        _map.showsUserLocation =YES;
+        _map.delegate = self;
+    }
+}
+
+- (void)stopLocationUserGPS{
+    _map.showsUserLocation = NO;
+    self.map = nil;
+}
+*/
+
+
+- (BOOL)checkGPSEnable{
+    ABLoggerMethod();
+    BOOL isEnable = YES;
+    
+    if (![CLLocationManager locationServicesEnabled]){
+        isEnable = NO;
+        ABLoggerDebug(@"定位服没有打开");
+    }
+    
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied){
+        isEnable = NO;
+        ABLoggerDebug(@"软件没有被用户授权 = kCLAuthorizationStatusDenied");
+    }
+    
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted){
+        isEnable = NO;
+        ABLoggerDebug(@"软件没有被系统授权 = kCLAuthorizationStatusRestricted");
+    }
+    
+    //    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined){
+    //        isEnable = NO;
+    //        ABLoggerDebug(@"软件没有被系统授权 = kCLAuthorizationStatusNotDetermined");
+    //    }
+    
+    if (![[ReachabilityManager defaultReachabilityManager] isReachableNetwork]) {
+        isEnable = NO;
+        ABLoggerDebug(@"没有网络啊+++++");
+    }
+    
+    return isEnable;
 }
 
 #pragma mark -
@@ -87,63 +140,83 @@
     }
 }
 
-/*
- - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
- switch (buttonIndex) {
- case 0:
- isSaveUserState = NO;
- break;
- 
- default:
- isSaveUserState = YES;
- break;
- }
- }*/
-
 - (void)mapView:(MKMapView *)mapView didFailToLocateUserWithError:(NSError *)error{
-    
+    ABLoggerMethod();
     if (error) {
         ABLoggerError(@"error ======== %@",[error debugDescription]);
     }
 }
 
-- (void)startLocationUserGPS{
-    
+
+- (void)startLocationUserGPS
+{
     if ([self checkGPSEnable]) {
-        _map.showsUserLocation =YES;
-        _map.delegate = self;
+    // if location services are restricted do nothing
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied ||
+        [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted)
+    {
+        return;
+    }
+    
+    // if locationManager does not currently exist, create it
+    if (!_locationManager)
+    {
+        _locationManager = [[CLLocationManager alloc] init];
+        [_locationManager setDelegate:self];
+        _locationManager.distanceFilter = 10.0f; // we don't need to be any more accurate than 10m
+    }
+    
+    [_locationManager startUpdatingLocation];
+        
     }
 }
 
-- (void)stopLocationUserGPS{
-    _map.showsUserLocation = NO;
+- (void)stopLocationUserGPS
+{
+    [_locationManager stopUpdatingLocation];
+    self.locationManager = nil;
 }
 
-- (BOOL)checkGPSEnable{
-    
-    BOOL isEnable = YES;
-    
-    if (![CLLocationManager locationServicesEnabled]){
-        isEnable = NO;
-        ABLoggerDebug(@"定位服没有打开");
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+    // if the location is older than 30s ignore
+    if (fabs([newLocation.timestamp timeIntervalSinceDate:[NSDate date]]) > 30)
+    {
+        return;
+    } 
+    //解析并获取当前坐标对应得地址信息
+    if ([[[UIDevice currentDevice] systemVersion]floatValue] >= 5.0) {
+        CLGeocoder *clGeoCoder = [[CLGeocoder alloc] init];
+        CLGeocodeCompletionHandler handle = ^(NSArray *placemarks,NSError *error)
+        {
+            for (CLPlacemark * placeMark in placemarks)
+            {
+                
+#ifdef AB_LOGGER
+                for (NSString *key in [placeMark addressDictionary]) {
+                    ABLoggerInfo(@"定位到城市 %@ === %@",key,[[placeMark addressDictionary] objectForKey:key]);
+                }
+#endif
+                
+                if (SYSTEM_VERSION_LESS_THAN(@"6.0")) {
+                    ABLoggerWarn(@"GPS 定位到城市 === %@",[[placeMark addressDictionary] objectForKey:@"City"]);
+                    [self setUserCity:[[placeMark addressDictionary] objectForKey:@"City"] CallBack:nil];
+                }else{
+                    ABLoggerWarn(@"GPS 定位到城市 === %@",placeMark.administrativeArea);
+                    [self setUserCity:placeMark.administrativeArea CallBack:nil];
+                    
+                }
+            }
+        };
+        [clGeoCoder reverseGeocodeLocation:newLocation completionHandler:handle];
+        [clGeoCoder release];
+        [self stopLocationUserGPS];
     }
-    
-    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied){
-        isEnable = NO;
-        ABLoggerDebug(@"软件没有被用户授权 = kCLAuthorizationStatusDenied");
-    }
-    
-    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted){
-        isEnable = NO;
-        ABLoggerDebug(@"软件没有被系统授权 = kCLAuthorizationStatusRestricted");
-    }
-    
-    if (![[ReachabilityManager defaultReachabilityManager] isReachableNetwork]) {
-        isEnable = NO;
-        ABLoggerDebug(@"没有网络啊+++++");
-    }
-    
-    return isEnable;
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    ABLoggerWarn(@"fail to location");
 }
 
 - (NSString *)getUserCity{
@@ -171,7 +244,7 @@
         if(![city isEqual:newCity]){
             ABLoggerWarn(@"切换城市 from %@ to %@",city,newCity);
             
-            SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:@"确定要切换城市吗?,亲!" andMessage:nil];
+            SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"确定要切换城市为%@吗?,亲!",newCity] andMessage:nil];
             [alertView addButtonWithTitle:@"取消"
                                      type:SIAlertViewButtonTypeCancel
                                   handler:^(SIAlertView *alertView) {
@@ -201,7 +274,7 @@
         }
     }else{
         ABLoggerInfo(@"第一次选择城市");
-        SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:@"第一次选择城市啊,亲!" andMessage:nil];
+        SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"第一次选择城市%@,亲!",newCity] andMessage:nil];
         [alertView addButtonWithTitle:@"取消"
                                  type:SIAlertViewButtonTypeCancel
                               handler:^(SIAlertView *alertView) {
