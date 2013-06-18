@@ -41,6 +41,7 @@
 	@returns res size
  */
 - (unsigned long long int)folderSize:(NSString *)folderPath;
+- (unsigned long long int)CoreDataSize;
 
 //database uid key
 - (NSString*)md5PathForKey:(NSString *) key;

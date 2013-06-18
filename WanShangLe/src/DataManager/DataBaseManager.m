@@ -79,6 +79,8 @@ static DataBaseManager *_sharedInstance = nil;
     _sharedInstance = nil;
 }
 
+#pragma mark -
+#pragma mark 函数
 - (void)cleanUp{
     [[CacheManager sharedInstance] cleanUp];
 }
@@ -96,6 +98,19 @@ static DataBaseManager *_sharedInstance = nil;
     
     ABLoggerInfo(@"DataBase 数据库大小 ========= %f M",(fileSize/1024.0/1024.0));
     return fileSize;
+}
+
+- (unsigned long long int)CoreDataSize{
+    
+    NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] valueForKey:(NSString *)kCFBundleNameKey];
+    
+    NSString *coreDataPath = [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:applicationName];
+    ABLoggerDebug(@"coreData path = %@",coreDataPath);
+    
+     NSString *cachePath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"com.hackemist.SDWebImageCache.default"];
+    ABLoggerDebug(@"cachePath = %@",cachePath);
+    
+    return [self folderSize:coreDataPath]+[self folderSize:cachePath];
 }
 
 - (NSString*)md5PathForKey:(NSString *) key{
@@ -143,7 +158,7 @@ static DataBaseManager *_sharedInstance = nil;
     return mMovie_city;
 }
 
-- (void)insertMMovie_CinemaWithMovie:(MMovie *)aMovie andCinema:(MCinema *)aCinema{
+- (void)insertMMovie_CinemaWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema{
     
     if (!aMovie || !aCinema) {
         ABLoggerWarn(@"不能 插入 电影_影院，不能为空");

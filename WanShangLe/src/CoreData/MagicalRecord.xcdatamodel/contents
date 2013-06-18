@@ -120,6 +120,8 @@
         <attribute name="webTimeStamp" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
+        <element name="BBar" positionX="-531" positionY="-1032" width="128" height="193"/>
+        <element name="BBarDetail" positionX="-747" positionY="-966" width="128" height="118"/>
         <element name="City" positionX="-162" positionY="-846" width="128" height="135"/>
         <element name="MBuyTicketInfo" positionX="-27" positionY="-63" width="128" height="73"/>
         <element name="MCinema" positionX="99" positionY="-306" width="128" height="193"/>
@@ -130,8 +132,6 @@
         <element name="MSchedule" positionX="-189" positionY="-67" width="128" height="163"/>
         <element name="SShow" positionX="-173" positionY="-1384" width="128" height="268"/>
         <element name="SShowDetail" positionX="-371" positionY="-1377" width="128" height="133"/>
-        <element name="TimeStamp" positionX="-756" positionY="-475" width="128" height="88"/>
-        <element name="BBar" positionX="-531" positionY="-1032" width="128" height="193"/>
-        <element name="BBarDetail" positionX="-747" positionY="-966" width="128" height="118"/>
+        <element name="TimeStamp" positionX="-774" positionY="-639" width="128" height="88"/>
     </elements>
 </model>
