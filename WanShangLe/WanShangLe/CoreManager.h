@@ -42,6 +42,8 @@
 //-------------BBar----------------/
 #define API_BBarCmd  106 //演出
 #define API_BBarDetailCmd  107 //演出详情
+//-------------KKTV----------------/
+#define API_KKTVCmd  108 //KTV
 
 //测试宏标记
 #define TestCode

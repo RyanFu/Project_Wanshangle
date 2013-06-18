@@ -20,7 +20,6 @@
     UIButton *favoriteButton;
     UIButton *nearbyButton;
     UIButton *allButton;
-    UIButton *movieDetailButton;
     UIButton *searchButton;
 }
 @property(nonatomic,retain)UILabel *movieLabel;
@@ -166,13 +165,13 @@
     }
     
     if (isMovie_Cinema) {
-        movieDetailButton.hidden = NO;
+        _movieDetailButton.hidden = NO;
         _cinemaTableView.frame = CGRectMake(0, 70, self.view.bounds.size.width, self.view.bounds.size.height-70);
         NSString *info = [NSString stringWithFormat:@"电影:%@   豆瓣评分:%@ (%d万人) \n\n 主演:范冰冰，唐尼        120分钟",
                           _mMovie.name,[_mMovie.rating stringValue],[_mMovie.ratingpeople integerValue]/10000];
         _movieLabel.text = info;
     }else{
-        movieDetailButton.hidden = YES;
+        _movieDetailButton.hidden = YES;
         _cinemaTableView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     }
 }

@@ -18,7 +18,9 @@
 @class ApiCmdMovie_getAllMovies,ApiCmdMovie_getAllCinemas;
 @class ApiCmdMovie_getSchedule,ApiCmdMovie_getBuyInfo;
 @class ApiCmdShow_getAllShows,ApiCmdBar_getAllBars;
+@class ApiCmdKTV_getAllKTVs,ApiCmdKTV_getKTVDetail,ApiCmdKTV_getDiscountInfo;
 @class MMovie_City,MSchedule,MMovie_Cinema,MMovie,MCinema;
+@class KKTV,KKTVBuyInfo,KKTVDetail;
 @class SShow,BBar;
 
 @interface DataBaseManager : NSObject{
@@ -113,4 +115,28 @@
 - (NSUInteger)getCountOfBarsListFromCoreDataWithCityName:(NSString *)cityName;
 - (void)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importBar:(BBar *)bBar ValuesForKeysWithObject:(NSDictionary *)aBarDic;
+
+/************ KTV ***************/
+- (ApiCmdKTV_getAllKTVs *)getAllKTVsListFromWeb:(id<ApiNotify>)delegate;
+- (NSArray *)getAllKTVsListFromCoreData;
+- (NSArray *)getAllKTVsListFromCoreDataWithCityName:(NSString *)cityName;
+- (NSUInteger)getCountOfKTVsListFromCoreData;
+- (NSUInteger)getCountOfKTVsListFromCoreDataWithCityName:(NSString *)cityName;
+- (void)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (void)importKTV:(KKTV *)kKTV ValuesForKeysWithObject:(NSDictionary *)aKTVDic;
+
+//获得 KTV Detail Info
+- (ApiCmdKTV_getKTVDetail *)getDetailInfoFromWebWithaKTV:(KKTV *)aKTV
+                                                delegate:(id<ApiNotify>)delegate;
+- (void)insertDetailInfoIntoCoreDataFromObject:(NSDictionary *)objectData
+                                    withApiCmd:(ApiCmd*)apiCmd
+                                      withaKTV:(KKTV *)aKTV;
+
+//获得 KTV Discounts Info
+- (ApiCmdKTV_getDiscountInfo *)getDiscountInfoFromWebWithaKTV:(KKTV *)aKTV
+                                                delegate:(id<ApiNotify>)delegate;
+- (void)insertDiscountInfoIntoCoreDataFromObject:(NSDictionary *)objectData
+                                    withApiCmd:(ApiCmd*)apiCmd
+                                      withaKTV:(KKTV *)aKTV;
+
 @end

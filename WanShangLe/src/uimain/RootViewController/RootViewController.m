@@ -90,6 +90,14 @@
 //KTV
 - (IBAction)clickKTVButton:(id)sender{
     userClickStyle = WSLUserClickStyleKTV;
+    
+    if (![self checkUserCity])return;
+    
+    if (!_ktvViewController) {
+        _ktvViewController = [[KtvViewController alloc] initWithNibName:(iPhone5?@"KtvViewController":@"KtvViewController") bundle:nil];
+    }
+    
+    [self.navigationController pushViewController:_ktvViewController animated:YES];
 }
 
 //演出

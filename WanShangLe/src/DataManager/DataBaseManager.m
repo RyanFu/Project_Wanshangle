@@ -9,31 +9,8 @@
 static DataBaseManager *_sharedInstance = nil;
 
 #import "DataBaseManager.h"
-#import "ASIHTTPRequest.h"
+#import "DataBase.h"
 
-#import "ShowViewController.h"
-#import "MovieViewController.h"
-#import "CinemaViewController.h"
-#import "ScheduleViewController.h"
-#import "BarViewController.h"
-
-#import "ApiCmdMovie_getAllMovies.h"
-#import "ApiCmdMovie_getAllCinemas.h"
-#import "ApiCmdMovie_getSchedule.h"
-#import "ApiCmdMovie_getBuyInfo.h"
-#import "ApiCmdShow_getAllShows.h"
-#import "ApiCmdBar_getAllBars.h"
-
-#import "MMovie_Cinema.h"
-#import "MMovie_City.h"
-#import "MMovie.h"
-#import "MCinema.h"
-#import "MSchedule.h"
-#import "MBuyTicketInfo.h"
-#import "City.h"
-#import "SShow.h"
-#import "BBar.h"
-#import "ApiCmd.h"
 
 @interface DataBaseManager(){
     NSString *updateTimeStamp;
@@ -1004,4 +981,112 @@ static DataBaseManager *_sharedInstance = nil;
     bBar.latitude = [aBarDic objectForKey:@"latitude"];
 }
 //========================================= 酒吧 =========================================/
+
+#pragma mark -
+#pragma mark KTV
+/****************************************** KTV *********************************************/
+- (ApiCmdKTV_getAllKTVs *)getAllKTVsListFromWeb:(id<ApiNotify>)delegate{
+    KtvViewController *ktvViewController = (KtvViewController *)delegate;
+    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:ktvViewController.apiCmdKTV_getAllKTVs.httpRequest]) {
+        ABLoggerWarn(@"不能请求 KTV 列表数据，因为已经请求了");
+        return ktvViewController.apiCmdKTV_getAllKTVs;
+    }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmdKTV_getAllKTVs* apiCmdKTV_getAllKTVs = [[ApiCmdKTV_getAllKTVs alloc] init];
+    apiCmdKTV_getAllKTVs.delegate = delegate;
+    apiCmdKTV_getAllKTVs.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    [apiClient executeApiCmdAsync:apiCmdKTV_getAllKTVs];
+    [apiCmdKTV_getAllKTVs.httpRequest setTag:API_KKTVCmd];
+    
+    return [apiCmdKTV_getAllKTVs autorelease];
+}
+
+- (NSArray *)getAllKTVsListFromCoreData{
+    return [self getAllKTVsListFromCoreDataWithCityName:nil];
+}
+
+- (NSArray *)getAllKTVsListFromCoreDataWithCityName:(NSString *)cityName{
+    if (isEmpty(cityName)) {
+        cityName = [[LocationManager defaultLocationManager] getUserCity];
+    }
+    
+    return [KKTV MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+}
+
+- (NSUInteger)getCountOfKTVsListFromCoreData{
+    return [self getCountOfKTVsListFromCoreDataWithCityName:nil];
+}
+
+- (NSUInteger)getCountOfKTVsListFromCoreDataWithCityName:(NSString *)cityName{
+    if (isEmpty(cityName)) {
+        cityName = [[LocationManager defaultLocationManager] getUserCity];
+    }
+    int count = [KKTV MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return count;
+
+}
+
+/*
+ {
+ "timestamp":"1369275251",
+ "errors":[],
+ "data":{
+ "count":10,
+ "infos":[
+ {
+ "id":30011,
+ "name":"钱柜静安店1",
+ "addr":"静安区乌鲁木齐路21号",
+ "lowprice":35,
+ "tel":13800999900,
+ "longitude":24.2355,
+ "latitude":42.2352,
+ "discounts":9
+ },
+ */
+- (void)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+    CFTimeInterval time1 = Elapsed_Time;
+    
+    NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"infos"];
+    
+    KKTV *kKTV = nil;
+    for (int i=0; i<[array count]; i++) {
+        
+        kKTV = [KKTV MR_findFirstByAttribute:@"uid" withValue:[[array objectAtIndex:i] objectForKey:@"id"] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        if (kKTV == nil)
+        {
+            ABLoggerInfo(@"插入 一条 KTV 新数据 ======= %@",[[array objectAtIndex:i] objectForKey:@"name"]);
+            kKTV = [KKTV MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        }
+        [self importKTV:kKTV ValuesForKeysWithObject:[array objectAtIndex:i]];
+        
+        City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
+        kKTV.city = city;
+    }
+    
+    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"KTV 保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
+    
+    CFTimeInterval time2 = Elapsed_Time;
+    ElapsedTime(time2, time1);
+    
+    [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+    ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+}
+
+- (void)importKTV:(KKTV *)kKTV ValuesForKeysWithObject:(NSDictionary *)aKTVDic{
+    kKTV.name = [aKTVDic objectForKey:@"name"];
+    kKTV.uid = [[aKTVDic objectForKey:@"id"] stringValue];
+    kKTV.address = [aKTVDic objectForKey:@"addr"];
+    kKTV.price = [aKTVDic objectForKey:@"lowprice"];
+    kKTV.phoneNumber = [[aKTVDic objectForKey:@"tel"] stringValue];
+    kKTV.longitude = [aKTVDic objectForKey:@"longitude"];
+    kKTV.latitude = [aKTVDic objectForKey:@"latitude"];
+    kKTV.discounts = [aKTVDic objectForKey:@"discounts"];
+}
+//========================================= KTV =========================================/
 @end
