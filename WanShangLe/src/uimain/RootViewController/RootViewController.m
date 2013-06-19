@@ -78,12 +78,12 @@
 - (IBAction)clickMovieButton:(id)sender{
     userClickStyle = WSLUserClickStyleMovie;
     
-     if (![self checkUserCity])return;
+    if (![self checkUserCity])return;
     
     if (!_movieViewController) {
         _movieViewController = [[MovieViewController alloc] initWithNibName:nil bundle:nil];
     }
-
+    
     [self.navigationController pushViewController:_movieViewController animated:YES];
 }
 
@@ -215,6 +215,7 @@
     
     [super didReceiveMemoryWarning];
     
+    /*释放可以再生成的资源*/
 }
 
 - (void)dealloc{

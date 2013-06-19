@@ -294,7 +294,7 @@ NSString * const kMagicalRecordPSCDidCompleteiCloudSetupNotification = @"kMagica
 {
     NSMutableDictionary *mutDict = [self mutableCopy];
     [mutDict addEntriesFromDictionary:d];
-    return mutDict; 
+    return [mutDict autorelease];
 } 
 
 @end 

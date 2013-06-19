@@ -84,7 +84,7 @@ static DataBaseManager *_sharedInstance = nil;
     NSString *coreDataPath = [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:applicationName];
     ABLoggerDebug(@"coreData path = %@",coreDataPath);
     
-     NSString *cachePath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"com.hackemist.SDWebImageCache.default"];
+    NSString *cachePath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"com.hackemist.SDWebImageCache.default"];
     ABLoggerDebug(@"cachePath = %@",cachePath);
     
     return [self folderSize:coreDataPath]+[self folderSize:cachePath];
@@ -586,8 +586,10 @@ static DataBaseManager *_sharedInstance = nil;
     
     NSDictionary *dataDic = [objectData objectForKey:@"data"];
     
-    NSString *movie_cinema_schedule_uid = [[NSString alloc] initWithFormat:@"%d%d%@",[aCinema.uid intValue],[aMovie.uid intValue],aSchedule];
-    movie_cinema_schedule_uid = [self md5PathForKey:movie_cinema_schedule_uid];
+    NSString *keyPath = [[NSString alloc] initWithFormat:@"%d%d%@",[aCinema.uid intValue],[aMovie.uid intValue],aSchedule];
+    NSString *movie_cinema_schedule_uid = [self md5PathForKey:keyPath];
+    [keyPath release];
+    
     MBuyTicketInfo *buyInfo = [MBuyTicketInfo MR_findFirstByAttribute:@"uid" withValue:movie_cinema_schedule_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     if (buyInfo == nil) {
         buyInfo = [MBuyTicketInfo MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
@@ -600,8 +602,6 @@ static DataBaseManager *_sharedInstance = nil;
         ABLoggerDebug(@"排期 保存是否成功 ========= %d",success);
         ABLoggerDebug(@"错误信息 ========= %@",[error description]);
     }];
-    
-    [movie_cinema_schedule_uid release];
 }
 //========================================= 电影 =========================================/
 
@@ -921,7 +921,7 @@ static DataBaseManager *_sharedInstance = nil;
     
     NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"pubs"];
     
-     BBar *bBar = nil;
+    BBar *bBar = nil;
     for (int i=0; i<[array count]; i++) {
         
         bBar = [BBar MR_findFirstByAttribute:@"uid" withValue:[[array objectAtIndex:i] objectForKey:@"id"] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
@@ -1025,7 +1025,7 @@ static DataBaseManager *_sharedInstance = nil;
     }
     int count = [KKTV MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     return count;
-
+    
 }
 
 /*

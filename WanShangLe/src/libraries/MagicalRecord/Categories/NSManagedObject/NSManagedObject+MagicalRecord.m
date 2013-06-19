@@ -133,6 +133,7 @@ static NSUInteger defaultBatchSize = kMagicalRecordDefaultBatchSize;
     {
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:attributeName ascending:ascending];
         [attributes addObject:sortDescriptor];
+        [sortDescriptor release];
     }
     
 	return attributes;

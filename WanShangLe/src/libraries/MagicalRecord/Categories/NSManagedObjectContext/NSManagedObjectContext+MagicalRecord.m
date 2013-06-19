@@ -42,7 +42,7 @@ static NSString * const kMagicalRecordNSManagedObjectContextWorkingName = @"kNSM
 
 - (NSString *) MR_parentChain;
 {
-    NSMutableString *familyTree = [@"\n" mutableCopy];
+    NSMutableString *familyTree = [[@"\n" mutableCopy] autorelease];
     NSManagedObjectContext *currentContext = self;
     do
     {
@@ -169,7 +169,7 @@ static NSString * const kMagicalRecordNSManagedObjectContextWorkingName = @"kNSM
 {
     NSManagedObjectContext *context = [[self alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
     MRLog(@"Created Main Queue Context: %@", context);
-    return context;    
+    return context;
 }
 
 + (NSManagedObjectContext *) MR_contextWithStoreCoordinator:(NSPersistentStoreCoordinator *)coordinator;

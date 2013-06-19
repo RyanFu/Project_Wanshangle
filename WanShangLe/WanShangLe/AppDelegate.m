@@ -57,11 +57,9 @@
     //inset all citys into coreData
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         
-         [[DataBaseManager sharedInstance] insertAllCitysIntoCoreData];
-
+        [[DataBaseManager sharedInstance] insertAllCitysIntoCoreData];
+        
     });
-    
-    
     
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
@@ -113,6 +111,11 @@
 
 + (instancetype)appDelegateInstance{
 	return (AppDelegate *)[UIApplication sharedApplication].delegate;
+}
+
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
+{
+    ABLoggerWarn(@"AppDelegate 接受到内存警告了");
 }
 
 @end

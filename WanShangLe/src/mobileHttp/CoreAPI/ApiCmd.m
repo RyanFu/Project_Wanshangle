@@ -103,7 +103,7 @@
     }
     
     NSError *error = nil;
-    self.responseJSONObject = [NSJSONSerialization JSONObjectWithData:self.responseData options:kNilOptions error:&error];
+    self.responseJSONObject = [NSJSONSerialization JSONObjectWithData:self.responseData options:0 error:&error];
     
     if (error) {
         ABLoggerInfo(@"Fail to parseJson with error:\n%@", [error localizedDescription]);
@@ -234,7 +234,7 @@
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     NSError *error = [request error];
-
+    
     if (delegate && [delegate respondsToSelector:@selector(apiNotifyResult:error:)]) {
         // call delegate
         [delegate apiNotifyResult:self error:error];
