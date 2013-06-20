@@ -12,12 +12,12 @@
 #import "CinemaTableViewCellSection.h"
 #import "ScheduleViewController.h"
 #import "CinemaMovieViewController.h"
+#import "MovieViewController.h"
 #import "MCinema.h"
 
 @interface CinemaListTableViewDelegate(){
     
 }
-@property (nonatomic,retain)NSIndexPath *selectIndex;
 @end
 
 @implementation CinemaListTableViewDelegate
@@ -155,7 +155,7 @@
                                                                 bundle:nil];
             cinemaMovieController.mCinema = mCinema;
             cinemaMovieController.mMovie = _parentViewController.mMovie;
-            [_parentViewController.navigationController pushViewController:cinemaMovieController animated:YES];
+            [_parentViewController.mparentController.navigationController pushViewController:cinemaMovieController animated:YES];
             [cinemaMovieController release];
         }
         

@@ -11,6 +11,7 @@
 #import "MovieListTableViewDelegate.h"
 #import "CinemaListTableViewDelegate.h"
 #import "CinemaSearchViewController.h"
+#import "MovieViewController.h"
 #import "ASIHTTPRequest.h"
 #import "MCinema.h"
 #import "MMovie.h"
@@ -31,6 +32,7 @@
 
 @implementation CinemaViewController
 @synthesize isMovie_Cinema;
+@synthesize mparentController = _mparentController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -65,6 +67,9 @@
     [self updatData];//测试代码
 #endif
     
+    _cinemaDelegate.isOpen = NO;
+    _cinemaDelegate.selectIndex = nil;
+    [_cinemaTableView reloadData];
 }
 
 - (void)updatData{
@@ -150,6 +155,10 @@
     [self initMovieCinemaView];
     
     [favoriteButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [self updateData:0];
+    });
 }
 
 - (void)setTableViewDelegate{
@@ -181,13 +190,14 @@
 }
 
 - (void)clickSearchBar:(id)sender{
+    
     if (!_cinemaSearchViewControlelr) {
         _cinemaSearchViewControlelr = [[CinemaSearchViewController alloc] initWithNibName:nil bundle:nil];
     }
     
     if ([[DataBaseManager sharedInstance] getCountOfCinemasListFromCoreData]) {
         _cinemaSearchViewControlelr.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-        [self.navigationController pushViewController:_cinemaSearchViewControlelr animated:YES];
+        [self.mparentController.navigationController pushViewController:_cinemaSearchViewControlelr animated:YES];
     }else{
         ABLoggerWarn(@"======== 还没有电影院");
     }

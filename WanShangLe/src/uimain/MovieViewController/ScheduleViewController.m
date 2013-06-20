@@ -13,6 +13,7 @@
 #import "CinemaMovieViewController.h"
 #import "MMovie.h"
 #import "MCinema.h"
+#import "MSchedule.h"
 
 @interface ScheduleViewController ()<ApiNotify>{
     
@@ -47,6 +48,7 @@
     self.todaySchedules = nil;
     self.schedulesArray = nil;
     self.scheduleTableViewDelegate = nil;
+    self.apiCmdMovie_getSchedule.delegate = nil;
     [super dealloc];
 }
 
@@ -77,6 +79,10 @@
     [self setTableViewDelegate];
     
     [_todayButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [self updateData:0];
+    });
     
 }
 
@@ -136,7 +142,7 @@
                                                                     andaCinema:_mCinema];
         
         int tag = [[apiCmd httpRequest] tag];
-        [self updateData:tag responseData:[apiCmd responseJSONObject]];
+        [self updateData:tag];
         
     });
     
@@ -146,17 +152,19 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         int tag = [[apiCmd httpRequest] tag];
-        [self updateData:tag responseData:[apiCmd responseJSONObject]];
+        [self updateData:tag];
     });
 }
 
-- (void)updateData:(int)tag responseData:(NSDictionary *)responseDic
+- (void)updateData:(int)tag
 {
     ABLogger_int(tag);
     switch (tag) {
         case 0:
         case API_MScheduleCmd:
         {
+            MSchedule *tSchedule = [[DataBaseManager sharedInstance] getScheduleFromCoreDataWithaMovie:_mMovie andaCinema:_mCinema];
+            NSDictionary *responseDic = tSchedule.scheduleInfo;
             [self formatCinemaData:responseDic];
         }
             break;
@@ -170,7 +178,7 @@
 
 - (void)formatCinemaData:(NSDictionary *)responseDic{
     ABLoggerMethod();
-    NSArray *schedules = [[responseDic objectForKey:@"data"] objectForKey:@"schedule"];
+    NSArray *schedules = [responseDic objectForKey:@"schedule"];
     self.todaySchedules = [[schedules objectAtIndex:0] objectForKey:@"starts"];
     self.tomorrowSchedules = [[schedules objectAtIndex:1] objectForKey:@"starts"];
     self.schedulesArray = self.todaySchedules;

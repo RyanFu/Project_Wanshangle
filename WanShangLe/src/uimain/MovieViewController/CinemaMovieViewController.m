@@ -110,7 +110,8 @@
     NSArray *array = [NSArray arrayWithObjects:
                       [CacheManager sharedInstance].rootViewController,
                       [CacheManager sharedInstance].movieViewController,
-                      [CacheManager sharedInstance].cinemaViewController,nil];
+                      [CacheManager sharedInstance].cinemaViewController,
+                      nil];
     
     cinemaViewController.mMovie = self.mMovie;
     cinemaViewController.isMovie_Cinema = YES;

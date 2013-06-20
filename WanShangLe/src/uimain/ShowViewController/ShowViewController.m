@@ -113,6 +113,7 @@
         
     }];
 }
+
 - (IBAction)clickTimeButton:(id)sender{
     [self cleanUpButtonBackground];
     [_timeButton setBackgroundColor:[UIColor colorWithRed:0.184 green:0.973 blue:0.629 alpha:1.000]];
@@ -135,6 +136,7 @@
         
     }];
 }
+
 - (IBAction)clickOrderButton:(id)sender{
     [self cleanUpButtonBackground];
     [_orderButton setBackgroundColor:[UIColor colorWithRed:0.184 green:0.973 blue:0.629 alpha:1.000]];

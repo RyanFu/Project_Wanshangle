@@ -10,6 +10,7 @@
 
 @class MMovie;
 @class ApiCmdMovie_getAllCinemas;
+@class MovieViewController;
 
 typedef NS_ENUM(NSInteger, NSFilterCinemaListType) {
     NSFilterCinemaListTypeFavorite = 0,          
@@ -20,6 +21,7 @@ typedef NS_ENUM(NSInteger, NSFilterCinemaListType) {
 @interface CinemaViewController : UIViewController{
     
 }
+@property(nonatomic,assign)MovieViewController *mparentController;
 @property(nonatomic,retain)MMovie *mMovie;
 @property(nonatomic,readwrite)BOOL isMovie_Cinema;
 @property(nonatomic,retain)UITableView *cinemaTableView;

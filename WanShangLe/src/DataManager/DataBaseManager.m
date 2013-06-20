@@ -135,15 +135,15 @@ static DataBaseManager *_sharedInstance = nil;
     return mMovie_city;
 }
 
-- (void)insertMMovie_CinemaWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema{
-    
-    if (!aMovie || !aCinema) {
-        ABLoggerWarn(@"不能 插入 电影_影院，不能为空");
-        return;
-    }
+- (MMovie_Cinema *)insertMMovie_CinemaWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema{
     
     MMovie_Cinema *movie_cinema = nil;
     
+    if (!aMovie || !aCinema) {
+        ABLoggerWarn(@"不能 插入 电影_影院，不能为空");
+        return movie_cinema;
+    }
+
     NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%d",[aCinema.city name],[aCinema.uid intValue],[aMovie.uid intValue]];
     movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     if (movie_cinema == nil) {
@@ -154,6 +154,7 @@ static DataBaseManager *_sharedInstance = nil;
     movie_cinema.cinema = aCinema;
     [movie_cinema_uid release];
     
+    return movie_cinema;
 }
 
 - (void)insertMMovie_CinemaWithMovies:(NSArray *)movies andCinemas:(NSArray *)cinemas
@@ -347,6 +348,7 @@ static DataBaseManager *_sharedInstance = nil;
     CFTimeInterval time1 = Elapsed_Time;
     
     NSArray *array = [[objectData objectForKey:@"data"] objectForKey:@"movies"];
+    NSArray *array_dynamic = [[objectData objectForKey:@"data"] objectForKey:@"dynamic"];
     
     MMovie *mMovie = nil;
     for (int i=0; i<[array count]; i++) {
@@ -354,7 +356,7 @@ static DataBaseManager *_sharedInstance = nil;
         mMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:[[array objectAtIndex:i] objectForKey:@"id"] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
         if (mMovie == nil)
         {
-            ABLoggerInfo(@"插入 一条电影 新数据 ======= %@",[[array objectAtIndex:i] objectForKey:@"name"]);
+            ABLoggerInfo(@"插入 一条 New电影 新数据 ======= %@",[[array objectAtIndex:i] objectForKey:@"name"]);
             mMovie = [MMovie MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
         }
         [self importMovie:mMovie ValuesForKeysWithObject:[array objectAtIndex:i]];
@@ -369,11 +371,22 @@ static DataBaseManager *_sharedInstance = nil;
         
     }
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSArray *movies = [self getAllMoviesListFromCoreDataWithCityName:apiCmd.cityName];
-        NSArray *cinemas = [self getAllCinemasListFromCoreDataWithCityName:apiCmd.cityName];
-        [self insertMMovie_CinemaWithMovies:movies andCinemas:cinemas];
-    });
+    for (int i=0; i<[array_dynamic count]; i++) {
+        
+        mMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:[[array_dynamic objectAtIndex:i] objectForKey:@"id"] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        if (mMovie == nil)
+        {
+            ABLoggerInfo(@"插入 一条 更新动态电影 新数据 ======= %@",[[array_dynamic objectAtIndex:i] objectForKey:@"name"]);
+            mMovie = [MMovie MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        }
+        [self importDynamicMovie:mMovie ValuesForKeysWithObject:[array_dynamic objectAtIndex:i]];
+    }
+    
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        NSArray *movies = [self getAllMoviesListFromCoreDataWithCityName:apiCmd.cityName];
+//        NSArray *cinemas = [self getAllCinemasListFromCoreDataWithCityName:apiCmd.cityName];
+//        [self insertMMovie_CinemaWithMovies:movies andCinemas:cinemas];
+//    });
     
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         ABLoggerDebug(@"电影保存是否成功 ========= %d",success);
@@ -389,7 +402,7 @@ static DataBaseManager *_sharedInstance = nil;
     //    });
 }
 
-/***************************
+/**
  {
  "timestamp":1369275251,
  "errors":[],
@@ -399,26 +412,38 @@ static DataBaseManager *_sharedInstance = nil;
  {
  "id":101,
  "name":"钢铁侠三",
+ "webImg":"http://img31.mtime.cn/mt/2013/05/03/124825.16945557.jpg",
+ "aword":"一个世纪英雄再次拯救我们"
+ },
+ 
+ "dynamic":[
+ {
+ "id":101,
  "rating":7.8,
  "ratingFrom":"豆瓣",
  "ratingpeople":120000,
- "webImg":"http://img31.mtime.cn/mt/2013/05/03/124825.16945557.jpg",
  "newMovie":0,
- "aword":"一个世纪英雄再次拯救我们",
  "viewtypes":[0,1,1]
  },
+ 
+ "deletions":[]
  ***/
 - (void)importMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData
 {
     ABLoggerMethod();
     mMovie.uid = [amovieData objectForKey:@"id"];
     mMovie.name = [amovieData objectForKey:@"name"];
+    mMovie.webImg = [amovieData objectForKey:@"webImg"];
+    mMovie.aword = [amovieData objectForKey:@"aword"];
+}
+
+- (void)importDynamicMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData
+{
+    ABLoggerMethod();
     mMovie.rating = [amovieData objectForKey:@"rating"];
     mMovie.ratingFrom = [amovieData objectForKey:@"ratingFrom"];
     mMovie.ratingpeople = [amovieData objectForKey:@"ratingpeople"];
-    mMovie.webImg = [amovieData objectForKey:@"webImg"];
     mMovie.newMovie = [amovieData objectForKey:@"newMovie"];
-    mMovie.aword = [amovieData objectForKey:@"aword"];
     mMovie.twoD = [[amovieData objectForKey:@"viewtypes"] objectAtIndex:0];
     mMovie.threeD = [[amovieData objectForKey:@"viewtypes"] objectAtIndex:1];
     mMovie.iMaxD = [[amovieData objectForKey:@"viewtypes"] objectAtIndex:2];
@@ -431,12 +456,6 @@ static DataBaseManager *_sharedInstance = nil;
 {
     ABLoggerDebug(@"=== %@",[[CacheManager sharedInstance] mUserDefaults]);
     
-    //    if ([[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]) {
-    //        ABLoggerWarn(@"不能请求影院列表数据，因为已经请求了 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
-    //        return nil;
-    //    }
-    
-    //    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:UpdatingCinemasList];
     ApiClient* apiClient = [ApiClient defaultClient];
     
     ApiCmdMovie_getSchedule* apiCmdMovie_getSchedule = [[ApiCmdMovie_getSchedule alloc] init];
@@ -448,8 +467,13 @@ static DataBaseManager *_sharedInstance = nil;
     return [apiCmdMovie_getSchedule autorelease];
 }
 
-- (NSArray *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema isToday:(BOOL)isToday{
-    return nil;
+- (MSchedule *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema{
+    
+    MMovie_Cinema *movie_cinema = nil;
+    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%d",[aCinema.city name],[aCinema.uid intValue],[aMovie.uid intValue]];
+    movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+
+    return movie_cinema.schedule;
 }
 
 /*
@@ -519,7 +543,9 @@ static DataBaseManager *_sharedInstance = nil;
     NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%d",[aCinema.city name],[aCinema.uid intValue],[aMovie.uid intValue]];
     MMovie_Cinema *movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     if (movie_cinema == nil) {
-        movie_cinema = [MMovie_Cinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        MMovie *tMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:aMovie.uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        MCinema *tCinema = [MCinema MR_findFirstByAttribute:@"uid" withValue:aCinema.uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        movie_cinema = [self insertMMovie_CinemaWithaMovie:tMovie andaCinema:tCinema];
     }
     
     if (!movie_cinema.schedule) {
@@ -543,13 +569,7 @@ static DataBaseManager *_sharedInstance = nil;
                                                delegate:(id<ApiNotify>)delegate
 {
     ABLoggerDebug(@"=== %@",[[CacheManager sharedInstance] mUserDefaults]);
-    
-    //    if ([[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]) {
-    //        ABLoggerWarn(@"不能请求影院列表数据，因为已经请求了 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
-    //        return nil;
-    //    }
-    
-    //    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:UpdatingCinemasList];
+
     ApiClient* apiClient = [ApiClient defaultClient];
     
     ApiCmdMovie_getBuyInfo* apiCmdMovie_getBuyInfo = [[ApiCmdMovie_getBuyInfo alloc] init];
@@ -667,7 +687,7 @@ static DataBaseManager *_sharedInstance = nil;
     
     CFTimeInterval time1 = Elapsed_Time;
     
-    NSArray *info_array = [objectData objectForKey:@"info"];
+    NSArray *info_array = [[objectData objectForKey:@"data"] objectForKey:@"info"];
     //    NSMutableArray *cinemas = [[NSMutableArray alloc] initWithCapacity:100];
     MCinema *mCinema = nil;
     
@@ -696,11 +716,11 @@ static DataBaseManager *_sharedInstance = nil;
     
     
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSArray *movies = [self getAllMoviesListFromCoreDataWithCityName:apiCmd.cityName];
-        NSArray *cinemas = [self getAllCinemasListFromCoreDataWithCityName:apiCmd.cityName];
-        [self insertMMovie_CinemaWithMovies:movies andCinemas:cinemas];
-    });
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        NSArray *movies = [self getAllMoviesListFromCoreDataWithCityName:apiCmd.cityName];
+//        NSArray *cinemas = [self getAllCinemasListFromCoreDataWithCityName:apiCmd.cityName];
+//        [self insertMMovie_CinemaWithMovies:movies andCinemas:cinemas];
+//    });
     
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         ABLoggerDebug(@"影院保存是否成功 ========= %d",success);
@@ -720,14 +740,15 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 /*
- "error":{
- },
- "timestamp":"1369275251",
- "count":10,
- "info":[
  {
- "district":"朝阳区",
- "cinemas":[
+ "error":{},
+ "timestamp":"1369275251",
+ "data":{
+ "count": 10,
+ "info": [
+ {
+ "district": "朝阳区",
+ "cinemas": [
  {
  "id":10011,
  "name":"大望路电影院1",

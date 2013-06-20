@@ -21,8 +21,10 @@
 @interface MovieViewController ()<ApiNotify>{
     UIButton *movieButton;
     UIButton *cinemaButton;
+    BOOL isMoviePanel;
 }
 @property(nonatomic,retain)MovieListTableViewDelegate *movieDelegate;
+@property(nonatomic,retain)UIView *movieContentView;;
 @end
 
 @implementation MovieViewController
@@ -38,7 +40,9 @@
             self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
         });
         
-        _cinemaViewController = [[CinemaViewController alloc] initWithNibName:nil bundle:nil];
+        [self newCinemaController];
+        
+        isMoviePanel = YES;
     }
     return self;
 }
@@ -51,16 +55,17 @@
     
     self.apiCmdMovie_getAllCinemas = nil;
     self.apiCmdMovie_getAllMovies = nil;
+    self.movieContentView = nil;
     
     [super dealloc];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
-    [self.navigationController setNavigationBarHidden:NO];
+
+    [self newCinemaController];
     
     self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
     self.apiCmdMovie_getAllCinemas =[[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
-    
     
 #ifdef TestCode
     [self updatData];//测试代码
@@ -68,10 +73,14 @@
     
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    
+}
+
 - (void)updatData{
     for (int i=0; i<10; i++) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-             self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+            self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
         });
     }
 }
@@ -86,6 +95,8 @@
     UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 7, 140, 30)];
     UIButton *moviebt = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *cinemabt = [UIButton buttonWithType:UIButtonTypeCustom];
+    movieButton = moviebt;
+    cinemaButton = cinemabt;
     [moviebt setTitle:@"电影" forState:UIControlStateNormal];
     [moviebt setExclusiveTouch:YES];
     [cinemabt setTitle:@"影院" forState:UIControlStateNormal];
@@ -93,8 +104,10 @@
     cinemabt.tag = CinemaButtonTag;
     [moviebt setBackgroundColor:[UIColor clearColor]];
     [cinemabt setBackgroundColor:[UIColor clearColor]];
-    [moviebt addTarget:self action:@selector(clickMovieButton:) forControlEvents:UIControlEventTouchUpInside];
-    [cinemabt addTarget:self action:@selector(clickCinemaButton:) forControlEvents:UIControlEventTouchUpInside];
+    [moviebt addTarget:self action:@selector(clickMovieButtonUp:) forControlEvents:UIControlEventTouchUpInside];
+    [cinemabt addTarget:self action:@selector(clickCinemaButtonUp:) forControlEvents:UIControlEventTouchUpInside];
+    [moviebt addTarget:self action:@selector(clickMovieButtonDown:) forControlEvents:UIControlEventTouchDown];
+    [cinemabt addTarget:self action:@selector(clickCinemaButtonDown:) forControlEvents:UIControlEventTouchDown];
     [moviebt setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
     [moviebt setFrame:CGRectMake(0, 0, 70, 30)];
     [cinemabt setFrame:CGRectMake(70, 0, 70, 30)];
@@ -103,6 +116,7 @@
     self.navigationItem.titleView = topView;
     [topView release];
     
+    _movieContentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, iPhoneAppFrame.size.width, iPhoneAppFrame.size.height-44)];
     //create movie tableview and init
     _movieTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, iPhoneAppFrame.size.width, iPhoneAppFrame.size.height-44)
                                                    style:UITableViewStylePlain];
@@ -115,7 +129,8 @@
     _movieTableView.backgroundColor = [UIColor colorWithRed:0.880 green:0.963 blue:0.925 alpha:1.000];
     _movieTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-    [self.view addSubview:_movieTableView];
+    [_movieContentView addSubview:_movieTableView];
+    [self.view addSubview:_movieContentView];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         [self updateData:0];
@@ -127,28 +142,97 @@
     _movieTableView.delegate = _movieDelegate;
 }
 
-- (void)clickMovieButton:(id)sender{
+- (void)newCinemaController{
+    
+    if (!_cinemaViewController) {
+        _cinemaViewController = [[CinemaViewController alloc] initWithNibName:nil bundle:nil];
+        _cinemaViewController.mparentController = self;
+    }
+
+    _cinemaViewController.isMovie_Cinema = NO;
+    [_cinemaViewController viewWillAppear:NO];
+    CGRect cinemaFrame =  _cinemaViewController.view.frame;
+    cinemaFrame.origin.x = isMoviePanel?self.view.bounds.size.width:0;
+    _cinemaViewController.view.frame = cinemaFrame;
+
+    [_cinemaViewController.view removeFromSuperview];
+    [self.view addSubview:_cinemaViewController.view];
+}
+
+#pragma mark -
+#pragma mark 【电影-影院】Button Event
+- (void)clickMovieButtonUp:(id)sender{
+    
+    isMoviePanel = YES;
+    [self switchMovieCinemaAnimation];
+}
+
+- (void)clickMovieButtonDown:(id)sender{
     [self cleanUpButtonBackground];
     [movieButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
 }
 
-- (void)clickCinemaButton:(id)sender{
+- (void)clickCinemaButtonUp:(id)sender{
+    
+    [self newCinemaController];
+    
+    _cinemaViewController.isMovie_Cinema = NO;
+    
+    isMoviePanel = NO;
+    [self switchMovieCinemaAnimation];
+}
+- (void)clickCinemaButtonDown:(id)sender{
     
     [self cleanUpButtonBackground];
     [cinemaButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
-    
-    if (!_cinemaViewController) {
-        _cinemaViewController = [[CinemaViewController alloc] initWithNibName:nil bundle:nil];
-        [[CacheManager sharedInstance] setCinemaViewController:_cinemaViewController];
-    }
-    
-    _cinemaViewController.isMovie_Cinema = NO;
-    [self.navigationController pushViewController:_cinemaViewController animated:YES];
 }
 
 - (void)cleanUpButtonBackground{
     [movieButton setBackgroundColor:[UIColor clearColor]];
     [cinemaButton setBackgroundColor:[UIColor clearColor]];
+}
+
+- (void)switchMovieCinemaAnimation{
+    
+    [self.view setUserInteractionEnabled:NO];
+    
+    if (isMoviePanel) {
+        _movieContentView.hidden = NO;
+    }
+    
+    [UIView animateWithDuration:0.4 animations:^{
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+        
+        if (isMoviePanel && _movieContentView.frame.origin.x != 0) {
+
+            CGRect movieFrame =  _movieContentView.frame;
+            movieFrame.origin.x = 0;
+            _movieContentView.frame = movieFrame;
+            
+            CGRect cinemaFrame =  _cinemaViewController.view.frame;
+            cinemaFrame.origin.x = self.view.bounds.size.width;
+            _cinemaViewController.view.frame = cinemaFrame;
+            
+        }else if (_cinemaViewController.view.frame.origin.x != 0){
+            
+            CGRect movieFrame =  _movieContentView.frame;
+            movieFrame.origin.x = -self.view.bounds.size.width;
+            _movieContentView.frame = movieFrame;
+            
+            CGRect cinemaFrame =  _cinemaViewController.view.frame;
+            cinemaFrame.origin.x = 0;
+            _cinemaViewController.view.frame = cinemaFrame;
+            
+            [_cinemaViewController viewWillAppear:NO];
+        }
+        
+    } completion:^(BOOL finished) {
+        [self.view setUserInteractionEnabled:YES];
+        
+        if (!isMoviePanel) {
+            _movieContentView.hidden = YES;
+        }
+    }];
 }
 
 #pragma mark -
@@ -196,7 +280,7 @@
                 
                 [self.movieTableView reloadData];
             });
-//            [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingMoviesList];
+            //            [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingMoviesList];
         }
             break;
             
@@ -204,8 +288,8 @@
         {
             NSArray *array = [[DataBaseManager sharedInstance] getAllCinemasListFromCoreData];
             ABLoggerDebug(@"影院 count ==== %d",[array count]);
-//            [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingCinemasList];
-//            ABLoggerWarn(@"可以请求 影院列表数据 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
+            //            [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingCinemasList];
+            //            ABLoggerWarn(@"可以请求 影院列表数据 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
         }
             break;
         default:
