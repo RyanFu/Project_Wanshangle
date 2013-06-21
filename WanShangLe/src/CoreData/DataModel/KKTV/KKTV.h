@@ -24,5 +24,6 @@
 @property (nonatomic, retain) KKTVBuyInfo *ktvBuyInfo;
 @property (nonatomic, retain) NSManagedObject *ktvDetail;
 @property (nonatomic, retain) City *city;
+@property (nonatomic, retain) NSNumber * favorite;
 
 @end

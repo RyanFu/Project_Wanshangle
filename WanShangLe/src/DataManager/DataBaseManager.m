@@ -95,6 +95,13 @@ static DataBaseManager *_sharedInstance = nil;
     return md5(key);
 }
 
+- (void)saveInManagedObjectContext:(NSManagedObjectContext *)coreDataContext{
+    [coreDataContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
+}
+
 #pragma mark -
 #pragma mark 更新标记-时间戳
 - (BOOL)isToday:(NSString *)timeStamp{
@@ -447,6 +454,42 @@ static DataBaseManager *_sharedInstance = nil;
     mMovie.twoD = [[amovieData objectForKey:@"viewtypes"] objectAtIndex:0];
     mMovie.threeD = [[amovieData objectForKey:@"viewtypes"] objectAtIndex:1];
     mMovie.iMaxD = [[amovieData objectForKey:@"viewtypes"] objectAtIndex:2];
+}
+
+- (BOOL)addFavoriteCinemaWithId:(NSNumber *)uid{
+    NSManagedObjectContext* threadContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    MCinema *tCinema = [MCinema MR_findFirstByAttribute:@"uid" withValue:uid inContext:threadContext];
+    
+    if (!tCinema) {
+        return NO;
+    }
+    
+    tCinema.favorite = [NSNumber numberWithBool:YES];
+    
+    [threadContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"收藏影院 保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
+    
+    return YES;
+}
+
+- (BOOL)deleteFavoriteCinemaWithId:(NSNumber *)uid{
+    NSManagedObjectContext* threadContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    MCinema *tCinema = [MCinema MR_findFirstByAttribute:@"uid" withValue:uid inContext:threadContext];
+    
+    if (!tCinema) {
+        return NO;
+    }
+    
+    tCinema.favorite = [NSNumber numberWithBool:NO];
+    
+    [threadContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"取消收藏影院 保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
+    
+    return YES;
 }
 
 #pragma mark 获得排期
@@ -1108,6 +1151,44 @@ static DataBaseManager *_sharedInstance = nil;
     kKTV.longitude = [aKTVDic objectForKey:@"longitude"];
     kKTV.latitude = [aKTVDic objectForKey:@"latitude"];
     kKTV.discounts = [aKTVDic objectForKey:@"discounts"];
+}
+
+- (BOOL)addFavoriteKTVWithId:(NSNumber *)uid{
+    
+    NSManagedObjectContext* threadContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    KKTV *tKTV = [KKTV MR_findFirstByAttribute:@"uid" withValue:uid inContext:threadContext];
+    
+    if (!tKTV) {
+        return NO;
+    }
+    
+    tKTV.favorite = [NSNumber numberWithBool:YES];
+    
+    [threadContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"收藏KTV 保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
+    
+    return YES;
+}
+
+- (BOOL)deleteFavoriteKTVWithId:(NSNumber *)uid{
+    
+    NSManagedObjectContext* threadContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    KKTV *tKTV = [KKTV MR_findFirstByAttribute:@"uid" withValue:uid inContext:threadContext];
+    
+    if (!tKTV) {
+        return NO;
+    }
+    
+    tKTV.favorite = [NSNumber numberWithBool:NO];
+    
+    [threadContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"收藏KTV 保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
+    
+    return YES;
 }
 //========================================= KTV =========================================/
 @end

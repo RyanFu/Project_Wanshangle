@@ -96,7 +96,7 @@
     
     [_todayButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
     
-    _coverFlow.type = iCarouselTypeCoverFlow2;
+    _coverFlow.type = iCarouselTypeLinear;
     [_coverFlow reloadData];
 }
 
@@ -149,7 +149,8 @@
     return [_moviesArray count];
 }
 
-- (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index reusingView:(ReflectionView *)view
+//- (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index reusingView:(ReflectionView *)view
+- (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index reusingView:(UIView *)view
 {
     UIImageView *view2 = nil;
 	
@@ -157,7 +158,7 @@
 	if (view == nil)
 	{
         //set up reflection view
-		view = [[[ReflectionView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 100, 100)] autorelease];
+		view = [[[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 80, 120)] autorelease];
         
         view2 = [[[UIImageView alloc] initWithFrame:view.bounds] autorelease];
         view2.backgroundColor = [UIColor clearColor];
@@ -174,7 +175,7 @@
           placeholderImage:[UIImage imageNamed:@"placeholder"]
                    options:SDWebImageRetryFailed
                  completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                     [(ReflectionView *)[view2 superview] update];
+//                     [[view2 superview] update];
                  }];
     
 	return view;
@@ -194,7 +195,7 @@
         {
             //add a bit of spacing between the item views
             //            return value * 1.1f;
-            return value * 1.8f;
+            return value * 1.1f;
         }
         default:
         {

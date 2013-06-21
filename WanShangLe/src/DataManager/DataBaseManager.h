@@ -53,6 +53,8 @@
 
 - (void)cleanUp;
 
+- (void)saveInManagedObjectContext:(NSManagedObjectContext *)coreDataContext;
+
 /************ 关联表 ***************/
 - (MMovie_City *)getFirstMMovie_CityFromCoreData:(NSString *)u_id;
 - (MMovie_City *)insertMMovie_CityWithMovie:(MMovie *)a_movie andCity:(City *)a_city;
@@ -98,6 +100,8 @@
 - (void)insertCinemasIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importCinema:(MCinema *)mCinema ValuesForKeysWithObject:(NSDictionary *)aCinemaData;
 - (void)importDynamicMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData;
+- (BOOL)addFavoriteCinemaWithId:(NSNumber *)uid;
+- (BOOL)deleteFavoriteCinemaWithId:(NSNumber *)uid;
 
 /************ 演出 ***************/
 - (ApiCmdShow_getAllShows *)getAllShowsListFromWeb:(id<ApiNotify>)delegate;
@@ -125,15 +129,17 @@
 - (NSUInteger)getCountOfKTVsListFromCoreDataWithCityName:(NSString *)cityName;
 - (void)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importKTV:(KKTV *)kKTV ValuesForKeysWithObject:(NSDictionary *)aKTVDic;
+- (BOOL)addFavoriteKTVWithId:(NSNumber *)uid;
+- (BOOL)deleteFavoriteKTVWithId:(NSNumber *)uid;
 
-//获得 KTV Detail Info
+//获得KTV详情 KTV Detail Info
 - (ApiCmdKTV_getKTVDetail *)getDetailInfoFromWebWithaKTV:(KKTV *)aKTV
                                                 delegate:(id<ApiNotify>)delegate;
 - (void)insertDetailInfoIntoCoreDataFromObject:(NSDictionary *)objectData
                                     withApiCmd:(ApiCmd*)apiCmd
                                       withaKTV:(KKTV *)aKTV;
 
-//获得 KTV Discounts Info
+//获得KTV购买信息 KTV Discounts Info
 - (ApiCmdKTV_getDiscountInfo *)getDiscountInfoFromWebWithaKTV:(KKTV *)aKTV
                                                 delegate:(id<ApiNotify>)delegate;
 - (void)insertDiscountInfoIntoCoreDataFromObject:(NSDictionary *)objectData

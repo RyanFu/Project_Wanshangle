@@ -24,5 +24,6 @@
 @dynamic ktvBuyInfo;
 @dynamic ktvDetail;
 @dynamic city;
+@dynamic favorite;
 
 @end
