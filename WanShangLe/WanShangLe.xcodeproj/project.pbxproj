@@ -210,6 +210,8 @@
 		5AF26FAA1770506900C53D1B /* KTVListTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF26FA61770506900C53D1B /* KTVListTableViewDelegate.m */; };
 		5AF26FAB1770506900C53D1B /* KTVTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF26FA81770506900C53D1B /* KTVTableViewCell.m */; };
 		5AF26FAC1770506900C53D1B /* KTVTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AF26FA91770506900C53D1B /* KTVTableViewCell.xib */; };
+		5AFDF37D1773E6E7000C38A0 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AFDF37B1773E6E7000C38A0 /* SettingViewController.m */; };
+		5AFDF37E1773E6E7000C38A0 /* SettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AFDF37C1773E6E7000C38A0 /* SettingViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -589,6 +591,9 @@
 		5AF26FA81770506900C53D1B /* KTVTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KTVTableViewCell.m; sourceTree = "<group>"; };
 		5AF26FA91770506900C53D1B /* KTVTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KTVTableViewCell.xib; sourceTree = "<group>"; };
 		5AF26FAD177053E900C53D1B /* DataBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataBase.h; sourceTree = "<group>"; };
+		5AFDF37A1773E6E7000C38A0 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
+		5AFDF37B1773E6E7000C38A0 /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
+		5AFDF37C1773E6E7000C38A0 /* SettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1325,6 +1330,7 @@
 		5AAC708E17601BDB004B7395 /* uimain */ = {
 			isa = PBXGroup;
 			children = (
+				5AFDF3791773E6C9000C38A0 /* SettingViewController */,
 				5AAC708F17601BDB004B7395 /* BarViewController */,
 				5AAC709317601BDB004B7395 /* KtvViewController */,
 				5AAC709717601BDB004B7395 /* MovieViewController */,
@@ -1449,6 +1455,16 @@
 			path = ShowViewController;
 			sourceTree = "<group>";
 		};
+		5AFDF3791773E6C9000C38A0 /* SettingViewController */ = {
+			isa = PBXGroup;
+			children = (
+				5AFDF37A1773E6E7000C38A0 /* SettingViewController.h */,
+				5AFDF37B1773E6E7000C38A0 /* SettingViewController.m */,
+				5AFDF37C1773E6E7000C38A0 /* SettingViewController.xib */,
+			);
+			path = SettingViewController;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1556,6 +1572,7 @@
 				5A429513176EFB5600D9B987 /* BarTableViewCell.xib in Resources */,
 				5A429521176F054D00D9B987 /* BarViewController_5.xib in Resources */,
 				5AF26FAC1770506900C53D1B /* KTVTableViewCell.xib in Resources */,
+				5AFDF37E1773E6E7000C38A0 /* SettingViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1735,6 +1752,7 @@
 				5AF26FA417704CDB00C53D1B /* ApiCmdKTV_getKTVDetail.m in Sources */,
 				5AF26FAA1770506900C53D1B /* KTVListTableViewDelegate.m in Sources */,
 				5AF26FAB1770506900C53D1B /* KTVTableViewCell.m in Sources */,
+				5AFDF37D1773E6E7000C38A0 /* SettingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,6 +12,7 @@
 #import "KtvViewController.h"
 #import "ShowViewController.h"
 #import "BarViewController.h"
+#import "SettingViewController.h"
 
 #import "SIAlertView.h"
 #import "UIImageView+WebCache.h"
@@ -53,6 +54,13 @@
 {
     [super viewDidLoad];
     
+    self.cityButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_cityButton setTitle:@"选择城市" forState:UIControlStateNormal];
+    [_cityButton setTintColor:[UIColor whiteColor]];
+    _cityButton.frame = CGRectMake(0, 0, 60, 30);
+    [_cityButton addTarget:self action:@selector(clickCityButton:) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.titleView = _cityButton;
+    
     [[CacheManager sharedInstance] setRootViewController:self];
     
     [LocationManager defaultLocationManager].cityLabel = _cityButton;
@@ -71,6 +79,16 @@
     [_cityButton setTitle:title forState:UIControlStateNormal];
     
     SDWebImageManager.sharedManager.imageDownloader.executionOrder = SDWebImageDownloaderLIFOExecutionOrder;
+    
+    UIButton *settingButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [settingButton setTitle:@"设置" forState:UIControlStateNormal];
+    [settingButton setTintColor:[UIColor whiteColor]];
+    settingButton.frame = CGRectMake(0, 0, 60, 30);
+    [settingButton addTarget:self action:@selector(clickSettingButton:) forControlEvents:UIControlEventTouchUpInside];
+    [settingButton setBackgroundColor:[UIColor colorWithRed:0.143 green:0.517 blue:1.000 alpha:1.000]];
+    UIBarButtonItem *settingItem = [[UIBarButtonItem alloc] initWithCustomView:settingButton];
+    [self.navigationItem setRightBarButtonItem:settingItem animated:YES];
+    [settingItem release];
     
 }
 
@@ -124,6 +142,14 @@
     }
     
     [self.navigationController pushViewController:_barViewController animated:YES];
+}
+
+//设置
+- (void)clickSettingButton:(id)sender{
+    
+   SettingViewController* settingController = [[SettingViewController alloc] initWithNibName:@"SettingViewController" bundle:nil];
+    [self.navigationController pushViewController:settingController animated:YES];
+    [settingController release];
 }
 
 //选择城市
