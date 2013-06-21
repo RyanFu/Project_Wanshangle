@@ -14,6 +14,7 @@
 #import "CinemaViewController.h"
 #import "ASIHTTPRequest.h"
 #import "ApiCmd.h"
+#import "MMovie.h"
 
 #define MovieButtonTag 10
 #define CinemaButtonTag 11
@@ -21,15 +22,17 @@
 @interface MovieViewController ()<ApiNotify>{
     UIButton *movieButton;
     UIButton *cinemaButton;
-    BOOL isMoviePanel;
 }
 @property(nonatomic,retain)MovieListTableViewDelegate *movieDelegate;
-@property(nonatomic,retain)UIView *movieContentView;;
+@property(nonatomic,retain)UIView *movieContentView;
+@property(nonatomic,retain)UIView *topView;
+@property(nonatomic,retain)UILabel *titleLabel;
 @end
 
 @implementation MovieViewController
 @synthesize movieTableView = _movieTableView;
 @synthesize moviesArray = _moviesArray;
+@synthesize isMoviePanel,topView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -43,6 +46,8 @@
         [self newCinemaController];
         
         isMoviePanel = YES;
+        
+        self.navigationItem.hidesBackButton= YES;
     }
     return self;
 }
@@ -56,13 +61,15 @@
     self.apiCmdMovie_getAllCinemas = nil;
     self.apiCmdMovie_getAllMovies = nil;
     self.movieContentView = nil;
+    self.topView = nil;
+    self.titleLabel = nil;
     
     [super dealloc];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
 
-    [self newCinemaController];
+    [_cinemaViewController viewWillAppear:animated];
     
     self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
     self.apiCmdMovie_getAllCinemas =[[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
@@ -92,7 +99,7 @@
     [[CacheManager sharedInstance] setMovieViewController:self];
     
     //创建TopView
-    UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 7, 140, 30)];
+    topView = [[UIView alloc] initWithFrame:CGRectMake(0, 7, 140, 30)];
     UIButton *moviebt = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *cinemabt = [UIButton buttonWithType:UIButtonTypeCustom];
     movieButton = moviebt;
@@ -114,7 +121,17 @@
     [topView addSubview:moviebt];
     [topView addSubview:cinemabt];
     self.navigationItem.titleView = topView;
-    [topView release];
+    
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton setTitle:@"返回" forState:UIControlStateNormal];
+    [backButton addTarget:self action:@selector(clickBackButton:) forControlEvents:UIControlEventTouchUpInside];
+    backButton.frame = CGRectMake(0, 0, 60, 40);
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.navigationItem.leftBarButtonItem = backItem;
+    [backItem release];
+    
+    _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
+    _titleLabel.backgroundColor = [UIColor clearColor];
     
     _movieContentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, iPhoneAppFrame.size.width, iPhoneAppFrame.size.height-44)];
     //create movie tableview and init
@@ -148,14 +165,7 @@
         _cinemaViewController = [[CinemaViewController alloc] initWithNibName:nil bundle:nil];
         _cinemaViewController.mparentController = self;
     }
-
-    _cinemaViewController.isMovie_Cinema = NO;
-    [_cinemaViewController viewWillAppear:NO];
-    CGRect cinemaFrame =  _cinemaViewController.view.frame;
-    cinemaFrame.origin.x = isMoviePanel?self.view.bounds.size.width:0;
-    _cinemaViewController.view.frame = cinemaFrame;
-
-    [_cinemaViewController.view removeFromSuperview];
+    _cinemaViewController.view.frame = CGRectMake(self.view.bounds.size.width, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     [self.view addSubview:_cinemaViewController.view];
 }
 
@@ -174,13 +184,12 @@
 
 - (void)clickCinemaButtonUp:(id)sender{
     
-    [self newCinemaController];
-    
-    _cinemaViewController.isMovie_Cinema = NO;
+    _cinemaViewController.movieDetailButton.hidden = YES;
     
     isMoviePanel = NO;
     [self switchMovieCinemaAnimation];
 }
+
 - (void)clickCinemaButtonDown:(id)sender{
     
     [self cleanUpButtonBackground];
@@ -192,6 +201,17 @@
     [cinemaButton setBackgroundColor:[UIColor clearColor]];
 }
 
+- (void)clickBackButton:(id)sender{
+    if (_cinemaViewController.movieDetailButton.hidden) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }else{
+        _cinemaViewController.movieDetailButton.hidden = YES;
+        [self pushMovieCinemaAnimation];
+    }
+}
+
+#pragma mark - 
+#pragma mark 【电影-影院】 Transition
 - (void)switchMovieCinemaAnimation{
     
     [self.view setUserInteractionEnabled:NO];
@@ -200,6 +220,7 @@
         _movieContentView.hidden = NO;
     }
     
+    ABLoggerInfo(@"_cinemaViewController.view.frame.origin.x == %f",_cinemaViewController.view.frame.origin.x);
     [UIView animateWithDuration:0.4 animations:^{
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
         
@@ -233,6 +254,21 @@
             _movieContentView.hidden = YES;
         }
     }];
+}
+
+- (void)pushMovieCinemaAnimation{
+    
+    topView.hidden = !_cinemaViewController.movieDetailButton.hidden;
+    
+    if (topView.hidden) {
+        ABLoggerInfo(@"_cinemaViewController.mMovie.name === %@",_cinemaViewController.mMovie.name);
+        _titleLabel.text = _cinemaViewController.mMovie.name;
+        self.navigationItem.titleView = _titleLabel;
+    }else{
+        self.navigationItem.titleView = topView;
+    }
+    
+    [self switchMovieCinemaAnimation];
 }
 
 #pragma mark -

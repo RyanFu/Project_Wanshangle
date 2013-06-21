@@ -11,9 +11,12 @@
 #import "ScheduleTableViewDelegate.h"
 #import "CinemaViewController.h"
 #import "CinemaMovieViewController.h"
+#import "MovieViewController.h"
 #import "MMovie.h"
 #import "MCinema.h"
 #import "MSchedule.h"
+#import "ASIHTTPRequest.h"
+#import "ApiCmd.h"
 
 @interface ScheduleViewController ()<ApiNotify>{
     
@@ -47,6 +50,8 @@
     self.todaySchedules = nil;
     self.todaySchedules = nil;
     self.schedulesArray = nil;
+    
+    [self.apiCmdMovie_getSchedule.httpRequest clearDelegatesAndCancel];
     self.scheduleTableViewDelegate = nil;
     self.apiCmdMovie_getSchedule.delegate = nil;
     [super dealloc];
@@ -88,24 +93,27 @@
 
 - (IBAction)clickCinemaButton:(id)sender{
     
-    CinemaViewController *cinemaViewController = [CacheManager sharedInstance].cinemaViewController;
+    //    CinemaViewController *cinemaViewController = [CacheManager sharedInstance].cinemaViewController;
     CinemaMovieViewController *cinemaMovieController = [[CinemaMovieViewController alloc]
                                                         initWithNibName:(iPhone5?@"CinemaMovieViewController_5":@"CinemaMovieViewController")
                                                         bundle:nil];
     cinemaMovieController.mCinema = self.mCinema;
     cinemaMovieController.mMovie = self.mMovie;
     
-    NSArray *array = [NSArray arrayWithObjects:
-                      [CacheManager sharedInstance].rootViewController,
-                      [CacheManager sharedInstance].movieViewController,
-                      [CacheManager sharedInstance].cinemaViewController,
-                      cinemaMovieController,nil];
+    //    MovieViewController *movieController = [CacheManager sharedInstance].movieViewController;
+    //    NSArray *array = [NSArray arrayWithObjects:
+    //                      [CacheManager sharedInstance].rootViewController,
+    //                      movieController,
+    //                      cinemaMovieController,
+    //                      nil];
+    //
+    //    [movieController clickCinemaButtonDown:nil];
+    //    [movieController clickCinemaButtonUp:nil];
     
-    cinemaViewController.mMovie = self.mMovie;
-    cinemaViewController.isMovie_Cinema = NO;
+    //    cinemaViewController.mMovie = self.mMovie;
+    //    cinemaViewController.isMovie_Cinema = NO;
     
-    ABLogger_bool(cinemaViewController.isMovie_Cinema);
-    [self.navigationController setViewControllers:array animated:YES];
+    [self.navigationController pushViewController:cinemaMovieController animated:YES];
     [cinemaMovieController release];
 }
 

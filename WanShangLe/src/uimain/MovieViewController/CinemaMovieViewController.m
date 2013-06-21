@@ -11,6 +11,8 @@
 #import "CinemaMovieTableViewDelegate.h"
 #import "CinemaViewController.h"
 #import "ASIHTTPRequest.h"
+#import "MovieViewController.h"
+#import "MovieDetailViewController.h"
 #import "MMovie.h"
 #import "MCinema.h"
 #import "iCarousel.h"
@@ -103,7 +105,10 @@
 
 - (IBAction)clickMovieInfo:(id)sender{
     ABLoggerInfo(@"");
-    
+    MovieDetailViewController *movieDetailController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
+    [self.navigationController pushViewController:movieDetailController animated:YES];
+    [movieDetailController release];
+    /*
     CinemaViewController *cinemaViewController = [CacheManager sharedInstance].cinemaViewController;
     
     
@@ -112,12 +117,15 @@
                       [CacheManager sharedInstance].movieViewController,
                       [CacheManager sharedInstance].cinemaViewController,
                       nil];
+    [[CacheManager sharedInstance].movieViewController clickMovieButtonDown:nil];
+    [[CacheManager sharedInstance].movieViewController clickMovieButtonUp:nil];
     
     cinemaViewController.mMovie = self.mMovie;
     cinemaViewController.isMovie_Cinema = YES;
     
     ABLogger_bool(cinemaViewController.isMovie_Cinema);
     [self.navigationController setViewControllers:array animated:YES];
+     */
 }
 
 - (void)cleanUpButtonBackground{

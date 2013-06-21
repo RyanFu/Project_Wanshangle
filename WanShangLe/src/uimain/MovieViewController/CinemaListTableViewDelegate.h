@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class CinemaViewController;
-@interface CinemaListTableViewDelegate : NSObject<UITableViewDataSource,UITableViewDelegate>{
+@interface CinemaListTableViewDelegate : NSObject<UISearchBarDelegate,UISearchDisplayDelegate,UITableViewDelegate,UITableViewDataSource>{
     
 }
 @property (assign)BOOL isOpen;

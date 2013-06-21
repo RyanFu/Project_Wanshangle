@@ -21,10 +21,16 @@ typedef NS_ENUM(NSInteger, NSFilterCinemaListType) {
 @interface CinemaViewController : UIViewController{
     
 }
-@property(nonatomic,assign)MovieViewController *mparentController;
-@property(nonatomic,retain)MMovie *mMovie;
-@property(nonatomic,readwrite)BOOL isMovie_Cinema;
-@property(nonatomic,retain)UITableView *cinemaTableView;
-@property(nonatomic,retain)NSArray *cinemasArray;
-@property(nonatomic,retain)ApiCmdMovie_getAllCinemas *apiCmdMovie_getAllCinemas;
+@property (nonatomic,retain) UISearchBar *searchBar;
+@property(nonatomic, retain) UISearchDisplayController *strongSearchDisplayController;
+@property(nonatomic,retain) UIView *filterHeaderView;
+@property(nonatomic,assign) MovieViewController *mparentController;
+@property(nonatomic,retain) MMovie *mMovie;
+@property(nonatomic,retain) UITableView *cinemaTableView;
+@property(nonatomic,retain) UIButton *movieDetailButton;
+@property(nonatomic,retain) NSArray *cinemasArray;
+@property(nonatomic,retain) ApiCmdMovie_getAllCinemas *apiCmdMovie_getAllCinemas;
+
+-(void)beginSearch;
+-(void)endSearch;
 @end

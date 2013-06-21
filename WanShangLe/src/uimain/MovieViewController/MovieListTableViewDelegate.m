@@ -57,7 +57,7 @@
 
 -(MovieTableViewCell *)createNewMocieCell{
     ABLoggerMethod();
-     MovieTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"MovieTableViewCell" owner:self options:nil] objectAtIndex:0];
+    MovieTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"MovieTableViewCell" owner:self options:nil] objectAtIndex:0];
     [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     //    cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"history_menu_cell_background"]] autorelease];
@@ -71,11 +71,12 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    _parentViewController.cinemaViewController.isMovie_Cinema = YES;
+    _parentViewController.cinemaViewController.movieDetailButton.hidden = NO;
     _parentViewController.cinemaViewController.mMovie = [_parentViewController.moviesArray objectAtIndex:indexPath.row];
-    [_parentViewController.navigationController pushViewController:_parentViewController.cinemaViewController animated:YES];
+    [_parentViewController pushMovieCinemaAnimation];
 }
 
 
