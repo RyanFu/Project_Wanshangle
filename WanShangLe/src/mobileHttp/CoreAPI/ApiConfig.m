@@ -31,21 +31,21 @@ static struct EnvConfig envConfigArray[APIEND] = {
     {
      .apiRequestUrl = "https://raw.github.com/liubin1777/HelloWorld/master/HelloWorld/cinemas.json", 
      .apiStaticUrlPrefix = "http://cdn.gaopeng.com",
-     .apiAppId = "3", 
+     .apiAppId = "000001", 
      .apiSignParamKey = "92bb2f0fd9d13edd85751207d1b6f82a",        
     },
     
     // APIQA
     {.apiRequestUrl = "https://raw.github.com/liubin1777/HelloWorld/master/HelloWorld/cinemas.json", 
      .apiStaticUrlPrefix= "http://cdn.gaopeng.com",
-     .apiAppId = "3", 
+     .apiAppId = "000001", 
      .apiSignParamKey = "GAOPENGMOBILEVERSION1",
     },
     
     // APIPROD
     {.apiRequestUrl = "https://raw.github.com/liubin1777/HelloWorld/master/HelloWorld/cinemas.json",
      .apiStaticUrlPrefix = "http://cdn.gaopeng.com",
-     .apiAppId = "3", 
+     .apiAppId = "000001", 
      .apiSignParamKey = "92bb2f0fd9d13edd85751207d1b6f82a",
     },
 

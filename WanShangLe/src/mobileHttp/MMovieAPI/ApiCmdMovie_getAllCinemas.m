@@ -30,7 +30,8 @@
     [super prepareExecuteApiCmd];
     
     // prepare http request
-    NSURL *url = [NSURL URLWithString:@"https://raw.github.com/zyallday/HelloWorld/master/mobileapidemo/all-cinemas-list.json"];
+//    NSURL *url = [NSURL URLWithString:@"https://raw.github.com/zyallday/HelloWorld/master/mobileapidemo/all-cinemas-list.json"];
+    NSURL *url = [NSURL URLWithString:@"http://api.wanshangle.com:10000/api?appId=000001&sign=sign&time=1371988912&v=1.0&api=cinema.list&cityid=010"];
     
     [self.httpRequest setURL:url];
     
@@ -51,7 +52,7 @@
 
     
     // get the data
-    //ABLoggerDebug(@"1111 responseJSONObject ======== %@",self.responseJSONObject);
+//    ABLoggerDebug(@"1111 responseJSONObject ======== %@",self.responseJSONObject);
     
 }
 

@@ -6,7 +6,7 @@
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
-#import "CinemaListTableViewDelegate.h"
+#import "CinemaListFilterTableViewDelegate.h"
 #import "CinemaViewController.h"
 #import "CinemaTableViewCell.h"
 #import "CinemaTableViewCellSection.h"
@@ -24,7 +24,7 @@ static NSInteger const kAttributedLabelTag = 100;
 static CGFloat const kLabelWidth = 300;
 static CGFloat const kLabelVMargin = 10;
 
-@interface CinemaListTableViewDelegate(){
+@interface CinemaListFilterTableViewDelegate(){
     
 }
 @property (nonatomic,retain) NSMutableDictionary *contactDic;
@@ -32,7 +32,7 @@ static CGFloat const kLabelVMargin = 10;
 @property (nonatomic,retain) NSMutableArray *searchByPhone;
 @end
 
-@implementation CinemaListTableViewDelegate
+@implementation CinemaListFilterTableViewDelegate
 
 - (id)init{
     self = [super init];
@@ -53,29 +53,6 @@ static CGFloat const kLabelVMargin = 10;
 
 - (void)initData{
     
-    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-    self.contactDic = dic;
-    [dic release];
-    
-    NSMutableArray *nameIDArray = [[NSMutableArray alloc] init];
-    self.searchByName = nameIDArray;
-    [nameIDArray release];
-    NSMutableArray *phoneIDArray = [[NSMutableArray alloc] init];
-    
-    self.searchByPhone = phoneIDArray;
-    [phoneIDArray release];
-}
-
--(void)getAllSearchCinemaData{
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSArray *array = [[DataBaseManager sharedInstance] getAllCinemasListFromCoreData];
-        for (int i=0; i<[array count]; i++) {
-            MCinema *cienma = [array objectAtIndex:i];
-            [[SearchCoreManager share] AddContact:cienma.uid name:cienma.name phone:nil];
-            [self.contactDic setObject:cienma forKey:cienma.uid];
-        }
-    });
 }
 
 #pragma mark -
@@ -353,116 +330,4 @@ static CGFloat const kLabelVMargin = 10;
     }
     if (self.isOpen) [_parentViewController.cinemaTableView scrollToNearestSelectedRowAtScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
-
-#pragma mark -
-#pragma mark UIScrollViewDelegate
-- (void)scrollTableViewToSearchBarAnimated:(BOOL)animated
-{
-    [_parentViewController.cinemaTableView setContentOffset:CGPointMake(0, 44) animated:YES];
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
-    if (scrollView.contentOffset.y < 44) {
-        _parentViewController.cinemaTableView.scrollIndicatorInsets = UIEdgeInsetsMake(CGRectGetHeight(_parentViewController.searchBar.bounds) - MAX(scrollView.contentOffset.y, 0), 0, 0, 0);
-    } else {
-        _parentViewController.cinemaTableView.scrollIndicatorInsets = UIEdgeInsetsZero;
-    }
-    
-    CGRect searchBarFrame = _parentViewController.searchBar.frame;
-    searchBarFrame.origin.y = MIN(scrollView.contentOffset.y, 0);
-
-    _parentViewController.searchBar.frame = searchBarFrame;
-    }
-}
-
-
-#pragma mark -
-#pragma mark UISearchBarDelegate methods
-/*
-- (void)searchBar:(UISearchBar *)_searchBar textDidChange:(NSString *)searchText
-{
-    [[SearchCoreManager share] Search:searchText searchArray:nil nameMatch:_searchByName phoneMatch:self.searchByPhone];
-
-    ABLoggerInfo(@"_searchByName count ==== %d",[_searchByName count]);
-    ABLoggerInfo(@"searchByPhone count ==== %d",[_searchByPhone count]);
-    [_parentViewController.cinemaTableView reloadData];
-}*/
-
-- (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar{
-    [_parentViewController endSearch];
-    [_parentViewController.cinemaTableView resignFirstResponder];
-    [self scrollTableViewToSearchBarAnimated:YES];
-
-    _parentViewController.searchBar.text = nil;
-    
-    [self.searchByName removeAllObjects];
-    [self.searchByPhone removeAllObjects];
-    [self.contactDic removeAllObjects];
-}
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
-{
-    [_parentViewController.cinemaTableView resignFirstResponder];
-    [self scrollTableViewToSearchBarAnimated:YES];
-}
-
-
-- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar{
-    
-    [_parentViewController beginSearch];
-    [self getAllSearchCinemaData];
-    
-    _parentViewController.searchBar.showsScopeBar = YES;
-    [_parentViewController.searchBar sizeToFit];
-    [_parentViewController.searchBar setShowsCancelButton:YES animated:YES];
-    
-    for(id cc in [_parentViewController.searchBar subviews])
-    {
-        if([cc isKindOfClass:[UIButton class]])
-        {
-            UIButton *btn = (UIButton *)cc;
-            [btn setTitle:@"取消"  forState:UIControlStateNormal];
-            [btn setBackgroundImage:[UIImage imageNamed:@"searchBarBackground"] forState:UIControlStateNormal];
-            [btn setBackgroundImage:[UIImage imageNamed:@"searchBarBackground2"] forState:UIControlStateSelected];
-            [btn setBackgroundImage:[UIImage imageNamed:@"searchBarBackground2"] forState:UIControlStateHighlighted];
-        }
-    }
-    
-    return YES;
-}
-
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar{
-    
-}
-
-- (void) searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller{
-    [self.searchByName removeAllObjects];
-    [self.searchByPhone removeAllObjects];
-    
-    [self scrollTableViewToSearchBarAnimated:YES];
-}
-
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
-{
-    
-    [[SearchCoreManager share] Search:searchString searchArray:nil nameMatch:_searchByName phoneMatch:_searchByPhone];
-    
-    ABLoggerDebug(@"search Name = %d",[_searchByName count]);
-
-    [_parentViewController.cinemaTableView reloadData];
-    
-    return YES;
-}
-
-- (void)searchDisplayController:(UISearchDisplayController *)controller didShowSearchResultsTableView:(UITableView *)tableView{
-    ABLoggerDebug(@"subViews = %d",[controller.searchResultsTableView.subviews count]);
-    for(UIView *subview in controller.searchResultsTableView.subviews) {
-        
-        if([subview isKindOfClass:[UILabel class]]) {
-            [(UILabel*)subview setText:@"无结果"];
-        }
-    }
-}
-
 @end

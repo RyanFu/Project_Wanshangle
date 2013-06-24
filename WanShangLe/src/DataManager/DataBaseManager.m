@@ -724,6 +724,47 @@ static DataBaseManager *_sharedInstance = nil;
     return [MCinema MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
+- (BOOL)getNearbyCinemasListFromCoreDataWithCallBack:(GetCinemaNearbyList)callback{
+    
+    GetCinemaNearbyList mCallBack = [callback copy];
+    
+    NSArray *cinemas = [self getAllCinemasListFromCoreData];
+    LocationManager *lm = [LocationManager defaultLocationManager];
+    BOOL isSuccess =  [lm getUserGPSLocationWithCallBack:^(BOOL isNewLocation) {
+        for (MCinema *tCinema in cinemas) {
+            double distance = [lm distanceBetweenUserToLatitude:[tCinema.latitude doubleValue] longitude:[tCinema.longitue doubleValue]];
+            tCinema.nearby = [NSNumber numberWithInt:distance];
+        }
+        
+        [self saveInManagedObjectContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        
+        NSArray *array =  [cinemas sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            MCinema *cinema1 = (MCinema *)obj1;
+            MCinema *cinema2 = (MCinema *)obj2;
+            return [cinema1.nearby compare:cinema2.nearby];
+        }];
+        ABLoggerInfo(@"cinemas === %@",array);
+
+        if (mCallBack && isNewLocation) {
+            mCallBack(array);
+        }
+    }];
+
+   return isSuccess;
+}
+
+- (NSArray *)getFavoriteCinemasListFromCoreData{
+    return [self getFavoriteCinemasListFromCoreDataWithCityName:nil];
+}
+
+- (NSArray *)getFavoriteCinemasListFromCoreDataWithCityName:(NSString *)cityName{
+    if (isEmpty(cityName)) {
+        cityName = [[LocationManager defaultLocationManager] getUserCity];
+    }
+    
+    return [MCinema MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@ and favorite = YES", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+}
+
 - (NSUInteger)getCountOfCinemasListFromCoreData{
     return [self getCountOfCinemasListFromCoreDataWithCityName:nil];
 }
@@ -743,13 +784,14 @@ static DataBaseManager *_sharedInstance = nil;
     
     CFTimeInterval time1 = Elapsed_Time;
     
-    NSArray *info_array = [[objectData objectForKey:@"data"] objectForKey:@"info"];
+    NSArray *info_array = [[objectData objectForKey:@"data"] objectForKey:@"infos"];
     //    NSMutableArray *cinemas = [[NSMutableArray alloc] initWithCapacity:100];
     MCinema *mCinema = nil;
     
     for (int i=0; i<[info_array count]; i++) {
         
         NSArray *cinema_array = [[info_array objectAtIndex:i] objectForKey:@"cinemas"];
+        NSArray *dynamic_array = [[info_array objectAtIndex:i] objectForKey:@"dynamic"];
         NSString *district = [[info_array objectAtIndex:i] objectForKey:@"district"];
         
         for(int j=0; j<[cinema_array count]; j++) {
@@ -768,15 +810,24 @@ static DataBaseManager *_sharedInstance = nil;
             [self importCinema:mCinema ValuesForKeysWithObject:cinema_dic];
         }
         
+        /*
+        for(int j=0; j<[dynamic_array count]; j++) {
+            
+            NSDictionary *cinema_dic = [cinema_array objectAtIndex:j];
+            
+            mCinema = [MCinema MR_findFirstByAttribute:@"uid" withValue:[cinema_dic objectForKey:@"cinemaid"] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+            if (mCinema == nil)
+            {
+                ABLoggerInfo(@"插入 一条影院 新数据 ======= %@",[cinema_dic objectForKey:@"name"]);
+                mCinema = [MCinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+            }
+            //            [cinemas addObject:mCinema];
+            mCinema.district = district;
+            mCinema.city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
+            [self importCinema:mCinema ValuesForKeysWithObject:cinema_dic];
+        }*/
+        
     }
-    
-    
-    
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        NSArray *movies = [self getAllMoviesListFromCoreDataWithCityName:apiCmd.cityName];
-//        NSArray *cinemas = [self getAllCinemasListFromCoreDataWithCityName:apiCmd.cityName];
-//        [self insertMMovie_CinemaWithMovies:movies andCinemas:cinemas];
-//    });
     
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         ABLoggerDebug(@"影院保存是否成功 ========= %d",success);
@@ -797,6 +848,27 @@ static DataBaseManager *_sharedInstance = nil;
 
 /*
  {
+ "httpCode":200,
+ "errors":[
+ ],
+ "data":{
+ "count":1,
+ "infos":[
+ {
+ "district":"",
+ "cinemas":[],
+ "dynamic":[]
+ }
+ ]
+ },
+ "token":null,
+ "timestamp":"1372063052"
+ }
+ 
+ 
+ 
+ 
+ {
  "error":{},
  "timestamp":"1369275251",
  "data":{
@@ -816,12 +888,12 @@ static DataBaseManager *_sharedInstance = nil;
  */
 - (void)importCinema:(MCinema *)mCinema ValuesForKeysWithObject:(NSDictionary *)aCinemaData
 {
-    mCinema.uid = [aCinemaData objectForKey:@"id"];
+    mCinema.uid = [NSNumber numberWithInt:[[aCinemaData objectForKey:@"id"] intValue]];
     mCinema.name = [aCinemaData objectForKey:@"name"];
-    mCinema.address = [aCinemaData objectForKey:@"addr"];
-    mCinema.phoneNumber = [aCinemaData objectForKey:@"tel"];
-    mCinema.longitue = [aCinemaData objectForKey:@"longitue"];
-    mCinema.latitude = [aCinemaData objectForKey:@"latitude"];
+    mCinema.address = [aCinemaData objectForKey:@"address"];
+    mCinema.phoneNumber = [aCinemaData objectForKey:@"contactphonex"];
+    mCinema.longitue = [NSNumber numberWithDouble:[[aCinemaData objectForKey:@"longitude"] doubleValue]];
+    mCinema.latitude = [NSNumber numberWithDouble:[[aCinemaData objectForKey:@"latitude"] doubleValue]];
 }
 //========================================= 影院 =========================================/
 

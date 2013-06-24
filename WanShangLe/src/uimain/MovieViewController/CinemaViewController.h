@@ -12,10 +12,10 @@
 @class ApiCmdMovie_getAllCinemas;
 @class MovieViewController;
 
-typedef NS_ENUM(NSInteger, NSFilterCinemaListType) {
-    NSFilterCinemaListTypeFavorite = 0,          
-    NSFilterCinemaListTypeNearby,          
-    NSFilterCinemaListTypeAll,
+typedef NS_ENUM(NSInteger, MMFilterCinemaListType) {
+    MMFilterCinemaListTypeFavorite = 0,          
+    MMFilterCinemaListTypeNearby,          
+    MMFilterCinemaListTypeAll,
 };
 
 @interface CinemaViewController : UIViewController{
@@ -30,6 +30,7 @@ typedef NS_ENUM(NSInteger, NSFilterCinemaListType) {
 @property(nonatomic,retain) UIButton *movieDetailButton;
 @property(nonatomic,retain) NSArray *cinemasArray;
 @property(nonatomic,retain) ApiCmdMovie_getAllCinemas *apiCmdMovie_getAllCinemas;
+@property(nonatomic,assign) MMFilterCinemaListType cinemaFilterType;
 
 -(void)beginSearch;
 -(void)endSearch;

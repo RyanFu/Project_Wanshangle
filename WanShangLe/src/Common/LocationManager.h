@@ -9,7 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
 
-typedef void (^SetUserCityCallBack)();
+typedef void (^SetUserCityCallBack)(void);
+typedef void (^GetUserGPSLocation)(BOOL isNewLocation);
 
 /**
  @author stephenliu
@@ -27,7 +28,7 @@ typedef void (^SetUserCityCallBack)();
 /**
  start to location user GPS
  */
-- (void)startLocationUserGPS;
+- (BOOL)startLocationUserGPS;
 
 /**
  stop to location user GPS
@@ -47,12 +48,18 @@ typedef void (^SetUserCityCallBack)();
 - (BOOL)setUserCity:(NSString *)newCity CallBack:(SetUserCityCallBack)callback;
 
 /**
+ get user location
+ @returns
+ */
+- (BOOL)getUserGPSLocationWithCallBack:(GetUserGPSLocation)callback;
+
+/**
  用户到指定经纬度坐标的距离
  @param latitude 纬度坐标
  @param longitude 经度坐标
  @returns 距离
  */
-- (double)distanceBetweenUserToLatitude:(NSString *)latitude longitude:(NSString *)longitude;
+- (double)distanceBetweenUserToLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude;
 
 /**
  两个GPS坐标距离

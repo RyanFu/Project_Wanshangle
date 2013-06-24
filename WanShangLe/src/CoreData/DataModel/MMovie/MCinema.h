@@ -17,12 +17,13 @@
 @property (nonatomic, retain) NSNumber * favorite;
 @property (nonatomic, retain) NSNumber * longitue;
 @property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSNumber * phoneNumber;
+@property (nonatomic, retain) NSString * phoneNumber;
 @property (nonatomic, retain) NSNumber * uid;
 @property (nonatomic, retain) NSNumber * latitude;
 @property (nonatomic, retain) NSString * district;
 @property (nonatomic, retain) City *city;
 @property (nonatomic, retain) NSSet *movie_cinemas;
+@property (nonatomic, retain) NSNumber * nearby;
 
 @end
 

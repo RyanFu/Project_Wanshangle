@@ -23,5 +23,6 @@
 @dynamic district;
 @dynamic city;
 @dynamic movie_cinemas;
+@dynamic nearby;
 
 @end

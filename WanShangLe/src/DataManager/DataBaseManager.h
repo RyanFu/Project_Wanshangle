@@ -23,6 +23,8 @@
 @class KKTV,KKTVBuyInfo,KKTVDetail;
 @class SShow,BBar;
 
+typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
+
 @interface DataBaseManager : NSObject{
     
 }
@@ -95,6 +97,9 @@
 - (ApiCmdMovie_getAllCinemas *)getAllCinemasListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllCinemasListFromCoreData;
 - (NSArray *)getAllCinemasListFromCoreDataWithCityName:(NSString *)cityName;
+- (BOOL)getNearbyCinemasListFromCoreDataWithCallBack:(GetCinemaNearbyList)callback;
+- (NSArray *)getFavoriteCinemasListFromCoreData;
+- (NSArray *)getFavoriteCinemasListFromCoreDataWithCityName:(NSString *)cityName;
 - (NSUInteger)getCountOfCinemasListFromCoreData;
 - (NSUInteger)getCountOfCinemasListFromCoreDataWithCityName:(NSString *)cityName;
 - (void)insertCinemasIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;

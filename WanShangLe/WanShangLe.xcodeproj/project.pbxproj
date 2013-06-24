@@ -207,6 +207,7 @@
 		5AE906B21777EB9C0076394E /* 北京.json in Resources */ = {isa = PBXBuildFile; fileRef = 5AE906B01777EB9C0076394E /* 北京.json */; };
 		5AE906B51777F00A0076394E /* 广州.json in Resources */ = {isa = PBXBuildFile; fileRef = 5AE906B31777F00A0076394E /* 广州.json */; };
 		5AE906B61777F00A0076394E /* 深圳.json in Resources */ = {isa = PBXBuildFile; fileRef = 5AE906B41777F00A0076394E /* 深圳.json */; };
+		5AE906B91778137F0076394E /* CinemaListFilterTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AE906B81778137F0076394E /* CinemaListFilterTableViewDelegate.m */; };
 		5AF26F9517704B7800C53D1B /* KKTVBuyInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF26F9417704B7800C53D1B /* KKTVBuyInfo.m */; };
 		5AF26F9817704B7800C53D1B /* KKTV.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF26F9717704B7800C53D1B /* KKTV.m */; };
 		5AF26F9B17704B7800C53D1B /* KKTVDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF26F9A17704B7800C53D1B /* KKTVDetail.m */; };
@@ -586,6 +587,8 @@
 		5AE906B01777EB9C0076394E /* 北京.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "北京.json"; sourceTree = "<group>"; };
 		5AE906B31777F00A0076394E /* 广州.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "广州.json"; sourceTree = "<group>"; };
 		5AE906B41777F00A0076394E /* 深圳.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "深圳.json"; sourceTree = "<group>"; };
+		5AE906B71778137F0076394E /* CinemaListFilterTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaListFilterTableViewDelegate.h; sourceTree = "<group>"; };
+		5AE906B81778137F0076394E /* CinemaListFilterTableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaListFilterTableViewDelegate.m; sourceTree = "<group>"; };
 		5AF26F9317704B7800C53D1B /* KKTVBuyInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KKTVBuyInfo.h; sourceTree = "<group>"; };
 		5AF26F9417704B7800C53D1B /* KKTVBuyInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KKTVBuyInfo.m; sourceTree = "<group>"; };
 		5AF26F9617704B7800C53D1B /* KKTV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KKTV.h; sourceTree = "<group>"; };
@@ -1047,6 +1050,8 @@
 				5A1BDCE41762FC2B00D610AA /* CinemaViewController.m */,
 				5A5A86621762E455004E3FF7 /* CinemaListTableViewDelegate.h */,
 				5A5A86631762E456004E3FF7 /* CinemaListTableViewDelegate.m */,
+				5AE906B71778137F0076394E /* CinemaListFilterTableViewDelegate.h */,
+				5AE906B81778137F0076394E /* CinemaListFilterTableViewDelegate.m */,
 				5A1BDCE51762FC2B00D610AA /* CinemaViewController.xib */,
 				5A1BDCE81762FCBF00D610AA /* CinemaTableViewCell.h */,
 				5A1BDCE91762FCBF00D610AA /* CinemaTableViewCell.m */,
@@ -1819,6 +1824,7 @@
 				5AF26FAB1770506900C53D1B /* KTVTableViewCell.m in Sources */,
 				5AFDF37D1773E6E7000C38A0 /* SettingViewController.m in Sources */,
 				5A79C6BE1774413B00BDB7C1 /* MovieDetailViewController.m in Sources */,
+				5AE906B91778137F0076394E /* CinemaListFilterTableViewDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

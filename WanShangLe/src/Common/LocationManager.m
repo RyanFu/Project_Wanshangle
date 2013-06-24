@@ -15,8 +15,10 @@
 }
 @property (nonatomic, retain) CLGeocoder *geoCoder;
 @property (nonatomic, retain) MKMapView *map;
+@property (nonatomic, retain) CLLocation *userLocation;
 @property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic, copy) SetUserCityCallBack userCityCallBack;
+@property (nonatomic, copy) GetUserGPSLocation getUserGPSLocation;
 @end
 
 @implementation LocationManager
@@ -28,6 +30,8 @@
     self.geoCoder = nil;
     self.map = nil;
     self.userCityCallBack = nil;
+    self.getUserGPSLocation = nil;
+    self.userLocation = nil;
     
     [super dealloc];
 }
@@ -45,30 +49,30 @@
 - (id)init{
     self = [super init];
     if (self) {
-
+        
     }
     return self;
 }
 
 /*
-- (void)startLocationUserGPS{
-    ABLoggerMethod();
-    
-    if ([self checkGPSEnable]) {
-        if (!_map) {
-            _map = [[MKMapView alloc] init];
-            [_map setHidden:YES];
-        }
-        _map.showsUserLocation =YES;
-        _map.delegate = self;
-    }
-}
-
-- (void)stopLocationUserGPS{
-    _map.showsUserLocation = NO;
-    self.map = nil;
-}
-*/
+ - (void)startLocationUserGPS{
+ ABLoggerMethod();
+ 
+ if ([self checkGPSEnable]) {
+ if (!_map) {
+ _map = [[MKMapView alloc] init];
+ [_map setHidden:YES];
+ }
+ _map.showsUserLocation =YES;
+ _map.delegate = self;
+ }
+ }
+ 
+ - (void)stopLocationUserGPS{
+ _map.showsUserLocation = NO;
+ self.map = nil;
+ }
+ */
 
 
 - (BOOL)checkGPSEnable{
@@ -148,27 +152,23 @@
 }
 
 
-- (void)startLocationUserGPS
+- (BOOL)startLocationUserGPS
 {
     if ([self checkGPSEnable]) {
-    // if location services are restricted do nothing
-    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied ||
-        [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted)
-    {
-        return;
-    }
-    
-    // if locationManager does not currently exist, create it
-    if (!_locationManager)
-    {
-        _locationManager = [[CLLocationManager alloc] init];
-        [_locationManager setDelegate:self];
-        _locationManager.distanceFilter = 10.0f; // we don't need to be any more accurate than 10m
-    }
-    
-    [_locationManager startUpdatingLocation];
+
+        // if locationManager does not currently exist, create it
+        if (!_locationManager)
+        {
+            _locationManager = [[CLLocationManager alloc] init];
+            [_locationManager setDelegate:self];
+            _locationManager.distanceFilter = 10.0f; // we don't need to be any more accurate than 10m
+        }
         
+        [_locationManager startUpdatingLocation];
+        return YES;
     }
+    
+    return NO;
 }
 
 - (void)stopLocationUserGPS
@@ -183,7 +183,24 @@
     if (fabs([newLocation.timestamp timeIntervalSinceDate:[NSDate date]]) > 30)
     {
         return;
-    } 
+    }
+    
+    if (self.getUserGPSLocation) {
+        BOOL isNew = YES;
+        if (self.userLocation) {
+            if (self.userLocation.coordinate.latitude == newLocation.coordinate.latitude &&
+                self.userLocation.coordinate.longitude == newLocation.coordinate.longitude) {
+                isNew = NO;
+            } 
+        }
+    
+        self.userLocation = newLocation;
+        if (_getUserGPSLocation) {
+            _getUserGPSLocation(isNew);
+            self.getUserGPSLocation = nil;
+        }
+    }
+    
     //解析并获取当前坐标对应得地址信息
     if ([[[UIDevice currentDevice] systemVersion]floatValue] >= 5.0) {
         CLGeocoder *clGeoCoder = [[CLGeocoder alloc] init];
@@ -262,6 +279,7 @@
                                       [[LocationManager defaultLocationManager].cityLabel setTitle:newCity forState:UIControlStateNormal];
                                       if (_userCityCallBack) {
                                           _userCityCallBack();
+                                          self.userCityCallBack = nil;
                                       }
                                       ABLoggerDebug(@"确定切换城市");
                                   }];
@@ -291,6 +309,7 @@
                                   [[LocationManager defaultLocationManager].cityLabel setTitle:newCity forState:UIControlStateNormal];
                                   if (_userCityCallBack) {
                                       _userCityCallBack();
+                                      self.userCityCallBack = nil;
                                   }
                                   ABLoggerDebug(@"确定切换城市");
                               }];
@@ -305,25 +324,30 @@
     return YES;
 }
 
-- (double)distanceBetweenUserToLatitude:(NSString *)latitude longitude:(NSString *)longitude{
+- (BOOL)getUserGPSLocationWithCallBack:(GetUserGPSLocation)callback{
+    self.getUserGPSLocation = callback;
+    return [self startLocationUserGPS];
+}
+
+- (double)distanceBetweenUserToLatitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude{
     
     CLLocationDegrees _latitude, _longitude;
     
-    _latitude = [latitude doubleValue];
-    _longitude = [longitude doubleValue];
+    _latitude = latitude;
+    _longitude = longitude;
     
     CLLocation *toLocation = [[[CLLocation alloc] initWithLatitude:_latitude longitude:_longitude] autorelease];
     
-    return [self distanceBetweenCoordinatesFrom:_map.userLocation.location to:toLocation];
+    return [self distanceBetweenCoordinatesFrom:_userLocation to:toLocation];
 }
 
 - (double)distanceBetweenCoordinatesFrom:(CLLocation *)from to:(CLLocation *)to{
     
     CLLocationDistance distance = [to distanceFromLocation:from];
     
-    ABLoggerDebug(@" %.2f m",distance);
+    ABLoggerDebug(@"距离 === %.2f m",distance);
     
-    return distance;
+    return (distance<0?0:distance);
 }
 
 @end

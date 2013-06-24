@@ -13,6 +13,17 @@
 #import "ASINetworkQueue.h"
 #import "common.h"
 
+// const static key
+static NSString* keyToken = @"token";
+static NSString* keyAppId = @"appId";
+static NSString* keySign = @"sign";
+
+static NSString* keyFormat = @"format";
+static NSString* valueFormat = @"json";
+
+static NSString* keyPhoneType = @"phoneType";
+static NSString* valuePhoneType = @"iPhone";
+
 @implementation ApiClient
 
 // define getter/setter methods
@@ -113,7 +124,77 @@
     return md5(mutableString);
 }
 
-
+//- (ASIHTTPRequest*) prepareExecuteApiCmd:(ApiCmd*) cmd{
+//    
+//    // set apiClient of cmd
+//    cmd.apiClient = self;
+//    
+//    // prepare post data
+//    NSMutableDictionary* postDict = [cmd getParamDict];
+//    NSString * newToken = nil;
+//    NSUserDefaults *defaults = [NSUserDefaults  standardUserDefaults];
+//    newToken = [defaults objectForKey:@"HSAPI"];
+//    
+//    // add appId & cookie & phoneType
+//    [postDict setValue:[ApiConfig getApiAppId] forKey:keyAppId];
+//    [postDict setValue:@"1.0" forKey:@"v"];
+//    
+//    // caculate signature of parameters
+//    NSString* paramSign = [self signParam:postDict];
+//    [postDict setValue:paramSign forKey:keySign];
+//    
+//    // add all parameters to post data
+//    
+//    // prepare http request
+//    NSURL *url = [NSURL URLWithString:[ApiConfig getApiRequestUrl]];
+//    
+//    self.request = [ASIFormDataRequest requestWithURL:url];
+//    NSString * userAgnet = [ASIHTTPRequest defaultUserAgentString];
+//    apiLogDebug(@"userAgent is %@",userAgnet);
+//    
+//    NSString * deviceInfo = [defaults objectForKey:@"deviceInfo"];
+//    apiLogDebug(@"deviceInfo is %@",deviceInfo);
+//    userAgnet = [userAgnet stringByAppendingFormat:@"&%@",deviceInfo];
+//    userAgnet = [userAgnet stringByAppendingFormat:@"&huishow=v2.2"];
+//    apiLogDebug(@"NewUserAgent is %@",userAgnet);
+//    
+//    [request addRequestHeader:@"User-Agent" value:userAgnet];
+//    apiLogDebug(@"request.requesetHeader is %@",[request.requestHeaders objectForKey:@"User-Agent"]);
+//    
+//    
+//    if ([ApiConfig getApiMessageDebug]) {
+//        apiLogInfo(@"ApiRequestURL : [%@]", [ApiConfig getApiRequestUrl]);
+//        apiLogInfo(@"Request Param Count : [%d]", [postDict count]);
+//    }
+//    
+//    NSEnumerator *enumerator = [postDict keyEnumerator];
+//    id key;
+//    
+//    while ((key = [enumerator nextObject])) {
+//        
+//        NSString* value = (NSString*)[postDict objectForKey:key];
+//        // set post data
+//        if ([key isEqualToString:@"Filedata"]) {
+//            [request setFile:value forKey:@"Filedata"];
+//        }
+//        else{
+//            [request setPostValue:value forKey:(NSString*)key];
+//        }
+//        
+//        // for debugging purpose
+//        if ([ApiConfig getApiMessageDebug]) {
+//            apiLogInfo(@"Post Param : Key [%@] Value [%@]", (NSString*)key, value);
+//        }
+//    }
+//    //    [request setPostFormat:ASIMultipartFormDataPostFormat];
+//    // save all result to a file
+//    if (!isEmpty([cmd getCacheFilePath])) {
+//        [request setDownloadDestinationPath:[cmd getCacheFilePath]];
+//        apiLogDebug(@"save api result to cache file [%@]",[cmd getCacheFilePath]);
+//    }
+//    
+//    return request;
+//}
 
 - (void) executeApiCmdAsync:(ApiCmd*) cmd{
     ABLoggerMethod();

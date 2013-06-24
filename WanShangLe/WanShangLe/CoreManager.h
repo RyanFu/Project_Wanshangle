@@ -58,6 +58,10 @@
 //用户选择的城市
 #define UserState @"administrativeArea"
 
+//User Setting
+#define MMovie_CinemaFilterType @"MMovie_CinemaFilterType"
+
+
 //时间戳
 #define MMovieTimeStamp @"MMovieTimeStamp"
 #define MCinemaTimeStamp @"MCinemaTimeStamp"
