@@ -14,7 +14,7 @@
 @interface City : NSManagedObject
 
 @property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSNumber * uid;
+@property (nonatomic, retain) NSString * uid;
 @property (nonatomic, retain) NSSet *cinemas;
 @property (nonatomic, retain) NSSet *movie_citys;
 @property (nonatomic, retain) NSSet *shows;

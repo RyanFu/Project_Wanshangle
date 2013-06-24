@@ -284,6 +284,10 @@
 #pragma mark apiNotiry
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
+    if (error) {
+        return;
+    }
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         [[DataBaseManager sharedInstance] insertCinemasIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
@@ -329,6 +333,8 @@
     NSArray *array_coreData = [[DataBaseManager sharedInstance] getAllCinemasListFromCoreData];
     ABLoggerDebug(@"主电影院count ==== %d",[array_coreData count]);
     
+    NSArray *regionOrder = [[DataBaseManager sharedInstance] getRegionOrder];
+    
     NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:10];
     NSMutableArray *dataArray = [[NSMutableArray alloc] initWithCapacity:10];
     
@@ -345,7 +351,12 @@
         [[districtDic objectForKey:key] addObject:tcinema];
     }
     
-    for (NSString *key in [districtDic allKeys]) {
+    for (NSString *key in regionOrder) {
+        
+        if (![districtDic objectForKey:key]) {
+            continue;
+        }
+        
         NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:
                              [districtDic objectForKey:key],@"list",
                              key,@"name",nil];

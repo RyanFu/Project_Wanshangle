@@ -102,6 +102,7 @@
 - (void)importDynamicMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData;
 - (BOOL)addFavoriteCinemaWithId:(NSNumber *)uid;
 - (BOOL)deleteFavoriteCinemaWithId:(NSNumber *)uid;
+- (NSArray *)getRegionOrder;
 
 /************ 演出 ***************/
 - (ApiCmdShow_getAllShows *)getAllShowsListFromWeb:(id<ApiNotify>)delegate;

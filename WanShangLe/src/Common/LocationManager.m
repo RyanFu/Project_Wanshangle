@@ -235,6 +235,8 @@
         return NO;
     }
     
+    newCity = [newCity substringToIndex:2];
+    
     self.userCityCallBack = callback;
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];

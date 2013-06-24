@@ -21,7 +21,7 @@
     </entity>
     <entity name="City" representedClassName="City" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="uid" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="bars" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BBar" inverseName="city" inverseEntity="BBar" syncable="YES"/>
         <relationship name="cinemas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MCinema" inverseName="city" inverseEntity="MCinema" syncable="YES"/>
         <relationship name="ktvs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="KKTV" inverseName="city" inverseEntity="KKTV" syncable="YES"/>
@@ -147,7 +147,7 @@
     <elements>
         <element name="BBar" positionX="-531" positionY="-1032" width="128" height="193"/>
         <element name="BBarDetail" positionX="-747" positionY="-966" width="128" height="118"/>
-        <element name="City" positionX="-162" positionY="-846" width="128" height="148"/>
+        <element name="City" positionX="-162" positionY="-846" width="128" height="150"/>
         <element name="KKTV" positionX="142" positionY="-936" width="128" height="223"/>
         <element name="KKTVBuyInfo" positionX="430" positionY="-909" width="128" height="88"/>
         <element name="KKTVDetail" positionX="430" positionY="-718" width="128" height="88"/>

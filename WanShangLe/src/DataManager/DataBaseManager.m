@@ -492,6 +492,19 @@ static DataBaseManager *_sharedInstance = nil;
     return YES;
 }
 
+- (NSArray *)getRegionOrder{
+    
+    NSError *error = nil;
+
+    NSString *jsonPath = [[NSBundle mainBundle] pathForResource:[[LocationManager defaultLocationManager] getUserCity] ofType:@"json"];
+    NSData *JSONData = [NSData dataWithContentsOfFile:jsonPath];
+    NSDictionary *JSONObject = [NSJSONSerialization JSONObjectWithData:JSONData options:0 error:&error];
+    
+    ABLoggerInfo(@"JSONObject = %@",JSONObject);
+    
+    return [JSONObject objectForKey:@"region"];
+}
+
 #pragma mark 获得排期
 - (ApiCmdMovie_getSchedule *)getScheduleFromWebWithaMovie:(MMovie *)aMovie
                                                andaCinema:(MCinema *)aCinema
