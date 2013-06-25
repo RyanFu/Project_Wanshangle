@@ -37,10 +37,11 @@
     return self.httpRequest;
 }
 
+//http://api.wanshangle.com:10000/api? appId=000001 &api=movie.playing &sign=sign 
 - (NSMutableDictionary*) getParamDict {
-    NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
     
-    [paramDict setObject:@"extaccount.join" forKey:@"api"];
+    NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
+    [paramDict setObject:@"movie.playing" forKey:@"api"];
     
     return paramDict;
 }

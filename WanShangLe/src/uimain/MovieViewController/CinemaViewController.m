@@ -77,7 +77,6 @@
     [self.navigationController setNavigationBarHidden:NO];
     
     self.apiCmdMovie_getAllCinemas = [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
-    //    [self updateData:0];
     
     [super viewDidAppear:animated];
     
@@ -86,13 +85,13 @@
     }
     [self.cinemaTableView setContentOffset:CGPointMake(0, 44) animated:NO];
     
-#ifdef TestCode
-    [self updatData];//测试代码
-#endif
-    
     _cinemaDelegate.isOpen = NO;
     _cinemaDelegate.selectIndex = nil;
     [_cinemaTableView reloadData];
+    
+#ifdef TestCode
+    [self updatData];//测试代码
+#endif
 }
 
 - (void)updatData{
@@ -334,6 +333,7 @@
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
     if (error) {
+        [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
         return;
     }
     
@@ -355,6 +355,10 @@
         int tag = [[apiCmd httpRequest] tag];
         [self updateData:tag];
     });
+}
+
+- (ApiCmd *)apiGetDelegateApiCmd{
+    return _apiCmdMovie_getAllCinemas;
 }
 
 - (void)updateData:(int)tag

@@ -76,23 +76,12 @@
  object.metadata = [NSMutableDictionary dictionary];
  */
 - (ASIHTTPRequest*)prepareExecuteApiCmd{
-    
-    // prepare http request
-    NSURL *url = [NSURL URLWithString:[ApiConfig getApiRequestUrl]];
-    
-    self.httpRequest = [ASIHTTPRequest requestWithURL:url];
-    
-    NSMutableDictionary *requestHeaders = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                           @"application/json", @"Content-Type",
-                                           nil];
-    [_httpRequest setRequestHeaders:requestHeaders];
-    [_httpRequest setDelegate:self];
-    
-    //  [_httpRequest addRequestHeader:@"User-Agent" value:@"Wan_Shang_Le"];
-    //  [_httpRequest setUserInfo:nil];
-    //  [_httpRequest setNumberOfTimesToRetryOnTimeout:2];
-    //	[_httpRequest addRequestHeader:@"If-Modified-Since" value:@""];
-    //	[_httpRequest addRequestHeader:@"If-None-Match" value:@""];
+
+//  [_httpRequest addRequestHeader:@"User-Agent" value:@"Wan_Shang_Le"];
+//  [_httpRequest setUserInfo:nil];
+//  [_httpRequest setNumberOfTimesToRetryOnTimeout:2];
+//	[_httpRequest addRequestHeader:@"If-Modified-Since" value:@""];
+//	[_httpRequest addRequestHeader:@"If-None-Match" value:@""];
     return _httpRequest;
 }
 
@@ -215,16 +204,19 @@
     
     [self parseResponseData];
     
-    if (nil != apiClient) {
-        // call apiClient first
-        [apiClient apiNotifyResult:self error:nil];
+    NSError *error = nil;
+    if (statusCode != 200) {
+        ABLoggerWarn(@"请求失败 ========= %d",statusCode);
+        error = [NSError errorWithDomain:@"api error" code:404 userInfo:nil];
+        
+        [self apiNotifyResult:self error:error];
     }
     
     if (delegate && [delegate respondsToSelector:@selector(apiNotifyResult:error:)]) {
         // call delegate
-        [delegate apiNotifyResult:self error:nil];
+        [delegate apiNotifyResult:self error:error];
     }else{
-        [self apiNotifyResult:self error:nil];
+        [self apiNotifyResult:self error:error];
     }
 }
 
@@ -238,9 +230,9 @@
     if (delegate && [delegate respondsToSelector:@selector(apiNotifyResult:error:)]) {
         // call delegate
         [delegate apiNotifyResult:self error:error];
-    }else{
-        [self apiNotifyResult:self error:error];
     }
+    
+    [self apiNotifyResult:self error:error];
 }
 
 /**

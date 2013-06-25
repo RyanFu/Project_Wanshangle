@@ -33,14 +33,7 @@ static DataBaseManager *_sharedInstance = nil;
 -(id)init{
     self = [super init];
     if (self) {
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        //formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss ZZZ";
-        formatter.dateFormat = @"yyyyMMdd";
-        formatter.timeZone = [NSTimeZone localTimeZone];
-        formatter.locale = [NSLocale currentLocale];
-        updateTimeStamp = [[formatter stringFromDate:[NSDate date]] retain];
-        ABLoggerInfo(@"today time stamp is ===== %@",updateTimeStamp);
-        [formatter release];
+
     }
     return self;
 }
@@ -115,6 +108,16 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (NSString *)getTodayTimeStamp{
     
+    if (!updateTimeStamp) {
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        //formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss ZZZ";
+        formatter.dateFormat = @"yyyyMMdd";
+        formatter.timeZone = [NSTimeZone localTimeZone];
+        formatter.locale = [NSLocale currentLocale];
+        updateTimeStamp = [[formatter stringFromDate:[NSDate date]] retain];
+        ABLoggerInfo(@"today time stamp is ===== %@",updateTimeStamp);
+        [formatter release];
+    }
     return updateTimeStamp;
 }
 
@@ -243,6 +246,30 @@ static DataBaseManager *_sharedInstance = nil;
         ABLoggerDebug(@"错误信息 ========= %@",[error description]);
     }];
     
+}
+
+- (NSString *)getNowUserCityId{
+    
+    City *city = [self getNowUserCityFromCoreData];
+    if (city.uid) {
+        return city.uid;
+    }
+    
+    NSString *city_name = [[LocationManager defaultLocationManager] getUserCity];
+    NSString *cityPath = [[NSBundle mainBundle] pathForResource:@"city" ofType:@"json"];
+    NSData *cityData = [NSData dataWithContentsOfFile:cityPath];
+    NSDictionary *cityDic = [NSJSONSerialization JSONObjectWithData:cityData options:kNilOptions error:nil];
+    NSArray *array = [cityDic objectForKey:@"citys"];
+    
+    
+    for (NSDictionary *dic in array) {
+        NSString *tname = [dic objectForKey:@"name"];
+        if ([tname isEqualToString:city_name]) {
+            return [dic objectForKey:@"id"];
+        }
+    }
+    assert(0);
+    return nil;
 }
 
 - (City *)getNowUserCityFromCoreData
@@ -404,7 +431,7 @@ static DataBaseManager *_sharedInstance = nil;
     ElapsedTime(time2, time1);
     
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
-    ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
     //    });
 }
@@ -684,28 +711,32 @@ static DataBaseManager *_sharedInstance = nil;
 #pragma mark -
 #pragma mark 影院
 /****************************************** 影院 *********************************************/
-- (ApiCmdMovie_getAllCinemas *)getAllCinemasListFromWeb:(id<ApiNotify>)delegate
+- (ApiCmd *)getAllCinemasListFromWeb:(id<ApiNotify>)delegate
 {
-    CinemaViewController *cinemaViewController = (CinemaViewController *)delegate;
-    if ([[[[ApiClient defaultClient] networkQueue] operations] containsObject:cinemaViewController.apiCmdMovie_getAllCinemas.httpRequest]) {
+    
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+
+    if ([[[[ApiClient defaultClient] networkQueue] operations] containsObject:tapiCmd.httpRequest]) {
         ABLoggerWarn(@"不能请求影院列表数据，因为已经请求了");
-        return cinemaViewController.apiCmdMovie_getAllCinemas;
+        return tapiCmd;
     }
     
-    //    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:UpdatingCinemasList];
+    ABLoggerWarn(@"tapiCmd.httpRequest ====== %@",tapiCmd.httpRequest);
+    ABLoggerWarn(@"networkQueue ====== %@",[[[ApiClient defaultClient] networkQueue] operations]);
+    
     ApiClient* apiClient = [ApiClient defaultClient];
     
     ApiCmdMovie_getAllCinemas* apiCmdMovie_getAllCinemas = [[ApiCmdMovie_getAllCinemas alloc] init];
     apiCmdMovie_getAllCinemas.delegate = delegate;
     apiCmdMovie_getAllCinemas.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    
     [apiClient executeApiCmdAsync:apiCmdMovie_getAllCinemas];
     [apiCmdMovie_getAllCinemas.httpRequest setTag:API_MCinemaCmd];
     
     //    if (已经更新过) {
     //      [delegate apiNotifyLocationResult:apiCmdMovie_getAllCinemas error:nil];
     //    }
-    
-    
+
     return [apiCmdMovie_getAllCinemas autorelease];
 }
 
@@ -840,7 +871,7 @@ static DataBaseManager *_sharedInstance = nil;
     ElapsedTime(time2, time1);
     
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
-    ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
     //    });
     
@@ -996,7 +1027,7 @@ static DataBaseManager *_sharedInstance = nil;
     ElapsedTime(time2, time1);
     
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
-    ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
     
 }
@@ -1094,7 +1125,7 @@ static DataBaseManager *_sharedInstance = nil;
     ElapsedTime(time2, time1);
     
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
-    ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
 }
 
@@ -1224,7 +1255,7 @@ static DataBaseManager *_sharedInstance = nil;
     ElapsedTime(time2, time1);
     
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
-    ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
 }
 
 - (void)importKTV:(KKTV *)kKTV ValuesForKeysWithObject:(NSDictionary *)aKTVDic{

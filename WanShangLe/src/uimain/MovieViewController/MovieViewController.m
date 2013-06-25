@@ -38,10 +38,8 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
-        });
+
+        self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
         
         [self newCinemaController];
         
@@ -72,7 +70,6 @@
     [_cinemaViewController viewWillAppear:animated];
     
     self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
-    self.apiCmdMovie_getAllCinemas =[[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
     
 #ifdef TestCode
     [self updatData];//测试代码
@@ -87,7 +84,7 @@
 - (void)updatData{
     for (int i=0; i<10; i++) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+//            self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
         });
     }
 }

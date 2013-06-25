@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+@class ApiCmd;
 /**
  *  @author yuqiang
  *
@@ -20,4 +21,5 @@
 
 @optional
 - (void) apiNotifyLocationResult:(id) apiCmd  error:(NSError*) error;
+- (ApiCmd *)apiGetDelegateApiCmd;
 @end

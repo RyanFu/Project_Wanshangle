@@ -31,7 +31,7 @@
 /**
  *  execute ApiCmd asynchrouse
  **/
-- (void) executeApiCmdAsync:(ApiCmd*) cmd;
+- (BOOL) executeApiCmdAsync:(ApiCmd*) cmd;
 
 /**
  *  execute ApiCmd sync

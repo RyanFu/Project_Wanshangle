@@ -246,6 +246,14 @@
     return city;
 }
 
+- (NSString *)getUserCityId{
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *city = [userDefaults objectForKey:UserState];
+
+    return [userDefaults objectForKey:city];
+}
+
 - (BOOL)setUserCity:(NSString *)newCity CallBack:(SetUserCityCallBack)callback{
     
     if (isEmpty(newCity)) {
@@ -274,6 +282,7 @@
                                   handler:^(SIAlertView *alertView) {
                                       [[DataBaseManager sharedInstance] cleanUp];
                                       [userDefaults setObject:newCity forKey:UserState];
+                                      [userDefaults setObject:[[DataBaseManager sharedInstance] getNowUserCityId] forKey:newCity];
                                       [userDefaults synchronize];
                                       
                                       [[LocationManager defaultLocationManager].cityLabel setTitle:newCity forState:UIControlStateNormal];
@@ -305,6 +314,7 @@
                               handler:^(SIAlertView *alertView) {
                                   [[DataBaseManager sharedInstance] cleanUp];
                                   [userDefaults setObject:newCity forKey:UserState];
+                                  [userDefaults setObject:[[DataBaseManager sharedInstance] getNowUserCityId] forKey:newCity];
                                   [userDefaults synchronize];
                                   [[LocationManager defaultLocationManager].cityLabel setTitle:newCity forState:UIControlStateNormal];
                                   if (_userCityCallBack) {

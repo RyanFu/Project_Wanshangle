@@ -42,6 +42,12 @@ typedef void (^GetUserGPSLocation)(BOOL isNewLocation);
 - (NSString *)getUserCity;
 
 /**
+ 获取默认城市ID
+ @returns 用户选择的城市
+ */
+- (NSString *)getUserCityId;
+
+/**
  set user city
  @returns
  */
