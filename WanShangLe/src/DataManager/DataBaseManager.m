@@ -303,15 +303,14 @@ static DataBaseManager *_sharedInstance = nil;
 #pragma mark -
 #pragma mark 电影
 /****************************************** 电影 *********************************************/
-- (ApiCmdMovie_getAllMovies *)getAllMoviesListFromWeb:(id<ApiNotify>)delegate{
+- (ApiCmd *)getAllMoviesListFromWeb:(id<ApiNotify>)delegate{
     
-    MovieViewController *movieViewController = (MovieViewController *)delegate;
-    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:movieViewController.apiCmdMovie_getAllMovies.httpRequest]) {
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
         ABLoggerWarn(@"不能请求电影列表数据，因为已经请求了");
-        return movieViewController.apiCmdMovie_getAllMovies;
+        return tapiCmd;
     }
     
-    //    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:UpdatingMoviesList];
     ApiClient* apiClient = [ApiClient defaultClient];
     
     ApiCmdMovie_getAllMovies* apiCmdMovie_getAllMovies = [[ApiCmdMovie_getAllMovies alloc] init];
@@ -465,18 +464,18 @@ static DataBaseManager *_sharedInstance = nil;
 - (void)importMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData
 {
     ABLoggerMethod();
-    mMovie.uid = [amovieData objectForKey:@"id"];
+    mMovie.uid =  [NSNumber numberWithInt:[[amovieData objectForKey:@"id"] intValue]];
     mMovie.name = [amovieData objectForKey:@"name"];
-    mMovie.webImg = [amovieData objectForKey:@"webImg"];
+    mMovie.webImg = [amovieData objectForKey:@"imagesurl"];
     mMovie.aword = [amovieData objectForKey:@"aword"];
 }
 
 - (void)importDynamicMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData
 {
     ABLoggerMethod();
-    mMovie.rating = [amovieData objectForKey:@"rating"];
+    mMovie.rating = [NSNumber numberWithFloat:[[amovieData objectForKey:@"rating"] floatValue]];
     mMovie.ratingFrom = [amovieData objectForKey:@"ratingFrom"];
-    mMovie.ratingpeople = [amovieData objectForKey:@"ratingpeople"];
+    mMovie.ratingpeople = [amovieData objectForKey:@"ratingcount"];
     mMovie.newMovie = [amovieData objectForKey:@"newMovie"];
     mMovie.twoD = [[amovieData objectForKey:@"viewtypes"] objectAtIndex:0];
     mMovie.threeD = [[amovieData objectForKey:@"viewtypes"] objectAtIndex:1];
@@ -931,12 +930,12 @@ static DataBaseManager *_sharedInstance = nil;
 #pragma mark -
 #pragma mark 演出
 /****************************************** 演出 *********************************************/
-- (ApiCmdShow_getAllShows *)getAllShowsListFromWeb:(id<ApiNotify>)delegate{
+- (ApiCmd *)getAllShowsListFromWeb:(id<ApiNotify>)delegate{
     
-    ShowViewController *showViewController = (ShowViewController *)delegate;
-    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:showViewController.apiCmdShow_getAllShows.httpRequest]) {
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
         ABLoggerWarn(@"不能请求演出列表数据，因为已经请求了");
-        return showViewController.apiCmdShow_getAllShows;
+        return tapiCmd;
     }
     
     ApiClient* apiClient = [ApiClient defaultClient];
@@ -1053,11 +1052,12 @@ static DataBaseManager *_sharedInstance = nil;
 #pragma mark -
 #pragma mark 酒吧
 /****************************************** 酒吧 *********************************************/
-- (ApiCmdBar_getAllBars *)getAllBarsListFromWeb:(id<ApiNotify>)delegate;{
-    BarViewController *showViewController = (BarViewController *)delegate;
-    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:showViewController.apiCmdBar_getAllBars.httpRequest]) {
+- (ApiCmd *)getAllBarsListFromWeb:(id<ApiNotify>)delegate;{
+
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
         ABLoggerWarn(@"不能请求演出列表数据，因为已经请求了");
-        return showViewController.apiCmdBar_getAllBars;
+        return tapiCmd;
     }
     
     ApiClient* apiClient = [ApiClient defaultClient];
@@ -1165,11 +1165,13 @@ static DataBaseManager *_sharedInstance = nil;
 #pragma mark -
 #pragma mark KTV
 /****************************************** KTV *********************************************/
-- (ApiCmdKTV_getAllKTVs *)getAllKTVsListFromWeb:(id<ApiNotify>)delegate{
-    KtvViewController *ktvViewController = (KtvViewController *)delegate;
-    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:ktvViewController.apiCmdKTV_getAllKTVs.httpRequest]) {
+- (ApiCmd*)getAllKTVsListFromWeb:(id<ApiNotify>)delegate{
+    
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    
+    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
         ABLoggerWarn(@"不能请求 KTV 列表数据，因为已经请求了");
-        return ktvViewController.apiCmdKTV_getAllKTVs;
+        return tapiCmd;
     }
     
     ApiClient* apiClient = [ApiClient defaultClient];

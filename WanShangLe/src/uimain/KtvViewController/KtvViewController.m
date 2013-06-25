@@ -170,6 +170,10 @@
     });
 }
 
+- (ApiCmd *)apiGetDelegateApiCmd{
+    return _apiCmdKTV_getAllKTVs;
+}
+
 - (void)updateData:(int)tag
 {
     ABLogger_int(tag);

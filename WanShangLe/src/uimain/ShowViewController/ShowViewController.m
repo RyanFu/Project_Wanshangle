@@ -346,6 +346,10 @@
     });
 }
 
+- (ApiCmd *)apiGetDelegateApiCmd{
+    return _apiCmdShow_getAllShows;
+}
+
 - (void)updateData:(int)tag
 {
     ABLogger_int(tag);

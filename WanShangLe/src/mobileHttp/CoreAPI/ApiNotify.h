@@ -17,9 +17,11 @@
  */
 @protocol ApiNotify <NSObject>
 
+@required
 - (void) apiNotifyResult:(id) apiCmd  error:(NSError*) error;
+- (ApiCmd *)apiGetDelegateApiCmd;
 
 @optional
 - (void) apiNotifyLocationResult:(id) apiCmd  error:(NSError*) error;
-- (ApiCmd *)apiGetDelegateApiCmd;
+
 @end

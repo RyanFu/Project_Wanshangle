@@ -9,7 +9,6 @@
 #import "MovieViewController.h"
 #import "MovieTableViewCell.h"
 #import "ApiCmdMovie_getAllMovies.h"
-#import "ApiCmdMovie_getAllCinemas.h"
 #import "MovieListTableViewDelegate.h"
 #import "CinemaViewController.h"
 #import "ASIHTTPRequest.h"
@@ -56,7 +55,6 @@
     self.movieTableView = nil;
     self.movieDelegate = nil;
     
-    self.apiCmdMovie_getAllCinemas = nil;
     self.apiCmdMovie_getAllMovies = nil;
     self.movieContentView = nil;
     self.topView = nil;
@@ -299,6 +297,10 @@
         ElapsedTime(time2, time1);
         
     });
+}
+
+- (ApiCmd *)apiGetDelegateApiCmd{
+    return _apiCmdMovie_getAllMovies;
 }
 
 - (void)updateData:(int)tag

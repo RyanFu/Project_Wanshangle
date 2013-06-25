@@ -8,12 +8,12 @@
 
 #import "ASIHTTPRequest.h"
 
-#import "ShowViewController.h"
-#import "MovieViewController.h"
-#import "CinemaViewController.h"
-#import "ScheduleViewController.h"
-#import "BarViewController.h"
-#import "KtvViewController.h"
+//#import "ShowViewController.h"
+//#import "MovieViewController.h"
+//#import "CinemaViewController.h"
+//#import "ScheduleViewController.h"
+//#import "BarViewController.h"
+//#import "KtvViewController.h"
 
 #import "ApiCmdMovie_getAllMovies.h"
 #import "ApiCmdMovie_getAllCinemas.h"
