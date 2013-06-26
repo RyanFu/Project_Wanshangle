@@ -12,12 +12,9 @@
 
 @implementation MMovieDetail
 
-@dynamic fromCountry;
-@dynamic movieActor;
-@dynamic moviePlot;
-@dynamic movieTime;
-@dynamic movieType;
-@dynamic releaseDate;
+@dynamic recommendadded;
+@dynamic wantedadded;
+@dynamic info;
 @dynamic movie;
 
 @end

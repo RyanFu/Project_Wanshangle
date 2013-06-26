@@ -39,7 +39,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.apiCmdMovie_getAllCinemas = [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
+        self.apiCmdMovie_getAllCinemas = (ApiCmdMovie_getAllCinemas *)[[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
         
 //        [[NSNotificationCenter defaultCenter] addObserver:self
 //                                                 selector:@selector(keyboardWillShown:)
@@ -76,7 +76,7 @@
     
     [self.navigationController setNavigationBarHidden:NO];
     
-    self.apiCmdMovie_getAllCinemas = [[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
+    self.apiCmdMovie_getAllCinemas = (ApiCmdMovie_getAllCinemas *)[[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
     
     [super viewDidAppear:animated];
     
@@ -233,6 +233,7 @@
 #pragma mark 电影详情
 - (void)clickMovieDetail:(id)sender{
     MovieDetailViewController *movieDetailController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
+    movieDetailController.mMovie = self.mMovie;
     [_mparentController.navigationController pushViewController:movieDetailController animated:YES];
 }
 

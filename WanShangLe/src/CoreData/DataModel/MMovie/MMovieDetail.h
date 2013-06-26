@@ -13,12 +13,10 @@
 
 @interface MMovieDetail : NSManagedObject
 
-@property (nonatomic, retain) NSString * fromCountry;
-@property (nonatomic, retain) NSString * movieActor;
-@property (nonatomic, retain) NSString * moviePlot;
-@property (nonatomic, retain) NSNumber * movieTime;
-@property (nonatomic, retain) NSString * movieType;
-@property (nonatomic, retain) NSString * releaseDate;
+@property (nonatomic, retain) NSString * recommendadded;
+@property (nonatomic, retain) NSString * wantedadded;
+@property (nonatomic, retain) id info;
+
 @property (nonatomic, retain) MMovie *movie;
 
 @end

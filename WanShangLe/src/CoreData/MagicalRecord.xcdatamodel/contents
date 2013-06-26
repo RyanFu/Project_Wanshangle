@@ -79,7 +79,7 @@
         <attribute name="ratingpeople" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="threeD" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="twoD" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="uid" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="webImg" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="movie_cinemas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MMovie_Cinema" inverseName="movie" inverseEntity="MMovie_Cinema" syncable="YES"/>
         <relationship name="movie_citys" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MMovie_City" inverseName="movie" inverseEntity="MMovie_City" syncable="YES"/>
@@ -97,12 +97,9 @@
         <relationship name="movie" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovie" inverseName="movie_citys" inverseEntity="MMovie" syncable="YES"/>
     </entity>
     <entity name="MMovieDetail" representedClassName="MMovieDetail" syncable="YES">
-        <attribute name="fromCountry" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="movieActor" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="moviePlot" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="movieTime" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="movieType" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="releaseDate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="info" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
+        <attribute name="recommendadded" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wantedadded" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="movie" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovie" inverseName="movieDetail" inverseEntity="MMovie" syncable="YES"/>
     </entity>
     <entity name="MSchedule" representedClassName="MSchedule" syncable="YES">
@@ -157,7 +154,7 @@
         <element name="MMovie" positionX="-443" positionY="-351" width="128" height="253"/>
         <element name="MMovie_Cinema" positionX="-173" positionY="-313" width="128" height="103"/>
         <element name="MMovie_City" positionX="-450" positionY="-531" width="128" height="88"/>
-        <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="148"/>
+        <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="103"/>
         <element name="MSchedule" positionX="-189" positionY="-67" width="128" height="163"/>
         <element name="SShow" positionX="-173" positionY="-1384" width="128" height="268"/>
         <element name="SShowDetail" positionX="-371" positionY="-1377" width="128" height="133"/>

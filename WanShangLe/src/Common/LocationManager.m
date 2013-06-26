@@ -260,7 +260,7 @@
         return NO;
     }
     
-    newCity = [newCity substringToIndex:2];
+//    newCity = [newCity substringToIndex:[newCity length]-1];
     
     self.userCityCallBack = callback;
     

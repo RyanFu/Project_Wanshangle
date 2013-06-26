@@ -8,14 +8,8 @@
 
 #import "ASIHTTPRequest.h"
 
-//#import "ShowViewController.h"
-//#import "MovieViewController.h"
-//#import "CinemaViewController.h"
-//#import "ScheduleViewController.h"
-//#import "BarViewController.h"
-//#import "KtvViewController.h"
-
 #import "ApiCmdMovie_getAllMovies.h"
+#import "ApiCmdMovie_getAllMovieDetail.h"
 #import "ApiCmdMovie_getAllCinemas.h"
 #import "ApiCmdMovie_getSchedule.h"
 #import "ApiCmdMovie_getBuyInfo.h"
@@ -25,16 +19,22 @@
 #import "ApiCmdKTV_getDiscountInfo.h"
 #import "ApiCmdKTV_getKTVDetail.h"
 
+#import "City.h"
+#import "ApiCmd.h"
+
 #import "MMovie_Cinema.h"
 #import "MMovie_City.h"
 #import "MMovie.h"
+#import "MMovieDetail.h"
 #import "MCinema.h"
 #import "MSchedule.h"
 #import "MBuyTicketInfo.h"
-#import "City.h"
-#import "SShow.h"
-#import "BBar.h"
+
 #import "KKTV.h"
 #import "KKTVBuyInfo.h"
 #import "KKTVDetail.h"
-#import "ApiCmd.h"
+
+#import "SShow.h"
+
+#import "BBar.h"
+

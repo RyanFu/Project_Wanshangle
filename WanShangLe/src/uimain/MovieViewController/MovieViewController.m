@@ -38,7 +38,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
 
-        self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+        self.apiCmdMovie_getAllMovies = (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
         
         [self newCinemaController];
         
@@ -67,7 +67,7 @@
 
     [_cinemaViewController viewWillAppear:animated];
     
-    self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+    self.apiCmdMovie_getAllMovies =  (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
     
 #ifdef TestCode
     [self updatData];//测试代码
@@ -127,6 +127,7 @@
     
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
     _titleLabel.backgroundColor = [UIColor clearColor];
+    [_titleLabel setTextAlignment:UITextAlignmentCenter];
     
     _movieContentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, iPhoneAppFrame.size.width, iPhoneAppFrame.size.height-44)];
     //create movie tableview and init
