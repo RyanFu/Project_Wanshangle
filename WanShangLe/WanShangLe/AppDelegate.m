@@ -55,11 +55,11 @@
     [[LocationManager defaultLocationManager] startLocationUserGPS];
     
     //inset all citys into coreData
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        
-        [[DataBaseManager sharedInstance] insertAllCitysIntoCoreData];
-        
-    });
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+//        
+//        [[DataBaseManager sharedInstance] insertAllCitysIntoCoreData];
+//        
+//    });
     
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.

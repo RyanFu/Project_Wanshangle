@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5A0FA975177A8D5900676253 /* ApiCmdMovie_getAllMovieDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A0FA974177A8D5900676253 /* ApiCmdMovie_getAllMovieDetail.m */; };
+		5A0FA97B177AC90F00676253 /* POAPinyin.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A0FA97A177AC90F00676253 /* POAPinyin.m */; };
 		5A1746F7176057E400E155AB /* SIAlertView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5A1746F4176057E400E155AB /* SIAlertView.bundle */; };
 		5A1746F8176057E400E155AB /* SIAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1746F6176057E400E155AB /* SIAlertView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		5A1746FB17608CC500E155AB /* MovieTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1746FA17608CC500E155AB /* MovieTableViewCell.m */; };
@@ -236,6 +237,8 @@
 		5A0FA973177A8D5900676253 /* ApiCmdMovie_getAllMovieDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCmdMovie_getAllMovieDetail.h; sourceTree = "<group>"; };
 		5A0FA974177A8D5900676253 /* ApiCmdMovie_getAllMovieDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmdMovie_getAllMovieDetail.m; sourceTree = "<group>"; };
 		5A0FA976177A8EE500676253 /* DataBaseClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataBaseClass.h; sourceTree = "<group>"; };
+		5A0FA979177AC90F00676253 /* POAPinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POAPinyin.h; sourceTree = "<group>"; };
+		5A0FA97A177AC90F00676253 /* POAPinyin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POAPinyin.m; sourceTree = "<group>"; };
 		5A1746F4176057E400E155AB /* SIAlertView.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SIAlertView.bundle; sourceTree = "<group>"; };
 		5A1746F5176057E400E155AB /* SIAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIAlertView.h; sourceTree = "<group>"; };
 		5A1746F6176057E400E155AB /* SIAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIAlertView.m; sourceTree = "<group>"; };
@@ -654,6 +657,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5A0FA978177AC90E00676253 /* PinYin */ = {
+			isa = PBXGroup;
+			children = (
+				5A0FA979177AC90F00676253 /* POAPinyin.h */,
+				5A0FA97A177AC90F00676253 /* POAPinyin.m */,
+			);
+			path = PinYin;
+			sourceTree = "<group>";
+		};
 		5A1746F2176057E400E155AB /* UIControl */ = {
 			isa = PBXGroup;
 			children = (
@@ -1183,6 +1195,7 @@
 		5AAC6FF217601BDB004B7395 /* libraries */ = {
 			isa = PBXGroup;
 			children = (
+				5A0FA978177AC90E00676253 /* PinYin */,
 				5A1BDD0D176331C000D610AA /* OHAttributedLabel */,
 				5A1BDD011763311000D610AA /* SearchCore */,
 				5AAC6FF317601BDB004B7395 /* ASIHttpRequest */,
@@ -1833,6 +1846,7 @@
 				5A79C6BE1774413B00BDB7C1 /* MovieDetailViewController.m in Sources */,
 				5AE906B91778137F0076394E /* CinemaListFilterTableViewDelegate.m in Sources */,
 				5A0FA975177A8D5900676253 /* ApiCmdMovie_getAllMovieDetail.m in Sources */,
+				5A0FA97B177AC90F00676253 /* POAPinyin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,6 +9,7 @@
 static DataBaseManager *_sharedInstance = nil;
 
 #import "DataBaseManager.h"
+#import "POAPinyin.h"
 #import "DataBase.h"
 
 
@@ -248,14 +249,43 @@ static DataBaseManager *_sharedInstance = nil;
     
 }
 
-- (NSString *)getNowUserCityId{
+- (BOOL)insertCityIntoCoreDataWith:(NSString *)cityName{
     
-    City *city = [self getNowUserCityFromCoreData];
-    if (city.uid) {
-        return city.uid;
+    if (!cityName) {
+        cityName = [[LocationManager defaultLocationManager] getUserCity];
     }
     
-    NSString *city_name = [[LocationManager defaultLocationManager] getUserCity];
+    City *city = nil;
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    
+    NSString *newCityName = [self validateCity:cityName];
+    if (isEmpty(newCityName)) {
+        return NO;
+    }
+    
+    city = [City MR_findFirstByAttribute:@"name" withValue:newCityName inContext:context];
+    
+    if (city==nil) {
+         ABLoggerInfo(@"插入 城市 新数据 ======= %@",newCityName);
+        city = [City MR_createInContext:context];
+    }
+    
+    city.name = newCityName;
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:newCityName forKey:UserState];
+    
+    city.uid = [self getBundleCityIdWithCityName:newCityName];
+    [userDefaults setObject:city.uid forKey:newCityName];
+    [userDefaults synchronize];
+
+    [self saveInManagedObjectContext:context];
+  
+    return YES;
+}
+
+- (NSString *)validateCity:(NSString *)cityName{
+    
+    NSString *city_name = [POAPinyin quickConvert:cityName];
     NSString *cityPath = [[NSBundle mainBundle] pathForResource:@"city" ofType:@"json"];
     NSData *cityData = [NSData dataWithContentsOfFile:cityPath];
     NSDictionary *cityDic = [NSJSONSerialization JSONObjectWithData:cityData options:kNilOptions error:nil];
@@ -264,10 +294,51 @@ static DataBaseManager *_sharedInstance = nil;
     
     for (NSDictionary *dic in array) {
         NSString *tname = [dic objectForKey:@"name"];
-        if ([tname isEqualToString:city_name]) {
+        
+        tname = [POAPinyin quickConvert:tname];
+        if ([tname compare:city_name options:NSCaseInsensitiveSearch range:NSMakeRange(0, tname.length)] == NSOrderedSame) {
+            [POAPinyin clearCache];
+            return [dic objectForKey:@"name"];
+        }
+    }
+    
+    return nil;
+}
+
+- (NSString *)getBundleCityIdWithCityName:(NSString *)cityName{
+    
+    NSString *city_name = nil;
+    if (isEmpty(cityName)) {
+        cityName = [[LocationManager defaultLocationManager] getUserCity];
+    }
+    
+    city_name = [POAPinyin quickConvert:cityName];
+    NSString *cityPath = [[NSBundle mainBundle] pathForResource:@"city" ofType:@"json"];
+    NSData *cityData = [NSData dataWithContentsOfFile:cityPath];
+    NSDictionary *cityDic = [NSJSONSerialization JSONObjectWithData:cityData options:kNilOptions error:nil];
+    NSArray *array = [cityDic objectForKey:@"citys"];
+    
+    for (NSDictionary *dic in array) {
+        NSString *tname = [dic objectForKey:@"name"];
+        
+        tname = [POAPinyin quickConvert:tname];
+        if ([tname compare:city_name options:NSCaseInsensitiveSearch] == NSOrderedSame) {
             return [dic objectForKey:@"id"];
         }
     }
+    
+    return nil;
+}
+
+- (NSString *)getNowUserCityId{
+    
+    City *city = [self getNowUserCityFromCoreData];
+    if (city.uid) {
+        return city.uid;
+    }
+    
+    return [self getBundleCityIdWithCityName:nil];
+    
     assert(0);
     return nil;
 }
@@ -283,17 +354,20 @@ static DataBaseManager *_sharedInstance = nil;
     if (isEmpty(name)) {
         name = [[LocationManager defaultLocationManager] getUserCity];
     }
-    
+
     NSAssert(name !=nil, @"当前用户选择城市不能为空 NULL");
     
-    city = [City MR_findFirstByAttribute:@"name" withValue:name inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    
+    city = [City MR_findFirstByAttribute:@"name" withValue:name inContext:context];//中文名
     
     if (city == nil)
     {
         ABLoggerInfo(@"插入 城市 新数据 ======= %@",name);
-        city = [City MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-        city.name = name;
+        [self insertCityIntoCoreDataWith:name];
     }
+    
+    [self saveInManagedObjectContext:context];
     
     return city;
 }

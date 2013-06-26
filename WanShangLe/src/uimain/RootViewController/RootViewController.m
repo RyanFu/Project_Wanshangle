@@ -176,7 +176,7 @@
     [alertView addButtonWithTitle:@"北京"
                              type:SIAlertViewButtonTypeDefault
                           handler:^(SIAlertView *alertView) {
-                              [[LocationManager defaultLocationManager] setUserCity:@"北京" CallBack:^{
+                              [[LocationManager defaultLocationManager] setUserCity:@"北京市" CallBack:^{
                                   [self checkUserClickStyle];
                               }];
                               ABLoggerInfo(@"手动选择城市 北京");
@@ -184,7 +184,7 @@
     [alertView addButtonWithTitle:@"上海"
                              type:SIAlertViewButtonTypeDefault
                           handler:^(SIAlertView *alertView) {
-                              [[LocationManager defaultLocationManager] setUserCity:@"上海" CallBack:^{
+                              [[LocationManager defaultLocationManager] setUserCity:@"上海市" CallBack:^{
                                   [self checkUserClickStyle];
                               }];
                               ABLoggerInfo(@"手动选择城市 上海");
@@ -192,7 +192,7 @@
     [alertView addButtonWithTitle:@"广州"
                              type:SIAlertViewButtonTypeDefault
                           handler:^(SIAlertView *alertView) {
-                              [[LocationManager defaultLocationManager] setUserCity:@"广州" CallBack:^{
+                              [[LocationManager defaultLocationManager] setUserCity:@"广州市" CallBack:^{
                                   [self checkUserClickStyle];
                               }];
                               ABLoggerInfo(@"手动选择城市 广州");
@@ -200,7 +200,7 @@
     [alertView addButtonWithTitle:@"深圳"
                              type:SIAlertViewButtonTypeDefault
                           handler:^(SIAlertView *alertView) {
-                              [[LocationManager defaultLocationManager] setUserCity:@"深圳" CallBack:^{
+                              [[LocationManager defaultLocationManager] setUserCity:@"深圳市" CallBack:^{
                                   [self checkUserClickStyle];
                               }];
                               ABLoggerInfo(@"手动选择城市 深圳");

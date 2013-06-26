@@ -155,7 +155,7 @@
 - (BOOL)startLocationUserGPS
 {
     if ([self checkGPSEnable]) {
-
+        
         // if locationManager does not currently exist, create it
         if (!_locationManager)
         {
@@ -191,9 +191,9 @@
             if (self.userLocation.coordinate.latitude == newLocation.coordinate.latitude &&
                 self.userLocation.coordinate.longitude == newLocation.coordinate.longitude) {
                 isNew = NO;
-            } 
+            }
         }
-    
+        
         self.userLocation = newLocation;
         if (_getUserGPSLocation) {
             _getUserGPSLocation(isNew);
@@ -250,7 +250,7 @@
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *city = [userDefaults objectForKey:UserState];
-
+    
     return [userDefaults objectForKey:city];
 }
 
@@ -260,11 +260,21 @@
         return NO;
     }
     
-//    newCity = [newCity substringToIndex:[newCity length]-1];
+    unichar c = [newCity characterAtIndex:0];
+    if (c >=0x4E00 && c <=0x9FFF){
+        if ([[newCity substringFromIndex:[newCity length]-1] isEqualToString:@"市"]) {
+            newCity = [newCity substringToIndex:[newCity length]-1];
+            ABLoggerInfo(@"定位信息 == 汉字 == %@",newCity);  
+        }
+    }else{
+        ABLoggerInfo(@"定位信息 == 英文");
+    }
+    
+    if ([[DataBaseManager sharedInstance] validateCity:newCity]) {
+        
+    }
     
     self.userCityCallBack = callback;
-    
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     
     NSString *city = [self getUserCity];
     if (city) {
@@ -281,9 +291,8 @@
                                      type:SIAlertViewButtonTypeDefault
                                   handler:^(SIAlertView *alertView) {
                                       [[DataBaseManager sharedInstance] cleanUp];
-                                      [userDefaults setObject:newCity forKey:UserState];
-                                      [userDefaults setObject:[[DataBaseManager sharedInstance] getNowUserCityId] forKey:newCity];
-                                      [userDefaults synchronize];
+                                      
+                                      [[DataBaseManager sharedInstance] insertCityIntoCoreDataWith:newCity];
                                       
                                       [[LocationManager defaultLocationManager].cityLabel setTitle:newCity forState:UIControlStateNormal];
                                       if (_userCityCallBack) {
@@ -313,9 +322,9 @@
                                  type:SIAlertViewButtonTypeDefault
                               handler:^(SIAlertView *alertView) {
                                   [[DataBaseManager sharedInstance] cleanUp];
-                                  [userDefaults setObject:newCity forKey:UserState];
-                                  [userDefaults setObject:[[DataBaseManager sharedInstance] getNowUserCityId] forKey:newCity];
-                                  [userDefaults synchronize];
+                                  
+                                  [[DataBaseManager sharedInstance] insertCityIntoCoreDataWith:newCity];
+                                  
                                   [[LocationManager defaultLocationManager].cityLabel setTitle:newCity forState:UIControlStateNormal];
                                   if (_userCityCallBack) {
                                       _userCityCallBack();

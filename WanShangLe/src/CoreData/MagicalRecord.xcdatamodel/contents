@@ -145,7 +145,7 @@
     <elements>
         <element name="BBar" positionX="-531" positionY="-1032" width="128" height="193"/>
         <element name="BBarDetail" positionX="-747" positionY="-966" width="128" height="118"/>
-        <element name="City" positionX="-162" positionY="-846" width="128" height="150"/>
+        <element name="City" positionX="-162" positionY="-846" width="128" height="148"/>
         <element name="KKTV" positionX="142" positionY="-936" width="128" height="223"/>
         <element name="KKTVBuyInfo" positionX="430" positionY="-909" width="128" height="88"/>
         <element name="KKTVDetail" positionX="430" positionY="-718" width="128" height="88"/>
