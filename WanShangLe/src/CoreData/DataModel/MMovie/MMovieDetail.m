@@ -16,5 +16,8 @@
 @dynamic wantedadded;
 @dynamic info;
 @dynamic movie;
+@dynamic doneLook;
+@dynamic doneRec;
+
 
 @end

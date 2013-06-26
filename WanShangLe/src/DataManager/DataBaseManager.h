@@ -11,8 +11,8 @@
 #import "DataBaseClass.h"
 
 /**
-	数据库管理类
-	@author stephenliu
+ 数据库管理类
+ @author stephenliu
  */
 
 typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
@@ -21,20 +21,20 @@ typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
     
 }
 /**
-	单例对象
-	@returns single instance type
+ 单例对象
+ @returns single instance type
  */
 + (instancetype)sharedInstance;
 
 /**
-	destroy single instance
+ destroy single instance
  */
 + (void)destroySharedInstance;
 
 /**
-	computer database and resource folder size
-	@param folderPath fodler path
-	@returns res size
+ computer database and resource folder size
+ @param folderPath fodler path
+ @returns res size
  */
 - (unsigned long long int)folderSize:(NSString *)folderPath;
 - (unsigned long long int)CoreDataSize;
@@ -48,6 +48,17 @@ typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
 - (void)cleanUp;
 
 - (void)saveInManagedObjectContext:(NSManagedObjectContext *)coreDataContext;
+
+/**
+ 推荐和想看接口
+ @param apiType api 类型
+ @param cType 是推荐还是想看
+ @param delegate 代理
+ */
+- (BOOL)getRecommendOrLookForWeb:(NSString *)movieId
+                         APIType:(WSLRecommendAPIType)apiType
+                           cType:(WSLRecommendLookType)cType
+                        delegate:(id<ApiNotify>)delegate;
 
 /************ 关联表 ***************/
 - (MMovie_City *)getFirstMMovie_CityFromCoreData:(NSString *)u_id;
@@ -71,12 +82,14 @@ typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
 - (NSUInteger)getCountOfMoviesListFromCoreDataWithCityName:(NSString *)cityName;
 - (void)insertMoviesIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData;
+- (MMovie*)getMovieWithId:(NSString *)movieId;
 
 //获取电影详情
 - (ApiCmd *)getMovieDetailFromWeb:(id<ApiNotify>)delegate movieId:(NSString *)movieId;
 - (BOOL)insertMovieDetailIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (BOOL)insertMovieRecommendIntoCoreDataFromObject:(NSString *)movieId data:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importMovieDetail:(MMovieDetail *)aMovieDetail ValuesForKeysWithObject:(NSDictionary *)amovieDetailData;
-- (MMovieDetail *)getMovieDetailWithId:(NSNumber *)movieId;
+- (MMovieDetail *)getMovieDetailWithId:(NSString *)movieId;
 
 //获得排期
 - (ApiCmd *)getScheduleFromWebWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema delegate:(id<ApiNotify>)delegate;
@@ -85,14 +98,14 @@ typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
 
 //购买信息
 - (ApiCmd *)getBuyInfoFromWebWithaMovie:(MMovie *)aMovie
-                                               aCinema:(MCinema *)aCinema
-                                                aSchedule:(NSString *)aSchedule
-                                                 delegate:(id<ApiNotify>)delegate;
+                                aCinema:(MCinema *)aCinema
+                              aSchedule:(NSString *)aSchedule
+                               delegate:(id<ApiNotify>)delegate;
 - (void)insertBuyInfoIntoCoreDataFromObject:(NSDictionary *)objectData
                                  withApiCmd:(ApiCmd*)apiCmd
                                  withaMovie:(MMovie *)aMovie
                                  andaCinema:(MCinema *)aCinema
-                                 aSchedule:(NSString *)aSchedule;
+                                  aSchedule:(NSString *)aSchedule;
 
 /************ 影院 ***************/
 - (ApiCmd *)getAllCinemasListFromWeb:(id<ApiNotify>)delegate;
@@ -141,16 +154,16 @@ typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
 
 //获得KTV详情 KTV Detail Info
 - (ApiCmd *)getDetailInfoFromWebWithaKTV:(KKTV *)aKTV
-                                                delegate:(id<ApiNotify>)delegate;
+                                delegate:(id<ApiNotify>)delegate;
 - (void)insertDetailInfoIntoCoreDataFromObject:(NSDictionary *)objectData
                                     withApiCmd:(ApiCmd*)apiCmd
                                       withaKTV:(KKTV *)aKTV;
 
 //获得KTV购买信息 KTV Discounts Info
 - (ApiCmd *)getDiscountInfoFromWebWithaKTV:(KKTV *)aKTV
-                                                delegate:(id<ApiNotify>)delegate;
+                                  delegate:(id<ApiNotify>)delegate;
 - (void)insertDiscountInfoIntoCoreDataFromObject:(NSDictionary *)objectData
-                                    withApiCmd:(ApiCmd*)apiCmd
-                                      withaKTV:(KKTV *)aKTV;
+                                      withApiCmd:(ApiCmd*)apiCmd
+                                        withaKTV:(KKTV *)aKTV;
 
 @end

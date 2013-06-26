@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5A0FA975177A8D5900676253 /* ApiCmdMovie_getAllMovieDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A0FA974177A8D5900676253 /* ApiCmdMovie_getAllMovieDetail.m */; };
 		5A0FA97B177AC90F00676253 /* POAPinyin.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A0FA97A177AC90F00676253 /* POAPinyin.m */; };
+		5A0FA9C5177AE75A00676253 /* ApiCmd_recommendOrLook.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A0FA9C4177AE75A00676253 /* ApiCmd_recommendOrLook.m */; };
 		5A1746F7176057E400E155AB /* SIAlertView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5A1746F4176057E400E155AB /* SIAlertView.bundle */; };
 		5A1746F8176057E400E155AB /* SIAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1746F6176057E400E155AB /* SIAlertView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		5A1746FB17608CC500E155AB /* MovieTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1746FA17608CC500E155AB /* MovieTableViewCell.m */; };
@@ -239,6 +240,8 @@
 		5A0FA976177A8EE500676253 /* DataBaseClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataBaseClass.h; sourceTree = "<group>"; };
 		5A0FA979177AC90F00676253 /* POAPinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = POAPinyin.h; sourceTree = "<group>"; };
 		5A0FA97A177AC90F00676253 /* POAPinyin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = POAPinyin.m; sourceTree = "<group>"; };
+		5A0FA9C3177AE75900676253 /* ApiCmd_recommendOrLook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiCmd_recommendOrLook.h; path = ../MMovieAPI/ApiCmd_recommendOrLook.h; sourceTree = "<group>"; };
+		5A0FA9C4177AE75A00676253 /* ApiCmd_recommendOrLook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ApiCmd_recommendOrLook.m; path = ../MMovieAPI/ApiCmd_recommendOrLook.m; sourceTree = "<group>"; };
 		5A1746F4176057E400E155AB /* SIAlertView.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SIAlertView.bundle; sourceTree = "<group>"; };
 		5A1746F5176057E400E155AB /* SIAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIAlertView.h; sourceTree = "<group>"; };
 		5A1746F6176057E400E155AB /* SIAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIAlertView.m; sourceTree = "<group>"; };
@@ -730,6 +733,8 @@
 				5A1747291761ADCA00E155AB /* ApiNotify.h */,
 				5A17472A1761ADCA00E155AB /* DomainProtocol.h */,
 				5A17472B1761ADCA00E155AB /* MobileApi.h */,
+				5A0FA9C3177AE75900676253 /* ApiCmd_recommendOrLook.h */,
+				5A0FA9C4177AE75A00676253 /* ApiCmd_recommendOrLook.m */,
 			);
 			path = CoreAPI;
 			sourceTree = "<group>";
@@ -1847,6 +1852,7 @@
 				5AE906B91778137F0076394E /* CinemaListFilterTableViewDelegate.m in Sources */,
 				5A0FA975177A8D5900676253 /* ApiCmdMovie_getAllMovieDetail.m in Sources */,
 				5A0FA97B177AC90F00676253 /* POAPinyin.m in Sources */,
+				5A0FA9C5177AE75A00676253 /* ApiCmd_recommendOrLook.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

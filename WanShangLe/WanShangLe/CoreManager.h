@@ -34,6 +34,7 @@
 //-------------MMovie----------------/
 #define API_MMovieCmd  100 //电影
 #define API_MMovieDetailCmd  101 //电影详情
+#define API_MMovieRecOrLookCmd  102 //电影推荐想看
 #define API_MCinemaCmd 120 //影院
 #define API_MScheduleCmd 140 //排期
 #define API_MBuyInfoCmd 160//购买信息

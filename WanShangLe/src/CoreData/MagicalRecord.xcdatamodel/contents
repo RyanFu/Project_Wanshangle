@@ -97,6 +97,8 @@
         <relationship name="movie" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovie" inverseName="movie_citys" inverseEntity="MMovie" syncable="YES"/>
     </entity>
     <entity name="MMovieDetail" representedClassName="MMovieDetail" syncable="YES">
+        <attribute name="doneLook" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="doneRec" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="info" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
         <attribute name="recommendadded" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wantedadded" optional="YES" attributeType="String" syncable="YES"/>
@@ -154,7 +156,7 @@
         <element name="MMovie" positionX="-443" positionY="-351" width="128" height="253"/>
         <element name="MMovie_Cinema" positionX="-173" positionY="-313" width="128" height="103"/>
         <element name="MMovie_City" positionX="-450" positionY="-531" width="128" height="88"/>
-        <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="103"/>
+        <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="133"/>
         <element name="MSchedule" positionX="-189" positionY="-67" width="128" height="163"/>
         <element name="SShow" positionX="-173" positionY="-1384" width="128" height="268"/>
         <element name="SShowDetail" positionX="-371" positionY="-1377" width="128" height="133"/>

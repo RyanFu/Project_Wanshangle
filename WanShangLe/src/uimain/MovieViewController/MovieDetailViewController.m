@@ -8,6 +8,7 @@
 
 #import "MovieDetailViewController.h"
 #import "ApiCmdMovie_getAllMovieDetail.h"
+#import "ApiCmd_recommendOrLook.h"
 #import "ASIHTTPRequest.h"
 #import "MMovie.h"
 #import "MMovieDetail.h"
@@ -25,7 +26,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-
+        
     }
     return self;
 }
@@ -35,6 +36,7 @@
     
     [_apiCmdMovie_getAllMovieDetail.httpRequest clearDelegatesAndCancel];
     _apiCmdMovie_getAllMovieDetail.delegate = nil;
+    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdMovie_getAllMovieDetail];
     self.apiCmdMovie_getAllMovieDetail = nil;
     
     [super dealloc];
@@ -57,15 +59,16 @@
     }else{
         [self initMovieDetailData];
     }
-
+    
 }
 
 - (void)initMovieDetailData{
+    
     NSDictionary *tDic = _mMovie.movieDetail.info;
+    ABLoggerInfo(@"tDic ===== %@",tDic);
     [_imgView setImageWithURL:[NSURL URLWithString:[tDic objectForKey:@"coverurl"]]
              placeholderImage:[UIImage imageNamed:@"placeholder"]
                       options:SDWebImageRetryFailed];
-    
     _directorLabel.text = [tDic objectForKey:@"director"];
     _actorLabel.text = [tDic objectForKey:@"star"];
     _typeLabel.text = [tDic objectForKey:@"type"];
@@ -76,30 +79,44 @@
     _descriptionLabel.text = [tDic objectForKey:@"description"];
 }
 
+- (void)updateRecOrLookData{
+    ABLoggerInfo(@"推荐 ===== %@",_mMovie.movieDetail.recommendadded);
+    _recommendLabel.text = _mMovie.movieDetail.recommendadded;
+    _wantLookLabel.text = _mMovie.movieDetail.wantedadded;
+}
+
 #pragma mark -
 #pragma mark 点击按钮 Event
 -(IBAction)clickRecommendButton:(id)sender{
+    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mMovie.uid APIType:WSLRecommendAPITypeMovieInteract cType:WSLRecommendLookTypeRecommend delegate:self];
     [self startAddOneAnimation:(UIButton *)sender];
 }
 
 -(IBAction)clickWantLookButton:(id)sender{
+    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mMovie.uid APIType:WSLRecommendAPITypeMovieInteract cType:WSLRecommendLookTypeLook delegate:self];
     [self startAddOneAnimation:(UIButton *)sender];
 }
 
 - (void)startAddOneAnimation:(UIButton *)sender{
-    
-    _addOneLabel.center = CGPointMake(sender.center.x-5, sender.center.y-10);
-    _addOneLabel.alpha = 1.0;
-    [self.view addSubview:_addOneLabel];
+    sender.enabled = NO;
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(sender.center.x-5, sender.center.y-10, 20, 20)];
+    [label setBackgroundColor:[UIColor clearColor]];
+    label.text = @"+1";
+    label.textColor = [UIColor colorWithRed:1.000 green:0.430 blue:0.540 alpha:1.000];
+    label.alpha = 1.0;
+    [self.view addSubview:label];
+    [label release];
     
     [UIView animateWithDuration:1 animations:^{
         
         [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
-        _addOneLabel.center = CGPointMake(sender.center.x-5, sender.center.y-20);
-        _addOneLabel.alpha = 0.4;
+        label.frame = CGRectMake(sender.center.x-5, sender.center.y-30, 20, 20);
+        label.textColor = [UIColor colorWithRed:1.000 green:0.181 blue:0.373 alpha:1.000];
+        label.alpha = 0.4;
         
     } completion:^(BOOL finished) {
-        [_addOneLabel removeFromSuperview];
+        [label removeFromSuperview];
+        sender.enabled = YES;
     }];
 }
 
@@ -111,14 +128,32 @@
         return;
     }
     
+    int tag = [[apiCmd httpRequest] tag];
+    ABLogger_int(tag);
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        [[DataBaseManager sharedInstance] insertMovieDetailIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
-        
-        int tag = [[apiCmd httpRequest] tag];
+        switch (tag) {
+            case API_MMovieDetailCmd:
+            {
+                
+                [[DataBaseManager sharedInstance] insertMovieDetailIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+            }
+                break;
+            case API_MMovieRecOrLookCmd:
+            {
+                [[DataBaseManager sharedInstance] insertMovieRecommendIntoCoreDataFromObject:_mMovie.uid data:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+            }
+                break;
+                
+            default:
+            {
+                NSAssert(0, @"没有从网络抓取到数据");
+            }
+                break;
+        }
         [self updateData:tag];
     });
-    
 }
 
 - (void) apiNotifyLocationResult:(id) apiCmd  error:(NSError*) error{
@@ -142,24 +177,30 @@
 
 - (void)updateData:(int)tag
 {
-    ABLogger_int(tag);
-    switch (tag) {
-        case 0:
-        case API_MMovieDetailCmd:
-        {
-            
-            dispatch_sync(dispatch_get_main_queue(), ^{
+    self.mMovie = [[DataBaseManager sharedInstance] getMovieWithId:_mMovie.uid];
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        ABLogger_int(tag);
+        switch (tag) {
+            case 0:
+            case API_MMovieDetailCmd:
+            {
                 [self initMovieDetailData];
-            });
+            }
+                break;
+            case API_MMovieRecOrLookCmd:
+            {
+                
+                [self updateRecOrLookData];
+            }
+                break;
+                
+            default:
+            {
+                NSAssert(0, @"没有从网络抓取到数据");
+            }
+                break;
         }
-            break;
-            
-        default:
-        {
-            NSAssert(0, @"没有从网络抓取到数据");
-        }
-            break;
-    }
+    });
 }
 
 - (void)didReceiveMemoryWarning

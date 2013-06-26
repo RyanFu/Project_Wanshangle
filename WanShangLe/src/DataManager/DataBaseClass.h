@@ -6,6 +6,8 @@
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
+#import "ApiCmd_recommendOrLook.h"
+
 @class City;
 @class ApiCmd;
 

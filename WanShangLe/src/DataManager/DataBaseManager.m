@@ -123,6 +123,54 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 #pragma mark -
+#pragma mark 推荐和想看
+- (BOOL)getRecommendOrLookForWeb:(NSString *)movieId
+                         APIType:(WSLRecommendAPIType)apiType
+                           cType:(WSLRecommendLookType)cType
+                        delegate:(id<ApiNotify>)delegate{
+    
+//    if (!isEmpty(movieId)) {
+//        
+//        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+//        MMovie *aMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:movieId inContext:context];
+//        if (aMovie==nil) {
+//            return NO;
+//        }
+//        
+//        BOOL canRequest = YES;
+//        switch (cType) {
+//            case WSLRecommendLookTypeRecommend:
+//                canRequest = ![aMovie.movieDetail.doneRec boolValue];
+//                break;
+//            case WSLRecommendLookTypeLook:
+//                canRequest = ![aMovie.movieDetail.doneLook boolValue];
+//                break;
+//                
+//            default:
+//                break;
+//        }
+//        
+//        if (!canRequest) {
+//            return NO;
+//        }
+//    }else{
+//        return NO;
+//    }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmd_recommendOrLook* apiCmd_recommendOrLook = [[ApiCmd_recommendOrLook alloc] init];
+    apiCmd_recommendOrLook.delegate = delegate;
+    apiCmd_recommendOrLook.movie_id = movieId;
+    apiCmd_recommendOrLook.mAPIType = apiType;
+    apiCmd_recommendOrLook.mType = cType;
+    [apiClient executeApiCmdAsync:apiCmd_recommendOrLook];
+    [apiCmd_recommendOrLook.httpRequest setTag:API_MMovieRecOrLookCmd];
+    
+    return YES;
+}
+
+#pragma mark -
 #pragma mark 关联表
 /************ 关联表 ***************/
 - (MMovie_City *)getFirstMMovie_CityFromCoreData:(NSString *)u_id;
@@ -266,7 +314,7 @@ static DataBaseManager *_sharedInstance = nil;
     city = [City MR_findFirstByAttribute:@"name" withValue:newCityName inContext:context];
     
     if (city==nil) {
-         ABLoggerInfo(@"插入 城市 新数据 ======= %@",newCityName);
+        ABLoggerInfo(@"插入 城市 新数据 ======= %@",newCityName);
         city = [City MR_createInContext:context];
     }
     
@@ -277,9 +325,9 @@ static DataBaseManager *_sharedInstance = nil;
     city.uid = [self getBundleCityIdWithCityName:newCityName];
     [userDefaults setObject:city.uid forKey:newCityName];
     [userDefaults synchronize];
-
+    
     [self saveInManagedObjectContext:context];
-  
+    
     return YES;
 }
 
@@ -354,7 +402,7 @@ static DataBaseManager *_sharedInstance = nil;
     if (isEmpty(name)) {
         name = [[LocationManager defaultLocationManager] getUserCity];
     }
-
+    
     NSAssert(name !=nil, @"当前用户选择城市不能为空 NULL");
     
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
@@ -596,9 +644,16 @@ static DataBaseManager *_sharedInstance = nil;
     NSData *JSONData = [NSData dataWithContentsOfFile:jsonPath];
     NSDictionary *JSONObject = [NSJSONSerialization JSONObjectWithData:JSONData options:0 error:&error];
     
-    ABLoggerInfo(@"JSONObject = %@",JSONObject);
-    
     return [JSONObject objectForKey:@"region"];
+}
+
+- (MMovie*)getMovieWithId:(NSString *)movieId{
+    MMovie *tmovie = nil;
+    if (movieId) {
+        tmovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:movieId inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    }
+    
+    return tmovie;
 }
 
 #pragma mark 获取电影详情
@@ -614,7 +669,6 @@ static DataBaseManager *_sharedInstance = nil;
     
     ApiCmdMovie_getAllMovieDetail* apiCmdMovie_getAllMovieDetail = [[ApiCmdMovie_getAllMovieDetail alloc] init];
     apiCmdMovie_getAllMovieDetail.delegate = delegate;
-    ABLoggerInfo(@"_mMovie.uid === %@",movieId );
     apiCmdMovie_getAllMovieDetail.movie_id = movieId;
     [apiClient executeApiCmdAsync:apiCmdMovie_getAllMovieDetail];
     [apiCmdMovie_getAllMovieDetail.httpRequest setTag:API_MMovieDetailCmd];
@@ -646,7 +700,7 @@ static DataBaseManager *_sharedInstance = nil;
         tMovie.movieDetail = tMovieDetail;
         tMovieDetail.movie = tMovie;
         [self importMovieDetail:tMovie.movieDetail ValuesForKeysWithObject:tDic];
-    
+        
         [self saveInManagedObjectContext:context];
         
         return YES;
@@ -661,7 +715,44 @@ static DataBaseManager *_sharedInstance = nil;
     aMovieDetail.info = amovieDetailData;
 }
 
-- (MMovieDetail *)getMovieDetailWithId:(NSNumber *)movieId{
+/*
+ {
+ httpCode: 200,
+ errors: [ ],
+ data: {
+ interact: {
+ movieid: "1",
+ recommend: "13",
+ look: "2"
+ }
+ },
+ token: null,
+ timestamp: "1372236865"
+ }
+ */
+- (BOOL)insertMovieRecommendIntoCoreDataFromObject:(NSString *)movieId data:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+    
+    if (!isEmpty(movieId)) {
+        
+        NSDictionary *tDic = [[objectData objectForKey:@"data"] objectForKey:@"interact"];
+        
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+        MMovie *aMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:movieId inContext:context];
+        if (aMovie==nil) {
+            return NO;
+        }
+        
+        aMovie.movieDetail.recommendadded = [tDic objectForKey:@"recommend"];
+        aMovie.movieDetail.wantedadded = [tDic objectForKey:@"look"];
+        
+        [self saveInManagedObjectContext:context];
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (MMovieDetail *)getMovieDetailWithId:(NSString *)movieId{
     
     MMovieDetail *tMovieDetail = nil;
     if (movieId) {

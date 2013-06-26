@@ -15,6 +15,9 @@
 
 @property (nonatomic, retain) NSString * recommendadded;
 @property (nonatomic, retain) NSString * wantedadded;
+@property (nonatomic, retain) NSNumber * doneLook;
+@property (nonatomic, retain) NSNumber * doneRec;
+
 @property (nonatomic, retain) id info;
 
 @property (nonatomic, retain) MMovie *movie;

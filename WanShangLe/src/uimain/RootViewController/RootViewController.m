@@ -57,7 +57,7 @@
     self.cityButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_cityButton setTitle:@"选择城市" forState:UIControlStateNormal];
     [_cityButton setTintColor:[UIColor whiteColor]];
-    _cityButton.frame = CGRectMake(0, 0, 60, 30);
+    _cityButton.frame = CGRectMake(0, 0, 100, 30);
     [_cityButton addTarget:self action:@selector(clickCityButton:) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.titleView = _cityButton;
     
