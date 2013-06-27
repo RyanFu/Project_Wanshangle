@@ -5836,8 +5836,7 @@ char pinyinFirstLetter(unsigned short hanzi) {
 		strValue = [strValue stringByAppendingString:strRes];
         i++;
     }	
-	return [[NSString alloc] initWithString:strValue]
-            ;
+	return [[[NSString alloc] initWithString:strValue] autorelease];
 }
 
 + (char) sortSectionTitle:(NSString *)string {

@@ -334,6 +334,7 @@ static DataBaseManager *_sharedInstance = nil;
 - (NSString *)validateCity:(NSString *)cityName{
     
     NSString *city_name = [ChineseToPinyin pinyinFromChiniseString:cityName];
+    ABLoggerInfo(@"city_name ===== %@",city_name);
     NSString *cityPath = [[NSBundle mainBundle] pathForResource:@"city" ofType:@"json"];
     NSData *cityData = [NSData dataWithContentsOfFile:cityPath];
     NSDictionary *cityDic = [NSJSONSerialization JSONObjectWithData:cityData options:kNilOptions error:nil];
@@ -342,9 +343,20 @@ static DataBaseManager *_sharedInstance = nil;
     for (NSDictionary *dic in array) {
         NSString *tname = [dic objectForKey:@"name"];
         
-        tname = [ChineseToPinyin pinyinFromChiniseString:tname];
-        if ([tname compare:city_name options:NSCaseInsensitiveSearch range:NSMakeRange(0, tname.length)] == NSOrderedSame) {
+        NSString *aName = [ChineseToPinyin pinyinFromChiniseString:tname];
+
+        ABLoggerInfo(@"range ===== %@",NSStringFromRange(NSMakeRange(0, aName.length)));
+        if ([city_name isEqualToString:aName]) {
+            ABLoggerWarn(@"相等");
+        }
+        
+        if ([city_name compare:aName options:NSCaseInsensitiveSearch range:NSMakeRange(0, aName.length)] == NSOrderedSame) {
             return [dic objectForKey:@"name"];
+        }
+        
+        NSRange range=[city_name rangeOfString:aName options:NSCaseInsensitiveSearch];
+        if(range.location!=NSNotFound){
+             return [dic objectForKey:@"name"];
         }
     }
     

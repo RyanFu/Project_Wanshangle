@@ -218,11 +218,11 @@
                 if (SYSTEM_VERSION_LESS_THAN(@"6.0")) {
                     ABLoggerWarn(@"GPS 定位到城市 === %@",[[placeMark addressDictionary] objectForKey:@"City"]);
                     [self setUserCity:[[placeMark addressDictionary] objectForKey:@"City"] CallBack:nil];
-                    _locationCity = [[placeMark addressDictionary] objectForKey:@"City"];
+                    self.locationCity = [[placeMark addressDictionary] objectForKey:@"City"];
                 }else{
                     ABLoggerWarn(@"GPS 定位到城市 === %@",placeMark.administrativeArea);
                     [self setUserCity:placeMark.administrativeArea CallBack:nil];
-                    _locationCity = placeMark.administrativeArea;
+                    self.locationCity = placeMark.administrativeArea;
                     
                 }
             }
@@ -262,15 +262,15 @@
         return NO;
     }
     
-    unichar c = [newCity characterAtIndex:0];
-    if (c >=0x4E00 && c <=0x9FFF){
-        if ([[newCity substringFromIndex:[newCity length]-1] isEqualToString:@"市"]) {
-            newCity = [newCity substringToIndex:[newCity length]-1];
-            ABLoggerInfo(@"定位信息 == 汉字 == %@",newCity);  
-        }
-    }else{
-        ABLoggerInfo(@"定位信息 == 英文");
-    }
+    //    unichar c = [newCity characterAtIndex:0];
+    //    if (c >=0x4E00 && c <=0x9FFF){
+    //        if ([[newCity substringFromIndex:[newCity length]-1] isEqualToString:@"市"]) {
+    //            newCity = [newCity substringToIndex:[newCity length]-1];
+    //            ABLoggerInfo(@"定位信息 == 汉字 == %@",newCity);
+    //        }
+    //    }else{
+    //        ABLoggerInfo(@"定位信息 == 英文");
+    //    }
     
     if ([[DataBaseManager sharedInstance] validateCity:newCity]) {
         
@@ -280,7 +280,10 @@
     
     NSString *city = [self getUserCity];
     if (city) {
-        if(![city isEqual:newCity]){
+        
+        NSRange range=[newCity rangeOfString:city options:NSCaseInsensitiveSearch];
+        if(range.location == NSNotFound){
+            
             ABLoggerWarn(@"切换城市 from %@ to %@",city,newCity);
             
             SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"确定要切换城市为%@吗?,亲!",newCity] andMessage:nil];
