@@ -26,6 +26,7 @@
 @property(nonatomic,retain) ShowViewController* showViewController;
 @property(nonatomic,retain) BarViewController* barViewController;
 @property(nonatomic,retain) UIView *cityPanel;
+@property(nonatomic,retain) UIView *cityPanelMask;
 @end
 
 @implementation RootViewController
@@ -95,6 +96,9 @@
     [self.navigationItem setRightBarButtonItem:settingItem animated:YES];
     [settingItem release];
 }
+
+#pragma mark -
+#pragma mark 按钮点击事件
 //电影
 - (IBAction)clickMovieButton:(id)sender{
     userClickStyle = WSLUserClickStyleMovie;
@@ -164,6 +168,7 @@
     }
 }
 
+#pragma mark -
 /**
  check user city no nil
  @param sender
@@ -179,9 +184,14 @@
 
 - (void)popupCityPanel{
     
-    [self.view setUserInteractionEnabled:NO];
+    self.cityPanelMask = [[UIView alloc] initWithFrame:self.view.bounds];
+    _cityPanelMask.backgroundColor = [UIColor colorWithWhite:0.298 alpha:0.150];
+    [self.view addSubview:_cityPanelMask];
+    [_cityPanelMask release];
     
     self.cityPanel = [[UIView alloc] initWithFrame:CGRectMake(0, -120, 320, 119)];
+    
+    
     UIImageView *bgImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_city_panel@2x"]];
     bgImg.frame = CGRectMake(0, 0, 320, 119);
     [self.cityPanel addSubview:bgImg];
@@ -274,10 +284,25 @@
 }
 
 - (void)addLocationIconWithPanel:(UIView *)panel andButton:(UIButton*)bt{
-    UIImageView *locationImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"btn_location_icon@2x"]];
-    locationImg.frame = CGRectMake(2, 11, 12, 12);
-    [bt addSubview:locationImg];
-    [locationImg release];
+    
+    NSString *locationCity = [LocationManager defaultLocationManager].locationCity;
+    locationCity = [[DataBaseManager sharedInstance] validateCity:locationCity];
+    
+    if (!isEmpty(locationCity)) {
+        UIImage *img = nil;
+        if ([locationCity isEqualToString:bt.currentTitle]) {
+            img = [UIImage imageNamed:@"btn_location_icon@2x"];
+        }else{
+            img = [UIImage imageNamed:@"btn_location_icon_black@2x"];
+            NSArray *array = [NSArray arrayWithObjects:@"北京",@"上海",@"广州",@"深圳", nil];
+            bt = (UIButton *)[panel viewWithTag:(1+[array indexOfObject:locationCity])];
+
+        }
+        UIImageView *locationImg = [[UIImageView alloc] initWithImage:img];
+        locationImg.frame = CGRectMake(2, 11, 12, 12);
+        [bt addSubview:locationImg];
+        [locationImg release];
+    }
 }
 
 - (void)startAnimationCityPanel{
@@ -287,7 +312,7 @@
         [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
         _cityPanel.frame = CGRectMake(0, 0, 320, 119);
     } completion:^(BOOL finished) {
-        [self.view setUserInteractionEnabled:YES];
+        
     }];
 }
 
@@ -298,6 +323,7 @@
         [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
         _cityPanel.frame = CGRectMake(0, -120, 320, 119);
     } completion:^(BOOL finished) {
+        [self.cityPanelMask removeFromSuperview];
         [self.cityPanel removeFromSuperview];
         self.cityPanel = nil;
     }];
@@ -340,6 +366,7 @@
     self.showViewController = nil;
     self.barViewController = nil;
     self.cityPanel = nil;
+    self.cityPanelMask = nil;
     [super dealloc];
 }
 

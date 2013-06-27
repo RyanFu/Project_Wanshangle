@@ -32,6 +32,7 @@
     self.userCityCallBack = nil;
     self.getUserGPSLocation = nil;
     self.userLocation = nil;
+    self.locationCity = nil;
     
     [super dealloc];
 }
@@ -49,7 +50,6 @@
 - (id)init{
     self = [super init];
     if (self) {
-        
     }
     return self;
 }
@@ -131,6 +131,7 @@
                 if (SYSTEM_VERSION_LESS_THAN(@"6.0")) {
                     ABLoggerWarn(@"GPS 定位到城市 === %@",[[placeMark addressDictionary] objectForKey:@"City"]);
                     [self setUserCity:[[placeMark addressDictionary] objectForKey:@"City"] CallBack:nil];
+                    
                 }else{
                     ABLoggerWarn(@"GPS 定位到城市 === %@",placeMark.administrativeArea);
                     [self setUserCity:placeMark.administrativeArea CallBack:nil];
@@ -214,13 +215,14 @@
                     ABLoggerInfo(@"定位到城市 %@ === %@",key,[[placeMark addressDictionary] objectForKey:key]);
                 }
 #endif
-                
                 if (SYSTEM_VERSION_LESS_THAN(@"6.0")) {
                     ABLoggerWarn(@"GPS 定位到城市 === %@",[[placeMark addressDictionary] objectForKey:@"City"]);
                     [self setUserCity:[[placeMark addressDictionary] objectForKey:@"City"] CallBack:nil];
+                    _locationCity = [[placeMark addressDictionary] objectForKey:@"City"];
                 }else{
                     ABLoggerWarn(@"GPS 定位到城市 === %@",placeMark.administrativeArea);
                     [self setUserCity:placeMark.administrativeArea CallBack:nil];
+                    _locationCity = placeMark.administrativeArea;
                     
                 }
             }

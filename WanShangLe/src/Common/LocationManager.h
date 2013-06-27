@@ -18,6 +18,7 @@ typedef void (^GetUserGPSLocation)(BOOL isNewLocation);
 @interface LocationManager : NSObject{
     
 }
+@property(nonatomic,retain) NSString *locationCity;
 @property(nonatomic,assign) UIButton *cityLabel;
 /**
  single instance

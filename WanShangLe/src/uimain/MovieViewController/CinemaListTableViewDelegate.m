@@ -423,9 +423,8 @@ static CGFloat const kLabelVMargin = 10;
         {
             UIButton *btn = (UIButton *)cc;
             [btn setTitle:@"取消"  forState:UIControlStateNormal];
-            [btn setBackgroundImage:[UIImage imageNamed:@"searchBarBackground"] forState:UIControlStateNormal];
-            [btn setBackgroundImage:[UIImage imageNamed:@"searchBarBackground2"] forState:UIControlStateSelected];
-            [btn setBackgroundImage:[UIImage imageNamed:@"searchBarBackground2"] forState:UIControlStateHighlighted];
+            [btn setBackgroundColor:[UIColor colorWithWhite:0.800 alpha:1.000]];
+//            [btn setBackgroundImage:[UIImage imageNamed:@"searchBarBackground"] forState:UIControlStateNormal];
         }
     }
     

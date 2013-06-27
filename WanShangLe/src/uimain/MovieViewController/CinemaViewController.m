@@ -172,6 +172,7 @@
     
     [self.view addSubview:_cinemaTableView];
 }
+
 - (void)searchBarInit{
     _searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
     
@@ -181,7 +182,7 @@
 	self.searchBar.keyboardType = UIKeyboardTypeDefault;
 	self.searchBar.backgroundColor=[UIColor clearColor];
 	self.searchBar.translucent=YES;
-	self.searchBar.placeholder=@"搜索";
+	self.searchBar.placeholder=@"输入影院名称搜索";
 	self.searchBar.barStyle=UIBarStyleDefault;
     
     self.searchBar.backgroundColor=[UIColor clearColor];
