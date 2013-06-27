@@ -294,7 +294,8 @@
                                       
                                       [[DataBaseManager sharedInstance] insertCityIntoCoreDataWith:newCity];
                                       
-                                      [[LocationManager defaultLocationManager].cityLabel setTitle:newCity forState:UIControlStateNormal];
+                                      [_cityLabel setTitle:[NSString stringWithFormat:@"%@%d",newCity,arc4random()%200] forState:UIControlStateNormal];
+                                      [_cityLabel setValue:nil forKey:@"title"];
                                       if (_userCityCallBack) {
                                           _userCityCallBack();
                                           self.userCityCallBack = nil;
@@ -308,7 +309,12 @@
             [alertView show];
             [alertView release];
         }else{
-            [[LocationManager defaultLocationManager].cityLabel setTitle:newCity forState:UIControlStateNormal];
+            [_cityLabel setTitle:newCity forState:UIControlStateNormal];
+            [_cityLabel setValue:nil forKey:@"title"];
+            if (_userCityCallBack) {
+                _userCityCallBack();
+                self.userCityCallBack = nil;
+            }
         }
     }else{
         ABLoggerInfo(@"第一次选择城市");
@@ -325,7 +331,8 @@
                                   
                                   [[DataBaseManager sharedInstance] insertCityIntoCoreDataWith:newCity];
                                   
-                                  [[LocationManager defaultLocationManager].cityLabel setTitle:newCity forState:UIControlStateNormal];
+                                  [_cityLabel setTitle:newCity forState:UIControlStateNormal];
+                                  [_cityLabel setValue:nil forKey:@"title"];
                                   if (_userCityCallBack) {
                                       _userCityCallBack();
                                       self.userCityCallBack = nil;

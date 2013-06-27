@@ -13,7 +13,7 @@
 #import "ShowViewController.h"
 #import "BarViewController.h"
 #import "SettingViewController.h"
-
+#import "JSButton.h"
 #import "SIAlertView.h"
 #import "UIImageView+WebCache.h"
 
@@ -25,6 +25,7 @@
 @property(nonatomic,retain) KtvViewController* ktvViewController;
 @property(nonatomic,retain) ShowViewController* showViewController;
 @property(nonatomic,retain) BarViewController* barViewController;
+@property(nonatomic,retain) UIView *cityPanel;
 @end
 
 @implementation RootViewController
@@ -43,7 +44,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated{
-//   [self.navigationController setNavigationBarHidden:YES];
+    //   [self.navigationController setNavigationBarHidden:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animate{
@@ -54,14 +55,16 @@
 {
     [super viewDidLoad];
     
-    self.cityButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_cityButton setTitle:@"选择城市" forState:UIControlStateNormal];
-    [_cityButton setTintColor:[UIColor whiteColor]];
-    _cityButton.frame = CGRectMake(0, 0, 100, 30);
-    [_cityButton addTarget:self action:@selector(clickCityButton:) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.titleView = _cityButton;
+    _city_arrow_imgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"btn_city_arrow_f@2x"] highlightedImage:[UIImage imageNamed:@"btn_city_arrow_n@2x"]];
+    NSString *title = @"选择城市";
     
-    [[CacheManager sharedInstance] setRootViewController:self];
+    self.cityButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_cityButton setTintColor:[UIColor whiteColor]];
+    _cityButton.frame = CGRectMake(0, 0, 200, 30);
+    [_cityButton addTarget:self action:@selector(clickCityButton:) forControlEvents:UIControlEventTouchUpInside];
+    [_cityButton addObserver:self forKeyPath:@"title" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:NULL];
+    self.navigationItem.titleView = _cityButton;
+    [_cityButton addSubview:_city_arrow_imgView];
     
     [LocationManager defaultLocationManager].cityLabel = _cityButton;
     
@@ -72,26 +75,26 @@
     [[SIAlertView appearance] setCornerRadius:12];
     [[SIAlertView appearance] setShadowRadius:20];
     
-    NSString *title = @"选择城市";
+    //设置已选择的城市
     if (!(isEmpty([[LocationManager defaultLocationManager] getUserCity]))) {
         title = [[LocationManager defaultLocationManager] getUserCity];
     }
     [_cityButton setTitle:title forState:UIControlStateNormal];
+    [_cityButton setValue:nil forKey:@"title"];
     
+    //图片异步加载配置
     SDWebImageManager.sharedManager.imageDownloader.executionOrder = SDWebImageDownloaderLIFOExecutionOrder;
     
+    //设置按钮配置
     UIButton *settingButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [settingButton setTitle:@"设置" forState:UIControlStateNormal];
-    [settingButton setTintColor:[UIColor whiteColor]];
-    settingButton.frame = CGRectMake(0, 0, 60, 30);
+    settingButton.frame = CGRectMake(0, 0, 45, 30);
+    [settingButton setBackgroundImage:[UIImage imageNamed:@"btn_setting_n@2x"] forState:UIControlStateNormal];
+    [settingButton setBackgroundImage:[UIImage imageNamed:@"btn_setting_f@2x"] forState:UIControlStateHighlighted];
     [settingButton addTarget:self action:@selector(clickSettingButton:) forControlEvents:UIControlEventTouchUpInside];
-    [settingButton setBackgroundColor:[UIColor colorWithRed:0.143 green:0.517 blue:1.000 alpha:1.000]];
     UIBarButtonItem *settingItem = [[UIBarButtonItem alloc] initWithCustomView:settingButton];
     [self.navigationItem setRightBarButtonItem:settingItem animated:YES];
     [settingItem release];
-    
 }
-
 //电影
 - (IBAction)clickMovieButton:(id)sender{
     userClickStyle = WSLUserClickStyleMovie;
@@ -147,14 +150,18 @@
 //设置
 - (void)clickSettingButton:(id)sender{
     
-   SettingViewController* settingController = [[SettingViewController alloc] initWithNibName:@"SettingViewController" bundle:nil];
+    SettingViewController* settingController = [[SettingViewController alloc] initWithNibName:@"SettingViewController" bundle:nil];
     [self.navigationController pushViewController:settingController animated:YES];
     [settingController release];
 }
 
 //选择城市
 - (IBAction)clickCityButton:(id)sender{
-    [self popupCityPanel];
+    if (!self.cityPanel) {
+        [self popupCityPanel];
+    }else{
+        [self stopAnimationCityPanel];
+    }
 }
 
 /**
@@ -172,45 +179,128 @@
 
 - (void)popupCityPanel{
     
-    SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:@"请选择一个城市,亲!" andMessage:nil];
-    [alertView addButtonWithTitle:@"北京"
-                             type:SIAlertViewButtonTypeDefault
-                          handler:^(SIAlertView *alertView) {
-                              [[LocationManager defaultLocationManager] setUserCity:@"北京市" CallBack:^{
-                                  [self checkUserClickStyle];
-                              }];
-                              ABLoggerInfo(@"手动选择城市 北京");
-                          }];
-    [alertView addButtonWithTitle:@"上海"
-                             type:SIAlertViewButtonTypeDefault
-                          handler:^(SIAlertView *alertView) {
-                              [[LocationManager defaultLocationManager] setUserCity:@"上海市" CallBack:^{
-                                  [self checkUserClickStyle];
-                              }];
-                              ABLoggerInfo(@"手动选择城市 上海");
-                          }];
-    [alertView addButtonWithTitle:@"广州"
-                             type:SIAlertViewButtonTypeDefault
-                          handler:^(SIAlertView *alertView) {
-                              [[LocationManager defaultLocationManager] setUserCity:@"广州市" CallBack:^{
-                                  [self checkUserClickStyle];
-                              }];
-                              ABLoggerInfo(@"手动选择城市 广州");
-                          }];
-    [alertView addButtonWithTitle:@"深圳"
-                             type:SIAlertViewButtonTypeDefault
-                          handler:^(SIAlertView *alertView) {
-                              [[LocationManager defaultLocationManager] setUserCity:@"深圳市" CallBack:^{
-                                  [self checkUserClickStyle];
-                              }];
-                              ABLoggerInfo(@"手动选择城市 深圳");
-                          }];
+    [self.view setUserInteractionEnabled:NO];
     
-    alertView.transitionStyle = SIAlertViewTransitionStyleDropDown;
-    alertView.backgroundStyle = SIAlertViewBackgroundStyleSolid;
+    self.cityPanel = [[UIView alloc] initWithFrame:CGRectMake(0, -120, 320, 119)];
+    UIImageView *bgImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_city_panel@2x"]];
+    bgImg.frame = CGRectMake(0, 0, 320, 119);
+    [self.cityPanel addSubview:bgImg];
+    [bgImg release];
     
-    [alertView show];
-    [alertView release];
+    JSButton *bt1 = [[JSButton alloc] initWithFrame:CGRectMake(5,30,70,35)];
+    [bt1 setTitle:@"北京" forState:UIControlStateNormal];
+    [bt1 setTag:1];
+    [bt1 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [_cityPanel addSubview:bt1];
+    [bt1 performBlock:^(JSButton *sender) {
+        [[LocationManager defaultLocationManager] setUserCity:@"北京市" CallBack:^{
+            [self setSelectedButton:bt1];
+        }];
+        ABLoggerInfo(@"手动选择城市 北京");
+    } forEvents:UIControlEventTouchUpInside];
+    
+    JSButton *bt2 = [[JSButton alloc] initWithFrame:CGRectMake(85,30,70,35)];
+    [bt2 setTitle:@"上海" forState:UIControlStateNormal];
+    [bt2 setTag:2];
+    [bt2 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [_cityPanel addSubview:bt2];
+    [bt2 performBlock:^(JSButton *sender) {
+        [[LocationManager defaultLocationManager] setUserCity:@"上海市" CallBack:^{
+            [self setSelectedButton:bt2];
+        }];
+        ABLoggerInfo(@"手动选择城市 上海");
+    } forEvents:UIControlEventTouchUpInside];
+    
+    JSButton *bt3 = [[JSButton alloc] initWithFrame:CGRectMake(165,30,70,35)];
+    [bt3 setTitle:@"广州" forState:UIControlStateNormal];
+    [bt3 setTag:3];
+    [bt3 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [_cityPanel addSubview:bt3];
+    [bt3 performBlock:^(JSButton *sender) {
+        [[LocationManager defaultLocationManager] setUserCity:@"广州市" CallBack:^{
+            [self setSelectedButton:bt3];
+        }];
+        ABLoggerInfo(@"手动选择城市 广州");
+    } forEvents:UIControlEventTouchUpInside];
+    
+    JSButton *bt4 = [[JSButton alloc] initWithFrame:CGRectMake(245,30,70,35)];
+    [bt4 setTitle:@"深圳" forState:UIControlStateNormal];
+    [bt4 setTag:4];
+    [bt4 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [_cityPanel addSubview:bt4];
+    [bt4 performBlock:^(JSButton *sender) {
+        [[LocationManager defaultLocationManager] setUserCity:@"深圳市" CallBack:^{
+            [self setSelectedButton:bt4];
+        }];
+        ABLoggerInfo(@"手动选择城市 深圳");
+    } forEvents:UIControlEventTouchUpInside];
+    
+    [self cleanCityButtonStateWithPanel:_cityPanel];
+    [self selectedCityButtonInPanel:_cityPanel];
+    [self startAnimationCityPanel];
+    [_cityPanel release];
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if([keyPath isEqualToString:@"title"])
+    {
+        _city_arrow_imgView.frame = CGRectMake((_cityButton.titleLabel.frame.origin.x+_cityButton.titleLabel.frame.size.width), 5, 21, 21);
+    }
+}
+
+- (void)cleanCityButtonStateWithPanel:(UIView *)panel{
+    for (int i=1;i<5;i++) {
+        UIButton *bt = (UIButton*)[panel viewWithTag:i];
+        [bt setBackgroundImage:[UIImage imageNamed:@"btn_city_n@2x"] forState:UIControlStateNormal];
+        [bt setBackgroundImage:[UIImage imageNamed:@"btn_city_f@2x"] forState:UIControlStateHighlighted];
+    }
+}
+
+- (void)selectedCityButtonInPanel:(UIView*)panel{
+    NSArray *array = [NSArray arrayWithObjects:@"北京",@"上海",@"广州",@"深圳", nil];
+    UIButton *bt = (UIButton *)[panel viewWithTag:(1+[array indexOfObject:[[LocationManager defaultLocationManager] getUserCity]])];
+    [bt setBackgroundImage:[UIImage imageNamed:@"btn_city_f@2x"] forState:UIControlStateNormal];
+    [self addLocationIconWithPanel:panel andButton:bt];
+}
+
+- (void)setSelectedButton:(UIButton *)sender{
+    
+    [self cleanCityButtonStateWithPanel:_cityPanel];
+    [sender setBackgroundImage:[UIImage imageNamed:@"btn_city_f@2x"] forState:UIControlStateNormal];
+    [self addLocationIconWithPanel:_cityPanel andButton:sender];
+    [self stopAnimationCityPanel];
+    [self checkUserClickStyle];
+}
+
+- (void)addLocationIconWithPanel:(UIView *)panel andButton:(UIButton*)bt{
+    UIImageView *locationImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"btn_location_icon@2x"]];
+    locationImg.frame = CGRectMake(2, 11, 12, 12);
+    [bt addSubview:locationImg];
+    [locationImg release];
+}
+
+- (void)startAnimationCityPanel{
+    [self.view addSubview:_cityPanel];
+    _city_arrow_imgView.highlighted = YES;
+    [UIView animateWithDuration:0.3 animations:^{
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+        _cityPanel.frame = CGRectMake(0, 0, 320, 119);
+    } completion:^(BOOL finished) {
+        [self.view setUserInteractionEnabled:YES];
+    }];
+}
+
+- (void)stopAnimationCityPanel{
+    _city_arrow_imgView.highlighted = NO;
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
+        _cityPanel.frame = CGRectMake(0, -120, 320, 119);
+    } completion:^(BOOL finished) {
+        [self.cityPanel removeFromSuperview];
+        self.cityPanel = nil;
+    }];
 }
 
 - (void)checkUserClickStyle{
@@ -249,6 +339,7 @@
     self.ktvViewController = nil;
     self.showViewController = nil;
     self.barViewController = nil;
+    self.cityPanel = nil;
     [super dealloc];
 }
 

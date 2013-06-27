@@ -80,7 +80,7 @@
     }
     
     [cell.imgView setImageWithURL:[NSURL URLWithString:[dataDic objectForKey:@"img"]]
-                         placeholderImage:[UIImage imageNamed:@"placeholder"] options:SDWebImageRetryFailed];
+                         placeholderImage:[UIImage imageNamed:@"movie_placeholder@2x"] options:SDWebImageRetryFailed];
     cell.vendorName.text = [dataDic objectForKey:@"name"];
     cell.price.text = [[dataDic objectForKey:@"price"] stringValue];
     cell.clickCount.text = [NSString stringWithFormat:@"%d人点击购买",[[dataDic objectForKey:@"clicks"] intValue]];

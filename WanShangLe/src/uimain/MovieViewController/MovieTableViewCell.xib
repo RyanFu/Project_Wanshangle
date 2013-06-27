@@ -39,7 +39,7 @@
 					<object class="IBUIImageView" id="250784483">
 						<reference key="NSNextResponder" ref="1051989706"/>
 						<int key="NSvFlags">274</int>
-						<string key="NSFrame">{{8, 3}, {70, 75}}</string>
+						<string key="NSFrame">{{8, 3}, {58, 75}}</string>
 						<reference key="NSSuperview" ref="1051989706"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="992357436"/>
@@ -50,7 +50,7 @@
 					<object class="IBUILabel" id="992357436">
 						<reference key="NSNextResponder" ref="1051989706"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{96, 3}, {161, 23}}</string>
+						<string key="NSFrame">{{79, 3}, {161, 23}}</string>
 						<reference key="NSSuperview" ref="1051989706"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="42482020"/>
@@ -82,7 +82,7 @@
 					<object class="IBUILabel" id="722101925">
 						<reference key="NSNextResponder" ref="1051989706"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{96, 29}, {204, 21}}</string>
+						<string key="NSFrame">{{79, 29}, {204, 21}}</string>
 						<reference key="NSSuperview" ref="1051989706"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="551594210"/>
@@ -110,10 +110,9 @@
 					<object class="IBUILabel" id="551594210">
 						<reference key="NSNextResponder" ref="1051989706"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{96, 57}, {204, 21}}</string>
+						<string key="NSFrame">{{79, 57}, {204, 21}}</string>
 						<reference key="NSSuperview" ref="1051989706"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -267,8 +266,8 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="250784483"/>
 							<reference ref="992357436"/>
-							<reference ref="722101925"/>
 							<reference ref="42482020"/>
+							<reference ref="722101925"/>
 							<reference ref="551594210"/>
 						</array>
 						<reference key="parent" ref="0"/>

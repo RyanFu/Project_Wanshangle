@@ -37,14 +37,14 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-
+        
         self.apiCmdMovie_getAllMovies = (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
         
         [self newCinemaController];
         
         isMoviePanel = YES;
         
-        self.navigationItem.hidesBackButton= YES;
+        //        self.navigationItem.hidesBackButton= YES;
     }
     return self;
 }
@@ -64,7 +64,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated{
-
+    
     [_cinemaViewController viewWillAppear:animated];
     
     self.apiCmdMovie_getAllMovies =  (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
@@ -82,7 +82,7 @@
 - (void)updatData{
     for (int i=0; i<10; i++) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//            self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+            //            self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
         });
     }
 }
@@ -91,10 +91,13 @@
 {
     [super viewDidLoad];
     
-    [[CacheManager sharedInstance] setMovieViewController:self];
-    
     //创建TopView
-    topView = [[UIView alloc] initWithFrame:CGRectMake(0, 7, 140, 30)];
+    topView = [[UIView alloc] initWithFrame:CGRectMake(0, 7, 150, 30)];
+    UIImageView *bgImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_M_switch_C@2x"]];
+    bgImg.frame = CGRectMake(0, 0, 150, 30);
+    [topView addSubview:bgImg];
+    [bgImg release];
+    
     UIButton *moviebt = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *cinemabt = [UIButton buttonWithType:UIButtonTypeCustom];
     movieButton = moviebt;
@@ -106,24 +109,26 @@
     cinemabt.tag = CinemaButtonTag;
     [moviebt setBackgroundColor:[UIColor clearColor]];
     [cinemabt setBackgroundColor:[UIColor clearColor]];
+    [moviebt setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [cinemabt setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [moviebt addTarget:self action:@selector(clickMovieButtonUp:) forControlEvents:UIControlEventTouchUpInside];
     [cinemabt addTarget:self action:@selector(clickCinemaButtonUp:) forControlEvents:UIControlEventTouchUpInside];
     [moviebt addTarget:self action:@selector(clickMovieButtonDown:) forControlEvents:UIControlEventTouchDown];
     [cinemabt addTarget:self action:@selector(clickCinemaButtonDown:) forControlEvents:UIControlEventTouchDown];
-    [moviebt setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
-    [moviebt setFrame:CGRectMake(0, 0, 70, 30)];
-    [cinemabt setFrame:CGRectMake(70, 0, 70, 30)];
+    [moviebt setBackgroundImage:[UIImage imageNamed:@"btn_switch@2x"] forState:UIControlStateNormal];
+    [moviebt setFrame:CGRectMake(0, 0, 75, 30)];
+    [cinemabt setFrame:CGRectMake(75, 0, 75, 30)];
     [topView addSubview:moviebt];
     [topView addSubview:cinemabt];
     self.navigationItem.titleView = topView;
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [backButton setTitle:@"返回" forState:UIControlStateNormal];
+    [backButton setFrame:CGRectMake(0, 0, 45, 30)];
     [backButton addTarget:self action:@selector(clickBackButton:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 60, 40);
+    [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_n@2x"] forState:UIControlStateNormal];
+    [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_f@2x"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backItem;
-    [backItem release];
     
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
     _titleLabel.backgroundColor = [UIColor clearColor];
@@ -175,7 +180,7 @@
 
 - (void)clickMovieButtonDown:(id)sender{
     [self cleanUpButtonBackground];
-    [movieButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
+    [movieButton setBackgroundImage:[UIImage imageNamed:@"btn_switch@2x"] forState:UIControlStateNormal];
 }
 
 - (void)clickCinemaButtonUp:(id)sender{
@@ -189,12 +194,13 @@
 - (void)clickCinemaButtonDown:(id)sender{
     
     [self cleanUpButtonBackground];
-    [cinemaButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
+    [cinemaButton setBackgroundImage:[UIImage imageNamed:@"btn_switch@2x"] forState:UIControlStateNormal];
+    
 }
 
 - (void)cleanUpButtonBackground{
-    [movieButton setBackgroundColor:[UIColor clearColor]];
-    [cinemaButton setBackgroundColor:[UIColor clearColor]];
+    [movieButton setBackgroundImage:nil forState:UIControlStateNormal];
+    [cinemaButton setBackgroundImage:nil forState:UIControlStateNormal];
 }
 
 - (void)clickBackButton:(id)sender{
@@ -206,7 +212,7 @@
     }
 }
 
-#pragma mark - 
+#pragma mark -
 #pragma mark 【电影-影院】 Transition
 - (void)switchMovieCinemaAnimation{
     
@@ -221,7 +227,7 @@
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
         
         if (isMoviePanel && _movieContentView.frame.origin.x != 0) {
-
+            
             CGRect movieFrame =  _movieContentView.frame;
             movieFrame.origin.x = 0;
             _movieContentView.frame = movieFrame;
@@ -320,7 +326,6 @@
                 
                 [self.movieTableView reloadData];
             });
-            //            [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingMoviesList];
         }
             break;
             
@@ -328,8 +333,6 @@
         {
             NSArray *array = [[DataBaseManager sharedInstance] getAllCinemasListFromCoreData];
             ABLoggerDebug(@"影院 count ==== %d",[array count]);
-            //            [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:UpdatingCinemasList];
-            //            ABLoggerWarn(@"可以请求 影院列表数据 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
         }
             break;
         default:

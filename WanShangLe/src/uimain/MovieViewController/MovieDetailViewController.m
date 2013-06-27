@@ -55,13 +55,20 @@
     
     if (_mMovie.movieDetail.info==nil) {
         [_imgView setImageWithURL:[NSURL URLWithString:_mMovie.webImg]
-                 placeholderImage:[UIImage imageNamed:@"placeholder"]
+                 placeholderImage:[UIImage imageNamed:@"movie_placeholder@2x"]
                           options:SDWebImageRetryFailed];
         self.apiCmdMovie_getAllMovieDetail = (ApiCmdMovie_getAllMovieDetail *)[[DataBaseManager sharedInstance] getMovieDetailFromWeb:self movieId:_mMovie.uid];
     }else{
         [self initMovieDetailData];
     }
     
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton setFrame:CGRectMake(0, 0, 45, 30)];
+    [backButton addTarget:self action:@selector(clickBackButton:) forControlEvents:UIControlEventTouchUpInside];
+    [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_n@2x"] forState:UIControlStateNormal];
+    [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_f@2x"] forState:UIControlStateHighlighted];
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.navigationItem.leftBarButtonItem = backItem;
 }
 
 - (void)initMovieDetailData{
@@ -69,7 +76,7 @@
     NSDictionary *tDic = _mMovie.movieDetail.info;
     ABLoggerInfo(@"tDic ===== %@",tDic);
     [_imgView setImageWithURL:[NSURL URLWithString:[tDic objectForKey:@"coverurl"]]
-             placeholderImage:[UIImage imageNamed:@"placeholder"]
+             placeholderImage:[UIImage imageNamed:@"movie_placeholder@2x"]
                       options:SDWebImageRetryFailed];
     _directorLabel.text = [tDic objectForKey:@"director"];
     _actorLabel.text = [tDic objectForKey:@"star"];
@@ -83,12 +90,27 @@
 
 - (void)updateRecOrLookData{
     ABLoggerInfo(@"推荐 ===== %@",_mMovie.movieDetail.recommendadded);
-    _recommendLabel.text = _mMovie.movieDetail.recommendadded;
-    _wantLookLabel.text = _mMovie.movieDetail.wantedadded;
+    
+    if (isEmpty( _mMovie.movieDetail.recommendadded)) {
+        _recommendLabel.text = [NSString stringWithFormat:@"%d",[_recommendLabel.text intValue]+1];
+    }else{
+        _recommendLabel.text = _mMovie.movieDetail.recommendadded;
+    }
+    
+    if (isEmpty( _mMovie.movieDetail.wantedadded)) {
+        _wantLookLabel.text = [NSString stringWithFormat:@"%d",[_wantLookLabel.text intValue]+1];
+    }else{
+        _wantLookLabel.text = _mMovie.movieDetail.wantedadded;
+    }
 }
 
 #pragma mark -
 #pragma mark 点击按钮 Event
+
+- (void)clickBackButton:(id)sender{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 -(IBAction)clickRecommendButton:(id)sender{
     [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mMovie.uid APIType:WSLRecommendAPITypeMovieInteract cType:WSLRecommendLookTypeRecommend delegate:self];
     [self startAddOneAnimation:(UIButton *)sender];

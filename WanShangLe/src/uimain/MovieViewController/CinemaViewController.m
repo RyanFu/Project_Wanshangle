@@ -106,8 +106,6 @@
 {
     [super viewDidLoad];
     
-    [[CacheManager sharedInstance] setCinemaViewController:self];
-    
     [self initFilterButtonHeaderView];
     
     [self searchBarInit];

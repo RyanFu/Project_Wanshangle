@@ -44,7 +44,7 @@
     
     MMovie *movie = [_parentViewController.moviesArray objectAtIndex:indexPath.row];
     [cell.movie_imageView setImageWithURL:[NSURL URLWithString:movie.webImg]
-                         placeholderImage:[UIImage imageNamed:@"placeholder"] options:SDWebImageRetryFailed];
+                         placeholderImage:[UIImage imageNamed:@"movie_placeholder@2x"] options:SDWebImageRetryFailed];
     cell.movie_name.text = movie.name;
     cell.movie_new.hidden = YES;
     if ([movie.newMovie boolValue]) {

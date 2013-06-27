@@ -9,7 +9,7 @@
 static DataBaseManager *_sharedInstance = nil;
 
 #import "DataBaseManager.h"
-#import "POAPinyin.h"
+#import "ChineseToPinyin.h"
 #import "DataBase.h"
 
 
@@ -333,19 +333,17 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (NSString *)validateCity:(NSString *)cityName{
     
-    NSString *city_name = [POAPinyin quickConvert:cityName];
+    NSString *city_name = [ChineseToPinyin pinyinFromChiniseString:cityName];
     NSString *cityPath = [[NSBundle mainBundle] pathForResource:@"city" ofType:@"json"];
     NSData *cityData = [NSData dataWithContentsOfFile:cityPath];
     NSDictionary *cityDic = [NSJSONSerialization JSONObjectWithData:cityData options:kNilOptions error:nil];
     NSArray *array = [cityDic objectForKey:@"citys"];
     
-    
     for (NSDictionary *dic in array) {
         NSString *tname = [dic objectForKey:@"name"];
         
-        tname = [POAPinyin quickConvert:tname];
+        tname = [ChineseToPinyin pinyinFromChiniseString:tname];
         if ([tname compare:city_name options:NSCaseInsensitiveSearch range:NSMakeRange(0, tname.length)] == NSOrderedSame) {
-            [POAPinyin clearCache];
             return [dic objectForKey:@"name"];
         }
     }
@@ -360,7 +358,7 @@ static DataBaseManager *_sharedInstance = nil;
         cityName = [[LocationManager defaultLocationManager] getUserCity];
     }
     
-    city_name = [POAPinyin quickConvert:cityName];
+    city_name = [ChineseToPinyin pinyinFromChiniseString:cityName];
     NSString *cityPath = [[NSBundle mainBundle] pathForResource:@"city" ofType:@"json"];
     NSData *cityData = [NSData dataWithContentsOfFile:cityPath];
     NSDictionary *cityDic = [NSJSONSerialization JSONObjectWithData:cityData options:kNilOptions error:nil];
@@ -369,7 +367,7 @@ static DataBaseManager *_sharedInstance = nil;
     for (NSDictionary *dic in array) {
         NSString *tname = [dic objectForKey:@"name"];
         
-        tname = [POAPinyin quickConvert:tname];
+        tname = [ChineseToPinyin pinyinFromChiniseString:tname];
         if ([tname compare:city_name options:NSCaseInsensitiveSearch] == NSOrderedSame) {
             return [dic objectForKey:@"id"];
         }
@@ -766,7 +764,6 @@ static DataBaseManager *_sharedInstance = nil;
                                                andaCinema:(MCinema *)aCinema
                                                  delegate:(id<ApiNotify>)delegate
 {
-    ABLoggerDebug(@"=== %@",[[CacheManager sharedInstance] mUserDefaults]);
     
     ApiClient* apiClient = [ApiClient defaultClient];
     
@@ -880,7 +877,6 @@ static DataBaseManager *_sharedInstance = nil;
                                               aSchedule:(NSString *)aSchedule
                                                delegate:(id<ApiNotify>)delegate
 {
-    ABLoggerDebug(@"=== %@",[[CacheManager sharedInstance] mUserDefaults]);
     
     ApiClient* apiClient = [ApiClient defaultClient];
     
