@@ -54,7 +54,9 @@
     [self.view addSubview:_imgView];
     
     if (_mMovie.movieDetail.info==nil) {
-        
+        [_imgView setImageWithURL:[NSURL URLWithString:_mMovie.webImg]
+                 placeholderImage:[UIImage imageNamed:@"placeholder"]
+                          options:SDWebImageRetryFailed];
         self.apiCmdMovie_getAllMovieDetail = (ApiCmdMovie_getAllMovieDetail *)[[DataBaseManager sharedInstance] getMovieDetailFromWeb:self movieId:_mMovie.uid];
     }else{
         [self initMovieDetailData];
@@ -76,7 +78,7 @@
     _startdayLabel.text = [tDic objectForKey:@"startday"];
     _recommendLabel.text = [tDic objectForKey:@"recommendadded"];
     _wantLookLabel.text = [tDic objectForKey:@"wantedadded"];
-    _descriptionLabel.text = [tDic objectForKey:@"description"];
+    _descriptionTextView.text = [tDic objectForKey:@"description"];
 }
 
 - (void)updateRecOrLookData{

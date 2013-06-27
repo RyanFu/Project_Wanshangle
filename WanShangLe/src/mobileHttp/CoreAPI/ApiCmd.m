@@ -225,8 +225,10 @@
  **/
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    ABLoggerWarn(@"请求失败 =========");
+    
     NSError *error = [request error];
+    ABLoggerWarn(@"请求失败 ========= %@",[error description]);
+    ABLoggerWarn(@"apiCmd tag ========= %d",[self.httpRequest tag]);
     
     if (delegate && [delegate respondsToSelector:@selector(apiNotifyResult:error:)]) {
         // call delegate

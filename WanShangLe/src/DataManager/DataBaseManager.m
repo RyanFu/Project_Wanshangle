@@ -185,7 +185,7 @@ static DataBaseManager *_sharedInstance = nil;
     
     MMovie_City *mMovie_city = nil;
     
-    ABLoggerInfo(@"插入 电影_城市 关联表 新数据 =======");
+    ABLoggerInfo(@"插入 电影_城市 关联表 新数据 [a_city name] ======= %@",[a_city name]);
     mMovie_city = [MMovie_City MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     mMovie_city.uid = [NSString stringWithFormat:@"%@%@",[a_city name],a_movie.uid];
     mMovie_city.city = a_city;
@@ -297,7 +297,7 @@ static DataBaseManager *_sharedInstance = nil;
     
 }
 
-- (BOOL)insertCityIntoCoreDataWith:(NSString *)cityName{
+- (City *)insertCityIntoCoreDataWith:(NSString *)cityName{
     
     if (!cityName) {
         cityName = [[LocationManager defaultLocationManager] getUserCity];
@@ -308,7 +308,7 @@ static DataBaseManager *_sharedInstance = nil;
     
     NSString *newCityName = [self validateCity:cityName];
     if (isEmpty(newCityName)) {
-        return NO;
+        return nil;
     }
     
     city = [City MR_findFirstByAttribute:@"name" withValue:newCityName inContext:context];
@@ -328,7 +328,7 @@ static DataBaseManager *_sharedInstance = nil;
     
     [self saveInManagedObjectContext:context];
     
-    return YES;
+    return city;
 }
 
 - (NSString *)validateCity:(NSString *)cityName{
@@ -412,10 +412,8 @@ static DataBaseManager *_sharedInstance = nil;
     if (city == nil)
     {
         ABLoggerInfo(@"插入 城市 新数据 ======= %@",name);
-        [self insertCityIntoCoreDataWith:name];
+        city = [self insertCityIntoCoreDataWith:name];
     }
-    
-    [self saveInManagedObjectContext:context];
     
     return city;
 }
@@ -963,6 +961,8 @@ static DataBaseManager *_sharedInstance = nil;
     
     [apiClient executeApiCmdAsync:apiCmdMovie_getAllCinemas];
     [apiCmdMovie_getAllCinemas.httpRequest setTag:API_MCinemaCmd];
+    [apiCmdMovie_getAllCinemas.httpRequest setNumberOfTimesToRetryOnTimeout:2];
+    [apiCmdMovie_getAllCinemas.httpRequest setTimeOutSeconds:60*2];
     
     return [apiCmdMovie_getAllCinemas autorelease];
 }

@@ -19,7 +19,7 @@
 @property(nonatomic,retain) IBOutlet UILabel *startdayLabel;
 @property(nonatomic,retain) IBOutlet UILabel *recommendLabel;
 @property(nonatomic,retain) IBOutlet UILabel *wantLookLabel;
-@property(nonatomic,retain) IBOutlet UILabel *descriptionLabel;
+@property(nonatomic,retain) IBOutlet UITextView *descriptionTextView;
 @property(nonatomic,retain) IBOutlet UIButton *recommendButton;
 @property(nonatomic,retain) IBOutlet UIButton *wantLookButton;
 -(IBAction)clickRecommendButton:(id)sender;

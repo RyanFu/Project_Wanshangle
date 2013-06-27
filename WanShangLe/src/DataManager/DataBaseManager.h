@@ -68,7 +68,7 @@ typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
 
 /************ 城市 ***************/
 - (void)insertAllCitysIntoCoreData;
-- (BOOL)insertCityIntoCoreDataWith:(NSString *)cityName;
+- (City *)insertCityIntoCoreDataWith:(NSString *)cityName;
 - (NSString *)validateCity:(NSString *)cityName;
 - (NSString *)getNowUserCityId;
 - (City *)getNowUserCityFromCoreData;

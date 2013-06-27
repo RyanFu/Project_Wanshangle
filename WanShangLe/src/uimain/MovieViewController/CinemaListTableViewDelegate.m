@@ -163,7 +163,7 @@ static CGFloat const kLabelVMargin = 10;
     }
     
     NSString *name = [[_parentViewController.cinemasArray objectAtIndex:indexPath.section] objectForKey:@"name"];
-    NSArray *list = [[_parentViewController.cinemasArray objectAtIndex:self.selectIndex.section] objectForKey:@"list"];
+    NSArray *list = [[_parentViewController.cinemasArray objectAtIndex:indexPath.section] objectForKey:@"list"];
     cell.cinema_district.text = [NSString stringWithFormat:@"%@  (共%d家)",name,[list count]];
     [cell changeArrowWithUp:([self.selectIndex isEqual:indexPath]?YES:NO)];
     return cell;
