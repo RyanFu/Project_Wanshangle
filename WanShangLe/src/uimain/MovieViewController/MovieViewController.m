@@ -11,6 +11,8 @@
 #import "ApiCmdMovie_getAllMovies.h"
 #import "MovieListTableViewDelegate.h"
 #import "CinemaViewController.h"
+#import "EGORefreshTableHeaderView.h"
+#import <QuartzCore/QuartzCore.h>
 #import "ASIHTTPRequest.h"
 #import "ApiCmd.h"
 #import "MMovie.h"
@@ -18,9 +20,15 @@
 #define MovieButtonTag 10
 #define CinemaButtonTag 11
 
+typedef enum {
+    EGOHeaderView = 0,
+    EGOBottomView
+} EGORefreshView;
+
 @interface MovieViewController ()<ApiNotify>{
     UIButton *movieButton;
     UIButton *cinemaButton;
+    UIView *mView;
 }
 @property(nonatomic,retain)MovieListTableViewDelegate *movieDelegate;
 @property(nonatomic,retain)UIView *movieContentView;
@@ -60,6 +68,7 @@
     self.topView = nil;
     self.titleLabel = nil;
     
+    self.refreshHeaderView = nil;
     [super dealloc];
 }
 
@@ -91,6 +100,20 @@
 {
     [super viewDidLoad];
     
+    [self initTopButtonView];
+    
+    [self initTableView];
+    
+    [self initRefreshHeaderView];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [self updateData:0];
+    });
+}
+
+#pragma mark -
+#pragma mark 初始化数据
+- (void)initTopButtonView{
     //创建TopView
     topView = [[UIView alloc] initWithFrame:CGRectMake(0, 7, 150, 30)];
     UIImageView *bgImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_M_switch_C@2x"]];
@@ -129,7 +152,10 @@
     [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_f@2x"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backItem;
-    
+    [backItem release];
+}
+
+- (void)initTableView{
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
     _titleLabel.backgroundColor = [UIColor clearColor];
     [_titleLabel setTextAlignment:UITextAlignmentCenter];
@@ -145,19 +171,82 @@
     [self setTableViewDelegate];
     
     _movieTableView.backgroundColor = [UIColor colorWithRed:0.880 green:0.963 blue:0.925 alpha:1.000];
+    _movieTableView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
     _movieTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     [_movieContentView addSubview:_movieTableView];
     [self.view addSubview:_movieContentView];
+}
+
+- (void)initRefreshHeaderView{
+    if (_refreshHeaderView == nil) {
+
+        mView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+        [mView setBackgroundColor:[UIColor clearColor]];
+        [_movieTableView insertSubview:mView atIndex:-1];
+        [self showShadow:YES];
+        [mView release];
+        
+        EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame: CGRectMake(0.0f, - _movieTableView.bounds.size.height, _movieTableView.frame.size.width, _movieTableView.bounds.size.height)];
+        
+        view.delegate = _movieDelegate;
+        view.tag = EGOHeaderView;
+        view.backgroundColor = [UIColor clearColor];
+        [_movieTableView addSubview:view];
+        self.refreshHeaderView = view;
+        [view release];
+    }
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        [self updateData:0];
-    });
+    [_refreshHeaderView refreshLastUpdatedDate];
+    _movieDelegate.mTableView = self.movieTableView;
+    _movieDelegate.refreshHeaderView = self.refreshHeaderView;
+}
+
+- (void)showShadow:(BOOL)val {
+    
+    mView.layer.shadowOpacity = val ? 0.7f : 0.0f;
+    if (val) {
+        
+        NSMutableArray *shadowPoints = nil;
+        if (shadowPoints==nil) {
+            shadowPoints = [[NSMutableArray alloc] initWithObjects:
+                            [NSValue valueWithCGPoint:CGPointMake(-40 ,-1)],
+                            [NSValue valueWithCGPoint:CGPointMake(0   ,-2)],
+                            [NSValue valueWithCGPoint:CGPointMake(40  ,-3)],
+                            [NSValue valueWithCGPoint:CGPointMake(80  ,-4)],
+                            [NSValue valueWithCGPoint:CGPointMake(120 ,-5)],
+                            [NSValue valueWithCGPoint:CGPointMake(160 ,-5)],
+                            [NSValue valueWithCGPoint:CGPointMake(200 ,-5)],
+                            [NSValue valueWithCGPoint:CGPointMake(240 ,-4)],
+                            [NSValue valueWithCGPoint:CGPointMake(280 ,-3)],
+                            [NSValue valueWithCGPoint:CGPointMake(320 ,-2)],
+                            [NSValue valueWithCGPoint:CGPointMake(360 ,-1)],
+                            nil];
+        }
+        
+        CGMutablePathRef path = CGPathCreateMutable();
+        if (shadowPoints && shadowPoints.count > 0) {
+            CGPoint p = [(NSValue *)[shadowPoints objectAtIndex:0] CGPointValue];
+            CGPathMoveToPoint(path, nil, p.x, p.y);
+            for (int i = 1; i < shadowPoints.count; i++) {
+                p = [(NSValue *)[shadowPoints objectAtIndex:i] CGPointValue];
+                CGPathAddLineToPoint(path, nil, p.x, p.y);
+            }
+        }
+        mView.layer.shadowOffset = CGSizeMake(0, 1);
+        mView.layer.shadowRadius = 1.0f;
+        mView.layer.shadowPath = path;
+        mView.layer.shadowColor = [UIColor colorWithRed:0.737 green:0.761 blue:0.780 alpha:1.000].CGColor;
+        
+        CFRelease(path);
+        [shadowPoints release];
+    }
+    
 }
 
 - (void)setTableViewDelegate{
-    _movieTableView.dataSource = _movieDelegate;
-    _movieTableView.delegate = _movieDelegate;
+    self.movieTableView.dataSource = _movieDelegate;
+    self.movieTableView.delegate = _movieDelegate;
 }
 
 - (void)newCinemaController{
@@ -342,7 +431,6 @@
             break;
     }
 }
-
 
 #pragma mark -
 - (void)didReceiveMemoryWarning

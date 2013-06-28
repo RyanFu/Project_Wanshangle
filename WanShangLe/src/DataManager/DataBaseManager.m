@@ -333,6 +333,10 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (NSString *)validateCity:(NSString *)cityName{
     
+    if (isEmpty(cityName)) {
+        return nil;
+    }
+    
     NSString *city_name = [ChineseToPinyin pinyinFromChiniseString:cityName];
     ABLoggerInfo(@"city_name ===== %@",city_name);
     NSString *cityPath = [[NSBundle mainBundle] pathForResource:@"city" ofType:@"json"];

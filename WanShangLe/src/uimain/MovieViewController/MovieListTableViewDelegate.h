@@ -7,10 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "EGORefreshTableHeaderView.h"
 
 @class MovieViewController;
-@interface MovieListTableViewDelegate : NSObject<UITableViewDataSource,UITableViewDelegate>{
-    
+
+@interface MovieListTableViewDelegate : NSObject<EGORefreshTableHeaderDelegate,UITableViewDataSource,UITableViewDelegate>{
+    EGORefreshTableHeaderView *_refreshHeaderView;
+    BOOL _reloading;
+    UITableView *mTableView;
 }
+
+@property(nonatomic,assign) EGORefreshTableHeaderView *refreshHeaderView;
+@property(nonatomic,assign) UITableView *mTableView;
 @property(nonatomic,assign) MovieViewController *parentViewController;
 @end

@@ -11,6 +11,7 @@
 @class CinemaViewController;
 @class ApiCmdMovie_getAllMovies;
 @class ApiCmdMovie_getAllCinemas;
+@class EGORefreshTableHeaderView;
 
 @interface MovieViewController : UIViewController{
     
@@ -21,6 +22,7 @@
 @property(nonatomic,retain)NSArray *moviesArray;
 @property(nonatomic,retain)ApiCmdMovie_getAllMovies *apiCmdMovie_getAllMovies;
 @property(nonatomic,retain)ApiCmdMovie_getAllCinemas *apiCmdMovie_getAllCinemas;
+@property(nonatomic,retain)EGORefreshTableHeaderView *refreshHeaderView;
 
 - (void)switchMovieCinemaAnimation;
 - (void)pushMovieCinemaAnimation;

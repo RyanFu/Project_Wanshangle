@@ -13,6 +13,12 @@
 		5A1261E7177C2BFB0018E21A /* btn_switch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A1261E5177C2BFB0018E21A /* btn_switch@2x.png */; };
 		5A1261EA177C38230018E21A /* ChineseToPinyin.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1261E9177C38230018E21A /* ChineseToPinyin.m */; };
 		5A1261EC177C42760018E21A /* btn_location_icon_black@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A1261EB177C42760018E21A /* btn_location_icon_black@2x.png */; };
+		5A1261F3177D42B50018E21A /* blueDownArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A1261EE177D42B50018E21A /* blueDownArrow.png */; };
+		5A1261F4177D42B50018E21A /* blueDownArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A1261EF177D42B50018E21A /* blueDownArrow@2x.png */; };
+		5A1261F5177D42B50018E21A /* blueUpArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A1261F0177D42B50018E21A /* blueUpArrow.png */; };
+		5A1261F6177D42B50018E21A /* blueUpArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A1261F1177D42B50018E21A /* blueUpArrow@2x.png */; };
+		5A1261F7177D42B50018E21A /* TableViewPull-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5A1261F2177D42B50018E21A /* TableViewPull-Info.plist */; };
+		5A1261FE177D43C90018E21A /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1261FD177D43C90018E21A /* EGORefreshTableHeaderView.m */; };
 		5A1746F7176057E400E155AB /* SIAlertView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5A1746F4176057E400E155AB /* SIAlertView.bundle */; };
 		5A1746F8176057E400E155AB /* SIAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1746F6176057E400E155AB /* SIAlertView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		5A1746FB17608CC500E155AB /* MovieTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1746FA17608CC500E155AB /* MovieTableViewCell.m */; };
@@ -262,6 +268,13 @@
 		5A1261E8177C38230018E21A /* ChineseToPinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChineseToPinyin.h; sourceTree = "<group>"; };
 		5A1261E9177C38230018E21A /* ChineseToPinyin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChineseToPinyin.m; sourceTree = "<group>"; };
 		5A1261EB177C42760018E21A /* btn_location_icon_black@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_location_icon_black@2x.png"; sourceTree = "<group>"; };
+		5A1261EE177D42B50018E21A /* blueDownArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueDownArrow.png; sourceTree = "<group>"; };
+		5A1261EF177D42B50018E21A /* blueDownArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blueDownArrow@2x.png"; sourceTree = "<group>"; };
+		5A1261F0177D42B50018E21A /* blueUpArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueUpArrow.png; sourceTree = "<group>"; };
+		5A1261F1177D42B50018E21A /* blueUpArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blueUpArrow@2x.png"; sourceTree = "<group>"; };
+		5A1261F2177D42B50018E21A /* TableViewPull-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "TableViewPull-Info.plist"; sourceTree = "<group>"; };
+		5A1261FC177D43C90018E21A /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
+		5A1261FD177D43C90018E21A /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
 		5A1746F4176057E400E155AB /* SIAlertView.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SIAlertView.bundle; sourceTree = "<group>"; };
 		5A1746F5176057E400E155AB /* SIAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIAlertView.h; sourceTree = "<group>"; };
 		5A1746F6176057E400E155AB /* SIAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIAlertView.m; sourceTree = "<group>"; };
@@ -704,9 +717,31 @@
 			path = PinYin;
 			sourceTree = "<group>";
 		};
+		5A1261ED177D42B50018E21A /* pullRefresh */ = {
+			isa = PBXGroup;
+			children = (
+				5A1261EE177D42B50018E21A /* blueDownArrow.png */,
+				5A1261EF177D42B50018E21A /* blueDownArrow@2x.png */,
+				5A1261F0177D42B50018E21A /* blueUpArrow.png */,
+				5A1261F1177D42B50018E21A /* blueUpArrow@2x.png */,
+				5A1261F2177D42B50018E21A /* TableViewPull-Info.plist */,
+			);
+			path = pullRefresh;
+			sourceTree = "<group>";
+		};
+		5A1261F8177D42D80018E21A /* pullRefresh */ = {
+			isa = PBXGroup;
+			children = (
+				5A1261FC177D43C90018E21A /* EGORefreshTableHeaderView.h */,
+				5A1261FD177D43C90018E21A /* EGORefreshTableHeaderView.m */,
+			);
+			path = pullRefresh;
+			sourceTree = "<group>";
+		};
 		5A1746F2176057E400E155AB /* UIControl */ = {
 			isa = PBXGroup;
 			children = (
+				5A1261F8177D42D80018E21A /* pullRefresh */,
 				5A83CF2B177BEC1F00E86F72 /* JSButton */,
 				5A507F33176B0000001D673D /* iCarousel */,
 				5A507F36176B0000001D673D /* ReflectionView */,
@@ -1177,6 +1212,7 @@
 		5A83CFA4177C25D900E86F72 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				5A1261ED177D42B50018E21A /* pullRefresh */,
 				5A83CFA5177C25D900E86F72 /* Home */,
 				5A83CFAA177C25D900E86F72 /* MovieImgs */,
 				5A83CFAC177C25D900E86F72 /* NavigationBar */,
@@ -1777,6 +1813,11 @@
 				5A1261E6177C2BFB0018E21A /* bg_M_switch_C@2x.png in Resources */,
 				5A1261E7177C2BFB0018E21A /* btn_switch@2x.png in Resources */,
 				5A1261EC177C42760018E21A /* btn_location_icon_black@2x.png in Resources */,
+				5A1261F3177D42B50018E21A /* blueDownArrow.png in Resources */,
+				5A1261F4177D42B50018E21A /* blueDownArrow@2x.png in Resources */,
+				5A1261F5177D42B50018E21A /* blueUpArrow.png in Resources */,
+				5A1261F6177D42B50018E21A /* blueUpArrow@2x.png in Resources */,
+				5A1261F7177D42B50018E21A /* TableViewPull-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1963,6 +2004,7 @@
 				5A0FA9C5177AE75A00676253 /* ApiCmd_recommendOrLook.m in Sources */,
 				5A83CF2E177BEC1F00E86F72 /* JSButton.m in Sources */,
 				5A1261EA177C38230018E21A /* ChineseToPinyin.m in Sources */,
+				5A1261FE177D43C90018E21A /* EGORefreshTableHeaderView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

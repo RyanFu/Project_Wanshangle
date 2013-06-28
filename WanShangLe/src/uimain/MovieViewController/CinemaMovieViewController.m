@@ -100,8 +100,20 @@
     
     _coverFlow.type = iCarouselTypeLinear;
     [_coverFlow reloadData];
+    
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton setFrame:CGRectMake(0, 0, 45, 30)];
+    [backButton addTarget:self action:@selector(clickBackButton:) forControlEvents:UIControlEventTouchUpInside];
+    [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_n@2x"] forState:UIControlStateNormal];
+    [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_f@2x"] forState:UIControlStateHighlighted];
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.navigationItem.leftBarButtonItem = backItem;
+    [backItem release];
 }
 
+- (void)clickBackButton:(id)sender{
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
 - (IBAction)clickMovieInfo:(id)sender{
     ABLoggerInfo(@"");
@@ -109,22 +121,22 @@
     [self.navigationController pushViewController:movieDetailController animated:YES];
     [movieDetailController release];
     /*
-    CinemaViewController *cinemaViewController = [CacheManager sharedInstance].cinemaViewController;
-    
-    
-    NSArray *array = [NSArray arrayWithObjects:
-                      [CacheManager sharedInstance].rootViewController,
-                      [CacheManager sharedInstance].movieViewController,
-                      [CacheManager sharedInstance].cinemaViewController,
-                      nil];
-    [[CacheManager sharedInstance].movieViewController clickMovieButtonDown:nil];
-    [[CacheManager sharedInstance].movieViewController clickMovieButtonUp:nil];
-    
-    cinemaViewController.mMovie = self.mMovie;
-    cinemaViewController.isMovie_Cinema = YES;
-    
-    ABLogger_bool(cinemaViewController.isMovie_Cinema);
-    [self.navigationController setViewControllers:array animated:YES];
+     CinemaViewController *cinemaViewController = [CacheManager sharedInstance].cinemaViewController;
+     
+     
+     NSArray *array = [NSArray arrayWithObjects:
+     [CacheManager sharedInstance].rootViewController,
+     [CacheManager sharedInstance].movieViewController,
+     [CacheManager sharedInstance].cinemaViewController,
+     nil];
+     [[CacheManager sharedInstance].movieViewController clickMovieButtonDown:nil];
+     [[CacheManager sharedInstance].movieViewController clickMovieButtonUp:nil];
+     
+     cinemaViewController.mMovie = self.mMovie;
+     cinemaViewController.isMovie_Cinema = YES;
+     
+     ABLogger_bool(cinemaViewController.isMovie_Cinema);
+     [self.navigationController setViewControllers:array animated:YES];
      */
 }
 
@@ -180,10 +192,10 @@
     
     ABLoggerDebug(@"%@",[[_moviesArray objectAtIndex:index] webImg]);
     [view2 setImageWithURL:[NSURL URLWithString:[[_moviesArray objectAtIndex:index] webImg]]
-          placeholderImage:[UIImage imageNamed:@"placeholder"]
+          placeholderImage:[UIImage imageNamed:@"movie_placeholder@2x"]
                    options:SDWebImageRetryFailed
                  completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-//                     [[view2 superview] update];
+                     //                     [[view2 superview] update];
                  }];
     
 	return view;
@@ -197,7 +209,7 @@
         case iCarouselOptionWrap:
         {
             //normally you would hard-code this to YES or NO
-            return YES;
+            return NO;
         }
         case iCarouselOptionSpacing:
         {
@@ -222,7 +234,7 @@
     _movieRating.text = [NSString stringWithFormat:@"%@ : %0.1f (%d 万人)",aMovie.ratingFrom,[aMovie.rating floatValue],[aMovie.ratingpeople intValue]/10000];
     _movieTimeLong.text = @"120分钟";
     
-    self.apiCmdMovie_getSchedule = [[DataBaseManager sharedInstance] getScheduleFromWebWithaMovie:_mMovie andaCinema:_mCinema delegate:self];
+    self.apiCmdMovie_getSchedule = (ApiCmdMovie_getSchedule *)[[DataBaseManager sharedInstance] getScheduleFromWebWithaMovie:_mMovie andaCinema:_mCinema delegate:self];
 }
 
 
