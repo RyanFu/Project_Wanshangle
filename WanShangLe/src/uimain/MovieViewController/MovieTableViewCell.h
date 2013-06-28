@@ -20,4 +20,9 @@
 @property(nonatomic,retain) UILabel *movie_rating;
 @property(nonatomic,retain) UILabel *movie_new;
 @property(nonatomic,retain) UIImageView *movie_imageView;
+
+@property(nonatomic,retain)IBOutlet UIImageView *movie_image_new;
+@property(nonatomic,retain)IBOutlet UIImageView *movie_image_3dimx;
+@property(nonatomic,retain)IBOutlet UIImageView *movie_image_imx;
+@property(nonatomic,retain)IBOutlet UIImageView *movie_image_3d;
 @end

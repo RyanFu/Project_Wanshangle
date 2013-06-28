@@ -41,14 +41,14 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
-    NSString *imageName;
+    NSString *imageName = nil;
     if (self = [super initWithFrame:frame]) {
         if (frame.origin.y < 0) {
             _pullDirection = EGOPullingDown;
-            imageName = @"blueDownArrow.png";
+            imageName = @"blueDownArrow";
         } else {
             _pullDirection = EGOPullingUp;
-            imageName = @"blueUpArrow.png";
+            imageName = @"blueUpArrow";
         }
     }
     [self initWithFrame:frame arrowImageName:imageName];
@@ -96,12 +96,13 @@
 		
 		CALayer *layer = [CALayer layer];
         if (_pullDirection == EGOPullingDown) {
-            layer.frame = CGRectMake(25.0f, frame.size.height - 65.0f, 30.0f, 55.0f);
+            layer.frame = CGRectMake(45.0f, frame.size.height - 45.0f, 19.0f, 31.0f);
         } else {
-            layer.frame = CGRectMake(25.0f, 5.0f, 30.0f, 55.0f);
+            layer.frame = CGRectMake(45.0f, 5.0f, 19.0f, 31.0f);
         }
 		layer.contentsGravity = kCAGravityResizeAspect;
 		layer.contents = (id)[UIImage imageNamed:arrowImage].CGImage;
+        
 		
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 40000
 		if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {

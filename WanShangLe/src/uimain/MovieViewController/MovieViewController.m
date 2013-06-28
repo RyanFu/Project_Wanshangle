@@ -99,6 +99,7 @@ typedef enum {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:[UIColor colorWithRed:0.878 green:0.890 blue:0.910 alpha:1.000]];
     
     [self initTopButtonView];
     
@@ -170,9 +171,16 @@ typedef enum {
     
     [self setTableViewDelegate];
     
-    _movieTableView.backgroundColor = [UIColor colorWithRed:0.880 green:0.963 blue:0.925 alpha:1.000];
+    _movieTableView.backgroundColor = [UIColor clearColor];
     _movieTableView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
-    _movieTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    UIImageView *headerView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tableView_shadow@2x"]];
+    headerView.frame = CGRectMake(0, -12, self.view.bounds.size.width, 12);
+//    _movieTableView.tableHeaderView = headerView; 
+    [_movieTableView addSubview:headerView];
+    [headerView release];
+    
+    _movieTableView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+    _movieTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     
     [_movieContentView addSubview:_movieTableView];
     [self.view addSubview:_movieContentView];
@@ -181,11 +189,12 @@ typedef enum {
 - (void)initRefreshHeaderView{
     if (_refreshHeaderView == nil) {
 
+        /*
         mView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
         [mView setBackgroundColor:[UIColor clearColor]];
-        [_movieTableView insertSubview:mView atIndex:-1];
+        [_movieTableView insertSubview:mView atIndex:0];
         [self showShadow:YES];
-        [mView release];
+        [mView release];*/
         
         EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame: CGRectMake(0.0f, - _movieTableView.bounds.size.height, _movieTableView.frame.size.width, _movieTableView.bounds.size.height)];
         
@@ -204,7 +213,7 @@ typedef enum {
 
 - (void)showShadow:(BOOL)val {
     
-    mView.layer.shadowOpacity = val ? 0.7f : 0.0f;
+    mView.layer.shadowOpacity = val ? 0.3f : 0.0f;
     if (val) {
         
         NSMutableArray *shadowPoints = nil;
@@ -233,10 +242,10 @@ typedef enum {
                 CGPathAddLineToPoint(path, nil, p.x, p.y);
             }
         }
-        mView.layer.shadowOffset = CGSizeMake(0, 1);
-        mView.layer.shadowRadius = 1.0f;
+        mView.layer.shadowOffset = CGSizeMake(0, 0);
+        mView.layer.shadowRadius = 2.0f;
         mView.layer.shadowPath = path;
-        mView.layer.shadowColor = [UIColor colorWithRed:0.737 green:0.761 blue:0.780 alpha:1.000].CGColor;
+        mView.layer.shadowColor = [UIColor blackColor].CGColor;
         
         CFRelease(path);
         [shadowPoints release];

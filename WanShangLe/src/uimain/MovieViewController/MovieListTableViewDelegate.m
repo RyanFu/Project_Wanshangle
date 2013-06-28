@@ -96,14 +96,15 @@ typedef enum {
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     ABLoggerMethod();
     static NSString *CellIdentifier = @"mMovieCell";
-    static BOOL nibsRegistered = NO;
-    if (!nibsRegistered) {
-        UINib *nib = [UINib nibWithNibName:@"MovieTableViewCell" bundle:nil];
-        [tableView registerNib:nib forCellReuseIdentifier:CellIdentifier];
-        nibsRegistered = YES;
-    }
     
-    MovieTableViewCell * cell = (MovieTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+//    static BOOL nibsRegistered = NO;
+//    if (!nibsRegistered) {
+//        UINib *nib = [UINib nibWithNibName:@"MovieTableViewCell" bundle:nil];
+//        [tableView registerNib:nib forCellReuseIdentifier:CellIdentifier];
+//        nibsRegistered = YES;
+//    }
+    
+    MovieTableViewCell *cell = (MovieTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [self createNewMocieCell];
     }
@@ -118,14 +119,58 @@ typedef enum {
     MMovie *movie = [_parentViewController.moviesArray objectAtIndex:indexPath.row];
     [cell.movie_imageView setImageWithURL:[NSURL URLWithString:movie.webImg]
                          placeholderImage:[UIImage imageNamed:@"movie_placeholder@2x"] options:SDWebImageRetryFailed];
-    cell.movie_name.text = movie.name;
     cell.movie_new.hidden = YES;
     if ([movie.newMovie boolValue]) {
         cell.movie_new.hidden = NO;
     }
-    cell.movie_rating.text = [NSString stringWithFormat:@"%@ : %0.1f (%d 万人)",movie.ratingFrom,[movie.rating floatValue],[movie.ratingpeople intValue]/10000];
+    
+    int ratingPeople = [movie.ratingpeople intValue];
+    if (ratingPeople >10000) {
+        ratingPeople = ratingPeople/10000;
+    }
+    
+    cell.movie_rating.text = [NSString stringWithFormat:@"%@评分: %0.1f (%d 万人)",movie.ratingFrom,[movie.rating floatValue],ratingPeople];
     cell.movie_word.text = movie.aword;
     
+     NSMutableArray *array = [NSMutableArray arrayWithCapacity:4];
+    if ([movie.newMovie boolValue]) {
+        [array addObject:cell.movie_image_new];
+    }
+    if (movie.twoD) {
+        [array addObject:cell.movie_image_3d];
+    }
+    if (movie.threeD) {
+        [array addObject:cell.movie_image_imx];
+    }
+    if (movie.iMaxD) {
+        [array addObject:cell.movie_image_3dimx];
+    }
+    
+    int twidth = 0;
+    UIView *view = [[UIView alloc] init];
+    for (int i=0;i<[array count];i++) {
+        
+        UIView *tview = [array objectAtIndex:i];
+        CGRect tframe = tview.frame;
+        
+        tframe.origin.x = twidth;
+        twidth += tframe.size.width + 5;
+        
+        tview.frame = tframe;
+        [view addSubview:tview];
+    }
+    
+    CGRect tFrame = [(UIView *)[array lastObject] frame];
+    int width = tFrame.origin.x+ tFrame.size.width;
+    ABLoggerInfo(@"view frame ===== %@",NSStringFromCGRect(view.frame));
+    [cell addSubview:view];
+    
+    CGSize nameSize = [movie.name sizeWithFont:[UIFont systemFontOfSize:19] constrainedToSize:CGSizeMake((240-width-10), 23)];
+
+    cell.movie_name.frame = CGRectMake(80, 3, nameSize.width, 23);
+    int view_x = cell.movie_name.frame.origin.x+nameSize.width +10;
+    [view setFrame:CGRectMake(view_x, 7, width, 10)];
+    cell.movie_name.text = movie.name;
 }
 
 -(MovieTableViewCell *)createNewMocieCell{
@@ -133,7 +178,11 @@ typedef enum {
     MovieTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"MovieTableViewCell" owner:self options:nil] objectAtIndex:0];
     [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    //    cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"history_menu_cell_background"]] autorelease];
+
+    UIView *bgView = [[[UIView alloc] initWithFrame:cell.bounds] autorelease];
+    [bgView setBackgroundColor:[UIColor colorWithWhite:0.996 alpha:1.000]];
+    [cell setBackgroundView:bgView];
+    
     return cell;
 }
 

@@ -333,7 +333,6 @@
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
     if (error) {
-        [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
         return;
     }
     
