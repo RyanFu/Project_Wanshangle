@@ -40,7 +40,7 @@
 					<object class="IBUIView" id="629815644">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrameSize">{320, 170}</string>
+						<string key="NSFrame">{{0, 32}, {320, 138}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="1072677422"/>
@@ -557,16 +557,11 @@
 					<string key="className">CinemaMovieViewController</string>
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="clickMovie:">id</string>
 						<string key="clickMovieInfo:">id</string>
 						<string key="clickTodayButton:">id</string>
 						<string key="clickTomorrowButton:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="clickMovie:">
-							<string key="name">clickMovie:</string>
-							<string key="candidateClassName">id</string>
-						</object>
 						<object class="IBActionInfo" key="clickMovieInfo:">
 							<string key="name">clickMovieInfo:</string>
 							<string key="candidateClassName">id</string>

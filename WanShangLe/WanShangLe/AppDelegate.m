@@ -55,13 +55,12 @@
     [[LocationManager defaultLocationManager] startLocationUserGPS];
     
     //inset all citys into coreData
+    /*
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         
-         [[DataBaseManager sharedInstance] insertAllCitysIntoCoreData];
-
-    });
-    
-    
+        [[DataBaseManager sharedInstance] insertAllCitysIntoCoreData];
+        
+    });*/
     
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
@@ -69,7 +68,8 @@
     _rootViewController = [[RootViewController alloc] initWithNibName:(iPhone5?@"RootViewController_5":@"RootViewController") bundle:nil];
     
     UINavigationController *_navigationController = [[UINavigationController alloc] initWithRootViewController:_rootViewController];
-    [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:0.016 green:0.613 blue:0.899 alpha:1.000]];
+    UIImage *bgImg = [UIImage imageNamed:@"bg_navigationBar"];
+    [[UINavigationBar appearance] setBackgroundImage:bgImg forBarMetrics:UIBarMetricsDefault];
     
     self.window.rootViewController = _navigationController;
     [_navigationController release];
@@ -113,6 +113,11 @@
 
 + (instancetype)appDelegateInstance{
 	return (AppDelegate *)[UIApplication sharedApplication].delegate;
+}
+
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
+{
+    ABLoggerWarn(@"AppDelegate 接受到内存警告了");
 }
 
 @end

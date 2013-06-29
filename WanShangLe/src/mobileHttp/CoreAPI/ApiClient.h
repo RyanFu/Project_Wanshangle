@@ -14,17 +14,14 @@
 /**
  *  @author yuqiang
  *
- *  This is the ApiClient , You should keep this Object 
+ *  This is the ApiClient , You should keep this Object
  *  as a singleton , reuse it , and use it one at a time
  *
  *  This class is NOT-Thread safe
  */
 @interface ApiClient : NSObject<ApiNotify>{
-
-@private
-    ASIHTTPRequest *request;
+    
 }
-@property(nonatomic,assign) ASIHTTPRequest *request;
 @property(nonatomic,retain) NSMutableArray *requestArray;
 @property(nonatomic,retain) ASINetworkQueue *networkQueue;
 
@@ -34,7 +31,7 @@
 /**
  *  execute ApiCmd asynchrouse
  **/
-- (void) executeApiCmdAsync:(ApiCmd*) cmd;
+- (BOOL) executeApiCmdAsync:(ApiCmd*) cmd;
 
 /**
  *  execute ApiCmd sync

@@ -24,6 +24,7 @@ typedef NS_ENUM(NSInteger, WSLUserClickStyle) {
 @property(nonatomic,retain) IBOutlet UIButton* showButton;
 @property(nonatomic,retain) IBOutlet UIButton* barButton;
 @property(nonatomic,retain) IBOutlet UIButton* cityButton;
+@property(nonatomic,retain) IBOutlet UIImageView* city_arrow_imgView;
 
 - (IBAction)clickMovieButton:(id)sender;
 - (IBAction)clickKTVButton:(id)sender;

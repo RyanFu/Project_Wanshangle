@@ -222,8 +222,8 @@ static SearchCoreManager *searchCoreManager = nil;
              matchPosInPChinese->length = [posInCh count]; 
         }
         
-        NSLog(@"index array ======= %@",posInCh);
-        NSLog(@"Ch pos is range loacation == %d length====%d",matchPosInPChinese->location,matchPosInPChinese->length);
+//        ABLoggerInfo(@"index array ======= %@",posInCh);
+//        ABLoggerInfo(@"Ch pos is range loacation == %d length====%d",matchPosInPChinese->location,matchPosInPChinese->length);
     }
     [posInCh release];
 	

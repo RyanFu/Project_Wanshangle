@@ -73,7 +73,7 @@
     _showTableViewDelegate.parentViewController = self;
     [self setTableViewDelegate];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         [self updateData:0];
     });
     
@@ -113,6 +113,7 @@
         
     }];
 }
+
 - (IBAction)clickTimeButton:(id)sender{
     [self cleanUpButtonBackground];
     [_timeButton setBackgroundColor:[UIColor colorWithRed:0.184 green:0.973 blue:0.629 alpha:1.000]];
@@ -135,6 +136,7 @@
         
     }];
 }
+
 - (IBAction)clickOrderButton:(id)sender{
     [self cleanUpButtonBackground];
     [_orderButton setBackgroundColor:[UIColor colorWithRed:0.184 green:0.973 blue:0.629 alpha:1.000]];
@@ -315,6 +317,10 @@
 #pragma mark apiNotiry
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
+    if (error) {
+        return;
+    }
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         [[DataBaseManager sharedInstance] insertShowsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
@@ -338,6 +344,10 @@
         ElapsedTime(time2, time1);
         
     });
+}
+
+- (ApiCmd *)apiGetDelegateApiCmd{
+    return _apiCmdShow_getAllShows;
 }
 
 - (void)updateData:(int)tag

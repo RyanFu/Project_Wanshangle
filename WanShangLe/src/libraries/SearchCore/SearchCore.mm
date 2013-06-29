@@ -1341,7 +1341,7 @@ BOOL Tree_GetPinYin(SearchTree* tree,int aID, u2char* aText, Array* iMatchPosInP
 	iMatchNum = tree->iMatchTrace.size;
 	iMatchIndex = iMatchNum - 1;
 	count = data->WordCodeNum;
-    NSLog(@"character count ======= %d",count);
+//    NSLog(@"character count ======= %d",count);
 	for(i = 0; i < count; i ++)
 		{
             //NSLog(@"count index ====== %d",i);
@@ -1363,7 +1363,7 @@ BOOL Tree_GetPinYin(SearchTree* tree,int aID, u2char* aText, Array* iMatchPosInP
 					{
 					iMatchPosInPinYin->Append(iMatchPosInPinYin,len);
                     
-                        NSLog(@"英文 char index %d====== find index %d",i,len);
+//                        NSLog(@"英文 char index %d====== find index %d",i,len);
                         if (zHIndex != i) {
                             zHIndex = i;
                             iMatchPosInPinYin->Append(iMatchPosInChinese,i);
@@ -1393,7 +1393,7 @@ BOOL Tree_GetPinYin(SearchTree* tree,int aID, u2char* aText, Array* iMatchPosInP
 					{
 					iMatchPosInPinYin->Append(iMatchPosInPinYin,len+nchar);
                         
-                    NSLog(@"中文 char index %d====== find index %d",i,len+nchar);
+//                    NSLog(@"中文 char index %d====== find index %d",i,len+nchar);
                         if (zHIndex != i) {
                             zHIndex = i;
                             iMatchPosInPinYin->Append(iMatchPosInChinese,zHIndex);

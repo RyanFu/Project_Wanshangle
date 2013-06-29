@@ -33,15 +33,19 @@
 //API HTTPRequest Tag
 //-------------MMovie----------------/
 #define API_MMovieCmd  100 //电影
-#define API_MCinemaCmd 101 //影院
-#define API_MScheduleCmd 102 //排期
-#define API_MBuyInfoCmd 103 //购买信息
+#define API_MMovieDetailCmd  101 //电影详情
+#define API_MMovieRecOrLookCmd  102 //电影推荐想看
+#define API_MCinemaCmd 120 //影院
+#define API_MScheduleCmd 140 //排期
+#define API_MBuyInfoCmd 160//购买信息
 //-------------SShow----------------/
-#define API_SShowCmd  104 //演出
-#define API_SShowDetailCmd  105 //演出详情
+#define API_SShowCmd  180 //演出
+#define API_SShowDetailCmd  200 //演出详情
 //-------------BBar----------------/
-#define API_BBarCmd  106 //演出
-#define API_BBarDetailCmd  107 //演出详情
+#define API_BBarCmd  220 //演出
+#define API_BBarDetailCmd  240 //演出详情
+//-------------KKTV----------------/
+#define API_KKTVCmd  260 //KTV
 
 //测试宏标记
 #define TestCode
@@ -55,6 +59,10 @@
 
 //用户选择的城市
 #define UserState @"administrativeArea"
+
+//User Setting
+#define MMovie_CinemaFilterType @"MMovie_CinemaFilterType"
+
 
 //时间戳
 #define MMovieTimeStamp @"MMovieTimeStamp"

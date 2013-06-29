@@ -44,7 +44,7 @@
     
     SShow *show = [_parentViewController.showsArray objectAtIndex:indexPath.row];
     [cell.show_imageView setImageWithURL:[NSURL URLWithString:[show webImg]]
-                         placeholderImage:[UIImage imageNamed:@"placeholder"] options:SDWebImageRetryFailed];
+                         placeholderImage:[UIImage imageNamed:@"movie_placeholder@2x"] options:SDWebImageRetryFailed];
     cell.show_name.text = show.name;
     cell.show_rating.text = [NSString stringWithFormat:@"%@ : %0.1f (%d 万人)",show.ratingfrom,[show.rating floatValue],[show.ratingpeople intValue]/10000];
     cell.show_price.text =  [NSString stringWithFormat:@"%@  %@   %@元起",show.date,show.where,[[show.price objectAtIndex:0] stringValue]];

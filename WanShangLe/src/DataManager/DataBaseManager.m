@@ -9,31 +9,9 @@
 static DataBaseManager *_sharedInstance = nil;
 
 #import "DataBaseManager.h"
-#import "ASIHTTPRequest.h"
+#import "ChineseToPinyin.h"
+#import "DataBase.h"
 
-#import "ShowViewController.h"
-#import "MovieViewController.h"
-#import "CinemaViewController.h"
-#import "ScheduleViewController.h"
-#import "BarViewController.h"
-
-#import "ApiCmdMovie_getAllMovies.h"
-#import "ApiCmdMovie_getAllCinemas.h"
-#import "ApiCmdMovie_getSchedule.h"
-#import "ApiCmdMovie_getBuyInfo.h"
-#import "ApiCmdShow_getAllShows.h"
-#import "ApiCmdBar_getAllBars.h"
-
-#import "MMovie_Cinema.h"
-#import "MMovie_City.h"
-#import "MMovie.h"
-#import "MCinema.h"
-#import "MSchedule.h"
-#import "MBuyTicketInfo.h"
-#import "City.h"
-#import "SShow.h"
-#import "BBar.h"
-#import "ApiCmd.h"
 
 @interface DataBaseManager(){
     NSString *updateTimeStamp;
@@ -56,14 +34,7 @@ static DataBaseManager *_sharedInstance = nil;
 -(id)init{
     self = [super init];
     if (self) {
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        //formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss ZZZ";
-        formatter.dateFormat = @"yyyyMMdd";
-        formatter.timeZone = [NSTimeZone localTimeZone];
-        formatter.locale = [NSLocale currentLocale];
-        updateTimeStamp = [[formatter stringFromDate:[NSDate date]] retain];
-        ABLoggerInfo(@"today time stamp is ===== %@",updateTimeStamp);
-        [formatter release];
+        
     }
     return self;
 }
@@ -79,6 +50,8 @@ static DataBaseManager *_sharedInstance = nil;
     _sharedInstance = nil;
 }
 
+#pragma mark -
+#pragma mark 函数
 - (void)cleanUp{
     [[CacheManager sharedInstance] cleanUp];
 }
@@ -98,9 +71,29 @@ static DataBaseManager *_sharedInstance = nil;
     return fileSize;
 }
 
+- (unsigned long long int)CoreDataSize{
+    
+    NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] valueForKey:(NSString *)kCFBundleNameKey];
+    
+    NSString *coreDataPath = [[NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:applicationName];
+    ABLoggerDebug(@"coreData path = %@",coreDataPath);
+    
+    NSString *cachePath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"com.hackemist.SDWebImageCache.default"];
+    ABLoggerDebug(@"cachePath = %@",cachePath);
+    
+    return [self folderSize:coreDataPath]+[self folderSize:cachePath];
+}
+
 - (NSString*)md5PathForKey:(NSString *) key{
     
     return md5(key);
+}
+
+- (void)saveInManagedObjectContext:(NSManagedObjectContext *)coreDataContext{
+    [coreDataContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
 }
 
 #pragma mark -
@@ -116,7 +109,65 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (NSString *)getTodayTimeStamp{
     
+    if (!updateTimeStamp) {
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        //formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss ZZZ";
+        formatter.dateFormat = @"yyyyMMdd";
+        formatter.timeZone = [NSTimeZone localTimeZone];
+        formatter.locale = [NSLocale currentLocale];
+        updateTimeStamp = [[formatter stringFromDate:[NSDate date]] retain];
+        ABLoggerInfo(@"today time stamp is ===== %@",updateTimeStamp);
+        [formatter release];
+    }
     return updateTimeStamp;
+}
+
+#pragma mark -
+#pragma mark 推荐和想看
+- (BOOL)getRecommendOrLookForWeb:(NSString *)movieId
+                         APIType:(WSLRecommendAPIType)apiType
+                           cType:(WSLRecommendLookType)cType
+                        delegate:(id<ApiNotify>)delegate{
+    
+//    if (!isEmpty(movieId)) {
+//        
+//        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+//        MMovie *aMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:movieId inContext:context];
+//        if (aMovie==nil) {
+//            return NO;
+//        }
+//        
+//        BOOL canRequest = YES;
+//        switch (cType) {
+//            case WSLRecommendLookTypeRecommend:
+//                canRequest = ![aMovie.movieDetail.doneRec boolValue];
+//                break;
+//            case WSLRecommendLookTypeLook:
+//                canRequest = ![aMovie.movieDetail.doneLook boolValue];
+//                break;
+//                
+//            default:
+//                break;
+//        }
+//        
+//        if (!canRequest) {
+//            return NO;
+//        }
+//    }else{
+//        return NO;
+//    }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmd_recommendOrLook* apiCmd_recommendOrLook = [[ApiCmd_recommendOrLook alloc] init];
+    apiCmd_recommendOrLook.delegate = delegate;
+    apiCmd_recommendOrLook.movie_id = movieId;
+    apiCmd_recommendOrLook.mAPIType = apiType;
+    apiCmd_recommendOrLook.mType = cType;
+    [apiClient executeApiCmdAsync:apiCmd_recommendOrLook];
+    [apiCmd_recommendOrLook.httpRequest setTag:API_MMovieRecOrLookCmd];
+    
+    return YES;
 }
 
 #pragma mark -
@@ -134,25 +185,25 @@ static DataBaseManager *_sharedInstance = nil;
     
     MMovie_City *mMovie_city = nil;
     
-    ABLoggerInfo(@"插入 电影_城市 关联表 新数据 =======");
+    ABLoggerInfo(@"插入 电影_城市 关联表 新数据 [a_city name] ======= %@",[a_city name]);
     mMovie_city = [MMovie_City MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-    mMovie_city.uid = [NSString stringWithFormat:@"%@%d",[a_city name],[a_movie.uid intValue]];
+    mMovie_city.uid = [NSString stringWithFormat:@"%@%@",[a_city name],a_movie.uid];
     mMovie_city.city = a_city;
     mMovie_city.movie = a_movie;
     
     return mMovie_city;
 }
 
-- (void)insertMMovie_CinemaWithMovie:(MMovie *)aMovie andCinema:(MCinema *)aCinema{
-    
-    if (!aMovie || !aCinema) {
-        ABLoggerWarn(@"不能 插入 电影_影院，不能为空");
-        return;
-    }
+- (MMovie_Cinema *)insertMMovie_CinemaWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema{
     
     MMovie_Cinema *movie_cinema = nil;
     
-    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%d",[aCinema.city name],[aCinema.uid intValue],[aMovie.uid intValue]];
+    if (!aMovie || !aCinema) {
+        ABLoggerWarn(@"不能 插入 电影_影院，不能为空");
+        return movie_cinema;
+    }
+    
+    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%@",[aCinema.city name],[aCinema.uid intValue],aMovie.uid];
     movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     if (movie_cinema == nil) {
         movie_cinema = [MMovie_Cinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
@@ -162,6 +213,7 @@ static DataBaseManager *_sharedInstance = nil;
     movie_cinema.cinema = aCinema;
     [movie_cinema_uid release];
     
+    return movie_cinema;
 }
 
 - (void)insertMMovie_CinemaWithMovies:(NSArray *)movies andCinemas:(NSArray *)cinemas
@@ -192,7 +244,7 @@ static DataBaseManager *_sharedInstance = nil;
             
             aCinema = [cinemas objectAtIndex:j];
             
-            NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%d",[aCinema.city name],[aCinema.uid intValue],[aMovie.uid intValue]];
+            NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%@",[aCinema.city name],[aCinema.uid intValue],aMovie.uid];
             movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
             if (movie_cinema == nil) {
                 movie_cinema = [MMovie_Cinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
@@ -245,6 +297,114 @@ static DataBaseManager *_sharedInstance = nil;
     
 }
 
+- (City *)insertCityIntoCoreDataWith:(NSString *)cityName{
+    
+    if (!cityName) {
+        cityName = [[LocationManager defaultLocationManager] getUserCity];
+    }
+    
+    City *city = nil;
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    
+    NSString *newCityName = [self validateCity:cityName];
+    if (isEmpty(newCityName)) {
+        return nil;
+    }
+    
+    city = [City MR_findFirstByAttribute:@"name" withValue:newCityName inContext:context];
+    
+    if (city==nil) {
+        ABLoggerInfo(@"插入 城市 新数据 ======= %@",newCityName);
+        city = [City MR_createInContext:context];
+    }
+    
+    city.name = newCityName;
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:newCityName forKey:UserState];
+    
+    city.uid = [self getBundleCityIdWithCityName:newCityName];
+    [userDefaults setObject:city.uid forKey:newCityName];
+    [userDefaults synchronize];
+    
+    [self saveInManagedObjectContext:context];
+    
+    return city;
+}
+
+- (NSString *)validateCity:(NSString *)cityName{
+    
+    if (isEmpty(cityName)) {
+        return nil;
+    }
+    
+    NSString *city_name = [ChineseToPinyin pinyinFromChiniseString:cityName];
+    ABLoggerInfo(@"city_name ===== %@",city_name);
+    NSString *cityPath = [[NSBundle mainBundle] pathForResource:@"city" ofType:@"json"];
+    NSData *cityData = [NSData dataWithContentsOfFile:cityPath];
+    NSDictionary *cityDic = [NSJSONSerialization JSONObjectWithData:cityData options:kNilOptions error:nil];
+    NSArray *array = [cityDic objectForKey:@"citys"];
+    
+    for (NSDictionary *dic in array) {
+        NSString *tname = [dic objectForKey:@"name"];
+        
+        NSString *aName = [ChineseToPinyin pinyinFromChiniseString:tname];
+
+        ABLoggerInfo(@"range ===== %@",NSStringFromRange(NSMakeRange(0, aName.length)));
+        if ([city_name isEqualToString:aName]) {
+            ABLoggerWarn(@"相等");
+        }
+        
+        if ([city_name compare:aName options:NSCaseInsensitiveSearch range:NSMakeRange(0, aName.length)] == NSOrderedSame) {
+            return [dic objectForKey:@"name"];
+        }
+        
+        NSRange range=[city_name rangeOfString:aName options:NSCaseInsensitiveSearch];
+        if(range.location!=NSNotFound){
+             return [dic objectForKey:@"name"];
+        }
+    }
+    
+    return nil;
+}
+
+- (NSString *)getBundleCityIdWithCityName:(NSString *)cityName{
+    
+    NSString *city_name = nil;
+    if (isEmpty(cityName)) {
+        cityName = [[LocationManager defaultLocationManager] getUserCity];
+    }
+    
+    city_name = [ChineseToPinyin pinyinFromChiniseString:cityName];
+    NSString *cityPath = [[NSBundle mainBundle] pathForResource:@"city" ofType:@"json"];
+    NSData *cityData = [NSData dataWithContentsOfFile:cityPath];
+    NSDictionary *cityDic = [NSJSONSerialization JSONObjectWithData:cityData options:kNilOptions error:nil];
+    NSArray *array = [cityDic objectForKey:@"citys"];
+    
+    for (NSDictionary *dic in array) {
+        NSString *tname = [dic objectForKey:@"name"];
+        
+        tname = [ChineseToPinyin pinyinFromChiniseString:tname];
+        if ([tname compare:city_name options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+            return [dic objectForKey:@"id"];
+        }
+    }
+    
+    return nil;
+}
+
+- (NSString *)getNowUserCityId{
+    
+    City *city = [self getNowUserCityFromCoreData];
+    if (city.uid) {
+        return city.uid;
+    }
+    
+    return [self getBundleCityIdWithCityName:nil];
+    
+    assert(0);
+    return nil;
+}
+
 - (City *)getNowUserCityFromCoreData
 {
     return [self getNowUserCityFromCoreDataWithName:nil];
@@ -259,13 +419,14 @@ static DataBaseManager *_sharedInstance = nil;
     
     NSAssert(name !=nil, @"当前用户选择城市不能为空 NULL");
     
-    city = [City MR_findFirstByAttribute:@"name" withValue:name inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    
+    city = [City MR_findFirstByAttribute:@"name" withValue:name inContext:context];//中文名
     
     if (city == nil)
     {
         ABLoggerInfo(@"插入 城市 新数据 ======= %@",name);
-        city = [City MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-        city.name = name;
+        city = [self insertCityIntoCoreDataWith:name];
     }
     
     return city;
@@ -276,15 +437,14 @@ static DataBaseManager *_sharedInstance = nil;
 #pragma mark -
 #pragma mark 电影
 /****************************************** 电影 *********************************************/
-- (ApiCmdMovie_getAllMovies *)getAllMoviesListFromWeb:(id<ApiNotify>)delegate{
+- (ApiCmd *)getAllMoviesListFromWeb:(id<ApiNotify>)delegate{
     
-    MovieViewController *movieViewController = (MovieViewController *)delegate;
-    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:movieViewController.apiCmdMovie_getAllMovies.httpRequest]) {
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
         ABLoggerWarn(@"不能请求电影列表数据，因为已经请求了");
-        return movieViewController.apiCmdMovie_getAllMovies;
+        return tapiCmd;
     }
     
-    //    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:UpdatingMoviesList];
     ApiClient* apiClient = [ApiClient defaultClient];
     
     ApiCmdMovie_getAllMovies* apiCmdMovie_getAllMovies = [[ApiCmdMovie_getAllMovies alloc] init];
@@ -292,10 +452,6 @@ static DataBaseManager *_sharedInstance = nil;
     apiCmdMovie_getAllMovies.cityName = [[LocationManager defaultLocationManager] getUserCity];
     [apiClient executeApiCmdAsync:apiCmdMovie_getAllMovies];
     [apiCmdMovie_getAllMovies.httpRequest setTag:API_MMovieCmd];
-    
-    //    if (已经更新过) {
-    //      [delegate apiNotifyLocationResult:apiCmdMovie_getAllMovies error:nil];
-    //    }
     
     return [apiCmdMovie_getAllMovies autorelease];
 }
@@ -350,19 +506,18 @@ static DataBaseManager *_sharedInstance = nil;
 - (void)insertMoviesIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd
 {
     
-    //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    
     CFTimeInterval time1 = Elapsed_Time;
     
     NSArray *array = [[objectData objectForKey:@"data"] objectForKey:@"movies"];
+    NSArray *array_dynamic = [[objectData objectForKey:@"data"] objectForKey:@"dynamic"];
     
     MMovie *mMovie = nil;
     for (int i=0; i<[array count]; i++) {
         
-        mMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:[[array objectAtIndex:i] objectForKey:@"id"] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        mMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:[NSNumber numberWithInt:[[[array objectAtIndex:i] objectForKey:@"id"] intValue]]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
         if (mMovie == nil)
         {
-            ABLoggerInfo(@"插入 一条电影 新数据 ======= %@",[[array objectAtIndex:i] objectForKey:@"name"]);
+            ABLoggerInfo(@"插入 一条 New电影 新数据 ======= %@",[[array objectAtIndex:i] objectForKey:@"name"]);
             mMovie = [MMovie MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
         }
         [self importMovie:mMovie ValuesForKeysWithObject:[array objectAtIndex:i]];
@@ -370,18 +525,31 @@ static DataBaseManager *_sharedInstance = nil;
         City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
         
         MMovie_City *movie_city = nil;
-        movie_city = [self getFirstMMovie_CityFromCoreData:[NSString stringWithFormat:@"%@%d",[city name],[mMovie.uid intValue]]];
+        movie_city = [self getFirstMMovie_CityFromCoreData:[NSString stringWithFormat:@"%@%@",[city name],mMovie.uid]];
         if (movie_city == nil) {
             [self insertMMovie_CityWithMovie:mMovie andCity:city];
         }
         
+        [self importDynamicMovie:mMovie ValuesForKeysWithObject:[array_dynamic objectAtIndex:i]];
+        
     }
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSArray *movies = [self getAllMoviesListFromCoreDataWithCityName:apiCmd.cityName];
-        NSArray *cinemas = [self getAllCinemasListFromCoreDataWithCityName:apiCmd.cityName];
-        [self insertMMovie_CinemaWithMovies:movies andCinemas:cinemas];
-    });
+    //    for (int i=0; i<[array_dynamic count]; i++) {
+    //
+    //        mMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:[NSNumber numberWithInt:[[[array_dynamic objectAtIndex:i] objectForKey:@"id"] intValue]]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    //        if (mMovie == nil)
+    //        {
+    //            ABLoggerInfo(@"插入 一条 更新动态电影 新数据 ======= %@",[[array_dynamic objectAtIndex:i] objectForKey:@"name"]);
+    //            mMovie = [MMovie MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    //        }
+    //        [self importDynamicMovie:mMovie ValuesForKeysWithObject:[array_dynamic objectAtIndex:i]];
+    //    }
+    
+    //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    //        NSArray *movies = [self getAllMoviesListFromCoreDataWithCityName:apiCmd.cityName];
+    //        NSArray *cinemas = [self getAllCinemasListFromCoreDataWithCityName:apiCmd.cityName];
+    //        [self insertMMovie_CinemaWithMovies:movies andCinemas:cinemas];
+    //    });
     
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         ABLoggerDebug(@"电影保存是否成功 ========= %d",success);
@@ -392,12 +560,12 @@ static DataBaseManager *_sharedInstance = nil;
     ElapsedTime(time2, time1);
     
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
-    ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
     //    });
 }
 
-/***************************
+/**
  {
  "timestamp":1369275251,
  "errors":[],
@@ -407,29 +575,204 @@ static DataBaseManager *_sharedInstance = nil;
  {
  "id":101,
  "name":"钢铁侠三",
+ "webImg":"http://img31.mtime.cn/mt/2013/05/03/124825.16945557.jpg",
+ "aword":"一个世纪英雄再次拯救我们"
+ },
+ 
+ "dynamic":[
+ {
+ "id":101,
  "rating":7.8,
  "ratingFrom":"豆瓣",
  "ratingpeople":120000,
- "webImg":"http://img31.mtime.cn/mt/2013/05/03/124825.16945557.jpg",
  "newMovie":0,
- "aword":"一个世纪英雄再次拯救我们",
  "viewtypes":[0,1,1]
  },
+ 
+ "deletions":[]
  ***/
 - (void)importMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData
 {
-    ABLoggerMethod();
+    ABLoggerInfo(@"amovieData == %@",amovieData);
     mMovie.uid = [amovieData objectForKey:@"id"];
     mMovie.name = [amovieData objectForKey:@"name"];
-    mMovie.rating = [amovieData objectForKey:@"rating"];
+    mMovie.webImg = [amovieData objectForKey:@"coverurl"];
+    mMovie.aword = [amovieData objectForKey:@"description"];
+}
+
+- (void)importDynamicMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData
+{
+    ABLoggerInfo(@"amovieData == %@",amovieData);
+    mMovie.rating = [NSNumber numberWithInt:[[amovieData objectForKey:@"rating"] intValue]];
     mMovie.ratingFrom = [amovieData objectForKey:@"ratingFrom"];
-    mMovie.ratingpeople = [amovieData objectForKey:@"ratingpeople"];
-    mMovie.webImg = [amovieData objectForKey:@"webImg"];
+    mMovie.ratingpeople = [amovieData objectForKey:@"ratingcount"];
     mMovie.newMovie = [amovieData objectForKey:@"newMovie"];
-    mMovie.aword = [amovieData objectForKey:@"aword"];
-    mMovie.twoD = [[amovieData objectForKey:@"viewtypes"] objectAtIndex:0];
-    mMovie.threeD = [[amovieData objectForKey:@"viewtypes"] objectAtIndex:1];
-    mMovie.iMaxD = [[amovieData objectForKey:@"viewtypes"] objectAtIndex:2];
+    mMovie.twoD = [NSNumber numberWithInt:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:0] intValue]];
+    mMovie.threeD = [NSNumber numberWithInt:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:1] intValue]];
+    mMovie.iMaxD = [NSNumber numberWithInt:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:2] intValue]];
+}
+
+- (BOOL)addFavoriteCinemaWithId:(NSNumber *)uid{
+    NSManagedObjectContext* threadContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    MCinema *tCinema = [MCinema MR_findFirstByAttribute:@"uid" withValue:uid inContext:threadContext];
+    
+    if (!tCinema) {
+        return NO;
+    }
+    
+    tCinema.favorite = [NSNumber numberWithBool:YES];
+    
+    [threadContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"收藏影院 保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
+    
+    return YES;
+}
+
+- (BOOL)deleteFavoriteCinemaWithId:(NSNumber *)uid{
+    NSManagedObjectContext* threadContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    MCinema *tCinema = [MCinema MR_findFirstByAttribute:@"uid" withValue:uid inContext:threadContext];
+    
+    if (!tCinema) {
+        return NO;
+    }
+    
+    tCinema.favorite = [NSNumber numberWithBool:NO];
+    
+    [threadContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"取消收藏影院 保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
+    
+    return YES;
+}
+
+- (NSArray *)getRegionOrder{
+    
+    NSError *error = nil;
+    
+    NSString *jsonPath = [[NSBundle mainBundle] pathForResource:[[LocationManager defaultLocationManager] getUserCity] ofType:@"json"];
+    NSData *JSONData = [NSData dataWithContentsOfFile:jsonPath];
+    NSDictionary *JSONObject = [NSJSONSerialization JSONObjectWithData:JSONData options:0 error:&error];
+    
+    return [JSONObject objectForKey:@"region"];
+}
+
+- (MMovie*)getMovieWithId:(NSString *)movieId{
+    MMovie *tmovie = nil;
+    if (movieId) {
+        tmovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:movieId inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    }
+    
+    return tmovie;
+}
+
+#pragma mark 获取电影详情
+- (ApiCmd *)getMovieDetailFromWeb:(id<ApiNotify>)delegate movieId:(NSString *)movieId{
+    
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
+        ABLoggerWarn(@"不能请求电影详情数据，因为已经请求了");
+        return tapiCmd;
+    }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmdMovie_getAllMovieDetail* apiCmdMovie_getAllMovieDetail = [[ApiCmdMovie_getAllMovieDetail alloc] init];
+    apiCmdMovie_getAllMovieDetail.delegate = delegate;
+    apiCmdMovie_getAllMovieDetail.movie_id = movieId;
+    [apiClient executeApiCmdAsync:apiCmdMovie_getAllMovieDetail];
+    [apiCmdMovie_getAllMovieDetail.httpRequest setTag:API_MMovieDetailCmd];
+    
+    return [apiCmdMovie_getAllMovieDetail autorelease];
+}
+
+- (BOOL)insertMovieDetailIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+    
+    if (objectData) {
+        
+        NSDictionary *tDic = [[objectData objectForKey:@"data"] objectForKey:@"info"];
+        
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+        NSString *movie_id = [tDic objectForKey:@"id"];
+        
+        MMovieDetail *tMovieDetail = nil;
+        MMovie *tMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:movie_id inContext:context];
+        
+        if (tMovie==nil) {
+            tMovie = [MMovie MR_createInContext:context];
+            tMovie.uid = movie_id;
+        }
+        
+        if (tMovie.movieDetail==nil) {
+            tMovieDetail = [MMovieDetail MR_createInContext:context];
+            ABLoggerInfo(@"插入 一条 电影详情 记录");
+        }
+        tMovie.movieDetail = tMovieDetail;
+        tMovieDetail.movie = tMovie;
+        [self importMovieDetail:tMovie.movieDetail ValuesForKeysWithObject:tDic];
+        
+        [self saveInManagedObjectContext:context];
+        
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (void)importMovieDetail:(MMovieDetail *)aMovieDetail ValuesForKeysWithObject:(NSDictionary *)amovieDetailData{
+    aMovieDetail.wantedadded = [amovieDetailData objectForKey:@"wantedadded"];
+    aMovieDetail.recommendadded = [amovieDetailData objectForKey:@"recommendadded"];
+    aMovieDetail.info = amovieDetailData;
+}
+
+/*
+ {
+ httpCode: 200,
+ errors: [ ],
+ data: {
+ interact: {
+ movieid: "1",
+ recommend: "13",
+ look: "2"
+ }
+ },
+ token: null,
+ timestamp: "1372236865"
+ }
+ */
+- (BOOL)insertMovieRecommendIntoCoreDataFromObject:(NSString *)movieId data:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+    
+    if (!isEmpty(movieId)) {
+        
+        NSDictionary *tDic = [[objectData objectForKey:@"data"] objectForKey:@"interact"];
+        
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+        MMovie *aMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:movieId inContext:context];
+        if (aMovie==nil) {
+            return NO;
+        }
+        
+        aMovie.movieDetail.recommendadded = [tDic objectForKey:@"recommend"];
+        aMovie.movieDetail.wantedadded = [tDic objectForKey:@"look"];
+        
+        [self saveInManagedObjectContext:context];
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (MMovieDetail *)getMovieDetailWithId:(NSString *)movieId{
+    
+    MMovieDetail *tMovieDetail = nil;
+    if (movieId) {
+        MMovie *tmovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:movieId inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        return tmovie.movieDetail;
+    }
+    
+    return tMovieDetail;
 }
 
 #pragma mark 获得排期
@@ -437,14 +780,7 @@ static DataBaseManager *_sharedInstance = nil;
                                                andaCinema:(MCinema *)aCinema
                                                  delegate:(id<ApiNotify>)delegate
 {
-    ABLoggerDebug(@"=== %@",[[CacheManager sharedInstance] mUserDefaults]);
     
-    //    if ([[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]) {
-    //        ABLoggerWarn(@"不能请求影院列表数据，因为已经请求了 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
-    //        return nil;
-    //    }
-    
-    //    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:UpdatingCinemasList];
     ApiClient* apiClient = [ApiClient defaultClient];
     
     ApiCmdMovie_getSchedule* apiCmdMovie_getSchedule = [[ApiCmdMovie_getSchedule alloc] init];
@@ -456,8 +792,13 @@ static DataBaseManager *_sharedInstance = nil;
     return [apiCmdMovie_getSchedule autorelease];
 }
 
-- (NSArray *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema isToday:(BOOL)isToday{
-    return nil;
+- (MSchedule *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema{
+    
+    MMovie_Cinema *movie_cinema = nil;
+    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%@",[aCinema.city name],[aCinema.uid intValue],aMovie.uid];
+    movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    
+    return movie_cinema.schedule;
 }
 
 /*
@@ -524,10 +865,12 @@ static DataBaseManager *_sharedInstance = nil;
     
     NSDictionary *dataDic = [objectData objectForKey:@"data"];
     
-    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%d",[aCinema.city name],[aCinema.uid intValue],[aMovie.uid intValue]];
+    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%@",[aCinema.city name],[aCinema.uid intValue],aMovie.uid];
     MMovie_Cinema *movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     if (movie_cinema == nil) {
-        movie_cinema = [MMovie_Cinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        MMovie *tMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:aMovie.uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        MCinema *tCinema = [MCinema MR_findFirstByAttribute:@"uid" withValue:aCinema.uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        movie_cinema = [self insertMMovie_CinemaWithaMovie:tMovie andaCinema:tCinema];
     }
     
     if (!movie_cinema.schedule) {
@@ -550,14 +893,7 @@ static DataBaseManager *_sharedInstance = nil;
                                               aSchedule:(NSString *)aSchedule
                                                delegate:(id<ApiNotify>)delegate
 {
-    ABLoggerDebug(@"=== %@",[[CacheManager sharedInstance] mUserDefaults]);
     
-    //    if ([[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]) {
-    //        ABLoggerWarn(@"不能请求影院列表数据，因为已经请求了 === %d",[[[[CacheManager sharedInstance] mUserDefaults] objectForKey:UpdatingCinemasList] intValue]);
-    //        return nil;
-    //    }
-    
-    //    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:UpdatingCinemasList];
     ApiClient* apiClient = [ApiClient defaultClient];
     
     ApiCmdMovie_getBuyInfo* apiCmdMovie_getBuyInfo = [[ApiCmdMovie_getBuyInfo alloc] init];
@@ -594,8 +930,10 @@ static DataBaseManager *_sharedInstance = nil;
     
     NSDictionary *dataDic = [objectData objectForKey:@"data"];
     
-    NSString *movie_cinema_schedule_uid = [[NSString alloc] initWithFormat:@"%d%d%@",[aCinema.uid intValue],[aMovie.uid intValue],aSchedule];
-    movie_cinema_schedule_uid = [self md5PathForKey:movie_cinema_schedule_uid];
+    NSString *keyPath = [[NSString alloc] initWithFormat:@"%d%@%@",[aCinema.uid intValue],aMovie.uid,aSchedule];
+    NSString *movie_cinema_schedule_uid = [self md5PathForKey:keyPath];
+    [keyPath release];
+    
     MBuyTicketInfo *buyInfo = [MBuyTicketInfo MR_findFirstByAttribute:@"uid" withValue:movie_cinema_schedule_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     if (buyInfo == nil) {
         buyInfo = [MBuyTicketInfo MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
@@ -608,35 +946,35 @@ static DataBaseManager *_sharedInstance = nil;
         ABLoggerDebug(@"排期 保存是否成功 ========= %d",success);
         ABLoggerDebug(@"错误信息 ========= %@",[error description]);
     }];
-    
-    [movie_cinema_schedule_uid release];
 }
 //========================================= 电影 =========================================/
 
 #pragma mark -
 #pragma mark 影院
 /****************************************** 影院 *********************************************/
-- (ApiCmdMovie_getAllCinemas *)getAllCinemasListFromWeb:(id<ApiNotify>)delegate
+- (ApiCmd *)getAllCinemasListFromWeb:(id<ApiNotify>)delegate
 {
-    CinemaViewController *cinemaViewController = (CinemaViewController *)delegate;
-    if ([[[[ApiClient defaultClient] networkQueue] operations] containsObject:cinemaViewController.apiCmdMovie_getAllCinemas.httpRequest]) {
+    
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    
+    if ([[[[ApiClient defaultClient] networkQueue] operations] containsObject:tapiCmd.httpRequest]) {
         ABLoggerWarn(@"不能请求影院列表数据，因为已经请求了");
-        return cinemaViewController.apiCmdMovie_getAllCinemas;
+        return tapiCmd;
     }
     
-    //    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:UpdatingCinemasList];
+    ABLoggerWarn(@"tapiCmd.httpRequest ====== %@",tapiCmd.httpRequest);
+    ABLoggerWarn(@"networkQueue ====== %@",[[[ApiClient defaultClient] networkQueue] operations]);
+    
     ApiClient* apiClient = [ApiClient defaultClient];
     
     ApiCmdMovie_getAllCinemas* apiCmdMovie_getAllCinemas = [[ApiCmdMovie_getAllCinemas alloc] init];
     apiCmdMovie_getAllCinemas.delegate = delegate;
     apiCmdMovie_getAllCinemas.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    
     [apiClient executeApiCmdAsync:apiCmdMovie_getAllCinemas];
     [apiCmdMovie_getAllCinemas.httpRequest setTag:API_MCinemaCmd];
-    
-    //    if (已经更新过) {
-    //      [delegate apiNotifyLocationResult:apiCmdMovie_getAllCinemas error:nil];
-    //    }
-    
+    [apiCmdMovie_getAllCinemas.httpRequest setNumberOfTimesToRetryOnTimeout:2];
+    [apiCmdMovie_getAllCinemas.httpRequest setTimeOutSeconds:60*2];
     
     return [apiCmdMovie_getAllCinemas autorelease];
 }
@@ -654,6 +992,47 @@ static DataBaseManager *_sharedInstance = nil;
     }
     
     return [MCinema MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+}
+
+- (BOOL)getNearbyCinemasListFromCoreDataWithCallBack:(GetCinemaNearbyList)callback{
+    
+    GetCinemaNearbyList mCallBack = [callback copy];
+    
+    NSArray *cinemas = [self getAllCinemasListFromCoreData];
+    LocationManager *lm = [LocationManager defaultLocationManager];
+    BOOL isSuccess =  [lm getUserGPSLocationWithCallBack:^(BOOL isNewLocation) {
+        for (MCinema *tCinema in cinemas) {
+            double distance = [lm distanceBetweenUserToLatitude:[tCinema.latitude doubleValue] longitude:[tCinema.longitue doubleValue]];
+            tCinema.nearby = [NSNumber numberWithInt:distance];
+        }
+        
+        [self saveInManagedObjectContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        
+        NSArray *array =  [cinemas sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            MCinema *cinema1 = (MCinema *)obj1;
+            MCinema *cinema2 = (MCinema *)obj2;
+            return [cinema1.nearby compare:cinema2.nearby];
+        }];
+        ABLoggerInfo(@"cinemas === %@",array);
+        
+        if (mCallBack && isNewLocation) {
+            mCallBack(array);
+        }
+    }];
+    
+    return isSuccess;
+}
+
+- (NSArray *)getFavoriteCinemasListFromCoreData{
+    return [self getFavoriteCinemasListFromCoreDataWithCityName:nil];
+}
+
+- (NSArray *)getFavoriteCinemasListFromCoreDataWithCityName:(NSString *)cityName{
+    if (isEmpty(cityName)) {
+        cityName = [[LocationManager defaultLocationManager] getUserCity];
+    }
+    
+    return [MCinema MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@ and favorite = YES", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
 - (NSUInteger)getCountOfCinemasListFromCoreData{
@@ -675,13 +1054,14 @@ static DataBaseManager *_sharedInstance = nil;
     
     CFTimeInterval time1 = Elapsed_Time;
     
-    NSArray *info_array = [objectData objectForKey:@"info"];
+    NSArray *info_array = [[objectData objectForKey:@"data"] objectForKey:@"infos"];
     //    NSMutableArray *cinemas = [[NSMutableArray alloc] initWithCapacity:100];
     MCinema *mCinema = nil;
     
     for (int i=0; i<[info_array count]; i++) {
         
         NSArray *cinema_array = [[info_array objectAtIndex:i] objectForKey:@"cinemas"];
+        NSArray *dynamic_array = [[info_array objectAtIndex:i] objectForKey:@"dynamic"];
         NSString *district = [[info_array objectAtIndex:i] objectForKey:@"district"];
         
         for(int j=0; j<[cinema_array count]; j++) {
@@ -700,15 +1080,24 @@ static DataBaseManager *_sharedInstance = nil;
             [self importCinema:mCinema ValuesForKeysWithObject:cinema_dic];
         }
         
+        /*
+         for(int j=0; j<[dynamic_array count]; j++) {
+         
+         NSDictionary *cinema_dic = [cinema_array objectAtIndex:j];
+         
+         mCinema = [MCinema MR_findFirstByAttribute:@"uid" withValue:[cinema_dic objectForKey:@"cinemaid"] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+         if (mCinema == nil)
+         {
+         ABLoggerInfo(@"插入 一条影院 新数据 ======= %@",[cinema_dic objectForKey:@"name"]);
+         mCinema = [MCinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+         }
+         //            [cinemas addObject:mCinema];
+         mCinema.district = district;
+         mCinema.city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
+         [self importCinema:mCinema ValuesForKeysWithObject:cinema_dic];
+         }*/
+        
     }
-    
-    
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSArray *movies = [self getAllMoviesListFromCoreDataWithCityName:apiCmd.cityName];
-        NSArray *cinemas = [self getAllCinemasListFromCoreDataWithCityName:apiCmd.cityName];
-        [self insertMMovie_CinemaWithMovies:movies andCinemas:cinemas];
-    });
     
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         ABLoggerDebug(@"影院保存是否成功 ========= %d",success);
@@ -721,21 +1110,43 @@ static DataBaseManager *_sharedInstance = nil;
     ElapsedTime(time2, time1);
     
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
-    ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
     //    });
     
 }
 
 /*
- "error":{
- },
- "timestamp":"1369275251",
- "count":10,
- "info":[
  {
- "district":"朝阳区",
- "cinemas":[
+ "httpCode":200,
+ "errors":[
+ ],
+ "data":{
+ "count":1,
+ "infos":[
+ {
+ "district":"",
+ "cinemas":[],
+ "dynamic":[]
+ }
+ ]
+ },
+ "token":null,
+ "timestamp":"1372063052"
+ }
+ 
+ 
+ 
+ 
+ {
+ "error":{},
+ "timestamp":"1369275251",
+ "data":{
+ "count": 10,
+ "info": [
+ {
+ "district": "朝阳区",
+ "cinemas": [
  {
  "id":10011,
  "name":"大望路电影院1",
@@ -747,24 +1158,24 @@ static DataBaseManager *_sharedInstance = nil;
  */
 - (void)importCinema:(MCinema *)mCinema ValuesForKeysWithObject:(NSDictionary *)aCinemaData
 {
-    mCinema.uid = [aCinemaData objectForKey:@"id"];
+    mCinema.uid = [NSNumber numberWithInt:[[aCinemaData objectForKey:@"id"] intValue]];
     mCinema.name = [aCinemaData objectForKey:@"name"];
-    mCinema.address = [aCinemaData objectForKey:@"addr"];
-    mCinema.phoneNumber = [aCinemaData objectForKey:@"tel"];
-    mCinema.longitue = [aCinemaData objectForKey:@"longitue"];
-    mCinema.latitude = [aCinemaData objectForKey:@"latitude"];
+    mCinema.address = [aCinemaData objectForKey:@"address"];
+    mCinema.phoneNumber = [aCinemaData objectForKey:@"contactphonex"];
+    mCinema.longitue = [NSNumber numberWithDouble:[[aCinemaData objectForKey:@"longitude"] doubleValue]];
+    mCinema.latitude = [NSNumber numberWithDouble:[[aCinemaData objectForKey:@"latitude"] doubleValue]];
 }
 //========================================= 影院 =========================================/
 
 #pragma mark -
 #pragma mark 演出
 /****************************************** 演出 *********************************************/
-- (ApiCmdShow_getAllShows *)getAllShowsListFromWeb:(id<ApiNotify>)delegate{
+- (ApiCmd *)getAllShowsListFromWeb:(id<ApiNotify>)delegate{
     
-    ShowViewController *showViewController = (ShowViewController *)delegate;
-    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:showViewController.apiCmdShow_getAllShows.httpRequest]) {
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
         ABLoggerWarn(@"不能请求演出列表数据，因为已经请求了");
-        return showViewController.apiCmdShow_getAllShows;
+        return tapiCmd;
     }
     
     ApiClient* apiClient = [ApiClient defaultClient];
@@ -855,7 +1266,7 @@ static DataBaseManager *_sharedInstance = nil;
     ElapsedTime(time2, time1);
     
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
-    ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
     
 }
@@ -881,11 +1292,12 @@ static DataBaseManager *_sharedInstance = nil;
 #pragma mark -
 #pragma mark 酒吧
 /****************************************** 酒吧 *********************************************/
-- (ApiCmdBar_getAllBars *)getAllBarsListFromWeb:(id<ApiNotify>)delegate;{
-    BarViewController *showViewController = (BarViewController *)delegate;
-    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:showViewController.apiCmdBar_getAllBars.httpRequest]) {
+- (ApiCmd *)getAllBarsListFromWeb:(id<ApiNotify>)delegate;{
+    
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
         ABLoggerWarn(@"不能请求演出列表数据，因为已经请求了");
-        return showViewController.apiCmdBar_getAllBars;
+        return tapiCmd;
     }
     
     ApiClient* apiClient = [ApiClient defaultClient];
@@ -929,7 +1341,7 @@ static DataBaseManager *_sharedInstance = nil;
     
     NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"pubs"];
     
-     BBar *bBar = nil;
+    BBar *bBar = nil;
     for (int i=0; i<[array count]; i++) {
         
         bBar = [BBar MR_findFirstByAttribute:@"uid" withValue:[[array objectAtIndex:i] objectForKey:@"id"] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
@@ -953,7 +1365,7 @@ static DataBaseManager *_sharedInstance = nil;
     ElapsedTime(time2, time1);
     
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
-    ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
 }
 
@@ -989,4 +1401,152 @@ static DataBaseManager *_sharedInstance = nil;
     bBar.latitude = [aBarDic objectForKey:@"latitude"];
 }
 //========================================= 酒吧 =========================================/
+
+#pragma mark -
+#pragma mark KTV
+/****************************************** KTV *********************************************/
+- (ApiCmd*)getAllKTVsListFromWeb:(id<ApiNotify>)delegate{
+    
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    
+    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
+        ABLoggerWarn(@"不能请求 KTV 列表数据，因为已经请求了");
+        return tapiCmd;
+    }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmdKTV_getAllKTVs* apiCmdKTV_getAllKTVs = [[ApiCmdKTV_getAllKTVs alloc] init];
+    apiCmdKTV_getAllKTVs.delegate = delegate;
+    apiCmdKTV_getAllKTVs.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    [apiClient executeApiCmdAsync:apiCmdKTV_getAllKTVs];
+    [apiCmdKTV_getAllKTVs.httpRequest setTag:API_KKTVCmd];
+    
+    return [apiCmdKTV_getAllKTVs autorelease];
+}
+
+- (NSArray *)getAllKTVsListFromCoreData{
+    return [self getAllKTVsListFromCoreDataWithCityName:nil];
+}
+
+- (NSArray *)getAllKTVsListFromCoreDataWithCityName:(NSString *)cityName{
+    if (isEmpty(cityName)) {
+        cityName = [[LocationManager defaultLocationManager] getUserCity];
+    }
+    
+    return [KKTV MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+}
+
+- (NSUInteger)getCountOfKTVsListFromCoreData{
+    return [self getCountOfKTVsListFromCoreDataWithCityName:nil];
+}
+
+- (NSUInteger)getCountOfKTVsListFromCoreDataWithCityName:(NSString *)cityName{
+    if (isEmpty(cityName)) {
+        cityName = [[LocationManager defaultLocationManager] getUserCity];
+    }
+    int count = [KKTV MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return count;
+    
+}
+
+/*
+ {
+ "timestamp":"1369275251",
+ "errors":[],
+ "data":{
+ "count":10,
+ "infos":[
+ {
+ "id":30011,
+ "name":"钱柜静安店1",
+ "addr":"静安区乌鲁木齐路21号",
+ "lowprice":35,
+ "tel":13800999900,
+ "longitude":24.2355,
+ "latitude":42.2352,
+ "discounts":9
+ },
+ */
+- (void)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+    CFTimeInterval time1 = Elapsed_Time;
+    
+    NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"infos"];
+    
+    KKTV *kKTV = nil;
+    for (int i=0; i<[array count]; i++) {
+        
+        kKTV = [KKTV MR_findFirstByAttribute:@"uid" withValue:[[array objectAtIndex:i] objectForKey:@"id"] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        if (kKTV == nil)
+        {
+            ABLoggerInfo(@"插入 一条 KTV 新数据 ======= %@",[[array objectAtIndex:i] objectForKey:@"name"]);
+            kKTV = [KKTV MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        }
+        [self importKTV:kKTV ValuesForKeysWithObject:[array objectAtIndex:i]];
+        
+        City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
+        kKTV.city = city;
+    }
+    
+    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"KTV 保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
+    
+    CFTimeInterval time2 = Elapsed_Time;
+    ElapsedTime(time2, time1);
+    
+    [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+}
+
+- (void)importKTV:(KKTV *)kKTV ValuesForKeysWithObject:(NSDictionary *)aKTVDic{
+    kKTV.name = [aKTVDic objectForKey:@"name"];
+    kKTV.uid = [[aKTVDic objectForKey:@"id"] stringValue];
+    kKTV.address = [aKTVDic objectForKey:@"addr"];
+    kKTV.price = [aKTVDic objectForKey:@"lowprice"];
+    kKTV.phoneNumber = [[aKTVDic objectForKey:@"tel"] stringValue];
+    kKTV.longitude = [aKTVDic objectForKey:@"longitude"];
+    kKTV.latitude = [aKTVDic objectForKey:@"latitude"];
+    kKTV.discounts = [aKTVDic objectForKey:@"discounts"];
+}
+
+- (BOOL)addFavoriteKTVWithId:(NSNumber *)uid{
+    
+    NSManagedObjectContext* threadContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    KKTV *tKTV = [KKTV MR_findFirstByAttribute:@"uid" withValue:uid inContext:threadContext];
+    
+    if (!tKTV) {
+        return NO;
+    }
+    
+    tKTV.favorite = [NSNumber numberWithBool:YES];
+    
+    [threadContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"收藏KTV 保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
+    
+    return YES;
+}
+
+- (BOOL)deleteFavoriteKTVWithId:(NSNumber *)uid{
+    
+    NSManagedObjectContext* threadContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    KKTV *tKTV = [KKTV MR_findFirstByAttribute:@"uid" withValue:uid inContext:threadContext];
+    
+    if (!tKTV) {
+        return NO;
+    }
+    
+    tKTV.favorite = [NSNumber numberWithBool:NO];
+    
+    [threadContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"收藏KTV 保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
+    
+    return YES;
+}
+//========================================= KTV =========================================/
 @end

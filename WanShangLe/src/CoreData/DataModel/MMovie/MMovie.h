@@ -22,7 +22,7 @@
 @property (nonatomic, retain) NSNumber * ratingpeople;
 @property (nonatomic, retain) NSNumber * threeD;
 @property (nonatomic, retain) NSNumber * twoD;
-@property (nonatomic, retain) NSNumber * uid;
+@property (nonatomic, retain) NSString * uid;
 @property (nonatomic, retain) NSString * webImg;
 @property (nonatomic, retain) NSSet *movie_cinemas;
 @property (nonatomic, retain) MMovieDetail *movieDetail;

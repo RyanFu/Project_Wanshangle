@@ -18,7 +18,7 @@
 	NSFetchRequest *request = [[NSFetchRequest alloc] init];
 	[request setEntity:[self MR_entityDescriptionInContext:context]];
     
-    return request;
+    return [request autorelease];
 }
 
 + (NSFetchRequest *) MR_createFetchRequest
@@ -114,12 +114,13 @@
     }
 	[request setFetchBatchSize:[self MR_defaultBatchSize]];
 	
-    NSMutableArray* sortDescriptors = [[NSMutableArray alloc] init];
+    NSMutableArray* sortDescriptors = [[[NSMutableArray alloc] init] autorelease];
     NSArray* sortKeys = [sortTerm componentsSeparatedByString:@","];
     for (NSString* sortKey in sortKeys) 
     {
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:sortKey ascending:ascending];
         [sortDescriptors addObject:sortDescriptor];
+        [sortDescriptor release];
     }
     
 	[request setSortDescriptors:sortDescriptors];

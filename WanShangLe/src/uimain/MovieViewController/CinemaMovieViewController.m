@@ -11,6 +11,8 @@
 #import "CinemaMovieTableViewDelegate.h"
 #import "CinemaViewController.h"
 #import "ASIHTTPRequest.h"
+#import "MovieViewController.h"
+#import "MovieDetailViewController.h"
 #import "MMovie.h"
 #import "MCinema.h"
 #import "iCarousel.h"
@@ -96,27 +98,46 @@
     
     [_todayButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
     
-    _coverFlow.type = iCarouselTypeCoverFlow2;
+    _coverFlow.type = iCarouselTypeLinear;
     [_coverFlow reloadData];
+    
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton setFrame:CGRectMake(0, 0, 45, 30)];
+    [backButton addTarget:self action:@selector(clickBackButton:) forControlEvents:UIControlEventTouchUpInside];
+    [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_n@2x"] forState:UIControlStateNormal];
+    [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_f@2x"] forState:UIControlStateHighlighted];
+    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.navigationItem.leftBarButtonItem = backItem;
+    [backItem release];
 }
 
+- (void)clickBackButton:(id)sender{
+    [self.navigationController popViewControllerAnimated:YES];
+}
 
 - (IBAction)clickMovieInfo:(id)sender{
     ABLoggerInfo(@"");
-    
-    CinemaViewController *cinemaViewController = [CacheManager sharedInstance].cinemaViewController;
-    
-    
-    NSArray *array = [NSArray arrayWithObjects:
-                      [CacheManager sharedInstance].rootViewController,
-                      [CacheManager sharedInstance].movieViewController,
-                      [CacheManager sharedInstance].cinemaViewController,nil];
-    
-    cinemaViewController.mMovie = self.mMovie;
-    cinemaViewController.isMovie_Cinema = YES;
-    
-    ABLogger_bool(cinemaViewController.isMovie_Cinema);
-    [self.navigationController setViewControllers:array animated:YES];
+    MovieDetailViewController *movieDetailController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
+    [self.navigationController pushViewController:movieDetailController animated:YES];
+    [movieDetailController release];
+    /*
+     CinemaViewController *cinemaViewController = [CacheManager sharedInstance].cinemaViewController;
+     
+     
+     NSArray *array = [NSArray arrayWithObjects:
+     [CacheManager sharedInstance].rootViewController,
+     [CacheManager sharedInstance].movieViewController,
+     [CacheManager sharedInstance].cinemaViewController,
+     nil];
+     [[CacheManager sharedInstance].movieViewController clickMovieButtonDown:nil];
+     [[CacheManager sharedInstance].movieViewController clickMovieButtonUp:nil];
+     
+     cinemaViewController.mMovie = self.mMovie;
+     cinemaViewController.isMovie_Cinema = YES;
+     
+     ABLogger_bool(cinemaViewController.isMovie_Cinema);
+     [self.navigationController setViewControllers:array animated:YES];
+     */
 }
 
 - (void)cleanUpButtonBackground{
@@ -148,7 +169,8 @@
     return [_moviesArray count];
 }
 
-- (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index reusingView:(ReflectionView *)view
+//- (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index reusingView:(ReflectionView *)view
+- (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index reusingView:(UIView *)view
 {
     UIImageView *view2 = nil;
 	
@@ -156,7 +178,7 @@
 	if (view == nil)
 	{
         //set up reflection view
-		view = [[[ReflectionView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 100, 100)] autorelease];
+		view = [[[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 80, 120)] autorelease];
         
         view2 = [[[UIImageView alloc] initWithFrame:view.bounds] autorelease];
         view2.backgroundColor = [UIColor clearColor];
@@ -170,10 +192,10 @@
     
     ABLoggerDebug(@"%@",[[_moviesArray objectAtIndex:index] webImg]);
     [view2 setImageWithURL:[NSURL URLWithString:[[_moviesArray objectAtIndex:index] webImg]]
-          placeholderImage:[UIImage imageNamed:@"placeholder"]
+          placeholderImage:[UIImage imageNamed:@"movie_placeholder@2x"]
                    options:SDWebImageRetryFailed
                  completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                     [(ReflectionView *)[view2 superview] update];
+                     //                     [[view2 superview] update];
                  }];
     
 	return view;
@@ -187,13 +209,13 @@
         case iCarouselOptionWrap:
         {
             //normally you would hard-code this to YES or NO
-            return YES;
+            return NO;
         }
         case iCarouselOptionSpacing:
         {
             //add a bit of spacing between the item views
             //            return value * 1.1f;
-            return value * 1.8f;
+            return value * 1.1f;
         }
         default:
         {
@@ -212,13 +234,17 @@
     _movieRating.text = [NSString stringWithFormat:@"%@ : %0.1f (%d 万人)",aMovie.ratingFrom,[aMovie.rating floatValue],[aMovie.ratingpeople intValue]/10000];
     _movieTimeLong.text = @"120分钟";
     
-    self.apiCmdMovie_getSchedule = [[DataBaseManager sharedInstance] getScheduleFromWebWithaMovie:_mMovie andaCinema:_mCinema delegate:self];
+    self.apiCmdMovie_getSchedule = (ApiCmdMovie_getSchedule *)[[DataBaseManager sharedInstance] getScheduleFromWebWithaMovie:_mMovie andaCinema:_mCinema delegate:self];
 }
 
 
 #pragma mark -
 #pragma mark apiNotiry
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
+    
+    if (error) {
+        return;
+    }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         

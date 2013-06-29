@@ -126,6 +126,8 @@
     NSDictionary *resultsDictionary = [self MR_executeFetchRequestAndReturnFirstObject:request inContext:context];
     NSNumber *resultValue = [resultsDictionary objectForKey:@"result"];
     
+    [ed release];
+    
     return resultValue;    
 }
 

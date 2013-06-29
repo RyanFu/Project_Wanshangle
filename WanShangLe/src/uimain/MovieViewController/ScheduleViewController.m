@@ -11,8 +11,12 @@
 #import "ScheduleTableViewDelegate.h"
 #import "CinemaViewController.h"
 #import "CinemaMovieViewController.h"
+#import "MovieViewController.h"
 #import "MMovie.h"
 #import "MCinema.h"
+#import "MSchedule.h"
+#import "ASIHTTPRequest.h"
+#import "ApiCmd.h"
 
 @interface ScheduleViewController ()<ApiNotify>{
     
@@ -46,7 +50,10 @@
     self.todaySchedules = nil;
     self.todaySchedules = nil;
     self.schedulesArray = nil;
+    
+    [self.apiCmdMovie_getSchedule.httpRequest clearDelegatesAndCancel];
     self.scheduleTableViewDelegate = nil;
+    self.apiCmdMovie_getSchedule.delegate = nil;
     [super dealloc];
 }
 
@@ -78,28 +85,35 @@
     
     [_todayButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
     
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [self updateData:0];
+    });
+    
 }
 
 - (IBAction)clickCinemaButton:(id)sender{
     
-    CinemaViewController *cinemaViewController = [CacheManager sharedInstance].cinemaViewController;
+    //    CinemaViewController *cinemaViewController = [CacheManager sharedInstance].cinemaViewController;
     CinemaMovieViewController *cinemaMovieController = [[CinemaMovieViewController alloc]
                                                         initWithNibName:(iPhone5?@"CinemaMovieViewController_5":@"CinemaMovieViewController")
                                                         bundle:nil];
     cinemaMovieController.mCinema = self.mCinema;
     cinemaMovieController.mMovie = self.mMovie;
     
-    NSArray *array = [NSArray arrayWithObjects:
-                      [CacheManager sharedInstance].rootViewController,
-                      [CacheManager sharedInstance].movieViewController,
-                      [CacheManager sharedInstance].cinemaViewController,
-                      cinemaMovieController,nil];
+    //    MovieViewController *movieController = [CacheManager sharedInstance].movieViewController;
+    //    NSArray *array = [NSArray arrayWithObjects:
+    //                      [CacheManager sharedInstance].rootViewController,
+    //                      movieController,
+    //                      cinemaMovieController,
+    //                      nil];
+    //
+    //    [movieController clickCinemaButtonDown:nil];
+    //    [movieController clickCinemaButtonUp:nil];
     
-    cinemaViewController.mMovie = self.mMovie;
-    cinemaViewController.isMovie_Cinema = NO;
+    //    cinemaViewController.mMovie = self.mMovie;
+    //    cinemaViewController.isMovie_Cinema = NO;
     
-    ABLogger_bool(cinemaViewController.isMovie_Cinema);
-    [self.navigationController setViewControllers:array animated:YES];
+    [self.navigationController pushViewController:cinemaMovieController animated:YES];
     [cinemaMovieController release];
 }
 
@@ -128,6 +142,10 @@
 #pragma mark apiNotiry
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
+    if (error) {
+        return;
+    }
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         [[DataBaseManager sharedInstance] insertScheduleIntoCoreDataFromObject:[apiCmd responseJSONObject]
@@ -136,7 +154,7 @@
                                                                     andaCinema:_mCinema];
         
         int tag = [[apiCmd httpRequest] tag];
-        [self updateData:tag responseData:[apiCmd responseJSONObject]];
+        [self updateData:tag];
         
     });
     
@@ -146,17 +164,19 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         int tag = [[apiCmd httpRequest] tag];
-        [self updateData:tag responseData:[apiCmd responseJSONObject]];
+        [self updateData:tag];
     });
 }
 
-- (void)updateData:(int)tag responseData:(NSDictionary *)responseDic
+- (void)updateData:(int)tag
 {
     ABLogger_int(tag);
     switch (tag) {
         case 0:
         case API_MScheduleCmd:
         {
+            MSchedule *tSchedule = [[DataBaseManager sharedInstance] getScheduleFromCoreDataWithaMovie:_mMovie andaCinema:_mCinema];
+            NSDictionary *responseDic = tSchedule.scheduleInfo;
             [self formatCinemaData:responseDic];
         }
             break;
@@ -170,7 +190,7 @@
 
 - (void)formatCinemaData:(NSDictionary *)responseDic{
     ABLoggerMethod();
-    NSArray *schedules = [[responseDic objectForKey:@"data"] objectForKey:@"schedule"];
+    NSArray *schedules = [responseDic objectForKey:@"schedule"];
     self.todaySchedules = [[schedules objectAtIndex:0] objectForKey:@"starts"];
     self.tomorrowSchedules = [[schedules objectAtIndex:1] objectForKey:@"starts"];
     self.schedulesArray = self.todaySchedules;

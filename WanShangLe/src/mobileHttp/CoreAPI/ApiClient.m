@@ -13,10 +13,20 @@
 #import "ASINetworkQueue.h"
 #import "common.h"
 
+// const static key
+static NSString* keyToken = @"token";
+static NSString* keyAppId = @"appId";
+static NSString* keySign = @"sign";
+
+static NSString* keyFormat = @"format";
+static NSString* valueFormat = @"json";
+
+static NSString* keyPhoneType = @"phoneType";
+static NSString* valuePhoneType = @"iPhone";
+
 @implementation ApiClient
 
 // define getter/setter methods
-@synthesize request;
 @synthesize requestArray = _requestArray;
 
 + (instancetype)defaultClient {
@@ -101,7 +111,7 @@
             strValue = [tmpId stringValue];
         }else{
             // do nothing
-           ABLoggerError(@"Error Value of [%@], can only accept NSString or NSNumber",[paramArray objectAtIndex:index]);
+            ABLoggerError(@"Error Value of [%@], can only accept NSString or NSNumber",[paramArray objectAtIndex:index]);
         }
         
         [mutableString appendString:strValue];
@@ -114,32 +124,72 @@
     return md5(mutableString);
 }
 
+- (ASIHTTPRequest*)prepareExecuteApiCmd:(ApiCmd*)cmd{
+    
+    // prepare post data
+    NSMutableDictionary* postDict = [cmd getParamDict];
+    NSString * newToken = nil;
+    NSUserDefaults *defaults = [NSUserDefaults  standardUserDefaults];
+    newToken = [defaults objectForKey:@"HSAPI"];
+    
+    // add appId & cookie & phoneType
+    [postDict setValue:[ApiConfig getApiAppId] forKey:keyAppId];
+    [postDict setValue:@"1.0" forKey:@"v"];
+    [postDict setValue:@"sign" forKey:@"sign"];
+    
+    NSMutableString *urlStr = [[NSMutableString alloc] init];
+    [urlStr appendString:[ApiConfig getApiRequestUrl]];
+    
+    for (NSString *key in [postDict allKeys]) {
+        [urlStr appendFormat:@"&%@=%@",key,[postDict objectForKey:key]];
+    }
 
+    // prepare http request
+    NSURL *url = [NSURL URLWithString:urlStr];
+    ABLoggerInfo(@"request url ===== %@",urlStr);
+    [urlStr release];
+    
+     ASIHTTPRequest *tASIHTTPRequest = [ASIHTTPRequest requestWithURL:url];
+    
+    NSMutableDictionary *requestHeaders = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                           @"application/json", @"Content-Type",
+                                           nil];
+    [tASIHTTPRequest setRequestHeaders:requestHeaders];
+    [tASIHTTPRequest setDelegate:self];
+    [tASIHTTPRequest setRequestMethod:@"GET"];
+    
+    return tASIHTTPRequest;
+}
 
-- (void) executeApiCmdAsync:(ApiCmd*) cmd{
-     ABLoggerMethod();
-    self.request = [cmd prepareExecuteApiCmd];
+- (BOOL) executeApiCmdAsync:(ApiCmd*) cmd{
+    ABLoggerMethod();
+    ASIHTTPRequest *request = [self prepareExecuteApiCmd:cmd];
+    cmd.httpRequest = request;
+    [request setDelegate:cmd];
     
     [_requestArray addObject:cmd];
     
-//      [request startAsynchronous];
-
-    @synchronized (_networkQueue) {
-    [_networkQueue addOperation:request];
+    //  [request startAsynchronous];
+    
+    if ([request isExecuting] || [_networkQueue.operations containsObject:request]) {
+        return NO;
     }
     
-     ABLoggerDebug(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    @synchronized (_networkQueue) {
+        [_networkQueue addOperation:request];
+    }
+    ABLoggerWarn(@"networkQueue ====== %@",[[[ApiClient defaultClient] networkQueue] operations]);
+    ABLoggerDebug(@"insert request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    return YES;
 }
 
 
 - (NSError*) executeApiCmd:(ApiCmd*) cmd{
     
-    self.request = [cmd prepareExecuteApiCmd];
+    ASIHTTPRequest *request = [cmd prepareExecuteApiCmd];
     [request startSynchronous];
     
     NSError *error = [request error];
-    
-//    NSData *data = [request responseData];
     
     if (error) {
         ABLoggerDebug(@"Error [%@]", [error localizedDescription]);
@@ -160,52 +210,6 @@
     [tmpDict setObject:@"请求的API不存在" forKey:@"10004003"];
     [tmpDict setObject:@"签名验证失败" forKey:@"10004004"];
     [tmpDict setObject:@"API需求参数未找到" forKey:@"10004005"];
-    //[tmpDict setObject:@"Token无效,必须重新登录" forKey:@"10004006"];
-    [tmpDict setObject:@"账户过期请重新登录" forKey:@"10004006"];
-    [tmpDict setObject:@"Token已过期" forKey:@"10004007"];
-    [tmpDict setObject:@"API需求参数赋值未知" forKey:@"10004008"];
-    [tmpDict setObject:@"无权访问此接口" forKey:@"10004009"];
-    [tmpDict setObject:@"API处理异常" forKey:@"10005000"];
-    
-    /*用户业务错误*/
-    [tmpDict setObject:@"用户名或密码错误" forKey:@"10014001"];
-    [tmpDict setObject:@"更新用户资料失败" forKey:@"10014002"];
-    [tmpDict setObject:@"用户注册失败" forKey:@"10014003"];
-    [tmpDict setObject:@"用户状态异常，或已被锁定" forKey:@"10014004"];
-    [tmpDict setObject:@"要创建的用户已存在" forKey:@"10014005"];
-    [tmpDict setObject:@"此外部平台帐户已经在绑定列表中" forKey:@"10014006"];
-    [tmpDict setObject:@"预绑定帐户ID无效" forKey:@"10014007"];
-    [tmpDict setObject:@"用户绑定外部帐号失败" forKey:@"10014008"];
-    [tmpDict setObject:@"关联的用户模型未找到" forKey:@"10014009"];
-    [tmpDict setObject:@"联合登录失败" forKey:@"10014010"];
-    [tmpDict setObject:@"自动创建用户失败" forKey:@"10014011"];
-    [tmpDict setObject:@"此外部平台帐户尚未绑定帐号" forKey:@"10014012"];
-    [tmpDict setObject:@"用户原始密码错误" forKey:@"10014013"];
-    [tmpDict setObject:@"用户修改密码失败" forKey:@"10014014"];
-    [tmpDict setObject:@"邮箱地址已经存在" forKey:@"10014015"];
-    [tmpDict setObject:@"手机号码已经存在" forKey:@"10014016"];
-    [tmpDict setObject:@"昵称已经被占用" forKey:@"10014017"];
-    [tmpDict setObject:@"用户未关联此外部帐号" forKey:@"10014018"];
-    [tmpDict setObject:@"用户取消绑定外部帐号失败" forKey:@"10014019"];
-    [tmpDict setObject:@"用户本次不是使用外部帐号进行登录" forKey:@"10014020"];
-    [tmpDict setObject:@"邮箱域名系回首系统所有" forKey:@"10014021"];
-    [tmpDict setObject:@"系统生成邮箱已被更新" forKey:@"10014022"];
-    [tmpDict setObject:@"自动登录失败" forKey:@"10014023"];
-    [tmpDict setObject:@"当前外部帐号禁止解除绑定" forKey:@"10014024"];
-    [tmpDict setObject:@"更新外部帐号信息失败" forKey:@"10014025"];
-    [tmpDict setObject:@"密码长度限制为6-12个字符" forKey:@"10014026"];
-    [tmpDict setObject:@"模型报错" forKey:@"10016000"];
-    
-    /*附件业务错误*/
-    [tmpDict setObject:@"上传附件失败" forKey:@"10024001"];
-    [tmpDict setObject:@"下载附件失败" forKey:@"10024002"];
-    [tmpDict setObject:@"未找到上传文件" forKey:@"10024003"];
-    [tmpDict setObject:@"模型错误" forKey:@"10026000"];
-    [tmpDict setObject:@"请选择文件上传" forKey:@"10024004"];
-    [tmpDict setObject:@"不支持的图片类型" forKey:@"10024005"];
-    [tmpDict setObject:@"图片大小超出限制" forKey:@"10024006"];
-    [tmpDict setObject:@"图片尺寸不正确" forKey:@"10024007"];
-    [tmpDict setObject:@"图片保存失败" forKey:@"10024008"];
     
     return [tmpDict objectForKey:errorString];
 }
