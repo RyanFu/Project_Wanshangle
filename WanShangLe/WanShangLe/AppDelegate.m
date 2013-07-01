@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "RootViewController.h"
 #import "ApiConfig.h"
+#import <ShareSDK/ShareSDK.h>
 
 @interface AppDelegate(){
     
@@ -21,9 +22,20 @@
 @synthesize window = _window;
 @synthesize rootViewController = _rootViewController;
 
+- (id)init
+{
+    if(self = [super init])
+    {
+        _scene = WXSceneSession;
+        _viewDelegate = [[AGViewDelegate alloc] init];
+    }
+    return self;
+}
+
 - (void)dealloc
 {
     [_window release];
+    [_viewDelegate release];
     self.rootViewController = nil;
     
     [super dealloc];
@@ -41,6 +53,14 @@
     }else{
         ABLoggerInfo(@"运行在非iphone5设备上");
     }
+    
+    /**
+     注册SDK应用，此应用请到http://www.sharesdk.cn中进行注册申请。
+     此方法必须在启动时调用，否则会限制SDK的使用。
+     **/
+    [ShareSDK registerApp:@"api20"];
+    [ShareSDK convertUrlEnabled:NO];
+    [self initializePlat];
     
     // set Dev Env
     [ApiConfig setEnv:APIDEV];
@@ -68,8 +88,7 @@
     _rootViewController = [[RootViewController alloc] initWithNibName:(iPhone5?@"RootViewController_5":@"RootViewController") bundle:nil];
     
     UINavigationController *_navigationController = [[UINavigationController alloc] initWithRootViewController:_rootViewController];
-    UIImage *bgImg = [UIImage imageNamed:@"bg_navigationBar"];
-    [[UINavigationBar appearance] setBackgroundImage:bgImg forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
     
     self.window.rootViewController = _navigationController;
     [_navigationController release];
@@ -81,6 +100,46 @@
     ElapsedTime(time2, time1);
     
     return YES;
+}
+
+- (void)initializePlat{
+    
+    /**
+     连接微信应用以使用相关功能，此应用需要引用WeChatConnection.framework和微信官方SDK
+     http://open.weixin.qq.com上注册应用，并将相关信息填写以下字段
+     **/
+    [ShareSDK connectWeChatWithAppId:@"wx6dd7a9b94f3dd72a" wechatCls:[WXApi class]];
+}
+
+- (BOOL)application:(UIApplication *)application
+      handleOpenURL:(NSURL *)url
+{
+    return [ShareSDK handleOpenURL:url
+                        wxDelegate:self];
+}
+
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString  *)sourceApplication
+         annotation:(id)annotation
+{
+    return [ShareSDK handleOpenURL:url
+                 sourceApplication:sourceApplication
+                        annotation:annotation
+                        wxDelegate:self];
+}
+
+#pragma mark - WXApiDelegate
+
+-(void) onReq:(BaseReq*)req
+{
+    
+}
+
+-(void) onResp:(BaseResp*)resp
+{
+    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

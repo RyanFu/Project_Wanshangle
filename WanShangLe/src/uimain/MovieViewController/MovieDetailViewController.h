@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 @class MMovie;
-@interface MovieDetailViewController : UIViewController
+@interface MovieDetailViewController : UIViewController<UIActionSheetDelegate,
+UIAlertViewDelegate>
 @property(nonatomic,retain) MMovie *mMovie;
 
+@property(nonatomic,retain) IBOutlet UIScrollView *mScrollView;
 @property(nonatomic,retain) IBOutlet UIImageView *imgView;
 @property(nonatomic,retain) IBOutlet UILabel *directorLabel;
 @property(nonatomic,retain) IBOutlet UILabel *actorLabel;
@@ -19,7 +21,8 @@
 @property(nonatomic,retain) IBOutlet UILabel *startdayLabel;
 @property(nonatomic,retain) IBOutlet UILabel *recommendLabel;
 @property(nonatomic,retain) IBOutlet UILabel *wantLookLabel;
-@property(nonatomic,retain) IBOutlet UITextView *descriptionTextView;
+@property(nonatomic,retain) IBOutlet UIImageView *movieInfoImgView;
+@property(nonatomic,retain) IBOutlet UILabel *movieInfoLabel;
 @property(nonatomic,retain) IBOutlet UIButton *recommendButton;
 @property(nonatomic,retain) IBOutlet UIButton *wantLookButton;
 -(IBAction)clickRecommendButton:(id)sender;

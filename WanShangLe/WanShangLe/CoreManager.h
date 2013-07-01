@@ -14,6 +14,14 @@
 #import "SysConfig.h"
 #import "SysInfo.h"
 
+//ShareSDK
+#import <AGCommon/CoreDefinition.h>
+#define BUNDLE_NAME @"Resource"
+#define IMAGE_NAME @"sharesdk_img"
+#define IMAGE_EXT @"jpg"
+#define CONTENT @"ShareSDK不仅集成简单、支持如QQ好友、微信、新浪微博、腾讯微博等所有社交平台，而且还有强大的统计分析管理后台，实时了解用户、信息流、回流率、传播效应等数据，详情见官网http://sharesdk.cn @ShareSDK"
+#define SHARE_URL @"http://www.sharesdk.cn"
+
 //数据库
 #import "CoreData+MagicalRecord.h"
 #import "DataBaseManager.h"
