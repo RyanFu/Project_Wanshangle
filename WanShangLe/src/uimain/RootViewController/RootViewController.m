@@ -73,7 +73,7 @@
     [[SIAlertView appearance] setTitleFont:[UIFont systemFontOfSize:20]];
     [[SIAlertView appearance] setTitleColor: [UIColor colorWithRed:0.199 green:0.731 blue:1.000 alpha:1.000]];
     [[SIAlertView appearance] setMessageColor:[UIColor colorWithRed:0.090 green:0.481 blue:0.905 alpha:1.000]];
-    [[SIAlertView appearance] setCornerRadius:12];
+    [[SIAlertView appearance] setCornerRadius:5];
     [[SIAlertView appearance] setShadowRadius:20];
     
     //设置已选择的城市

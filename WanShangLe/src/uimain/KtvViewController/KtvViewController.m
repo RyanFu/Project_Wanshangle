@@ -29,7 +29,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.apiCmdKTV_getAllKTVs = [[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
+        self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
     }
     return self;
 }
@@ -44,7 +44,7 @@
     
     [self.navigationController setNavigationBarHidden:NO];
     
-    self.apiCmdKTV_getAllKTVs = [[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
+    self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
     //    [self updateData:0];
     
 #ifdef TestCode
@@ -56,7 +56,7 @@
 - (void)updatData{
     for (int i=0; i<10; i++) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            self.apiCmdKTV_getAllKTVs = [[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
+            self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
         });
     }
 }
@@ -126,15 +126,15 @@
 #pragma mark Filter Movie List
 - (void)clickFilterFavoriteButton:(id)sender{
     [self cleanUpFilterButtonBackground];
-    [favoriteButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
+
 }
 - (void)clickFilterNearbyButton:(id)sender{
     [self cleanUpFilterButtonBackground];
-    [nearbyButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
+
 }
 - (void)clickFilterAllButton:(id)sender{
     [self cleanUpFilterButtonBackground];
-    [allButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
+
 }
 - (void)cleanUpFilterButtonBackground{
     [favoriteButton setBackgroundColor:[UIColor clearColor]];

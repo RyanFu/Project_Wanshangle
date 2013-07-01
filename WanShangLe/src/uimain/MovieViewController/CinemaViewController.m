@@ -24,6 +24,7 @@
     UIButton *nearbyButton;
     UIButton *allButton;
     UIButton *searchButton;
+    UIImageView *filterIndicator;
 }
 @property(nonatomic,retain)UILabel *movieLabel;
 @property(nonatomic,retain)UIView *headerView;
@@ -132,37 +133,41 @@
 #pragma mark 初始化数据
 - (void)initFilterButtonHeaderView{
     //创建TopView
-    _filterHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
+    _filterHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
     UIButton *bt1 = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *bt2 = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *bt3 = [UIButton buttonWithType:UIButtonTypeCustom];
-    [bt1 setTitle:@"常去" forState:UIControlStateNormal];
-    [bt2 setTitle:@"附近" forState:UIControlStateNormal];
-    [bt3 setTitle:@"全部" forState:UIControlStateNormal];
-    [bt1 setExclusiveTouch:YES];
-    [bt1 setBackgroundColor:[UIColor colorWithRed:0.601 green:0.896 blue:1.000 alpha:1.000]];
-    [bt2 setBackgroundColor:[UIColor colorWithRed:0.601 green:0.896 blue:1.000 alpha:1.000]];
-    [bt3 setBackgroundColor:[UIColor colorWithRed:0.601 green:0.896 blue:1.000 alpha:1.000]];
+    bt1.tag = 1;
+    bt2.tag = 2;
+    bt3.tag = 3;
+    [bt3 setExclusiveTouch:YES];
     [bt1 addTarget:self action:@selector(clickFilterFavoriteButton:) forControlEvents:UIControlEventTouchUpInside];
     [bt2 addTarget:self action:@selector(clickFilterNearbyButton:) forControlEvents:UIControlEventTouchUpInside];
     [bt3 addTarget:self action:@selector(clickFilterAllButton:) forControlEvents:UIControlEventTouchUpInside];
-    [bt3 setFrame:CGRectMake(0, 0, 105, 30)];
-    [bt2 setFrame:CGRectMake(105, 0, 110, 30)];
-    [bt1 setFrame:CGRectMake(215, 0, 105, 30)];
+    [bt3 setFrame:CGRectMake(0, 0, 105, _filterHeaderView.bounds.size.height)];
+    [bt2 setFrame:CGRectMake(105, 0, 110, _filterHeaderView.bounds.size.height)];
+    [bt1 setFrame:CGRectMake(215, 0, 105, _filterHeaderView.bounds.size.height)];
     [_filterHeaderView addSubview:bt1];
     [_filterHeaderView addSubview:bt2];
     [_filterHeaderView addSubview:bt3];
+    [_filterHeaderView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"btn_filter_bts"]]];
     favoriteButton = bt1;
     nearbyButton = bt2;
     allButton = bt3;
-    [favoriteButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
+    
+    UIImageView *imgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"btn_filter_indicator"]];
+    imgView.frame = CGRectMake(46, 34, 13, 6);
+    [_filterHeaderView addSubview:imgView];
+    filterIndicator = imgView;
+    [imgView release];
+    
     [self.view addSubview:_filterHeaderView];
 }
 
 - (void)tableViewInit {
     
     //create movie tableview and init
-    _cinemaTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 30, iPhoneAppFrame.size.width, self.view.bounds.size.height-74)
+    _cinemaTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, _filterHeaderView.bounds.size.height, iPhoneAppFrame.size.width, self.view.bounds.size.height-74)
                                                     style:UITableViewStylePlain];
     _cinemaTableView.backgroundColor = [UIColor colorWithRed:0.752 green:0.963 blue:0.931 alpha:1.000];
     _cinemaTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
@@ -180,12 +185,11 @@
     self.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
 	self.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	self.searchBar.keyboardType = UIKeyboardTypeDefault;
-	self.searchBar.backgroundColor=[UIColor clearColor];
+	self.searchBar.backgroundColor=[UIColor colorWithRed:0.784 green:0.800 blue:0.835 alpha:1.000];
 	self.searchBar.translucent=YES;
 	self.searchBar.placeholder=@"输入影院名称搜索";
 	self.searchBar.barStyle=UIBarStyleDefault;
-    
-    self.searchBar.backgroundColor=[UIColor clearColor];
+
     [[self.searchBar.subviews objectAtIndex:0]removeFromSuperview];
     for (UIView *subview in self.searchBar.subviews)
     {
@@ -195,9 +199,6 @@
             break;
         }
     }
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"searchBarBackground"]];
-    imageView.frame = CGRectMake(0, 0, 320, 44);
-    [self.searchBar insertSubview:imageView atIndex:0];
     
     [self setTableViewFilterAllDelegate];
     self.searchBar.delegate = _cinemaDelegate;
@@ -253,7 +254,7 @@
 -(void)beginSearch{
     
     CGRect frame1 = _filterHeaderView.frame;
-    frame1.origin.y = -30;
+    frame1.origin.y = -_filterHeaderView.bounds.size.height;
     _filterHeaderView.frame = frame1;
     
     CGRect frame2 = _cinemaTableView.frame;
@@ -267,7 +268,7 @@
     _filterHeaderView.frame = frame1;
     
     CGRect frame2 = _cinemaTableView.frame;
-    frame2.origin.y = 30;
+    frame2.origin.y = _filterHeaderView.bounds.size.height;
     _cinemaTableView.frame = frame2;
 }
 
@@ -302,30 +303,48 @@
     _cinemaFilterType = MMFilterCinemaListTypeFavorite;
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:_cinemaFilterType] forKey:MMovie_CinemaFilterType];
     [self userSettingFilter];
-    
-    [self cleanUpFilterButtonBackground];
-    [favoriteButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
+    [self stratAnimationFilterButton:sender];
 }
 - (void)clickFilterNearbyButton:(id)sender{
     _cinemaFilterType = MMFilterCinemaListTypeNearby;
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:_cinemaFilterType] forKey:MMovie_CinemaFilterType];
     [self userSettingFilter];
     
-    [self cleanUpFilterButtonBackground];
-    [nearbyButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
+    [self stratAnimationFilterButton:sender];
 }
 - (void)clickFilterAllButton:(id)sender{
     _cinemaFilterType = MMFilterCinemaListTypeAll;
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:_cinemaFilterType] forKey:MMovie_CinemaFilterType];
     [self userSettingFilter];
     
-    [self cleanUpFilterButtonBackground];
-    [allButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
+    [self stratAnimationFilterButton:sender];
 }
-- (void)cleanUpFilterButtonBackground{
-    [favoriteButton setBackgroundColor:[UIColor colorWithRed:0.601 green:0.896 blue:1.000 alpha:1.000]];
-    [nearbyButton setBackgroundColor:[UIColor colorWithRed:0.601 green:0.896 blue:1.000 alpha:1.000]];
-    [allButton setBackgroundColor:[UIColor colorWithRed:0.601 green:0.896 blue:1.000 alpha:1.000]];
+- (void)stratAnimationFilterButton:(id)sender{
+
+    UIButton *bt = (UIButton *)sender;
+    CGRect oldFrame = filterIndicator.frame;
+    oldFrame.origin.y = 34;
+    filterIndicator.frame = oldFrame;
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+         [_filterHeaderView setUserInteractionEnabled:NO];
+        CGRect newFrame = CGRectZero;
+        switch (bt.tag) {
+            case 2:
+                newFrame = CGRectMake(154, 34, 13, 6);
+                break;
+            case 1:
+                newFrame = CGRectMake(261, 34, 13, 6);
+                break;
+            default:
+                newFrame = CGRectMake(46, 34, 13, 6);
+                break;
+        }
+        filterIndicator.frame = newFrame;
+    } completion:^(BOOL finished) {
+        [_filterHeaderView setUserInteractionEnabled:YES];
+    }];
 }
 
 #pragma mark -

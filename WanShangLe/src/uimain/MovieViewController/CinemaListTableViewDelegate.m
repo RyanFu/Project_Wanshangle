@@ -400,6 +400,7 @@ static CGFloat const kLabelVMargin = 10;
     [self.searchByName removeAllObjects];
     [self.searchByPhone removeAllObjects];
     [self.contactDic removeAllObjects];
+    [[searchBar viewWithTag:100] removeFromSuperview];
 }
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
@@ -422,11 +423,18 @@ static CGFloat const kLabelVMargin = 10;
         if([cc isKindOfClass:[UIButton class]])
         {
             UIButton *btn = (UIButton *)cc;
-            [btn setTitle:@"取消"  forState:UIControlStateNormal];
-            [btn setBackgroundColor:[UIColor colorWithWhite:0.800 alpha:1.000]];
-//            [btn setBackgroundImage:[UIImage imageNamed:@"searchBarBackground"] forState:UIControlStateNormal];
+            [btn setTitle:@""  forState:UIControlStateNormal];
+//            [btn setBackgroundColor:[UIColor colorWithWhite:0.800 alpha:1.000]];
+            [btn setBackgroundImage:[UIImage imageNamed:@"btn_search_cancel_n@2x"] forState:UIControlStateNormal];
+            [btn setBackgroundImage:[UIImage imageNamed:@"btn_search_cancel_f@2x"] forState:UIControlStateHighlighted];
         }
     }
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_searchBar@2x"]];
+    imageView.frame = CGRectMake(0, 0, 320, 44);
+    imageView.tag = 100;
+    [searchBar insertSubview:imageView atIndex:0];
+    [imageView release];
     
     return YES;
 }

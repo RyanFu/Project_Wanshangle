@@ -71,7 +71,12 @@
     [_movieInfoImgView release];
     
     [_recommendButton setBackgroundImage:[UIImage imageNamed:@"btn_good_h_f"] forState:UIControlStateNormal];
+    [_recommendButton setBackgroundImage:[UIImage imageNamed:@"btn_good_s_f"] forState:UIControlStateHighlighted];
+    [_recommendButton setBackgroundImage:[UIImage imageNamed:@"btn_good_s_f"] forState:UIControlStateSelected];
+    
     [_wantLookButton setBackgroundImage:[UIImage imageNamed:@"btn_look_h_f"] forState:UIControlStateNormal];
+    [_wantLookButton setBackgroundImage:[UIImage imageNamed:@"btn_look_s_f"] forState:UIControlStateHighlighted];
+    [_wantLookButton setBackgroundImage:[UIImage imageNamed:@"btn_look_s_f"] forState:UIControlStateSelected];
     
     if (_mMovie.movieDetail.info==nil) {
         [_imgView setImageWithURL:[NSURL URLWithString:_mMovie.webImg]
