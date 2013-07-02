@@ -60,7 +60,7 @@
     _imgView = [[UIImageView alloc] initWithFrame:CGRectMake(7, 6, 90, 120)];
     [_mScrollView addSubview:_imgView];
     [_imgView release];
-    
+
     UIImage *img = [UIImage imageNamed:@"bg_movie_detail_info@2x"];
     _movieInfoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(9, 176,302, 270)];
     [_movieInfoImgView setBackgroundColor:[UIColor clearColor]];

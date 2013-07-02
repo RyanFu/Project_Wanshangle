@@ -136,13 +136,13 @@ typedef enum {
     if ([movie.newMovie boolValue]) {
         [array addObject:cell.movie_image_new];
     }
-    if (movie.twoD) {
+    if ([movie.twoD boolValue]) {
         [array addObject:cell.movie_image_3d];
     }
-    if (movie.threeD) {
+    if ([movie.threeD boolValue]) {
         [array addObject:cell.movie_image_imx];
     }
-    if (movie.iMaxD) {
+    if ([movie.iMaxD boolValue]) {
         [array addObject:cell.movie_image_3dimx];
     }
     
@@ -164,6 +164,7 @@ typedef enum {
     int width = tFrame.origin.x+ tFrame.size.width;
     ABLoggerInfo(@"view frame ===== %@",NSStringFromCGRect(view.frame));
     [cell addSubview:view];
+    [view release];
     
     CGSize nameSize = [movie.name sizeWithFont:[UIFont systemFontOfSize:19] constrainedToSize:CGSizeMake((240-width-10), 23)];
 

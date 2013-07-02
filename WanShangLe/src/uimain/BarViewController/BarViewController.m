@@ -140,7 +140,7 @@
 }
 
 - (ApiCmd *)apiGetDelegateApiCmd{
-    return _apiCmdBar_getAllBars;
+    return (ApiCmd *)_apiCmdBar_getAllBars;
 }
 
 - (void)updateData:(int)tag

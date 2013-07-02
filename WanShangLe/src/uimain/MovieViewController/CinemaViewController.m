@@ -69,6 +69,7 @@
     self.searchBar = nil;
     self.strongSearchDisplayController = nil;
     self.filterHeaderView = nil;
+    self.filterTableView = nil;
 //    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super dealloc];
 }
@@ -88,7 +89,6 @@
     
     _cinemaDelegate.isOpen = NO;
     _cinemaDelegate.selectIndex = nil;
-    [_cinemaTableView reloadData];
     
 #ifdef TestCode
     [self updatData];//测试代码
@@ -111,6 +111,7 @@
     
     [self searchBarInit];
     [self tableViewInit];
+    [self filterTableViewInit];
     
     //    [self setTableViewDelegate];
     
@@ -169,13 +170,20 @@
     //create movie tableview and init
     _cinemaTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, _filterHeaderView.bounds.size.height, iPhoneAppFrame.size.width, self.view.bounds.size.height-74)
                                                     style:UITableViewStylePlain];
-    _cinemaTableView.backgroundColor = [UIColor colorWithRed:0.752 green:0.963 blue:0.931 alpha:1.000];
+    _cinemaTableView.backgroundColor = [UIColor whiteColor];
     _cinemaTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     _cinemaDelegate.isOpen = NO;
     _cinemaTableView.tableHeaderView = self.searchBar;
     _cinemaTableView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+}
+- (void)filterTableViewInit {
     
-    [self.view addSubview:_cinemaTableView];
+    //create movie tableview and init
+    _filterTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, _filterHeaderView.bounds.size.height, iPhoneAppFrame.size.width, self.view.bounds.size.height-74)
+                                                    style:UITableViewStylePlain];
+    _filterTableView.backgroundColor = [UIColor whiteColor];
+    _filterTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    _filterTableView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
 }
 
 - (void)searchBarInit{
@@ -199,8 +207,6 @@
             break;
         }
     }
-    
-    [self setTableViewFilterAllDelegate];
     self.searchBar.delegate = _cinemaDelegate;
     self.strongSearchDisplayController = [[[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:_mparentController] autorelease];
     _mparentController.searchDisplayController.searchResultsDataSource = _cinemaDelegate;
@@ -217,6 +223,9 @@
     }
     _cinemaTableView.dataSource = _cinemaDelegate;
     _cinemaTableView.delegate = _cinemaDelegate;
+    
+    [_filterTableView removeFromSuperview];
+    [self.view insertSubview:_cinemaTableView belowSubview:_filterHeaderView];
 }
 
 - (void)setTableViewFilterDelegate:(BOOL)isFavorite{
@@ -225,9 +234,12 @@
         _cinemaFilterDelegate = [[CinemaListFilterTableViewDelegate alloc] init];
         _cinemaFilterDelegate.parentViewController = self;
     }
-    _cinemaTableView.dataSource = _cinemaFilterDelegate;
-    _cinemaTableView.delegate = _cinemaFilterDelegate;
+    _filterTableView.dataSource = _cinemaFilterDelegate;
+    _filterTableView.delegate = _cinemaFilterDelegate;
     _cinemaFilterDelegate.isFavoriteList = isFavorite;
+    
+    [_cinemaTableView removeFromSuperview];
+    [self.view insertSubview:_filterTableView belowSubview:_filterHeaderView];
 }
 
 #pragma mark 电影详情
@@ -273,7 +285,13 @@
 }
 
 #pragma mark-
-#pragma mark Filter Movie List
+#pragma mark IBAction Event
+- (IBAction)addFavoriteButtonClick:(id)sender{
+    ABLoggerMethod();
+}
+
+#pragma mark-
+#pragma mark Filter MovieList Event
 - (void)userSettingFilter{
     
     switch (_cinemaFilterType) {
@@ -281,16 +299,14 @@
             [self setTableViewFilterDelegate:YES];
             [self formatCinemaDataFilterFavorite];
         }
-            
             break;
         case MMFilterCinemaListTypeNearby:{
             [self setTableViewFilterDelegate:NO];
             [self formatCinemaDataFilterNearby];
         }
-            
             break;
             
-        default:{
+        case MMFilterCinemaListTypeAll:{
             [self setTableViewFilterAllDelegate];
             [self formatCinemaDataFilterAll];
             _cinemaFilterType = MMFilterCinemaListTypeAll;
@@ -328,7 +344,8 @@
     
     [UIView animateWithDuration:0.2 animations:^{
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-         [_filterHeaderView setUserInteractionEnabled:NO];
+        
+//         [_filterHeaderView setUserInteractionEnabled:NO];
         CGRect newFrame = CGRectZero;
         switch (bt.tag) {
             case 2:
@@ -363,8 +380,7 @@
         [self updateData:tag];
         
     });
-    
-    
+
 }
 
 - (void) apiNotifyLocationResult:(id) apiCmd  error:(NSError*) error{
@@ -438,25 +454,47 @@
     [dataArray release];
     [districtDic release];
     
-    [self asynTableViewReloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_cinemaTableView reloadData];
+    });
 }
 
 - (void)formatCinemaDataFilterNearby{
+    
+    self.cinemasArray = nil;
+     _filterTableView.tableFooterView = nil;
+    
     [[DataBaseManager sharedInstance] getNearbyCinemasListFromCoreDataWithCallBack:^(NSArray *cinemas) {
-        [self asynTableViewReloadData];
+        
+        ABLoggerInfo(@"nearby cinema count=== %d",[cinemas count]);
+        self.cinemasArray = cinemas;
+        
+        _filterTableView.tableFooterView = nil;
+        if ([cinemas count]<=0) {
+            _filterTableView.tableFooterView = _noGPSView;
+        }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_filterTableView reloadData];
+        });
     }];
+    
+    [_filterTableView reloadData];
 }
 
 - (void)formatCinemaDataFilterFavorite{
     NSArray *array_coreData = [[DataBaseManager sharedInstance] getFavoriteCinemasListFromCoreData];
     ABLoggerDebug(@"主电影院count ==== %d",[array_coreData count]);
+    self.cinemasArray = array_coreData;
     
-    [self asynTableViewReloadData];
-}
-
-- (void)asynTableViewReloadData{
+    if ([array_coreData count]>0) {
+        _filterTableView.tableFooterView = _addFavoriteFooterView;
+    }else{
+        _filterTableView.tableFooterView = _noFavoriteFooterView;
+    }
+    
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.cinemaTableView reloadData];
+        [_filterTableView reloadData];
     });
 }
 

@@ -21,17 +21,23 @@ typedef NS_ENUM(NSInteger, MMFilterCinemaListType) {
 @interface CinemaViewController : UIViewController{
     
 }
-@property (nonatomic,retain) UISearchBar *searchBar;
-@property(nonatomic, retain) UISearchDisplayController *strongSearchDisplayController;
+@property(nonatomic,retain) UISearchBar *searchBar;
+@property(nonatomic,retain) UISearchDisplayController *strongSearchDisplayController;
 @property(nonatomic,retain) UIView *filterHeaderView;
 @property(nonatomic,assign) MovieViewController *mparentController;
 @property(nonatomic,retain) MMovie *mMovie;
 @property(nonatomic,retain) UITableView *cinemaTableView;
+@property(nonatomic,retain) UITableView *filterTableView;
 @property(nonatomic,retain) UIButton *movieDetailButton;
 @property(nonatomic,retain) NSArray *cinemasArray;
 @property(nonatomic,retain) ApiCmdMovie_getAllCinemas *apiCmdMovie_getAllCinemas;
 @property(nonatomic,assign) MMFilterCinemaListType cinemaFilterType;
 
--(void)beginSearch;
--(void)endSearch;
+@property(nonatomic,retain) IBOutlet UIView *addFavoriteFooterView;
+@property(nonatomic,retain) IBOutlet UIView *noFavoriteFooterView;
+@property(nonatomic,retain) IBOutlet UIView *noGPSView;
+
+- (IBAction)addFavoriteButtonClick:(id)sender;
+- (void)beginSearch;
+- (void)endSearch;
 @end

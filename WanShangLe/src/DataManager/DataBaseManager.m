@@ -605,7 +605,7 @@ static DataBaseManager *_sharedInstance = nil;
     ABLoggerInfo(@"amovieData == %@",amovieData);
     mMovie.rating = [NSNumber numberWithInt:[[amovieData objectForKey:@"rating"] intValue]];
     mMovie.ratingFrom = [amovieData objectForKey:@"ratingFrom"];
-    mMovie.ratingpeople = [amovieData objectForKey:@"ratingcount"];
+    mMovie.ratingpeople = [NSNumber numberWithInt:[[amovieData objectForKey:@"ratingCount"] intValue]];
     mMovie.newMovie = [amovieData objectForKey:@"newMovie"];
     mMovie.twoD = [NSNumber numberWithInt:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:0] intValue]];
     mMovie.threeD = [NSNumber numberWithInt:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:1] intValue]];
@@ -786,6 +786,8 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdMovie_getSchedule* apiCmdMovie_getSchedule = [[ApiCmdMovie_getSchedule alloc] init];
     apiCmdMovie_getSchedule.delegate = delegate;
     apiCmdMovie_getSchedule.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdMovie_getSchedule.movie_id = aMovie.uid;
+    apiCmdMovie_getSchedule.cinema_id = [aCinema.uid stringValue];
     [apiClient executeApiCmdAsync:apiCmdMovie_getSchedule];
     [apiCmdMovie_getSchedule.httpRequest setTag:API_MScheduleCmd];
     
@@ -957,9 +959,11 @@ static DataBaseManager *_sharedInstance = nil;
     
     ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
     
-    if ([[[[ApiClient defaultClient] networkQueue] operations] containsObject:tapiCmd.httpRequest]) {
-        ABLoggerWarn(@"不能请求影院列表数据，因为已经请求了");
-        return tapiCmd;
+    if (tapiCmd.httpRequest!=nil) {
+        if ([[[[ApiClient defaultClient] networkQueue] operations] containsObject:tapiCmd.httpRequest]) {
+            ABLoggerWarn(@"不能请求影院列表数据，因为已经请求了");
+            return tapiCmd;
+        }
     }
     
     ABLoggerWarn(@"tapiCmd.httpRequest ====== %@",tapiCmd.httpRequest);
@@ -1013,7 +1017,6 @@ static DataBaseManager *_sharedInstance = nil;
             MCinema *cinema2 = (MCinema *)obj2;
             return [cinema1.nearby compare:cinema2.nearby];
         }];
-        ABLoggerInfo(@"cinemas === %@",array);
         
         if (mCallBack && isNewLocation) {
             mCallBack(array);

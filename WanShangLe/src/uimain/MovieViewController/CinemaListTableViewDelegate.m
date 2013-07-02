@@ -234,9 +234,6 @@ static CGFloat const kLabelVMargin = 10;
     
     cell.cinema_name.text = cinema.name;
     cell.cinema_address.text = cinema.address;
-    cell.cinema_count.text = [NSString stringWithFormat:@"34场"];
-    cell.cinema_price.text = [NSString stringWithFormat:@"25-75元"];
-    cell.cinema_tuan.hidden = NO;
 }
 
 -(CinemaTableViewCell *)createNewMocieCell{

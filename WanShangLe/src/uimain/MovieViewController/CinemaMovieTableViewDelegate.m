@@ -11,6 +11,12 @@
 #import "BuyInfoViewController.h"
 #import "MSchedule.h"
 
+@interface CinemaMovieTableViewDelegate(){
+    
+}
+@property(nonatomic,assign) NSArray *mArray;
+@end
+
 @implementation CinemaMovieTableViewDelegate
 
 #pragma mark -
@@ -41,7 +47,12 @@
 }
 
 - (void)configureCell:(ScheduleTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    cell.schedule_time.text = [_parentViewController.schedulesArray objectAtIndex:indexPath.row];
+    
+    _mArray = _parentViewController.schedulesArray;
+    NSDictionary *tDic = [_mArray objectAtIndex:indexPath.row];
+    cell.schedule_time.text = [tDic objectForKey:@"time"];
+    cell.schedule_price.text = [[tDic objectForKey:@"lowestprice"] stringValue];
+//    cell.schedule_time.text = [tDic objectForKey:@"viewtypes"];
 }
 
 -(ScheduleTableViewCell *)createNewMocieCell{

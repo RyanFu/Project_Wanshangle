@@ -10,6 +10,8 @@
 
 @interface ApiCmdMovie_getSchedule : ApiCmd{
 }
+@property(nonatomic,retain)NSString *movie_id;
+@property(nonatomic,retain)NSString *cinema_id;
 - (NSMutableDictionary*) getParamDict;
 - (void) parseResultData:(NSDictionary*) dictionary;
 
