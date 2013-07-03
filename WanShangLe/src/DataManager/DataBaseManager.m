@@ -15,8 +15,9 @@ static DataBaseManager *_sharedInstance = nil;
 
 @interface DataBaseManager(){
     NSString *updateTimeStamp;
+    
 }
-
+@property(nonatomic,retain)NSDateFormatter *timeFormatter;
 @end
 
 @implementation DataBaseManager
@@ -34,13 +35,20 @@ static DataBaseManager *_sharedInstance = nil;
 -(id)init{
     self = [super init];
     if (self) {
-        
+        [self initData];
     }
     return self;
 }
 
+- (void)initData{
+    _timeFormatter = [[NSDateFormatter alloc] init];
+    _timeFormatter.timeZone = [NSTimeZone localTimeZone];
+    _timeFormatter.locale = [NSLocale currentLocale];
+}
+
 - (void)dealloc {
     [updateTimeStamp release];
+    self.timeFormatter = nil;
     [super dealloc];
 }
 
@@ -97,7 +105,7 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 #pragma mark -
-#pragma mark 更新标记-时间戳
+#pragma mark 日期-时间
 - (BOOL)isToday:(NSString *)timeStamp{
     
     if (isEmpty(timeStamp)) {
@@ -110,16 +118,118 @@ static DataBaseManager *_sharedInstance = nil;
 - (NSString *)getTodayTimeStamp{
     
     if (!updateTimeStamp) {
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         //formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss ZZZ";
-        formatter.dateFormat = @"yyyyMMdd";
-        formatter.timeZone = [NSTimeZone localTimeZone];
-        formatter.locale = [NSLocale currentLocale];
-        updateTimeStamp = [[formatter stringFromDate:[NSDate date]] retain];
+        _timeFormatter.dateFormat = @"yyyyMMdd";
+        updateTimeStamp = [[_timeFormatter stringFromDate:[NSDate date]] retain];
         ABLoggerInfo(@"today time stamp is ===== %@",updateTimeStamp);
-        [formatter release];
     }
     return updateTimeStamp;
+}
+
+#pragma mark 获取星期几
+- (NSString *)getNowDate{
+    
+    _timeFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    
+    return [_timeFormatter stringFromDate:[NSDate date]];
+}
+
+- (NSString *)getTodayWeek{
+    return [self getWhickWeek:[NSDate date]];
+}
+- (NSString *)getTomorrowWeek{
+    //得到(24 * 60 * 60)即24小时之前的日期，dateWithTimeIntervalSinceNow:
+    NSDate *tomorrow = [NSDate dateWithTimeIntervalSinceNow: (24 * 60 * 60)];
+    
+    return [self getWhickWeek:tomorrow];
+}
+
+- (NSString *)getWhickWeek:(NSDate*)aDate{
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+
+    NSInteger unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekdayCalendarUnit |
+    NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
+
+    NSDateComponents *comps = [calendar components:unitFlags fromDate:aDate];
+    int week = [comps weekday];
+    
+    NSString *weekStr = nil;
+    switch (week) {
+        case 1:
+            weekStr = @"周日";
+            break;
+        case 2:
+            weekStr = @"周一";
+            break;
+        case 3:
+            weekStr = @"周二";
+            break;
+        case 4:
+            weekStr = @"周三";
+            break;
+        case 5:
+            weekStr = @"周四";
+            break;
+        case 6:
+            weekStr = @"周五";
+            break;
+        default:
+            weekStr = @"周六";
+            break;
+    }
+    
+    [calendar release];
+    return weekStr;
+    
+    /*
+    int month = [comps month];
+    int day = [comps day];
+    int hour = [comps hour];
+    int min = [comps minute];
+    int sec = [comps second];*/
+}
+
+#pragma mark 获取时间
+//time = "2013-07-03 10:00:00";
+- (NSString *)getTimeFromDate:(NSString *)dateStr{
+    if (isEmpty(dateStr)) {
+        return nil;
+    }
+    _timeFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    NSDate *aDate = [_timeFormatter dateFromString:dateStr];
+    
+    _timeFormatter.dateFormat = @"HH:mm";
+    
+    return [_timeFormatter stringFromDate:aDate];
+}
+
+- (NSString *)timeByAddingTimeInterval:(int)time fromDate:(NSString *)dateStr{
+    
+    if (isEmpty(dateStr) || isEmpty(dateStr)) {
+        return nil;
+    }
+    _timeFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    NSDate *aDate = [_timeFormatter dateFromString:dateStr];
+    
+    int interval = time*60;
+    aDate = [aDate dateByAddingTimeInterval:interval];
+    
+    _timeFormatter.dateFormat = @"HH:mm";
+    
+    return [_timeFormatter stringFromDate:aDate];
+}
+
+-(NSDate *)trueDate:(NSDate *)formatDate{
+    
+    NSTimeZone *zone = [NSTimeZone localTimeZone];;
+    
+    NSInteger interval = [zone secondsFromGMTForDate: formatDate];
+    
+    NSDate *localeDate = [formatDate  dateByAddingTimeInterval: interval];
+
+    ABLoggerDebug(@"localeDate ====== %@", localeDate);
+    
+    return localeDate;
 }
 
 #pragma mark -
@@ -475,11 +585,11 @@ static DataBaseManager *_sharedInstance = nil;
         [returnArray addObject:movie_city.movie];
     }
     
-    //    returnArray = (NSMutableArray *)[returnArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-    //        NSString *first =  [(MMovie*)a name];
-    //        NSString *second = [(MMovie*)b name];
-    //        return [first compare:second];
-    //    }];
+//    returnArray = (NSMutableArray *)[returnArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+//        NSString *first =  [(MMovie*)a name];
+//        NSString *second = [(MMovie*)b name];
+//        return [first compare:second];
+//    }];
     
     return returnArray;
 }
@@ -598,6 +708,7 @@ static DataBaseManager *_sharedInstance = nil;
     mMovie.name = [amovieData objectForKey:@"name"];
     mMovie.webImg = [amovieData objectForKey:@"coverurl"];
     mMovie.aword = [amovieData objectForKey:@"description"];
+    mMovie.duration = [amovieData objectForKey:@"duration"];
 }
 
 - (void)importDynamicMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData
@@ -887,6 +998,22 @@ static DataBaseManager *_sharedInstance = nil;
     }];
     
     [movie_cinema_uid release];
+}
+
+//去除过期的电影排期
+- (NSArray *)deleteUnavailableSchedules:(NSArray *)aArray{
+    
+    NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:10];
+    
+    NSString *nowTime = [[DataBaseManager sharedInstance] getNowDate];
+    for (NSDictionary *tDic in aArray) {
+        NSString *scheduleTime = [tDic objectForKey:@"time"];
+        if ([scheduleTime compare:nowTime options:NSNumericSearch] == NSOrderedDescending) {
+            [returnArray addObject:tDic];
+        }
+    }
+    
+    return [returnArray autorelease];
 }
 
 #pragma mark 购买信息

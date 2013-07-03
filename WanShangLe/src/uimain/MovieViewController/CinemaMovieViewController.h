@@ -29,6 +29,8 @@
 @property(nonatomic,retain)IBOutlet UIImageView *movie_image_3dimx;
 @property(nonatomic,retain)IBOutlet UIImageView *movie_image_imx;
 @property(nonatomic,retain)IBOutlet UIImageView *movie_image_3d;
+@property(nonatomic,retain)IBOutlet UIView *headerView;
+@property(nonatomic,retain)IBOutlet UIView *footerView;
 
 - (IBAction)clickTodayButton:(id)sender;
 - (IBAction)clickTomorrowButton:(id)sender;

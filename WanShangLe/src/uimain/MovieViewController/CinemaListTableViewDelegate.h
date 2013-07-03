@@ -12,7 +12,5 @@
 @interface CinemaListTableViewDelegate : NSObject<UISearchBarDelegate,UISearchDisplayDelegate,UITableViewDelegate,UITableViewDataSource>{
     
 }
-@property (assign)BOOL isOpen;
-@property (nonatomic,retain)NSIndexPath *selectIndex;
 @property(nonatomic,assign) CinemaViewController *parentViewController;
 @end

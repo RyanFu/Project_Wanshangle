@@ -27,6 +27,8 @@
 @property (nonatomic, retain) NSSet *movie_cinemas;
 @property (nonatomic, retain) MMovieDetail *movieDetail;
 @property (nonatomic, retain) NSSet *movie_citys;
+@property (nonatomic, retain) NSString * duration;
+
 @end
 
 @interface MMovie (CoreDataGeneratedAccessors)

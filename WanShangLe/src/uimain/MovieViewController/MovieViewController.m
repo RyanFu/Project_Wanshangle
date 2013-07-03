@@ -33,7 +33,7 @@ typedef enum {
 @property(nonatomic,retain)MovieListTableViewDelegate *movieDelegate;
 @property(nonatomic,retain)UIView *movieContentView;
 @property(nonatomic,retain)UIView *topView;
-@property(nonatomic,retain)UILabel *titleLabel;
+//@property(nonatomic,retain)UILabel *titleLabel;
 @end
 
 @implementation MovieViewController
@@ -52,7 +52,7 @@ typedef enum {
         
         isMoviePanel = YES;
         
-        //        self.navigationItem.hidesBackButton= YES;
+        //self.navigationItem.hidesBackButton= YES;
     }
     return self;
 }
@@ -66,7 +66,7 @@ typedef enum {
     self.apiCmdMovie_getAllMovies = nil;
     self.movieContentView = nil;
     self.topView = nil;
-    self.titleLabel = nil;
+//    self.titleLabel = nil;
     
     self.refreshHeaderView = nil;
     [super dealloc];
@@ -157,9 +157,12 @@ typedef enum {
 }
 
 - (void)initTableView{
-    _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
-    _titleLabel.backgroundColor = [UIColor clearColor];
-    [_titleLabel setTextAlignment:UITextAlignmentCenter];
+//    _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
+//    _titleLabel.backgroundColor = [UIColor clearColor];
+//    _titleLabel.textColor = [UIColor whiteColor];
+//    _titleLabel.font = [UIFont boldSystemFontOfSize:20];
+//    _titleLabel.shadowColor = [UIColor colorWithWhite:0.298 alpha:1.000];
+//    [_titleLabel setTextAlignment:UITextAlignmentCenter];
     
     _movieContentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, iPhoneAppFrame.size.width, iPhoneAppFrame.size.height-44)];
     //create movie tableview and init
@@ -272,6 +275,7 @@ typedef enum {
 #pragma mark 【电影-影院】Button Event
 - (void)clickMovieButtonUp:(id)sender{
     
+    if (isMoviePanel)return;
     isMoviePanel = YES;
     [self switchMovieCinemaAnimation];
 }
@@ -283,9 +287,13 @@ typedef enum {
 
 - (void)clickCinemaButtonUp:(id)sender{
     
-    _cinemaViewController.movieDetailButton.hidden = YES;
-    
+//    _cinemaViewController.movieDetailButton.hidden = YES;
+    if (!isMoviePanel)return;
     isMoviePanel = NO;
+    
+    if (_cinemaViewController.view.superview==nil) {
+        [self newCinemaController];
+    }
     [self switchMovieCinemaAnimation];
 }
 
@@ -293,7 +301,6 @@ typedef enum {
     
     [self cleanUpButtonBackground];
     [cinemaButton setBackgroundImage:[UIImage imageNamed:@"btn_switch@2x"] forState:UIControlStateNormal];
-    
 }
 
 - (void)cleanUpButtonBackground{
@@ -302,12 +309,15 @@ typedef enum {
 }
 
 - (void)clickBackButton:(id)sender{
-    if (_cinemaViewController.movieDetailButton.hidden) {
-        [self.navigationController popViewControllerAnimated:YES];
-    }else{
-        _cinemaViewController.movieDetailButton.hidden = YES;
-        [self pushMovieCinemaAnimation];
-    }
+    
+    [self.navigationController popViewControllerAnimated:YES];
+    
+//    if (_cinemaViewController.movieDetailButton.hidden) {
+//        [self.navigationController popViewControllerAnimated:YES];
+//    }else{
+//        _cinemaViewController.movieDetailButton.hidden = YES;
+//        [self pushMovieCinemaAnimation];
+//    }
 }
 
 #pragma mark -
@@ -358,17 +368,16 @@ typedef enum {
 
 - (void)pushMovieCinemaAnimation{
     
-    topView.hidden = !_cinemaViewController.movieDetailButton.hidden;
-    
-    if (topView.hidden) {
-        ABLoggerInfo(@"_cinemaViewController.mMovie.name === %@",_cinemaViewController.mMovie.name);
-        _titleLabel.text = _cinemaViewController.mMovie.name;
-        self.navigationItem.titleView = _titleLabel;
-    }else{
-        self.navigationItem.titleView = topView;
-    }
-    
-    [self switchMovieCinemaAnimation];
+//    topView.hidden = !_cinemaViewController.movieDetailButton.hidden;
+//    
+//    if (topView.hidden) {
+//        _titleLabel.text = _cinemaViewController.mMovie.name;
+//        self.navigationItem.titleView = _titleLabel;
+//    }else{
+//        self.navigationItem.titleView = topView;
+//    }
+    [self.navigationController pushViewController: _cinemaViewController animated:YES];
+//    [self switchMovieCinemaAnimation];
 }
 
 #pragma mark -

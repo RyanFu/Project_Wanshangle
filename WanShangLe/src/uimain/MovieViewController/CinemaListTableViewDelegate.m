@@ -96,12 +96,7 @@ static CGFloat const kLabelVMargin = 10;
     
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
         
-        if (self.isOpen) {
-            if (self.selectIndex.section == section) {
-                return [[[_parentViewController.cinemasArray objectAtIndex:section] objectForKey:@"list"] count]+1;;
-            }
-        }
-        return 1;
+        return [[[_parentViewController.cinemasArray objectAtIndex:section] objectForKey:@"list"] count];
         
     } else {//搜索模式
         return [self.searchByName count] + [self.searchByPhone count];
@@ -112,12 +107,7 @@ static CGFloat const kLabelVMargin = 10;
 {
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
         
-        if (self.isOpen&&self.selectIndex.section == indexPath.section&&indexPath.row!=0) {
-            return [self cinemaCelltableView:tableView cellForRowAtIndexPath:indexPath];
-        }else
-        {
-            return [self cinemaSectiontableView:tableView cellForRowAtIndexPath:indexPath];
-        }
+        return [self cinemaCelltableView:tableView cellForRowAtIndexPath:indexPath];
     }
     
     return [self cinemaSearchtableView:tableView cellForRowAtIndexPath:indexPath];
@@ -139,33 +129,15 @@ static CGFloat const kLabelVMargin = 10;
     if (!cell) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"CinemaTableViewCell" owner:self options:nil] objectAtIndex:0];
     }
-    NSArray *list = [[_parentViewController.cinemasArray objectAtIndex:self.selectIndex.section] objectForKey:@"list"];
     
-    [self configureCell:cell withObject:[list objectAtIndex:indexPath.row-1]];
+    ABLoggerDebug(@"");
     
-    return cell;
+    NSArray *mArray = _parentViewController.cinemasArray;
     
-}
-
--(UITableViewCell *)cinemaSectiontableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"mCinemaDistrictCell";
-    static BOOL nibsRegistered = NO;
-    if (!nibsRegistered) {
-        UINib *nib = [UINib nibWithNibName:@"CinemaTableViewCellSection" bundle:nil];
-        [tableView registerNib:nib forCellReuseIdentifier:CellIdentifier];
-        nibsRegistered = YES;
-    }
+    NSArray *list = [[mArray objectAtIndex:indexPath.section] objectForKey:@"list"];
     
-    CinemaTableViewCellSection *cell = (CinemaTableViewCellSection *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (!cell) {
-        [self createNewMocieCell];
-    }
+    [self configureCell:cell withObject:[list objectAtIndex:indexPath.row]];
     
-    NSString *name = [[_parentViewController.cinemasArray objectAtIndex:indexPath.section] objectForKey:@"name"];
-    NSArray *list = [[_parentViewController.cinemasArray objectAtIndex:indexPath.section] objectForKey:@"list"];
-    cell.cinema_district.text = [NSString stringWithFormat:@"%@  (共%d家)",name,[list count]];
-    [cell changeArrowWithUp:([self.selectIndex isEqual:indexPath]?YES:NO)];
     return cell;
     
 }
@@ -234,6 +206,57 @@ static CGFloat const kLabelVMargin = 10;
     
     cell.cinema_name.text = cinema.name;
     cell.cinema_address.text = cinema.address;
+    
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:4];
+    if ([cinema.zhekou boolValue]) {
+        [array addObject:cell.cinema_image_zhekou];
+    }
+    if ([cinema.juan boolValue]) {
+        [array addObject:cell.cinema_image_juan];
+    }
+    if ([cinema.seat boolValue]) {
+        [array addObject:cell.cinema_image_seat];
+    }
+    if ([cinema.tuan boolValue]) {
+        [array addObject:cell.cinema_image_tuan];
+    }
+    
+    int twidth = 0;
+    UIView *view = [[UIView alloc] init];
+    for (int i=0;i<[array count];i++) {
+        
+        UIView *tview = [array objectAtIndex:i];
+        CGRect tframe = tview.frame;
+        
+        tframe.origin.x = twidth;
+        twidth += tframe.size.width + 5;
+        
+        tview.frame = tframe;
+        [view addSubview:tview];
+    }
+    
+    CGRect tFrame = [(UIView *)[array lastObject] frame];
+    int width = (int)tFrame.origin.x+ tFrame.size.width;
+    ABLoggerInfo(@"view frame ===== %d",width);
+    [cell addSubview:view];
+    [view release];
+    
+    int nameSize_width = (cell.bounds.size.width-width-cell.cinema_name.frame.origin.x);
+    ABLoggerDebug(@"cinema.name = %@",cinema.name);
+    
+    CGSize nameSize = [cinema.name sizeWithFont:cell.cinema_name.font
+                              constrainedToSize:CGSizeMake(nameSize_width,MAXFLOAT)];
+    
+    CGRect cell_newFrame = cell.cinema_name.frame;
+    cell_newFrame.size.width = nameSize.width;
+    cell.cinema_name.frame = cell_newFrame;
+    
+    int view_x = cell.cinema_name.frame.origin.x+cell.cinema_name.frame.size.width +10;
+    [view setFrame:CGRectMake(view_x, 0, width, 15)];
+    CGPoint newCenter = view.center;
+    newCenter.y = cell.cinema_name.center.y;
+    view.center = newCenter;
+    cell.cinema_name.text = cinema.name;
 }
 
 -(CinemaTableViewCell *)createNewMocieCell{
@@ -247,13 +270,22 @@ static CGFloat const kLabelVMargin = 10;
 
 #pragma mark -
 #pragma mark UITableViewDelegate
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    
+    UILabel *headerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
+    headerView.backgroundColor = [UIColor colorWithWhite:0.829 alpha:1.000];
+    
+    NSString *name = [[_parentViewController.cinemasArray objectAtIndex:section] objectForKey:@"name"];
+    NSArray *list = [[_parentViewController.cinemasArray objectAtIndex:section] objectForKey:@"list"];
+    headerView.text = [NSString stringWithFormat:@"%@  (共%d家)",name,[list count]];
+    
+    return [headerView autorelease];
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
-        if (indexPath.row!=0) {
             return 80.0f;
-        }
-        return 44.0f;
     }
     
     return 44.0f;
@@ -264,91 +296,34 @@ static CGFloat const kLabelVMargin = 10;
 {
     
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
-        if (indexPath.row == 0) {
-            if ([indexPath isEqual:self.selectIndex]) {
-                self.isOpen = NO;
-                [self didSelectCellRowFirstDo:NO nextDo:NO];
-                self.selectIndex = nil;
-                
-            }else
-            {
-                if (!self.selectIndex) {
-                    self.selectIndex = indexPath;
-                    [self didSelectCellRowFirstDo:YES nextDo:NO];
-                    
-                }else
-                {
-                    
-                    [self didSelectCellRowFirstDo:NO nextDo:YES];
-                }
-            }
-            
-        }else
-        {
-            NSDictionary *dic = [_parentViewController.cinemasArray objectAtIndex:indexPath.section];
-            NSArray *list = [dic objectForKey:@"list"];
-            MCinema *mCinema = [list objectAtIndex:indexPath.row-1];
-            
-            if (!_parentViewController.movieDetailButton.hidden) {
-                ScheduleViewController *scheduleViewController = [[ScheduleViewController alloc]
-                                                                  initWithNibName:(iPhone5?@"ScheduleViewController_5":@"ScheduleViewController")
-                                                                  bundle:nil];
-                scheduleViewController.mCinema = mCinema;
-                scheduleViewController.mMovie = _parentViewController.mMovie;
-                [_parentViewController.mparentController.navigationController pushViewController:scheduleViewController animated:YES];
-                [scheduleViewController release];
-            }else{
-                CinemaMovieViewController *cinemaMovieController = [[CinemaMovieViewController alloc]
-                                                                    initWithNibName:(iPhone5?@"CinemaMovieViewController_5":@"CinemaMovieViewController")
-                                                                    bundle:nil];
-                cinemaMovieController.mCinema = mCinema;
-                cinemaMovieController.mMovie = _parentViewController.mMovie;
-                [_parentViewController.mparentController.navigationController pushViewController:cinemaMovieController animated:YES];
-                [cinemaMovieController release];
-            }
-            
+        
+        NSDictionary *dic = [_parentViewController.cinemasArray objectAtIndex:indexPath.section];
+        NSArray *list = [dic objectForKey:@"list"];
+        MCinema *mCinema = [list objectAtIndex:indexPath.row];
+        
+        if (!_parentViewController.movieDetailButton.hidden) {
+            ScheduleViewController *scheduleViewController = [[ScheduleViewController alloc]
+                                                              initWithNibName:(iPhone5?@"ScheduleViewController_5":@"ScheduleViewController")
+                                                              bundle:nil];
+            scheduleViewController.mCinema = mCinema;
+            scheduleViewController.mMovie = _parentViewController.mMovie;
+            [_parentViewController.mparentController.navigationController pushViewController:scheduleViewController animated:YES];
+            [scheduleViewController release];
+        }else{
+            CinemaMovieViewController *cinemaMovieController = [[CinemaMovieViewController alloc]
+                                                                initWithNibName:(iPhone5?@"CinemaMovieViewController_5":@"CinemaMovieViewController")
+                                                                bundle:nil];
+            cinemaMovieController.mCinema = mCinema;
+            cinemaMovieController.mMovie = _parentViewController.mMovie;
+            [_parentViewController.mparentController.navigationController pushViewController:cinemaMovieController animated:YES];
+            [cinemaMovieController release];
         }
+        
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         
     } else {//搜索模式
         
     }
-}
-
-- (void)didSelectCellRowFirstDo:(BOOL)firstDoInsert nextDo:(BOOL)nextDoInsert
-{
-    self.isOpen = firstDoInsert;
-    
-    CinemaTableViewCellSection *cell = (CinemaTableViewCellSection *)[_parentViewController.cinemaTableView cellForRowAtIndexPath:self.selectIndex];
-    [cell changeArrowWithUp:firstDoInsert];
-    
-    [_parentViewController.cinemaTableView beginUpdates];
-    
-    int section = self.selectIndex.section;
-    int contentCount = [[[_parentViewController.cinemasArray objectAtIndex:section] objectForKey:@"list"] count];
-	NSMutableArray* rowToInsert = [[NSMutableArray alloc] init];
-	for (NSUInteger i = 1; i < contentCount + 1; i++) {
-		NSIndexPath* indexPathToInsert = [NSIndexPath indexPathForRow:i inSection:section];
-		[rowToInsert addObject:indexPathToInsert];
-	}
-	
-	if (firstDoInsert)
-    {   [_parentViewController.cinemaTableView insertRowsAtIndexPaths:rowToInsert withRowAnimation:UITableViewRowAnimationTop];
-    }
-	else
-    {
-        [_parentViewController.cinemaTableView deleteRowsAtIndexPaths:rowToInsert withRowAnimation:UITableViewRowAnimationTop];
-    }
-    
-	[rowToInsert release];
-	
-	[_parentViewController.cinemaTableView endUpdates];
-    if (nextDoInsert) {
-        self.isOpen = YES;
-        self.selectIndex = [_parentViewController.cinemaTableView indexPathForSelectedRow];
-        [self didSelectCellRowFirstDo:YES nextDo:NO];
-    }
-    if (self.isOpen) [_parentViewController.cinemaTableView scrollToNearestSelectedRowAtScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
 #pragma mark -
@@ -361,16 +336,16 @@ static CGFloat const kLabelVMargin = 10;
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
-    if (scrollView.contentOffset.y < 44) {
-        _parentViewController.cinemaTableView.scrollIndicatorInsets = UIEdgeInsetsMake(CGRectGetHeight(_parentViewController.searchBar.bounds) - MAX(scrollView.contentOffset.y, 0), 0, 0, 0);
-    } else {
-        _parentViewController.cinemaTableView.scrollIndicatorInsets = UIEdgeInsetsZero;
-    }
-    
-    CGRect searchBarFrame = _parentViewController.searchBar.frame;
-    searchBarFrame.origin.y = MIN(scrollView.contentOffset.y, 0);
-
-    _parentViewController.searchBar.frame = searchBarFrame;
+        if (scrollView.contentOffset.y < 44) {
+            _parentViewController.cinemaTableView.scrollIndicatorInsets = UIEdgeInsetsMake(CGRectGetHeight(_parentViewController.searchBar.bounds) - MAX(scrollView.contentOffset.y, 0), 0, 0, 0);
+        } else {
+            _parentViewController.cinemaTableView.scrollIndicatorInsets = UIEdgeInsetsZero;
+        }
+        
+        CGRect searchBarFrame = _parentViewController.searchBar.frame;
+        searchBarFrame.origin.y = MIN(scrollView.contentOffset.y, 0);
+        
+        _parentViewController.searchBar.frame = searchBarFrame;
     }
 }
 
@@ -378,20 +353,20 @@ static CGFloat const kLabelVMargin = 10;
 #pragma mark -
 #pragma mark UISearchBarDelegate methods
 /*
-- (void)searchBar:(UISearchBar *)_searchBar textDidChange:(NSString *)searchText
-{
-    [[SearchCoreManager share] Search:searchText searchArray:nil nameMatch:_searchByName phoneMatch:self.searchByPhone];
-
-    ABLoggerInfo(@"_searchByName count ==== %d",[_searchByName count]);
-    ABLoggerInfo(@"searchByPhone count ==== %d",[_searchByPhone count]);
-    [_parentViewController.cinemaTableView reloadData];
-}*/
+ - (void)searchBar:(UISearchBar *)_searchBar textDidChange:(NSString *)searchText
+ {
+ [[SearchCoreManager share] Search:searchText searchArray:nil nameMatch:_searchByName phoneMatch:self.searchByPhone];
+ 
+ ABLoggerInfo(@"_searchByName count ==== %d",[_searchByName count]);
+ ABLoggerInfo(@"searchByPhone count ==== %d",[_searchByPhone count]);
+ [_parentViewController.cinemaTableView reloadData];
+ }*/
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar{
     [_parentViewController endSearch];
     [_parentViewController.cinemaTableView resignFirstResponder];
     [self scrollTableViewToSearchBarAnimated:YES];
-
+    
     _parentViewController.searchBar.text = nil;
     
     [self.searchByName removeAllObjects];
@@ -421,7 +396,7 @@ static CGFloat const kLabelVMargin = 10;
         {
             UIButton *btn = (UIButton *)cc;
             [btn setTitle:@""  forState:UIControlStateNormal];
-//            [btn setBackgroundColor:[UIColor colorWithWhite:0.800 alpha:1.000]];
+            //            [btn setBackgroundColor:[UIColor colorWithWhite:0.800 alpha:1.000]];
             [btn setBackgroundImage:[UIImage imageNamed:@"btn_search_cancel_n@2x"] forState:UIControlStateNormal];
             [btn setBackgroundImage:[UIImage imageNamed:@"btn_search_cancel_f@2x"] forState:UIControlStateHighlighted];
         }
@@ -453,7 +428,7 @@ static CGFloat const kLabelVMargin = 10;
     [[SearchCoreManager share] Search:searchString searchArray:nil nameMatch:_searchByName phoneMatch:_searchByPhone];
     
     ABLoggerDebug(@"search Name = %d",[_searchByName count]);
-
+    
     [_parentViewController.cinemaTableView reloadData];
     
     return YES;

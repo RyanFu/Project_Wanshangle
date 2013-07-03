@@ -136,7 +136,6 @@
 						<string key="NSFrame">{{231, 10}, {77, 23}}</string>
 						<reference key="NSSuperview" ref="1051989706"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="397557863"/>
 						<bool key="IBUIOpaque">NO</bool>
@@ -204,19 +203,19 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">schedule_timeLong</string>
-						<reference key="source" ref="1051989706"/>
-						<reference key="destination" ref="722101925"/>
-					</object>
-					<int key="connectionID">18</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">schedule_view</string>
 						<reference key="source" ref="1051989706"/>
 						<reference key="destination" ref="1020893105"/>
 					</object>
 					<int key="connectionID">19</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">schedule_timeLong</string>
+						<reference key="source" ref="1051989706"/>
+						<reference key="destination" ref="722101925"/>
+					</object>
+					<int key="connectionID">20</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -286,7 +285,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">19</int>
+			<int key="maxID">20</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">

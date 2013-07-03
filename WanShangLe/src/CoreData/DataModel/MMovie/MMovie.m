@@ -27,5 +27,6 @@
 @dynamic movie_cinemas;
 @dynamic movieDetail;
 @dynamic movie_citys;
+@dynamic duration;
 
 @end

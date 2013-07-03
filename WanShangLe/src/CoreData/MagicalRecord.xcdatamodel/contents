@@ -75,6 +75,7 @@
     </entity>
     <entity name="MMovie" representedClassName="MMovie" syncable="YES">
         <attribute name="aword" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="duration" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="iMaxD" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="newMovie" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -157,7 +158,7 @@
         <element name="KKTVDetail" positionX="430" positionY="-718" width="128" height="88"/>
         <element name="MBuyTicketInfo" positionX="-27" positionY="-63" width="128" height="73"/>
         <element name="MCinema" positionX="99" positionY="-306" width="128" height="270"/>
-        <element name="MMovie" positionX="-443" positionY="-351" width="128" height="253"/>
+        <element name="MMovie" positionX="-443" positionY="-351" width="128" height="270"/>
         <element name="MMovie_Cinema" positionX="-173" positionY="-313" width="128" height="103"/>
         <element name="MMovie_City" positionX="-450" positionY="-531" width="128" height="88"/>
         <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="133"/>

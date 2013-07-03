@@ -10,6 +10,7 @@
 #import "ScheduleViewController.h"
 #import "BuyInfoViewController.h"
 #import "MSchedule.h"
+#import "MMovie.h"
 
 @implementation ScheduleTableViewDelegate
 
@@ -40,13 +41,43 @@
 }
 
 - (void)configureCell:(ScheduleTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    cell.schedule_time.text = [_parentViewController.schedulesArray objectAtIndex:indexPath.row];
+    
+    NSArray *_mArray = _parentViewController.schedulesArray;
+    NSDictionary *tDic = [_mArray objectAtIndex:indexPath.row];
+    cell.schedule_time.text = [[DataBaseManager sharedInstance] getTimeFromDate:[tDic objectForKey:@"time"]];
+    cell.schedule_price.text = [NSString stringWithFormat:@"%@元起",[[tDic objectForKey:@"lowestprice"] stringValue]];
+    cell.schedule_timeLong.text = [NSString stringWithFormat:@"预计%@结束",
+                                   [[DataBaseManager sharedInstance] timeByAddingTimeInterval:[_parentViewController.mMovie.duration intValue]*60 fromDate:[tDic objectForKey:@"time"]]];
+    
+    NSString *viewType = @"2D";
+    NSArray *tarray = [tDic objectForKey:@"viewtypes"];
+    for (int i=0;i<[tarray count];i++) {
+        
+        if ([[tarray objectAtIndex:i] intValue]==0) {
+            continue;
+        }
+        switch (i) {
+            case 0:
+                viewType = @"3DIMAX";
+                break;
+            case 1:
+                viewType = @"IMX";
+                break;
+                
+            default:
+                viewType = @"3D";
+                break;
+        }
+        
+        break;
+    }
+    cell.schedule_view.text = [NSString stringWithFormat:@"国语%@",viewType];
 }
 
 -(ScheduleTableViewCell *)createNewMocieCell{
     ABLoggerMethod();
      ScheduleTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"ScheduleTableViewCell" owner:self options:nil] objectAtIndex:0];
-    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+    [cell setAccessoryType:UITableViewCellAccessoryNone];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     //    cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"history_menu_cell_background"]] autorelease];
     return cell;

@@ -197,9 +197,10 @@ typedef enum {
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    _parentViewController.cinemaViewController.movieDetailButton.hidden = NO;
+//    _parentViewController.cinemaViewController.movieDetailButton.hidden = NO;
     _parentViewController.cinemaViewController.mMovie = [_parentViewController.moviesArray objectAtIndex:indexPath.row];
     [_parentViewController pushMovieCinemaAnimation];
+    
 }
 
 

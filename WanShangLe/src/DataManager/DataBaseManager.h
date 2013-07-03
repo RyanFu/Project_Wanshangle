@@ -42,11 +42,19 @@ typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
 //database uid key
 - (NSString*)md5PathForKey:(NSString *) key;
 
+//日期-时间
 - (BOOL)isToday:(NSString *)timeStamp;
 - (NSString *)getTodayTimeStamp;
+//获取星期几
+- (NSString *)getNowDate;
+- (NSString *)getTodayWeek;
+- (NSString *)getTomorrowWeek;
+- (NSString *)getWhickWeek:(NSDate*)aDate;
+//获取时间
+- (NSString *)getTimeFromDate:(NSString *)dateStr;
+- (NSString *)timeByAddingTimeInterval:(int)time fromDate:(NSString *)dateStr;
 
 - (void)cleanUp;
-
 - (void)saveInManagedObjectContext:(NSManagedObjectContext *)coreDataContext;
 
 /**
@@ -95,6 +103,7 @@ typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
 - (ApiCmd *)getScheduleFromWebWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema delegate:(id<ApiNotify>)delegate;
 - (MSchedule *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema;
 - (void)insertScheduleIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd withaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema;
+- (NSArray *)deleteUnavailableSchedules:(NSArray *)aArray;
 
 //购买信息
 - (ApiCmd *)getBuyInfoFromWebWithaMovie:(MMovie *)aMovie
