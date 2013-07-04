@@ -301,7 +301,7 @@ static CGFloat const kLabelVMargin = 10;
         NSArray *list = [dic objectForKey:@"list"];
         MCinema *mCinema = [list objectAtIndex:indexPath.row];
         
-        if (!_parentViewController.movieDetailButton.hidden) {
+        if (_parentViewController.mparentController.isMoviePanel) {
             ScheduleViewController *scheduleViewController = [[ScheduleViewController alloc]
                                                               initWithNibName:(iPhone5?@"ScheduleViewController_5":@"ScheduleViewController")
                                                               bundle:nil];

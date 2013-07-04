@@ -72,5 +72,54 @@
     [showDetailController release];
 }
 
+#pragma mark -
+#pragma mark Data Source Loading / Reloading Methods
+
+- (void)reloadTableViewDataSource{
+    
+    //    [_model reload];
+	_reloading = YES;
+	
+}
+
+- (void)doneReLoadingTableViewData
+{
+	//  model should call this when its done loading
+	_reloading = NO;
+	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_mTableView];
+}
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+	if (view.tag == EGOHeaderView) {
+        [self reloadTableViewDataSource];
+        [self performSelector:@selector(doneReLoadingTableViewData) withObject:nil afterDelay:3.0];
+    }
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+	return _reloading; // should return if data source model is reloading
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+	
+	return [NSDate date]; // should return date data source was last changed
+	
+}
+
 
 @end

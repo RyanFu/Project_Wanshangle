@@ -357,8 +357,6 @@
             
         case MMFilterCinemaListTypeAll:{
             [self setTableViewFilterAllDelegate];
-            [self formatCinemaDataFilterAll];
-            _cinemaFilterType = MMFilterCinemaListTypeAll;
         }
             break;
         default:
@@ -384,7 +382,6 @@
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:_cinemaFilterType] forKey:MMovie_CinemaFilterType];
     [self userSettingFilter];
     [self formatCinemaDataFilterNearby];
-    
     [self stratAnimationFilterButton:_cinemaFilterType];
 }
 - (void)clickFilterAllButton:(id)sender{
@@ -394,7 +391,7 @@
     _cinemaFilterType = MMFilterCinemaListTypeAll;
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:_cinemaFilterType] forKey:MMovie_CinemaFilterType];
     [self userSettingFilter];
-    
+    [self formatCinemaDataFilterAll];
     [self stratAnimationFilterButton:_cinemaFilterType];
 }
 - (void)stratAnimationFilterButton:(MMFilterCinemaListType)type{

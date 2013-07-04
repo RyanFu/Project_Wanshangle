@@ -7,10 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "EGORefreshTableHeaderView.h"
+
 
 @class ShowViewController;
-@interface ShowTableViewDelegate : NSObject<UITableViewDataSource,UITableViewDelegate>{
-    
+@interface ShowTableViewDelegate : NSObject<EGORefreshTableHeaderDelegate,UITableViewDataSource,UITableViewDelegate>{
+    UITableView *mTableView;
+    BOOL _reloading;
 }
+@property(nonatomic,assign) EGORefreshTableHeaderView *refreshHeaderView;
+@property(nonatomic,assign)EGORefreshTableHeaderView *refreshTailerView;
+@property(nonatomic,assign) UITableView *mTableView;
 @property(nonatomic,assign) ShowViewController *parentViewController;
 @end

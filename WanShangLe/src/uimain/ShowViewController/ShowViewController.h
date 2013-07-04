@@ -9,6 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @class ApiCmdShow_getAllShows;
+@class EGORefreshTableHeaderView;
+
+
+
 
 @interface ShowViewController : UIViewController{
 
@@ -26,6 +30,8 @@
 @property(nonatomic,retain) IBOutlet UIView* orderView;
 @property(nonatomic,retain) NSArray *showsArray;
 @property(nonatomic,retain) ApiCmdShow_getAllShows *apiCmdShow_getAllShows;
+@property(nonatomic,retain)EGORefreshTableHeaderView *refreshHeaderView;
+@property(nonatomic,retain)EGORefreshTableHeaderView *refreshTailerView;
 
 - (IBAction)clickTypeButton:(id)sender;
 - (IBAction)clickTimeButton:(id)sender;

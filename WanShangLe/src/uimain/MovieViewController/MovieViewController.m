@@ -20,10 +20,7 @@
 #define MovieButtonTag 10
 #define CinemaButtonTag 11
 
-typedef enum {
-    EGOHeaderView = 0,
-    EGOBottomView
-} EGORefreshView;
+
 
 @interface MovieViewController ()<ApiNotify>{
     UIButton *movieButton;
@@ -181,7 +178,7 @@ typedef enum {
     [headerView release];
     
     _movieTableView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
-    _movieTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    _movieTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
     
     [_movieContentView addSubview:_movieTableView];
     [self.view addSubview:_movieContentView];

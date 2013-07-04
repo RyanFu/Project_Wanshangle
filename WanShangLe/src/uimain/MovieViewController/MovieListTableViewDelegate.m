@@ -12,10 +12,7 @@
 #import "UIImageView+WebCache.h"
 #import "MMovie.h"
 
-typedef enum {
-    EGOHeaderView = 0,
-    EGOBottomView
-} EGORefreshView;
+
 
 @interface MovieListTableViewDelegate(){
 
@@ -24,6 +21,7 @@ typedef enum {
 @end
 
 @implementation MovieListTableViewDelegate
+@synthesize mTableView = _mTableView;
 
 - (id)init{
     self = [super init];
@@ -202,7 +200,5 @@ typedef enum {
     [_parentViewController pushMovieCinemaAnimation];
     
 }
-
-
 
 @end

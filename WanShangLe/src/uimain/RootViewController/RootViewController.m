@@ -26,7 +26,7 @@
 @property(nonatomic,retain) ShowViewController* showViewController;
 @property(nonatomic,retain) BarViewController* barViewController;
 @property(nonatomic,retain) UIView *cityPanel;
-@property(nonatomic,retain) UIView *cityPanelMask;
+@property(nonatomic,retain) UIControl *cityPanelMask;
 @end
 
 @implementation RootViewController
@@ -184,8 +184,9 @@
 
 - (void)popupCityPanel{
     
-    self.cityPanelMask = [[UIView alloc] initWithFrame:self.view.bounds];
-    _cityPanelMask.backgroundColor = [UIColor colorWithWhite:0.298 alpha:0.150];
+    self.cityPanelMask = [[UIControl alloc] initWithFrame:self.view.bounds];
+    _cityPanelMask.backgroundColor = [UIColor colorWithWhite:0.000 alpha:0.650];
+    [_cityPanelMask addTarget:self action:@selector(dismissCityPanel) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_cityPanelMask];
     [_cityPanelMask release];
     
@@ -249,6 +250,10 @@
     [self selectedCityButtonInPanel:_cityPanel];
     [self startAnimationCityPanel];
     [_cityPanel release];
+}
+
+- (void)dismissCityPanel{
+    [self clickCityButton:nil];
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

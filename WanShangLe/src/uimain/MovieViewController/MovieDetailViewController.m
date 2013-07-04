@@ -87,6 +87,10 @@
         [self initMovieDetailData];
     }
     
+    [self initBarItem];
+}
+
+- (void)initBarItem{
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton setFrame:CGRectMake(0, 0, 45, 30)];
     [backButton addTarget:self action:@selector(clickBackButton:) forControlEvents:UIControlEventTouchUpInside];

@@ -10,7 +10,12 @@
 #import "BarTableViewCell.h"
 #import "BBar.h"
 
+@interface BarTableViewDelegate()
+@property(nonatomic,assign) MMFilterBarListType barFilterType;
+@end
+
 @implementation BarTableViewDelegate
+@synthesize mTableView = _mTableView;
 
 #pragma mark -
 #pragma mark UITableViewDataSource
@@ -42,15 +47,19 @@
     
     BBar *bar = [_parentViewController.barsArray objectAtIndex:indexPath.row];
     cell.bar_name.text = bar.name;
-    cell.bar_popular.text = [NSString stringWithFormat:@"%d 人气",[bar.popular intValue]];
+    cell.bar_popular.text = [NSString stringWithFormat:@"%d分",[bar.popular intValue]];
     cell.bar_address.text = bar.address;
     cell.bar_date.text = bar.date;
-    
+
+    BOOL isHidden = !(_barFilterType==MMFilterBarListTypeNearby);
+    cell.bar_distance.hidden = isHidden;
+    cell.bar_image_location.hidden = isHidden;
+
 }
 
 -(BarTableViewCell *)createNewMocieCell{
     ABLoggerMethod();
-     BarTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"BarTableViewCell" owner:self options:nil] objectAtIndex:0];
+     BarTableViewCell *cell = [[[NSBundle mainBundle] loadNibNamed:@"BarTableViewCell" owner:self options:nil] objectAtIndex:0];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     //    cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"history_menu_cell_background"]] autorelease];
     return cell;
@@ -58,6 +67,24 @@
 
 #pragma mark -
 #pragma mark UITableViewDelegate
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    
+    if (_barFilterType==MMFilterBarListTypeTime) {
+        NSArray *mArray = _parentViewController.barsArray;
+        UILabel *headerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
+        headerView.backgroundColor = [UIColor colorWithWhite:0.829 alpha:1.000];
+        
+        NSString *name = [[mArray objectAtIndex:section] objectForKey:@"name"];
+        NSArray *list = [[mArray objectAtIndex:section] objectForKey:@"list"];
+        headerView.text = [NSString stringWithFormat:@"%@  (共%d家)",name,[list count]];
+        
+        return [headerView autorelease];
+    }
+    
+    return nil;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 80.0f;
 }
@@ -69,5 +96,53 @@
 //    [showDetailController release];
 }
 
+#pragma mark -
+#pragma mark Data Source Loading / Reloading Methods
+
+- (void)reloadTableViewDataSource{
+    
+    //    [_model reload];
+	_reloading = YES;
+	
+}
+
+- (void)doneReLoadingTableViewData
+{
+	//  model should call this when its done loading
+	_reloading = NO;
+	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_mTableView];
+}
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+	if (view.tag == EGOHeaderView) {
+        [self reloadTableViewDataSource];
+        [self performSelector:@selector(doneReLoadingTableViewData) withObject:nil afterDelay:3.0];
+    }
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+	return _reloading; // should return if data source model is reloading
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+	
+	return [NSDate date]; // should return date data source was last changed
+	
+}
 
 @end

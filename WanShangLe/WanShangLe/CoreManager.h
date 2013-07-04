@@ -6,6 +6,11 @@
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
+typedef enum {
+    EGOHeaderView = 0,
+    EGOBottomView
+} EGORefreshView;
+
 #import "ABLogger.h"
 #import "LocationManager.h"
 #import "ReachabilityManager.h"
@@ -68,8 +73,9 @@
 //用户选择的城市
 #define UserState @"administrativeArea"
 
-//User Setting
+//用户偏好设置
 #define MMovie_CinemaFilterType @"MMovie_CinemaFilterType"
+#define BBar_ActivityFilterType @"BBar_ActivityFilterType"
 
 
 //时间戳
