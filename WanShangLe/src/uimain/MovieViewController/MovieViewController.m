@@ -30,7 +30,7 @@
 @property(nonatomic,retain)MovieListTableViewDelegate *movieDelegate;
 @property(nonatomic,retain)UIView *movieContentView;
 @property(nonatomic,retain)UIView *topView;
-//@property(nonatomic,retain)UILabel *titleLabel;
+@property(nonatomic,retain)UILabel *titleLabel;
 @end
 
 @implementation MovieViewController
@@ -63,7 +63,7 @@
     self.apiCmdMovie_getAllMovies = nil;
     self.movieContentView = nil;
     self.topView = nil;
-//    self.titleLabel = nil;
+    self.titleLabel = nil;
     
     self.refreshHeaderView = nil;
     [super dealloc];
@@ -152,12 +152,12 @@
 }
 
 - (void)initTableView{
-//    _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
-//    _titleLabel.backgroundColor = [UIColor clearColor];
-//    _titleLabel.textColor = [UIColor whiteColor];
-//    _titleLabel.font = [UIFont boldSystemFontOfSize:20];
-//    _titleLabel.shadowColor = [UIColor colorWithWhite:0.298 alpha:1.000];
-//    [_titleLabel setTextAlignment:UITextAlignmentCenter];
+    _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
+    _titleLabel.backgroundColor = [UIColor clearColor];
+    _titleLabel.textColor = [UIColor whiteColor];
+    _titleLabel.font = [UIFont boldSystemFontOfSize:20];
+    _titleLabel.shadowColor = [UIColor colorWithWhite:0.298 alpha:1.000];
+    [_titleLabel setTextAlignment:UITextAlignmentCenter];
     
     _movieContentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, iPhoneAppFrame.size.width, iPhoneAppFrame.size.height-44)];
     //create movie tableview and init
@@ -282,7 +282,7 @@
 
 - (void)clickCinemaButtonUp:(id)sender{
     
-//    _cinemaViewController.movieDetailButton.hidden = YES;
+    _cinemaViewController.movieDetailButton.hidden = YES;
     if (!isMoviePanel)return;
     isMoviePanel = NO;
     
@@ -305,14 +305,14 @@
 
 - (void)clickBackButton:(id)sender{
     
-    [self.navigationController popViewControllerAnimated:YES];
+//    [self.navigationController popViewControllerAnimated:YES];
     
-//    if (_cinemaViewController.movieDetailButton.hidden) {
-//        [self.navigationController popViewControllerAnimated:YES];
-//    }else{
-//        _cinemaViewController.movieDetailButton.hidden = YES;
-//        [self pushMovieCinemaAnimation];
-//    }
+    if (_cinemaViewController.movieDetailButton.hidden) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }else{
+        _cinemaViewController.movieDetailButton.hidden = YES;
+        [self pushMovieCinemaAnimation];
+    }
 }
 
 #pragma mark -
@@ -363,16 +363,16 @@
 
 - (void)pushMovieCinemaAnimation{
     
-//    topView.hidden = !_cinemaViewController.movieDetailButton.hidden;
-//    
-//    if (topView.hidden) {
-//        _titleLabel.text = _cinemaViewController.mMovie.name;
-//        self.navigationItem.titleView = _titleLabel;
-//    }else{
-//        self.navigationItem.titleView = topView;
-//    }
-    [self.navigationController pushViewController: _cinemaViewController animated:YES];
-//    [self switchMovieCinemaAnimation];
+    topView.hidden = !_cinemaViewController.movieDetailButton.hidden;
+    
+    if (topView.hidden) {
+        _titleLabel.text = _cinemaViewController.mMovie.name;
+        self.navigationItem.titleView = _titleLabel;
+    }else{
+        self.navigationItem.titleView = topView;
+    }
+
+    [self switchMovieCinemaAnimation];
 }
 
 #pragma mark -

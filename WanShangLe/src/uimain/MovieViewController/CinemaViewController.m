@@ -15,6 +15,7 @@
 #import "MovieViewController.h"
 #import "MovieDetailViewController.h"
 #import "ScheduleViewController.h"
+#import "AppDelegate.h"
 #import "ASIHTTPRequest.h"
 #import "MCinema.h"
 #import "MMovie.h"
@@ -121,14 +122,14 @@
 }
 
 - (void)initBarButtonItem{
-    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [backButton setFrame:CGRectMake(0, 0, 45, 30)];
-    [backButton addTarget:self action:@selector(clickBackButton:) forControlEvents:UIControlEventTouchUpInside];
-    [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_n@2x"] forState:UIControlStateNormal];
-    [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_f@2x"] forState:UIControlStateHighlighted];
-    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-    self.navigationItem.leftBarButtonItem = backItem;
-    [backItem release];
+//    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [backButton setFrame:CGRectMake(0, 0, 45, 30)];
+//    [backButton addTarget:self action:@selector(clickBackButton:) forControlEvents:UIControlEventTouchUpInside];
+//    [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_n@2x"] forState:UIControlStateNormal];
+//    [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_f@2x"] forState:UIControlStateHighlighted];
+//    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+//    self.navigationItem.leftBarButtonItem = backItem;
+//    [backItem release];
     
     self.movieDetailButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _movieDetailButton.frame = CGRectMake(0, 0, 50, 30);
@@ -136,8 +137,9 @@
     [_movieDetailButton setBackgroundImage:[UIImage imageNamed:@"btn_barItem_f@2x"] forState:UIControlStateHighlighted];
     [_movieDetailButton addTarget:self action:@selector(clickMovieDetail:) forControlEvents:UIControlEventTouchUpInside];
     [_movieDetailButton setTitle:@"详情" forState:UIControlStateNormal];
+    _movieDetailButton.hidden = YES;
     UIBarButtonItem *movieDetailIiem = [[UIBarButtonItem alloc] initWithCustomView:_movieDetailButton];
-    self.navigationItem.rightBarButtonItem = movieDetailIiem;
+   _mparentController.navigationItem.rightBarButtonItem = movieDetailIiem;
     [movieDetailIiem release];
 }
 
