@@ -12,5 +12,6 @@
 @interface CinemaListTableViewDelegate : NSObject<UISearchBarDelegate,UISearchDisplayDelegate,UITableViewDelegate,UITableViewDataSource>{
     
 }
+@property(nonatomic,assign) UISearchBar *mSearchBar;
 @property(nonatomic,assign) CinemaViewController *parentViewController;
 @end

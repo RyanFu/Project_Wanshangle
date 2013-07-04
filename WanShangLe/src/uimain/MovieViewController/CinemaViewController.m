@@ -224,6 +224,7 @@
     }
     
     self.searchBar.delegate = _cinemaDelegate;
+    _cinemaDelegate.mSearchBar = self.searchBar;
     self.strongSearchDisplayController = [[[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:_mparentController] autorelease];
     _mparentController.searchDisplayController.searchResultsDataSource = _cinemaDelegate;
     _mparentController.searchDisplayController.searchResultsDelegate = _cinemaDelegate;
@@ -296,13 +297,18 @@
 }
 
 -(void)endSearch{
-    CGRect frame1 = _filterHeaderView.frame;
-    frame1.origin.y = 0;
-    _filterHeaderView.frame = frame1;
     
-    CGRect frame2 = _cinemaTableView.frame;
-    frame2.origin.y = _filterHeaderView.bounds.size.height;
-    _cinemaTableView.frame = frame2;
+    [UIView animateWithDuration:0.2 animations:^{
+        CGRect frame1 = _filterHeaderView.frame;
+        frame1.origin.y = 0;
+        _filterHeaderView.frame = frame1;
+        
+        CGRect frame2 = _cinemaTableView.frame;
+        frame2.origin.y = _filterHeaderView.bounds.size.height;
+        _cinemaTableView.frame = frame2;
+    } completion:^(BOOL finished) {
+        
+    }];
 }
 
 #pragma mark-

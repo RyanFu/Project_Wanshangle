@@ -37,7 +37,6 @@ static CGFloat const kLabelVMargin = 10;
 - (id)init{
     self = [super init];
     if (self) {
-        [self initData];
     }
     return self;
 }
@@ -53,21 +52,26 @@ static CGFloat const kLabelVMargin = 10;
 
 - (void)initData{
     
-    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
-    self.contactDic = dic;
-    [dic release];
-    
-    NSMutableArray *nameIDArray = [[NSMutableArray alloc] init];
-    self.searchByName = nameIDArray;
-    [nameIDArray release];
-    NSMutableArray *phoneIDArray = [[NSMutableArray alloc] init];
-    
-    self.searchByPhone = phoneIDArray;
-    [phoneIDArray release];
+    if (_contactDic==nil) {
+        NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+        self.contactDic = dic;
+        [dic release];
+    }
+    if (_searchByName==nil) {
+        NSMutableArray *nameIDArray = [[NSMutableArray alloc] init];
+        self.searchByName = nameIDArray;
+        [nameIDArray release];
+    }
+    if (_searchByPhone==nil) {
+        NSMutableArray *phoneIDArray = [[NSMutableArray alloc] init];
+        self.searchByPhone = phoneIDArray;
+        [phoneIDArray release];
+    }
 }
 
 -(void)getAllSearchCinemaData{
     
+    [self initData];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSArray *array = [[DataBaseManager sharedInstance] getAllCinemasListFromCoreData];
         for (int i=0; i<[array count]; i++) {
@@ -363,26 +367,19 @@ static CGFloat const kLabelVMargin = 10;
  }*/
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar{
-    [_parentViewController endSearch];
-    [_parentViewController.cinemaTableView resignFirstResponder];
-    [self scrollTableViewToSearchBarAnimated:YES];
-    
-    _parentViewController.searchBar.text = nil;
-    
-    [self.searchByName removeAllObjects];
-    [self.searchByPhone removeAllObjects];
-    [self.contactDic removeAllObjects];
-    [[searchBar viewWithTag:100] removeFromSuperview];
+    ABLoggerWarn(@"");
 }
+
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
+        ABLoggerWarn(@"");
     [_parentViewController.cinemaTableView resignFirstResponder];
     [self scrollTableViewToSearchBarAnimated:YES];
 }
 
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar{
-    
+        ABLoggerWarn(@"");
     [_parentViewController beginSearch];
     [self getAllSearchCinemaData];
     
@@ -401,25 +398,35 @@ static CGFloat const kLabelVMargin = 10;
             [btn setBackgroundImage:[UIImage imageNamed:@"btn_search_cancel_f@2x"] forState:UIControlStateHighlighted];
         }
     }
-    
+    [[_parentViewController.searchBar viewWithTag:100] removeFromSuperview];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_searchBar@2x"]];
     imageView.frame = CGRectMake(0, 0, 320, 44);
     imageView.tag = 100;
-    [searchBar insertSubview:imageView atIndex:0];
+    [_parentViewController.searchBar insertSubview:imageView atIndex:0];
     [imageView release];
     
     return YES;
 }
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar{
-    
+        ABLoggerWarn(@"");
 }
 
-- (void) searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller{
-    [self.searchByName removeAllObjects];
-    [self.searchByPhone removeAllObjects];
+- (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller{
+        ABLoggerWarn(@"");
+    [self cleanUpSearchBar:_parentViewController.searchBar];
+}
+
+- (void)cleanUpSearchBar:(UISearchBar *)searchBar{
+    [[_parentViewController.searchBar viewWithTag:100] removeFromSuperview];
     
     [self scrollTableViewToSearchBarAnimated:YES];
+    [_parentViewController endSearch];
+    [_parentViewController.cinemaTableView resignFirstResponder];
+
+    self.searchByName = nil;
+    self.searchByPhone = nil;
+    self.contactDic = nil;
 }
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
