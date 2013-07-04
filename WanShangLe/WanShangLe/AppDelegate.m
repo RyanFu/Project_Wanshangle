@@ -20,7 +20,6 @@
 @implementation AppDelegate
 
 @synthesize window = _window;
-@synthesize rootViewController = _rootViewController;
 
 - (id)init
 {
@@ -36,7 +35,6 @@
 {
     [_window release];
     [_viewDelegate release];
-    self.rootViewController = nil;
     
     [super dealloc];
 }
@@ -85,12 +83,13 @@
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
     
-    _rootViewController = [[RootViewController alloc] initWithNibName:(iPhone5?@"RootViewController_5":@"RootViewController") bundle:nil];
+    RootViewController *rootViewController = [[RootViewController alloc] initWithNibName:(iPhone5?@"RootViewController_5":@"RootViewController") bundle:nil];
     
-    UINavigationController *_navigationController = [[UINavigationController alloc] initWithRootViewController:_rootViewController];
+    UINavigationController *_navigationController = [[UINavigationController alloc] initWithRootViewController:rootViewController];[rootViewController release];
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
     
     self.window.rootViewController = _navigationController;
+    [CacheManager sharedInstance].rootNavController = _navigationController;
     [_navigationController release];
     
     self.window.backgroundColor = [UIColor whiteColor];

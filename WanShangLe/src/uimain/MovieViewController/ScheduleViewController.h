@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "BaseViewController.h"
 
 @class MMovie,MCinema;
 
-@interface ScheduleViewController : BaseViewController{
+@interface ScheduleViewController : UIViewController{
     
 }
 @property(nonatomic,retain) MMovie *mMovie;

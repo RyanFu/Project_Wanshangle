@@ -13,6 +13,7 @@
 @property (retain, nonatomic) NSMutableDictionary *mUserDefaults;
 @property (retain, nonatomic) NSCache *cache;
 @property (nonatomic,assign) dispatch_queue_t dispatch_queue_syn_default;
+@property (nonatomic,assign) UINavigationController *rootNavController;
 
 
 +(instancetype)sharedInstance;

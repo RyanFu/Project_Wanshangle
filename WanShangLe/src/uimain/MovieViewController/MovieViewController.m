@@ -74,8 +74,6 @@ typedef enum {
 
 - (void)viewWillAppear:(BOOL)animated{
     
-    [_cinemaViewController viewWillAppear:animated];
-    
     self.apiCmdMovie_getAllMovies =  (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
     
 #ifdef TestCode

@@ -18,7 +18,6 @@
 }
 @property (nonatomic,readonly) AGViewDelegate *viewDelegate;
 @property (retain, nonatomic) UIWindow *window;
-@property (retain, nonatomic) RootViewController *rootViewController;
 
 + (instancetype)appDelegateInstance;
 @end

@@ -161,7 +161,7 @@
     int nameSize_width = (_cinemaButton.bounds.size.width-width-_cinemaNameLabel.frame.origin.x);
     
     CGSize nameSize = [_mCinema.name sizeWithFont:_cinemaNameLabel.font
-                              constrainedToSize:CGSizeMake(nameSize_width,MAXFLOAT)];
+                                constrainedToSize:CGSizeMake(nameSize_width,MAXFLOAT)];
     
     CGRect cell_newFrame = _cinemaNameLabel.frame;
     cell_newFrame.size.width = nameSize.width;
@@ -198,11 +198,8 @@
 #pragma mark -
 #pragma mark Button Event
 - (void)clickBackButton:(id)sender{
-    if (self.mparentViewController) {
-        [self.mparentViewController.navigationController popViewControllerAnimated:YES];
-        return;
-    }
-    [self.navigationController popViewControllerAnimated:YES];
+    
+    [[CacheManager sharedInstance].rootNavController popViewControllerAnimated:YES];
 }
 
 - (IBAction)clickCinemaButton:(id)sender{
@@ -212,11 +209,8 @@
     cinemaMovieController.mCinema = self.mCinema;
     cinemaMovieController.mMovie = self.mMovie;
     
-    if (self.mparentViewController) {
-        [self.mparentViewController.navigationController pushViewController:cinemaMovieController animated:YES];
-    }else{
-        [self.navigationController pushViewController:cinemaMovieController animated:YES];
-    }
+    [[CacheManager sharedInstance].rootNavController pushViewController:cinemaMovieController animated:YES];
+    
     [cinemaMovieController release];
 }
 
@@ -230,7 +224,7 @@
     _tomorrowButton.selected = NO;
     _todayButton.selected = YES;
     [_todayButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
-
+    
     self.todaySchedules = [[DataBaseManager sharedInstance] deleteUnavailableSchedules:_todaySchedules];
     self.schedulesArray = self.todaySchedules;
     if (isNull(self.schedulesArray) || [self.schedulesArray count]==0) {
@@ -241,7 +235,7 @@
     
     [_todayButton setTitle:[NSString stringWithFormat:@"今天(%@)%d场",_todayWeek,[_schedulesArray count]] forState:UIControlStateNormal];
     [_mTableView reloadData];
-
+    
 }
 
 - (IBAction)clickTomorrowButton:(id)sender{
@@ -260,7 +254,7 @@
     
     [_tomorrowButton setTitle:[NSString stringWithFormat:@"今天(%@)%d场",_tomorrowWeek,[_schedulesArray count]] forState:UIControlStateNormal];
     [_mTableView reloadData];
-
+    
 }
 
 #pragma mark -

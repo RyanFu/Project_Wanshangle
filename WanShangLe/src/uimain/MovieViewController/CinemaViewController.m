@@ -46,15 +46,15 @@
     if (self) {
         self.apiCmdMovie_getAllCinemas = (ApiCmdMovie_getAllCinemas *)[[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
         
-//        [[NSNotificationCenter defaultCenter] addObserver:self
-//                                                 selector:@selector(keyboardWillShown:)
-//                                                     name:UIKeyboardWillShowNotification
-//                                                   object:nil];
-//        
-//        [[NSNotificationCenter defaultCenter] addObserver:self
-//                                                 selector:@selector(keyboardWasHidden:)
-//                                                     name:UIKeyboardWillHideNotification
-//                                                   object:nil];
+        //        [[NSNotificationCenter defaultCenter] addObserver:self
+        //                                                 selector:@selector(keyboardWillShown:)
+        //                                                     name:UIKeyboardWillShowNotification
+        //                                                   object:nil];
+        //
+        //        [[NSNotificationCenter defaultCenter] addObserver:self
+        //                                                 selector:@selector(keyboardWasHidden:)
+        //                                                     name:UIKeyboardWillHideNotification
+        //                                                   object:nil];
     }
     return self;
 }
@@ -75,21 +75,20 @@
     self.filterHeaderView = nil;
     self.filterTableView = nil;
     self.scheduleViewController = nil;
-//    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    //    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super dealloc];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     
+    [super viewDidAppear:animated];
+    
     self.title = _mMovie.name;
     
-    [self.navigationController setNavigationBarHidden:NO];
-    
     self.apiCmdMovie_getAllCinemas = (ApiCmdMovie_getAllCinemas *)[[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
-    
-    [super viewDidAppear:animated];
-
     [self.cinemaTableView setContentOffset:CGPointMake(0, 44) animated:NO];
+    
+    [self updateSettingFilter];
     
 #ifdef TestCode
     [self updatData];//测试代码
@@ -208,7 +207,7 @@
 	self.searchBar.translucent=YES;
 	self.searchBar.placeholder=@"输入影院名称搜索";
 	self.searchBar.barStyle=UIBarStyleDefault;
-
+    
     [[self.searchBar.subviews objectAtIndex:0]removeFromSuperview];
     for (UIView *subview in self.searchBar.subviews)
     {
@@ -314,11 +313,35 @@
 
 #pragma mark-
 #pragma mark Button Event
-- (void)userSettingFilter{
+- (void)updateSettingFilter{
     
-    if (_mparentController.isMoviePanel) {
+    if (!_mparentController.isMoviePanel) {
         [self cleanFavoriteSchedule];
     }
+    
+    switch (_cinemaFilterType) {
+        case MMFilterCinemaListTypeFavorite:{
+            _cinemaFilterType=MMFilterCinemaListTypeNone;
+            [self clickFilterFavoriteButton:nil];
+        }
+            break;
+        case MMFilterCinemaListTypeNearby:{
+            _cinemaFilterType=MMFilterCinemaListTypeNone;
+            [self clickFilterNearbyButton:nil];
+        }
+            break;
+            
+        case MMFilterCinemaListTypeAll:{
+            _cinemaFilterType=MMFilterCinemaListTypeNone;
+            [self clickFilterAllButton:nil];
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)userSettingFilter{
     
     switch (_cinemaFilterType) {
         case MMFilterCinemaListTypeFavorite:{
@@ -338,6 +361,8 @@
             _cinemaFilterType = MMFilterCinemaListTypeAll;
         }
             break;
+        default:
+            break;
     }
 }
 
@@ -349,7 +374,7 @@
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:_cinemaFilterType] forKey:MMovie_CinemaFilterType];
     [self userSettingFilter];
     [self formatCinemaDataFilterFavorite];
-    [self stratAnimationFilterButton:sender];
+    [self stratAnimationFilterButton:_cinemaFilterType];
 }
 - (void)clickFilterNearbyButton:(id)sender{
     if (_cinemaFilterType==MMFilterCinemaListTypeNearby) {
@@ -360,7 +385,7 @@
     [self userSettingFilter];
     [self formatCinemaDataFilterNearby];
     
-    [self stratAnimationFilterButton:sender];
+    [self stratAnimationFilterButton:_cinemaFilterType];
 }
 - (void)clickFilterAllButton:(id)sender{
     if (_cinemaFilterType==MMFilterCinemaListTypeAll) {
@@ -370,11 +395,11 @@
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:_cinemaFilterType] forKey:MMovie_CinemaFilterType];
     [self userSettingFilter];
     
-    [self stratAnimationFilterButton:sender];
+    [self stratAnimationFilterButton:_cinemaFilterType];
 }
-- (void)stratAnimationFilterButton:(id)sender{
-
-    UIButton *bt = (UIButton *)sender;
+- (void)stratAnimationFilterButton:(MMFilterCinemaListType)type{
+     
+    UIButton *bt = (UIButton *)[_filterHeaderView viewWithTag:type];
     CGRect oldFrame = filterIndicator.frame;
     oldFrame.origin.y = 34;
     filterIndicator.frame = oldFrame;
@@ -382,17 +407,19 @@
     [UIView animateWithDuration:0.2 animations:^{
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
         
-//         [_filterHeaderView setUserInteractionEnabled:NO];
+        //         [_filterHeaderView setUserInteractionEnabled:NO];
         CGRect newFrame = CGRectZero;
         switch (bt.tag) {
-            case 2:
-                newFrame = CGRectMake(154, 34, 13, 6);
-                break;
             case 1:
                 newFrame = CGRectMake(261, 34, 13, 6);
                 break;
-            default:
+            case 2:
+                newFrame = CGRectMake(154, 34, 13, 6);
+                break;
+            case 3:
                 newFrame = CGRectMake(46, 34, 13, 6);
+                break;
+            default:
                 break;
         }
         filterIndicator.frame = newFrame;
@@ -417,7 +444,7 @@
         [self updateData:tag];
         
     });
-
+    
 }
 
 - (void) apiNotifyLocationResult:(id) apiCmd  error:(NSError*) error{
@@ -499,7 +526,7 @@
 - (void)formatCinemaDataFilterNearby{
     ABLoggerWarn(@" 附近 影院");
     self.cinemasArray = nil;
-     _filterTableView.tableFooterView = nil;
+    _filterTableView.tableFooterView = nil;
     
     [[DataBaseManager sharedInstance] getNearbyCinemasListFromCoreDataWithCallBack:^(NSArray *cinemas) {
         
@@ -510,7 +537,7 @@
         if ([cinemas count]<=0) {
             _filterTableView.tableFooterView = _noGPSView;
         }
-
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [_filterTableView reloadData];
         });
@@ -528,16 +555,15 @@
         
         if (_scheduleViewController==nil) {
             _scheduleViewController = [[ScheduleViewController alloc]
-                                      initWithNibName:(iPhone5?@"ScheduleViewController_5":@"ScheduleViewController")
-                                      bundle:nil];
+                                       initWithNibName:(iPhone5?@"ScheduleViewController_5":@"ScheduleViewController")
+                                       bundle:nil];
             
         }
         _scheduleViewController.mCinema = [array_coreData lastObject];
         _scheduleViewController.mMovie = _mMovie;
         _scheduleViewController.view.frame = _filterTableView.frame;
-        _scheduleViewController.mparentViewController = self;
         [self.view addSubview:_scheduleViewController.view];
-
+        
     }else{
         self.cinemasArray = array_coreData;
     }

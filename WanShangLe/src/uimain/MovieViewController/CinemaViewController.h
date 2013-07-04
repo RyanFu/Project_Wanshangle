@@ -13,7 +13,8 @@
 @class MovieViewController;
 
 typedef NS_ENUM(NSInteger, MMFilterCinemaListType) {
-    MMFilterCinemaListTypeFavorite = 0,          
+    MMFilterCinemaListTypeNone = 0,
+    MMFilterCinemaListTypeFavorite,          
     MMFilterCinemaListTypeNearby,          
     MMFilterCinemaListTypeAll,
 };
