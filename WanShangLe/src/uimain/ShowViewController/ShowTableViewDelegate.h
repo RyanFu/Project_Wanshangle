@@ -16,7 +16,7 @@
     BOOL _reloading;
 }
 @property(nonatomic,assign) EGORefreshTableHeaderView *refreshHeaderView;
-@property(nonatomic,assign)EGORefreshTableHeaderView *refreshTailerView;
+@property(nonatomic,assign) EGORefreshTableHeaderView *refreshTailerView;
 @property(nonatomic,assign) UITableView *mTableView;
 @property(nonatomic,assign) ShowViewController *parentViewController;
 @end

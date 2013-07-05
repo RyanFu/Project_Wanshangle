@@ -1,19 +1,19 @@
 //
-//  KKTVDetail.m
+//  KKTVPriceInfo.m
 //  WanShangLe
 //
-//  Created by stephenliu on 13-6-18.
+//  Created by stephenliu on 13-7-5.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
-#import "KKTVDetail.h"
+#import "KKTVPriceInfo.h"
 #import "KKTV.h"
 
 
-@implementation KKTVDetail
+@implementation KKTVPriceInfo
 
-@dynamic uid;
 @dynamic schedule;
+@dynamic uid;
 @dynamic ktv;
 
 @end

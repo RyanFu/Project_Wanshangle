@@ -6,10 +6,10 @@
 //
 //
 
-#import "ApiCmdKTV_getDiscountInfo.h"
+#import "ApiCmdKTV_getPriceList.h"
 #import "common.h"
 
-@implementation ApiCmdKTV_getDiscountInfo
+@implementation ApiCmdKTV_getPriceList
 
 - (id)init
 {
@@ -22,7 +22,7 @@
 }
 
 - (void) dealloc {
-    
+    self.ktvId = nil;
 	[super dealloc];
 }
 
@@ -37,10 +37,12 @@
     return self.httpRequest;
 }
 
+//http://api.wanshangle.com:10000/api? appId=000001&api=ktv.info&sign=sign&time=1371988912&v=1.0&ktvid=4
 - (NSMutableDictionary*) getParamDict {
     NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
     
-    [paramDict setObject:@"extaccount.join" forKey:@"api"];
+    [paramDict setObject:@"ktv.info" forKey:@"api"];
+    [paramDict setObject:self.ktvId forKey:@"ktvid"];
     
     return paramDict;
 }

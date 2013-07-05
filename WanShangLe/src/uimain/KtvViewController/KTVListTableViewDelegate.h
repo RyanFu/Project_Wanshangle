@@ -7,10 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "EGORefreshTableHeaderView.h"
 
 @class KtvViewController;
-@interface KTVListTableViewDelegate : NSObject<UITableViewDataSource,UITableViewDelegate>{
-    
+@interface KTVListTableViewDelegate : NSObject<EGORefreshTableHeaderDelegate,UISearchBarDelegate,UISearchDisplayDelegate,UITableViewDataSource,UITableViewDelegate>{
+    BOOL _reloading;
 }
+@property(nonatomic,assign) EGORefreshTableHeaderView *refreshHeaderView;
+@property(nonatomic,assign) EGORefreshTableHeaderView *refreshTailerView;
 @property(nonatomic,assign) KtvViewController *parentViewController;
+@property(nonatomic,assign) UITableView *mTableView;
 @end

@@ -69,6 +69,8 @@
     [super dealloc];
 }
 
+#pragma mark -
+#pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
     
     self.apiCmdMovie_getAllMovies =  (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];

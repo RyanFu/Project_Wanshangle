@@ -10,6 +10,7 @@
 #import "ApiCmdShow_getAllShows.h"
 #import "ShowTableViewDelegate.h"
 #import "EGORefreshTableHeaderView.h"
+#import "ASIHTTPRequest.h"
 
 @interface ShowViewController ()<ApiNotify>
 @property(nonatomic,retain) ShowTableViewDelegate *showTableViewDelegate;
@@ -32,19 +33,33 @@
 
 - (void)dealloc{
     
+    [_apiCmdShow_getAllShows.httpRequest clearDelegatesAndCancel];
+    _apiCmdShow_getAllShows.delegate = nil;
+    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdShow_getAllShows];
+    self.apiCmdShow_getAllShows = nil;
+    
     self.typeButton = nil;
     self.timeButton = nil;
     self.orderButton = nil;
-    self.mTableView = nil;
+    
     self.typeView = nil;
     self.timeView = nil;
     self.orderView = nil;
     self.apiCmdShow_getAllShows = nil;
     self.showsArray = nil;
-    self.showTableViewDelegate = nil;
     self.maskView = nil;
+    
+    _refreshHeaderView.delegate = nil;
+    _refreshTailerView.delegate = nil;
+    [_refreshHeaderView removeFromSuperview];
+    [_refreshTailerView removeFromSuperview];
     self.refreshHeaderView = nil;
     self.refreshTailerView = nil;
+    
+    self.showTableViewDelegate = nil;
+    _mTableView.delegate = nil;
+    _mTableView.dataSource = nil;
+    self.mTableView = nil;
     
     [super dealloc];
 }
@@ -113,8 +128,8 @@
         view.tag = EGOBottomView;
         view.backgroundColor = [UIColor clearColor];
 		[_mTableView addSubview:view];
-		_refreshTailerView = view;
-		[view release];
+		self.refreshTailerView = view;
+		[view release];view=nil;
         
         view = [[EGORefreshTableHeaderView alloc] initWithFrame: CGRectMake(0.0f, - _mTableView.bounds.size.height, _mTableView.frame.size.width, _mTableView.bounds.size.height)];
         view.delegate = _showTableViewDelegate;

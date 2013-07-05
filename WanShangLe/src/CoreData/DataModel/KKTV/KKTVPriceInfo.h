@@ -1,8 +1,8 @@
 //
-//  KKTVDetail.h
+//  KKTVPriceInfo.h
 //  WanShangLe
 //
-//  Created by stephenliu on 13-6-18.
+//  Created by stephenliu on 13-7-5.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -11,10 +11,10 @@
 
 @class KKTV;
 
-@interface KKTVDetail : NSManagedObject
+@interface KKTVPriceInfo : NSManagedObject
 
-@property (nonatomic, retain) NSString * uid;
 @property (nonatomic, retain) id schedule;
+@property (nonatomic, retain) NSString * uid;
 @property (nonatomic, retain) KKTV *ktv;
 
 @end

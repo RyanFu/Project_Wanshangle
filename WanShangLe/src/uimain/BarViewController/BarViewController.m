@@ -9,6 +9,8 @@
 #import "BarViewController.h"
 #import "ApiCmdShow_getAllShows.h"
 #import "BarTableViewDelegate.h"
+#import "EGORefreshTableHeaderView.h"
+#import "ASIHTTPRequest.h"
 
 @interface BarViewController ()<ApiNotify>
 @property(nonatomic,retain) BarTableViewDelegate *barTableViewDelegate;
@@ -32,6 +34,10 @@
 }
 
 - (void)dealloc{
+    
+    [[_apiCmdBar_getAllBars httpRequest] clearDelegatesAndCancel];
+    [_apiCmdBar_getAllBars setDelegate:nil];
+    self.apiCmdBar_getAllBars = nil;
     
     self.mTableView = nil;
     self.barsArray = nil;
@@ -62,6 +68,11 @@
             self.apiCmdBar_getAllBars = (ApiCmdBar_getAllBars*)[[DataBaseManager sharedInstance] getAllBarsListFromWeb:self];
         });
     }
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    ABLoggerMethod();
+    [super viewWillDisappear:animated];
 }
 
 - (void)viewDidLoad

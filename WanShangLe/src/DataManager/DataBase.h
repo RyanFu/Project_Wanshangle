@@ -16,8 +16,8 @@
 #import "ApiCmdShow_getAllShows.h"
 #import "ApiCmdBar_getAllBars.h"
 #import "ApiCmdKTV_getAllKTVs.h"
-#import "ApiCmdKTV_getDiscountInfo.h"
-#import "ApiCmdKTV_getKTVDetail.h"
+#import "ApiCmdKTV_getBuyList.h"
+#import "ApiCmdKTV_getPriceList.h"
 
 #import "City.h"
 #import "ApiCmd.h"
@@ -32,7 +32,7 @@
 
 #import "KKTV.h"
 #import "KKTVBuyInfo.h"
-#import "KKTVDetail.h"
+#import "KKTVPriceInfo.h"
 
 #import "SShow.h"
 

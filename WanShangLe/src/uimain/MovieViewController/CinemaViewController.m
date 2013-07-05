@@ -27,7 +27,6 @@
     UIButton *favoriteButton;
     UIButton *nearbyButton;
     UIButton *allButton;
-    UIButton *searchButton;
     UIImageView *filterIndicator;
 }
 @property(nonatomic,retain)UILabel *movieLabel;

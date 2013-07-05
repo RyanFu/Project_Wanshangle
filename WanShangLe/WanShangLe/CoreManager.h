@@ -59,6 +59,8 @@ typedef enum {
 #define API_BBarDetailCmd  240 //演出详情
 //-------------KKTV----------------/
 #define API_KKTVCmd  260 //KTV
+#define API_KKTVBuyListCmd  261 //KTV 团购列表
+#define API_KKTVPriceListCmd  262 //KTV 价格列表
 
 //测试宏标记
 #define TestCode
@@ -76,6 +78,7 @@ typedef enum {
 //用户偏好设置
 #define MMovie_CinemaFilterType @"MMovie_CinemaFilterType"
 #define BBar_ActivityFilterType @"BBar_ActivityFilterType"
+#define KKTV_FilterType @"KKTV_FilterType"
 
 
 //时间戳

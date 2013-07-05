@@ -164,7 +164,11 @@
 	switch (aState) {
 		case EGOOPullRefreshPulling:
 			
-			_statusLabel.text = NSLocalizedString(@"松开即可刷新...", @"Release to refresh status");
+            if (_pullDirection == EGOPullingDown) {
+                _statusLabel.text = NSLocalizedString(@"松开即可刷新...", @"Pull down to refresh status");
+            } else {
+                _statusLabel.text = NSLocalizedString(@"上拉加载更多...", @"Pull down to refresh status");
+            }
 			[CATransaction begin];
 			[CATransaction setAnimationDuration:FLIP_ANIMATION_DURATION];
 			_arrowImage.transform = CATransform3DMakeRotation((M_PI / 180.0) * 180.0f, 0.0f, 0.0f, 1.0f);
@@ -308,6 +312,11 @@
 
                      } completion:^(BOOL finished) {
                          [self setState:EGOOPullRefreshNormal];
+                         
+                         UITableView *tableView = (UITableView*)scrollView;
+                         if (tableView.tableHeaderView!=nil) {
+                            [scrollView setContentOffset:CGPointMake(0, 44) animated:YES]; 
+                         }
                      }];
 }
 

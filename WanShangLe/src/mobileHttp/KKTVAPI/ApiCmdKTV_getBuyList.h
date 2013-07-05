@@ -8,11 +8,12 @@
 
 #import "ApiCmd.h"
 
-@interface ApiCmdKTV_getDiscountInfo : ApiCmd
+@interface ApiCmdKTV_getBuyList : ApiCmd
 {
 @private
     
 }
+@property(nonatomic,retain) NSString *ktvId;
 - (NSMutableDictionary*) getParamDict;
 - (void) parseResultData:(NSDictionary*) dictionary;
 

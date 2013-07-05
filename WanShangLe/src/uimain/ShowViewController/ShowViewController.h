@@ -11,9 +11,6 @@
 @class ApiCmdShow_getAllShows;
 @class EGORefreshTableHeaderView;
 
-
-
-
 @interface ShowViewController : UIViewController{
 
 }

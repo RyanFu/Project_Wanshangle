@@ -82,11 +82,26 @@
 	
 }
 
+- (void)loadMoreTableViewDataSource {
+    //    [_model loadMore];
+    _reloading = YES;
+}
+
 - (void)doneReLoadingTableViewData
 {
 	//  model should call this when its done loading
 	_reloading = NO;
+//    ABLoggerWarn(@"========== %@",_refreshHeaderView);
+    if (_refreshHeaderView!=nil)
 	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_mTableView];
+}
+
+- (void)doneLoadingTableViewData
+{
+    _reloading = NO;
+    [_refreshTailerView egoRefreshScrollViewDataSourceDidFinishedLoading:mTableView];
+    [mTableView reloadData];
+    _refreshTailerView.frame = CGRectMake(0.0f, mTableView.contentSize.height, mTableView.frame.size.width, mTableView.bounds.size.height);
 }
 
 #pragma mark -
@@ -94,10 +109,12 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    [_refreshTailerView egoRefreshScrollViewDidScroll:scrollView];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
 	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    [_refreshTailerView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
 
@@ -105,10 +122,15 @@
 #pragma mark EGORefreshTableHeaderDelegate Methods
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
-	if (view.tag == EGOHeaderView) {
+    
+    if (view.tag == EGOHeaderView) {
         [self reloadTableViewDataSource];
-        [self performSelector:@selector(doneReLoadingTableViewData) withObject:nil afterDelay:3.0];
+        [self doneReLoadingTableViewData];
+    } else {
+        [self loadMoreTableViewDataSource];
+        [self doneLoadingTableViewData];
     }
+
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
@@ -121,5 +143,9 @@
 	
 }
 
+- (void)dealloc{
+    
+    [super dealloc];
+}
 
 @end

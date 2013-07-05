@@ -37,10 +37,13 @@
     return self.httpRequest;
 }
 
-- (NSMutableDictionary*) getParamDict {
+//http://api.wanshangle.com:10000/api? appId=000001&api=ktv.list&sign=sign&time=1371988912&v=1.0&cityid=0755
+- (NSMutableDictionary*)getParamDict {
     NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
     
-    [paramDict setObject:@"extaccount.join" forKey:@"api"];
+    [paramDict setObject:@"ktv.list" forKey:@"api"];
+    NSString *city_id = [[LocationManager defaultLocationManager] getUserCityId];
+    [paramDict setObject:city_id forKey:@"cityid"];
     
     return paramDict;
 }

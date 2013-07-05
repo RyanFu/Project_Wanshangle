@@ -16,6 +16,7 @@
  */
 
 typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
+typedef void (^GetKTVNearbyList)(NSArray *ktvs);
 
 @interface DataBaseManager : NSObject{
     
@@ -154,6 +155,9 @@ typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
 - (ApiCmd *)getAllKTVsListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllKTVsListFromCoreData;
 - (NSArray *)getAllKTVsListFromCoreDataWithCityName:(NSString *)cityName;
+- (BOOL)getNearbyKTVListFromCoreDataWithCallBack:(GetKTVNearbyList)callback;
+- (NSArray *)getFavoriteKTVListFromCoreData;
+- (NSArray *)getFavoriteKTVListFromCoreDataWithCityName:(NSString *)cityName;
 - (NSUInteger)getCountOfKTVsListFromCoreData;
 - (NSUInteger)getCountOfKTVsListFromCoreDataWithCityName:(NSString *)cityName;
 - (void)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
@@ -161,18 +165,17 @@ typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
 - (BOOL)addFavoriteKTVWithId:(NSNumber *)uid;
 - (BOOL)deleteFavoriteKTVWithId:(NSNumber *)uid;
 
-//获得KTV详情 KTV Detail Info
-- (ApiCmd *)getDetailInfoFromWebWithaKTV:(KKTV *)aKTV
-                                delegate:(id<ApiNotify>)delegate;
-- (void)insertDetailInfoIntoCoreDataFromObject:(NSDictionary *)objectData
-                                    withApiCmd:(ApiCmd*)apiCmd
-                                      withaKTV:(KKTV *)aKTV;
-
-//获得KTV购买信息 KTV Discounts Info
-- (ApiCmd *)getDiscountInfoFromWebWithaKTV:(KKTV *)aKTV
+//获得KTV 团购列表 KTV Info
+- (ApiCmd *)getKTVTuanGouListFromWebWithaKTV:(KKTV *)aKTV
                                   delegate:(id<ApiNotify>)delegate;
-- (void)insertDiscountInfoIntoCoreDataFromObject:(NSDictionary *)objectData
+- (void)insertKTVTuanGouListIntoCoreDataFromObject:(NSDictionary *)objectData
                                       withApiCmd:(ApiCmd*)apiCmd
                                         withaKTV:(KKTV *)aKTV;
 
+//获得KTV 价格列表 Info
+- (ApiCmd *)getKTVPriceListFromWebWithaKTV:(KKTV *)aKTV
+                                delegate:(id<ApiNotify>)delegate;
+- (void)insertKTVPriceListIntoCoreDataFromObject:(NSDictionary *)objectData
+                                    withApiCmd:(ApiCmd*)apiCmd
+                                      withaKTV:(KKTV *)aKTV;
 @end

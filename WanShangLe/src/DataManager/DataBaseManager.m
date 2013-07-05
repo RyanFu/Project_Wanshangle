@@ -1567,6 +1567,45 @@ static DataBaseManager *_sharedInstance = nil;
     return [KKTV MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
+- (BOOL)getNearbyKTVListFromCoreDataWithCallBack:(GetKTVNearbyList)callback{
+    GetKTVNearbyList mCallBack = [callback copy];
+    
+    NSArray *ktvs = [self getAllKTVsListFromCoreData];
+    LocationManager *lm = [LocationManager defaultLocationManager];
+    BOOL isSuccess =  [lm getUserGPSLocationWithCallBack:^(BOOL isNewLocation) {
+        for (KKTV *tKTV in ktvs) {
+            double distance = [lm distanceBetweenUserToLatitude:[tKTV.latitude doubleValue] longitude:[tKTV.longitude doubleValue]];
+            tKTV.nearby = [NSNumber numberWithInt:distance];
+        }
+        
+        [self saveInManagedObjectContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        
+        NSArray *array =  [ktvs sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            MCinema *cinema1 = (MCinema *)obj1;
+            MCinema *cinema2 = (MCinema *)obj2;
+            return [cinema1.nearby compare:cinema2.nearby];
+        }];
+        
+        if (mCallBack && isNewLocation) {
+            mCallBack(array);
+        }
+    }];
+    
+    return isSuccess;
+
+}
+- (NSArray *)getFavoriteKTVListFromCoreData{
+    return [self getFavoriteKTVListFromCoreDataWithCityName:nil];
+}
+
+- (NSArray *)getFavoriteKTVListFromCoreDataWithCityName:(NSString *)cityName{
+    if (isEmpty(cityName)) {
+        cityName = [[LocationManager defaultLocationManager] getUserCity];
+    }
+    
+    return [KKTV MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@ and favorite = YES", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+}
+
 - (NSUInteger)getCountOfKTVsListFromCoreData{
     return [self getCountOfKTVsListFromCoreDataWithCityName:nil];
 }
@@ -1601,7 +1640,7 @@ static DataBaseManager *_sharedInstance = nil;
 - (void)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
     CFTimeInterval time1 = Elapsed_Time;
     
-    NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"infos"];
+    NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"list"];
     
     KKTV *kKTV = nil;
     for (int i=0; i<[array count]; i++) {
@@ -1632,13 +1671,11 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (void)importKTV:(KKTV *)kKTV ValuesForKeysWithObject:(NSDictionary *)aKTVDic{
     kKTV.name = [aKTVDic objectForKey:@"name"];
-    kKTV.uid = [[aKTVDic objectForKey:@"id"] stringValue];
-    kKTV.address = [aKTVDic objectForKey:@"addr"];
-    kKTV.price = [aKTVDic objectForKey:@"lowprice"];
-    kKTV.phoneNumber = [[aKTVDic objectForKey:@"tel"] stringValue];
-    kKTV.longitude = [aKTVDic objectForKey:@"longitude"];
-    kKTV.latitude = [aKTVDic objectForKey:@"latitude"];
-    kKTV.discounts = [aKTVDic objectForKey:@"discounts"];
+    kKTV.uid = [aKTVDic objectForKey:@"id"];
+    kKTV.address = [aKTVDic objectForKey:@"address"];
+    kKTV.phoneNumber = [aKTVDic objectForKey:@"contactphone"];
+    kKTV.longitude = [NSNumber numberWithFloat:[[aKTVDic objectForKey:@"longitude"] floatValue]];
+    kKTV.latitude = [NSNumber numberWithFloat:[[aKTVDic objectForKey:@"latitude"] floatValue]];
 }
 
 - (BOOL)addFavoriteKTVWithId:(NSNumber *)uid{
@@ -1677,6 +1714,47 @@ static DataBaseManager *_sharedInstance = nil;
     }];
     
     return YES;
+}
+
+//获得KTV 团购列表 KTV Info
+- (ApiCmd *)getKTVTuanGouListFromWebWithaKTV:(KKTV *)aKTV
+                                    delegate:(id<ApiNotify>)delegate{
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    
+}
+- (void)insertKTVTuanGouListIntoCoreDataFromObject:(NSDictionary *)objectData
+                                        withApiCmd:(ApiCmd*)apiCmd
+                                          withaKTV:(KKTV *)aKTV{
+    
+}
+
+//获得KTV 价格列表 Info
+- (ApiCmd *)getKTVPriceListFromWebWithaKTV:(KKTV *)aKTV
+                                  delegate:(id<ApiNotify>)delegate{
+    
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    
+    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
+        ABLoggerWarn(@"不能请求 KTV 价格列表 数据，因为已经请求了");
+        return tapiCmd;
+    }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmdKTV_getPriceList* apiCmdKTV_getPriceList = [[ApiCmdKTV_getPriceList alloc] init];
+    apiCmdKTV_getPriceList.delegate = delegate;
+    apiCmdKTV_getPriceList.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdKTV_getPriceList.ktvId = aKTV.uid;
+    [apiClient executeApiCmdAsync:apiCmdKTV_getPriceList];
+    [apiCmdKTV_getPriceList.httpRequest setTag:API_KKTVPriceListCmd];
+    
+    return [apiCmdKTV_getPriceList autorelease];
+}
+
+- (void)insertKTVPriceListIntoCoreDataFromObject:(NSDictionary *)objectData
+                                      withApiCmd:(ApiCmd*)apiCmd
+                                        withaKTV:(KKTV *)aKTV{
+    
 }
 //========================================= KTV =========================================/
 @end
