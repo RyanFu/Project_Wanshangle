@@ -24,17 +24,39 @@
 #pragma mark UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    _mArray = _parentViewController.ktvsArray;
+    _filterKTVListType = _parentViewController.filterKTVListType;
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
-        return [_parentViewController.ktvsArray count];
+        switch (_filterKTVListType) {
+            case NSFilterKTVListTypeAll:{
+                return [_parentViewController.ktvsArray count];
+            }
+            default:{
+                return 1;
+            }
+        }
     }
-    
     //搜索模式
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    
+    _mArray = _parentViewController.ktvsArray;
+    _filterKTVListType = _parentViewController.filterKTVListType;
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
-    return [_parentViewController.ktvsArray count];
+        switch (_filterKTVListType) {
+            case NSFilterKTVListTypeFavorite:
+            case NSFilterKTVListTypeNearby:{
+                return [_mArray count];
+            }
+            case NSFilterKTVListTypeAll:{
+                return [[[_mArray objectAtIndex:section] objectForKey:@"list"] count];
+            }
+            default:{
+                return 0;
+            }
+        }
     }
     return 1;
 }
@@ -148,7 +170,7 @@
     int nameSize_width = (cell.bounds.size.width-width-cell.ktv_name.frame.origin.x);
     
     CGSize nameSize = [aKTV.name sizeWithFont:cell.ktv_name.font
-                              constrainedToSize:CGSizeMake(nameSize_width,MAXFLOAT)];
+                            constrainedToSize:CGSizeMake(nameSize_width,MAXFLOAT)];
     
     CGRect cell_newFrame = cell.ktv_name.frame;
     cell_newFrame.size.width = nameSize.width;
@@ -161,7 +183,7 @@
     view.center = newCenter;
 }
 
-#pragma mark - 
+#pragma mark -
 #pragma mark 搜索Cell
 - (UITableViewCell *)ktvSearchtableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *indentifier = @"KTVCellSearch";
@@ -183,8 +205,27 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
     KTVBuyViewController *ktvBuyController = [[KTVBuyViewController alloc] initWithNibName:iPhone5?@"KTVBuyViewController_5":@"KTVBuyViewController" bundle:nil];
-    ktvBuyController.mKTV = [_parentViewController.ktvsArray objectAtIndex:indexPath.row];
+    
+    KKTV *aKTV = nil;
+    int row = indexPath.row;
+    _filterKTVListType = _parentViewController.filterKTVListType;
+    switch (_filterKTVListType) {
+        case NSFilterKTVListTypeNearby:
+        case NSFilterKTVListTypeFavorite:{
+            aKTV = [_mArray objectAtIndex:row];
+        }
+            break;
+        case NSFilterKTVListTypeNone:
+        case NSFilterKTVListTypeAll:{
+            NSArray *list = [[_mArray objectAtIndex:indexPath.section] objectForKey:@"list"];
+            aKTV = [list objectAtIndex:row];
+        }
+            break;
+    }
+    
+    ktvBuyController.mKTV = aKTV;
     [_parentViewController.navigationController pushViewController:ktvBuyController animated:YES];
 }
 
@@ -215,7 +256,7 @@
     _reloading = NO;
     [_refreshTailerView egoRefreshScrollViewDataSourceDidFinishedLoading:_mTableView];
     [_mTableView reloadData];
-//    _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+    //    _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
 }
 
 #pragma mark -
@@ -239,7 +280,7 @@
     
     if (view.tag == EGOHeaderView) {
         [self reloadTableViewDataSource];
-//        [self performSelector:@selector(doneReLoadingTableViewData) withObject:nil afterDelay:3];
+        //        [self performSelector:@selector(doneReLoadingTableViewData) withObject:nil afterDelay:3];
         [self doneReLoadingTableViewData];
     } else {
         [self loadMoreTableViewDataSource];
@@ -279,7 +320,7 @@
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar{
     ABLoggerWarn(@"");
     [_parentViewController beginSearch];
-//    [self getAllSearchktvData];
+    //    [self getAllSearchktvData];
     
     _parentViewController.searchBar.showsScopeBar = YES;
     [_parentViewController.searchBar sizeToFit];
@@ -325,7 +366,7 @@
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
-//    [[SearchCoreManager share] Search:searchString searchArray:nil nameMatch:_searchByName phoneMatch:_searchByPhone];
+    //    [[SearchCoreManager share] Search:searchString searchArray:nil nameMatch:_searchByName phoneMatch:_searchByPhone];
     
     [_mTableView reloadData];
     

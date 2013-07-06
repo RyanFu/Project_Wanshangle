@@ -154,7 +154,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs);
 /************ KTV ***************/
 - (ApiCmd *)getAllKTVsListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllKTVsListFromCoreData;
-- (NSArray *)getAllKTVsListFromCoreDataWithCityName:(NSString *)cityName;
+- (NSArray *)getAllKTVsListFromCoreDataWithCityName:(NSString *)cityId;
 - (BOOL)getNearbyKTVListFromCoreDataWithCallBack:(GetKTVNearbyList)callback;
 - (NSArray *)getFavoriteKTVListFromCoreData;
 - (NSArray *)getFavoriteKTVListFromCoreDataWithCityName:(NSString *)cityName;

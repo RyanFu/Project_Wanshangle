@@ -49,6 +49,9 @@
     self.responseJSONObject = nil;
     self.httpRequest = nil;
     self.isFromCache = NO;
+    
+    self.cityId = nil;
+    self.cityName = nil;
 }
 
 - (BOOL) hasError {
@@ -248,6 +251,10 @@
     ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
     ABLoggerWarn(@"apiNotifyResult called, you should override this method to have your own implementation");
+}
+
+- (ApiCmd *)apiGetDelegateApiCmd{
+    return nil;
 }
 
 - (NSMutableDictionary*) getParamDict{

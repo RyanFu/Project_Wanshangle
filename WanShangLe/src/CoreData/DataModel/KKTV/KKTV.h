@@ -23,7 +23,6 @@
 @property (nonatomic, retain) NSString * phoneNumber;
 @property (nonatomic, retain) KKTVBuyInfo *ktvBuyInfo;
 @property (nonatomic, retain) NSManagedObject *ktvDetail;
-@property (nonatomic, retain) City *city;
 @property (nonatomic, retain) NSNumber * favorite;
 @property (nonatomic, retain) NSNumber * nearby;
 @property (nonatomic, retain) NSString * district;
@@ -31,5 +30,8 @@
 @property (nonatomic, retain) NSNumber * seat;
 @property (nonatomic, retain) NSNumber * tuan;
 @property (nonatomic, retain) NSNumber * zhekou;
+@property (nonatomic, retain) NSString * districtid;
+@property (nonatomic, retain) NSString * cityId;
+
 
 @end
