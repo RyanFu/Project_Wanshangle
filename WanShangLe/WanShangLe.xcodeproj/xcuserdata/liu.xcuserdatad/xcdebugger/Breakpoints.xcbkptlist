@@ -9,6 +9,17 @@
          continueAfterRunningActions = "No"
          symbolName = ""
          moduleName = "">
+<<<<<<< HEAD
+=======
+         <Actions>
+            <BreakpointActionProxy
+               ActionType = "Xcode.BreakpointAction.Sound">
+               <ActionContent
+                  soundName = "Blow">
+               </ActionContent>
+            </BreakpointActionProxy>
+         </Actions>
+>>>>>>> 3c437c2c9068d229121d6742a0043f99ed0aea75
       </SymbolicBreakpoint>
    </SymbolicBreakpoints>
    <ExceptionBreakpoints>
