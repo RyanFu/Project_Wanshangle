@@ -16,6 +16,7 @@
  */
 
 typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
+typedef void (^GetKTVNearbyList)(NSArray *ktvs);
 
 @interface DataBaseManager : NSObject{
     
@@ -42,11 +43,19 @@ typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
 //database uid key
 - (NSString*)md5PathForKey:(NSString *) key;
 
+//日期-时间
 - (BOOL)isToday:(NSString *)timeStamp;
 - (NSString *)getTodayTimeStamp;
+//获取星期几
+- (NSString *)getNowDate;
+- (NSString *)getTodayWeek;
+- (NSString *)getTomorrowWeek;
+- (NSString *)getWhickWeek:(NSDate*)aDate;
+//获取时间
+- (NSString *)getTimeFromDate:(NSString *)dateStr;
+- (NSString *)timeByAddingTimeInterval:(int)time fromDate:(NSString *)dateStr;
 
 - (void)cleanUp;
-
 - (void)saveInManagedObjectContext:(NSManagedObjectContext *)coreDataContext;
 
 /**
@@ -95,6 +104,7 @@ typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
 - (ApiCmd *)getScheduleFromWebWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema delegate:(id<ApiNotify>)delegate;
 - (MSchedule *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema;
 - (void)insertScheduleIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd withaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema;
+- (NSArray *)deleteUnavailableSchedules:(NSArray *)aArray;
 
 //购买信息
 - (ApiCmd *)getBuyInfoFromWebWithaMovie:(MMovie *)aMovie
@@ -145,6 +155,9 @@ typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
 - (ApiCmd *)getAllKTVsListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllKTVsListFromCoreData;
 - (NSArray *)getAllKTVsListFromCoreDataWithCityName:(NSString *)cityName;
+- (BOOL)getNearbyKTVListFromCoreDataWithCallBack:(GetKTVNearbyList)callback;
+- (NSArray *)getFavoriteKTVListFromCoreData;
+- (NSArray *)getFavoriteKTVListFromCoreDataWithCityName:(NSString *)cityName;
 - (NSUInteger)getCountOfKTVsListFromCoreData;
 - (NSUInteger)getCountOfKTVsListFromCoreDataWithCityName:(NSString *)cityName;
 - (void)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
@@ -152,18 +165,17 @@ typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
 - (BOOL)addFavoriteKTVWithId:(NSNumber *)uid;
 - (BOOL)deleteFavoriteKTVWithId:(NSNumber *)uid;
 
-//获得KTV详情 KTV Detail Info
-- (ApiCmd *)getDetailInfoFromWebWithaKTV:(KKTV *)aKTV
-                                delegate:(id<ApiNotify>)delegate;
-- (void)insertDetailInfoIntoCoreDataFromObject:(NSDictionary *)objectData
-                                    withApiCmd:(ApiCmd*)apiCmd
-                                      withaKTV:(KKTV *)aKTV;
-
-//获得KTV购买信息 KTV Discounts Info
-- (ApiCmd *)getDiscountInfoFromWebWithaKTV:(KKTV *)aKTV
+//获得KTV 团购列表 KTV Info
+- (ApiCmd *)getKTVTuanGouListFromWebWithaKTV:(KKTV *)aKTV
                                   delegate:(id<ApiNotify>)delegate;
-- (void)insertDiscountInfoIntoCoreDataFromObject:(NSDictionary *)objectData
+- (void)insertKTVTuanGouListIntoCoreDataFromObject:(NSDictionary *)objectData
                                       withApiCmd:(ApiCmd*)apiCmd
                                         withaKTV:(KKTV *)aKTV;
 
+//获得KTV 价格列表 Info
+- (ApiCmd *)getKTVPriceListFromWebWithaKTV:(KKTV *)aKTV
+                                delegate:(id<ApiNotify>)delegate;
+- (void)insertKTVPriceListIntoCoreDataFromObject:(NSDictionary *)objectData
+                                    withApiCmd:(ApiCmd*)apiCmd
+                                      withaKTV:(KKTV *)aKTV;
 @end

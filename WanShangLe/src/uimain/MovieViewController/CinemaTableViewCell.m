@@ -12,9 +12,6 @@
 
 @synthesize cinema_name;
 @synthesize cinema_address;
-@synthesize cinema_count;
-@synthesize cinema_price;
-@synthesize cinema_tuan;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -45,9 +42,6 @@
     
     self.cinema_name = nil;
     self.cinema_address = nil;
-    self.cinema_count = nil;
-    self.cinema_price = nil;
-    self.cinema_tuan = nil;
     [super dealloc];
 }
 

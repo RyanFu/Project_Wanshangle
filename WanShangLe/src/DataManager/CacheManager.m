@@ -34,10 +34,10 @@ static CacheManager *_sharedInstance = nil;
     self = [super init];
     
     if (self) {
-        self.mUserDefaults = [NSMutableDictionary dictionaryWithCapacity:10];
-        self.cache = [[[NSCache alloc] init] autorelease];
-        _dispatch_queue_syn_default = dispatch_queue_create("com.gcd.wanshangle.thread", NULL);
-        dispatch_retain(_dispatch_queue_syn_default);
+//        self.mUserDefaults = [NSMutableDictionary dictionaryWithCapacity:10];
+//        self.cache = [[[NSCache alloc] init] autorelease];
+//        _dispatch_queue_syn_default = dispatch_queue_create("com.gcd.wanshangle.thread", NULL);
+//        dispatch_retain(_dispatch_queue_syn_default);
     }
     
     return self;

@@ -15,8 +15,9 @@ static DataBaseManager *_sharedInstance = nil;
 
 @interface DataBaseManager(){
     NSString *updateTimeStamp;
+    
 }
-
+@property(nonatomic,retain)NSDateFormatter *timeFormatter;
 @end
 
 @implementation DataBaseManager
@@ -34,13 +35,20 @@ static DataBaseManager *_sharedInstance = nil;
 -(id)init{
     self = [super init];
     if (self) {
-        
+        [self initData];
     }
     return self;
 }
 
+- (void)initData{
+    _timeFormatter = [[NSDateFormatter alloc] init];
+    _timeFormatter.timeZone = [NSTimeZone localTimeZone];
+    _timeFormatter.locale = [NSLocale currentLocale];
+}
+
 - (void)dealloc {
     [updateTimeStamp release];
+    self.timeFormatter = nil;
     [super dealloc];
 }
 
@@ -97,7 +105,7 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 #pragma mark -
-#pragma mark 更新标记-时间戳
+#pragma mark 日期-时间
 - (BOOL)isToday:(NSString *)timeStamp{
     
     if (isEmpty(timeStamp)) {
@@ -110,16 +118,118 @@ static DataBaseManager *_sharedInstance = nil;
 - (NSString *)getTodayTimeStamp{
     
     if (!updateTimeStamp) {
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         //formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss ZZZ";
-        formatter.dateFormat = @"yyyyMMdd";
-        formatter.timeZone = [NSTimeZone localTimeZone];
-        formatter.locale = [NSLocale currentLocale];
-        updateTimeStamp = [[formatter stringFromDate:[NSDate date]] retain];
+        _timeFormatter.dateFormat = @"yyyyMMdd";
+        updateTimeStamp = [[_timeFormatter stringFromDate:[NSDate date]] retain];
         ABLoggerInfo(@"today time stamp is ===== %@",updateTimeStamp);
-        [formatter release];
     }
     return updateTimeStamp;
+}
+
+#pragma mark 获取星期几
+- (NSString *)getNowDate{
+    
+    _timeFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    
+    return [_timeFormatter stringFromDate:[NSDate date]];
+}
+
+- (NSString *)getTodayWeek{
+    return [self getWhickWeek:[NSDate date]];
+}
+- (NSString *)getTomorrowWeek{
+    //得到(24 * 60 * 60)即24小时之前的日期，dateWithTimeIntervalSinceNow:
+    NSDate *tomorrow = [NSDate dateWithTimeIntervalSinceNow: (24 * 60 * 60)];
+    
+    return [self getWhickWeek:tomorrow];
+}
+
+- (NSString *)getWhickWeek:(NSDate*)aDate{
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+
+    NSInteger unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekdayCalendarUnit |
+    NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
+
+    NSDateComponents *comps = [calendar components:unitFlags fromDate:aDate];
+    int week = [comps weekday];
+    
+    NSString *weekStr = nil;
+    switch (week) {
+        case 1:
+            weekStr = @"周日";
+            break;
+        case 2:
+            weekStr = @"周一";
+            break;
+        case 3:
+            weekStr = @"周二";
+            break;
+        case 4:
+            weekStr = @"周三";
+            break;
+        case 5:
+            weekStr = @"周四";
+            break;
+        case 6:
+            weekStr = @"周五";
+            break;
+        default:
+            weekStr = @"周六";
+            break;
+    }
+    
+    [calendar release];
+    return weekStr;
+    
+    /*
+    int month = [comps month];
+    int day = [comps day];
+    int hour = [comps hour];
+    int min = [comps minute];
+    int sec = [comps second];*/
+}
+
+#pragma mark 获取时间
+//time = "2013-07-03 10:00:00";
+- (NSString *)getTimeFromDate:(NSString *)dateStr{
+    if (isEmpty(dateStr)) {
+        return nil;
+    }
+    _timeFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    NSDate *aDate = [_timeFormatter dateFromString:dateStr];
+    
+    _timeFormatter.dateFormat = @"HH:mm";
+    
+    return [_timeFormatter stringFromDate:aDate];
+}
+
+- (NSString *)timeByAddingTimeInterval:(int)time fromDate:(NSString *)dateStr{
+    
+    if (isEmpty(dateStr) || isEmpty(dateStr)) {
+        return nil;
+    }
+    _timeFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    NSDate *aDate = [_timeFormatter dateFromString:dateStr];
+    
+    int interval = time*60;
+    aDate = [aDate dateByAddingTimeInterval:interval];
+    
+    _timeFormatter.dateFormat = @"HH:mm";
+    
+    return [_timeFormatter stringFromDate:aDate];
+}
+
+-(NSDate *)trueDate:(NSDate *)formatDate{
+    
+    NSTimeZone *zone = [NSTimeZone localTimeZone];;
+    
+    NSInteger interval = [zone secondsFromGMTForDate: formatDate];
+    
+    NSDate *localeDate = [formatDate  dateByAddingTimeInterval: interval];
+
+    ABLoggerDebug(@"localeDate ====== %@", localeDate);
+    
+    return localeDate;
 }
 
 #pragma mark -
@@ -475,11 +585,11 @@ static DataBaseManager *_sharedInstance = nil;
         [returnArray addObject:movie_city.movie];
     }
     
-    //    returnArray = (NSMutableArray *)[returnArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-    //        NSString *first =  [(MMovie*)a name];
-    //        NSString *second = [(MMovie*)b name];
-    //        return [first compare:second];
-    //    }];
+//    returnArray = (NSMutableArray *)[returnArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+//        NSString *first =  [(MMovie*)a name];
+//        NSString *second = [(MMovie*)b name];
+//        return [first compare:second];
+//    }];
     
     return returnArray;
 }
@@ -598,6 +708,7 @@ static DataBaseManager *_sharedInstance = nil;
     mMovie.name = [amovieData objectForKey:@"name"];
     mMovie.webImg = [amovieData objectForKey:@"coverurl"];
     mMovie.aword = [amovieData objectForKey:@"description"];
+    mMovie.duration = [amovieData objectForKey:@"duration"];
 }
 
 - (void)importDynamicMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData
@@ -605,7 +716,7 @@ static DataBaseManager *_sharedInstance = nil;
     ABLoggerInfo(@"amovieData == %@",amovieData);
     mMovie.rating = [NSNumber numberWithInt:[[amovieData objectForKey:@"rating"] intValue]];
     mMovie.ratingFrom = [amovieData objectForKey:@"ratingFrom"];
-    mMovie.ratingpeople = [amovieData objectForKey:@"ratingcount"];
+    mMovie.ratingpeople = [NSNumber numberWithInt:[[amovieData objectForKey:@"ratingCount"] intValue]];
     mMovie.newMovie = [amovieData objectForKey:@"newMovie"];
     mMovie.twoD = [NSNumber numberWithInt:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:0] intValue]];
     mMovie.threeD = [NSNumber numberWithInt:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:1] intValue]];
@@ -786,6 +897,8 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdMovie_getSchedule* apiCmdMovie_getSchedule = [[ApiCmdMovie_getSchedule alloc] init];
     apiCmdMovie_getSchedule.delegate = delegate;
     apiCmdMovie_getSchedule.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdMovie_getSchedule.movie_id = aMovie.uid;
+    apiCmdMovie_getSchedule.cinema_id = [aCinema.uid stringValue];
     [apiClient executeApiCmdAsync:apiCmdMovie_getSchedule];
     [apiCmdMovie_getSchedule.httpRequest setTag:API_MScheduleCmd];
     
@@ -887,6 +1000,22 @@ static DataBaseManager *_sharedInstance = nil;
     [movie_cinema_uid release];
 }
 
+//去除过期的电影排期
+- (NSArray *)deleteUnavailableSchedules:(NSArray *)aArray{
+    
+    NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:10];
+    
+    NSString *nowTime = [[DataBaseManager sharedInstance] getNowDate];
+    for (NSDictionary *tDic in aArray) {
+        NSString *scheduleTime = [tDic objectForKey:@"time"];
+        if ([scheduleTime compare:nowTime options:NSNumericSearch] == NSOrderedDescending) {
+            [returnArray addObject:tDic];
+        }
+    }
+    
+    return [returnArray autorelease];
+}
+
 #pragma mark 购买信息
 - (ApiCmdMovie_getBuyInfo *)getBuyInfoFromWebWithaMovie:(MMovie *)aMovie
                                                 aCinema:(MCinema *)aCinema
@@ -957,9 +1086,11 @@ static DataBaseManager *_sharedInstance = nil;
     
     ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
     
-    if ([[[[ApiClient defaultClient] networkQueue] operations] containsObject:tapiCmd.httpRequest]) {
-        ABLoggerWarn(@"不能请求影院列表数据，因为已经请求了");
-        return tapiCmd;
+    if (tapiCmd.httpRequest!=nil) {
+        if ([[[[ApiClient defaultClient] networkQueue] operations] containsObject:tapiCmd.httpRequest]) {
+            ABLoggerWarn(@"不能请求影院列表数据，因为已经请求了");
+            return tapiCmd;
+        }
     }
     
     ABLoggerWarn(@"tapiCmd.httpRequest ====== %@",tapiCmd.httpRequest);
@@ -1013,7 +1144,6 @@ static DataBaseManager *_sharedInstance = nil;
             MCinema *cinema2 = (MCinema *)obj2;
             return [cinema1.nearby compare:cinema2.nearby];
         }];
-        ABLoggerInfo(@"cinemas === %@",array);
         
         if (mCallBack && isNewLocation) {
             mCallBack(array);
@@ -1437,6 +1567,45 @@ static DataBaseManager *_sharedInstance = nil;
     return [KKTV MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
+- (BOOL)getNearbyKTVListFromCoreDataWithCallBack:(GetKTVNearbyList)callback{
+    GetKTVNearbyList mCallBack = [callback copy];
+    
+    NSArray *ktvs = [self getAllKTVsListFromCoreData];
+    LocationManager *lm = [LocationManager defaultLocationManager];
+    BOOL isSuccess =  [lm getUserGPSLocationWithCallBack:^(BOOL isNewLocation) {
+        for (KKTV *tKTV in ktvs) {
+            double distance = [lm distanceBetweenUserToLatitude:[tKTV.latitude doubleValue] longitude:[tKTV.longitude doubleValue]];
+            tKTV.nearby = [NSNumber numberWithInt:distance];
+        }
+        
+        [self saveInManagedObjectContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        
+        NSArray *array =  [ktvs sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            MCinema *cinema1 = (MCinema *)obj1;
+            MCinema *cinema2 = (MCinema *)obj2;
+            return [cinema1.nearby compare:cinema2.nearby];
+        }];
+        
+        if (mCallBack && isNewLocation) {
+            mCallBack(array);
+        }
+    }];
+    
+    return isSuccess;
+
+}
+- (NSArray *)getFavoriteKTVListFromCoreData{
+    return [self getFavoriteKTVListFromCoreDataWithCityName:nil];
+}
+
+- (NSArray *)getFavoriteKTVListFromCoreDataWithCityName:(NSString *)cityName{
+    if (isEmpty(cityName)) {
+        cityName = [[LocationManager defaultLocationManager] getUserCity];
+    }
+    
+    return [KKTV MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@ and favorite = YES", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+}
+
 - (NSUInteger)getCountOfKTVsListFromCoreData{
     return [self getCountOfKTVsListFromCoreDataWithCityName:nil];
 }
@@ -1471,7 +1640,7 @@ static DataBaseManager *_sharedInstance = nil;
 - (void)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
     CFTimeInterval time1 = Elapsed_Time;
     
-    NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"infos"];
+    NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"list"];
     
     KKTV *kKTV = nil;
     for (int i=0; i<[array count]; i++) {
@@ -1502,13 +1671,11 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (void)importKTV:(KKTV *)kKTV ValuesForKeysWithObject:(NSDictionary *)aKTVDic{
     kKTV.name = [aKTVDic objectForKey:@"name"];
-    kKTV.uid = [[aKTVDic objectForKey:@"id"] stringValue];
-    kKTV.address = [aKTVDic objectForKey:@"addr"];
-    kKTV.price = [aKTVDic objectForKey:@"lowprice"];
-    kKTV.phoneNumber = [[aKTVDic objectForKey:@"tel"] stringValue];
-    kKTV.longitude = [aKTVDic objectForKey:@"longitude"];
-    kKTV.latitude = [aKTVDic objectForKey:@"latitude"];
-    kKTV.discounts = [aKTVDic objectForKey:@"discounts"];
+    kKTV.uid = [aKTVDic objectForKey:@"id"];
+    kKTV.address = [aKTVDic objectForKey:@"address"];
+    kKTV.phoneNumber = [aKTVDic objectForKey:@"contactphone"];
+    kKTV.longitude = [NSNumber numberWithFloat:[[aKTVDic objectForKey:@"longitude"] floatValue]];
+    kKTV.latitude = [NSNumber numberWithFloat:[[aKTVDic objectForKey:@"latitude"] floatValue]];
 }
 
 - (BOOL)addFavoriteKTVWithId:(NSNumber *)uid{
@@ -1547,6 +1714,47 @@ static DataBaseManager *_sharedInstance = nil;
     }];
     
     return YES;
+}
+
+//获得KTV 团购列表 KTV Info
+- (ApiCmd *)getKTVTuanGouListFromWebWithaKTV:(KKTV *)aKTV
+                                    delegate:(id<ApiNotify>)delegate{
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    
+}
+- (void)insertKTVTuanGouListIntoCoreDataFromObject:(NSDictionary *)objectData
+                                        withApiCmd:(ApiCmd*)apiCmd
+                                          withaKTV:(KKTV *)aKTV{
+    
+}
+
+//获得KTV 价格列表 Info
+- (ApiCmd *)getKTVPriceListFromWebWithaKTV:(KKTV *)aKTV
+                                  delegate:(id<ApiNotify>)delegate{
+    
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    
+    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
+        ABLoggerWarn(@"不能请求 KTV 价格列表 数据，因为已经请求了");
+        return tapiCmd;
+    }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmdKTV_getPriceList* apiCmdKTV_getPriceList = [[ApiCmdKTV_getPriceList alloc] init];
+    apiCmdKTV_getPriceList.delegate = delegate;
+    apiCmdKTV_getPriceList.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdKTV_getPriceList.ktvId = aKTV.uid;
+    [apiClient executeApiCmdAsync:apiCmdKTV_getPriceList];
+    [apiCmdKTV_getPriceList.httpRequest setTag:API_KKTVPriceListCmd];
+    
+    return [apiCmdKTV_getPriceList autorelease];
+}
+
+- (void)insertKTVPriceListIntoCoreDataFromObject:(NSDictionary *)objectData
+                                      withApiCmd:(ApiCmd*)apiCmd
+                                        withaKTV:(KKTV *)aKTV{
+    
 }
 //========================================= KTV =========================================/
 @end

@@ -15,11 +15,21 @@
 }
 @property(nonatomic,retain) MMovie *mMovie;
 @property(nonatomic,retain) MCinema *mCinema;
-@property(nonatomic,retain) IBOutlet UIButton *cinemaButton;
+@property(nonatomic,retain) IBOutlet UIControl *cinemaButton;
 @property(nonatomic,retain) IBOutlet UIButton *todayButton;
 @property(nonatomic,retain) IBOutlet UIButton *tomorrowButton;
 @property(nonatomic,retain) IBOutlet UITableView *mTableView;
+@property(nonatomic,retain) IBOutlet UIView *headerView;
+@property(nonatomic,retain) IBOutlet UIView *footerView;
 @property(nonatomic,retain) NSArray *schedulesArray;
+
+@property(nonatomic,retain)IBOutlet UILabel *cinemaNameLabel;
+@property(nonatomic,retain)IBOutlet UILabel *cinemaAddreLabel;
+
+@property(nonatomic,retain)IBOutlet UIImageView *cinema_image_tuan;
+@property(nonatomic,retain)IBOutlet UIImageView *cinema_image_juan;
+@property(nonatomic,retain)IBOutlet UIImageView *cinema_image_zhekou;
+@property(nonatomic,retain)IBOutlet UIImageView *cinema_image_seat;
 
 - (IBAction)clickCinemaButton:(id)sender;
 - (IBAction)clickTodayButton:(id)sender;

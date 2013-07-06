@@ -15,4 +15,6 @@
 @property(nonatomic,retain) IBOutlet UILabel *bar_popular;
 @property(nonatomic,retain) IBOutlet UILabel *bar_address;
 @property(nonatomic,retain) IBOutlet UILabel *bar_date;
+@property(nonatomic,retain) IBOutlet UILabel *bar_distance;
+@property(nonatomic,retain) IBOutlet UIImageView *bar_image_location;
 @end

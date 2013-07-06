@@ -12,10 +12,7 @@
 #import "UIImageView+WebCache.h"
 #import "MMovie.h"
 
-typedef enum {
-    EGOHeaderView = 0,
-    EGOBottomView
-} EGORefreshView;
+
 
 @interface MovieListTableViewDelegate(){
 
@@ -24,6 +21,7 @@ typedef enum {
 @end
 
 @implementation MovieListTableViewDelegate
+@synthesize mTableView = _mTableView;
 
 - (id)init{
     self = [super init];
@@ -136,13 +134,13 @@ typedef enum {
     if ([movie.newMovie boolValue]) {
         [array addObject:cell.movie_image_new];
     }
-    if (movie.twoD) {
+    if ([movie.twoD boolValue]) {
         [array addObject:cell.movie_image_3d];
     }
-    if (movie.threeD) {
+    if ([movie.threeD boolValue]) {
         [array addObject:cell.movie_image_imx];
     }
-    if (movie.iMaxD) {
+    if ([movie.iMaxD boolValue]) {
         [array addObject:cell.movie_image_3dimx];
     }
     
@@ -164,6 +162,7 @@ typedef enum {
     int width = tFrame.origin.x+ tFrame.size.width;
     ABLoggerInfo(@"view frame ===== %@",NSStringFromCGRect(view.frame));
     [cell addSubview:view];
+    [view release];
     
     CGSize nameSize = [movie.name sizeWithFont:[UIFont systemFontOfSize:19] constrainedToSize:CGSizeMake((240-width-10), 23)];
 
@@ -199,8 +198,7 @@ typedef enum {
     _parentViewController.cinemaViewController.movieDetailButton.hidden = NO;
     _parentViewController.cinemaViewController.mMovie = [_parentViewController.moviesArray objectAtIndex:indexPath.row];
     [_parentViewController pushMovieCinemaAnimation];
+    
 }
-
-
 
 @end

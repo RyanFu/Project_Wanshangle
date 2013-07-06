@@ -7,13 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WXApi.h"
+#import "AGViewDelegate.h"
 
 @class RootViewController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
-
+@interface AppDelegate : UIResponder <UIApplicationDelegate,WXApiDelegate>{
+    
+    enum WXScene _scene;
+}
+@property (nonatomic,readonly) AGViewDelegate *viewDelegate;
 @property (retain, nonatomic) UIWindow *window;
-@property (retain, nonatomic) RootViewController *rootViewController;
 
 + (instancetype)appDelegateInstance;
 @end

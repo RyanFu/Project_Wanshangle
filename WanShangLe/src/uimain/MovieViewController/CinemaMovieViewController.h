@@ -14,16 +14,23 @@
 
 @property(nonatomic,retain) IBOutlet UIButton *todayButton;
 @property(nonatomic,retain) IBOutlet UIButton *tomorrowButton;
-@property(nonatomic,retain) IBOutlet UILabel *cinemaInfo;
+@property(nonatomic,retain) IBOutlet UIControl *movieDetailControl;
+@property(nonatomic,retain) IBOutlet UILabel *cinemaName;
+@property(nonatomic,retain) IBOutlet UILabel *cinemaAddress;
 @property(nonatomic,retain) IBOutlet iCarousel *coverFlow;
 @property(nonatomic,retain) IBOutlet UILabel *movieName;
-@property(nonatomic,retain) IBOutlet UILabel *movieActor;
 @property(nonatomic,retain) IBOutlet UILabel *movieRating;
-@property(nonatomic,retain) IBOutlet UILabel *movieTimeLong;
 @property(nonatomic,retain) IBOutlet UITableView *mTableView;
 @property(nonatomic,retain) MCinema *mCinema;
 @property(nonatomic,retain) MMovie *mMovie;
 @property(nonatomic,retain) NSArray *schedulesArray;
+
+@property(nonatomic,retain)IBOutlet UIImageView *movie_image_new;
+@property(nonatomic,retain)IBOutlet UIImageView *movie_image_3dimx;
+@property(nonatomic,retain)IBOutlet UIImageView *movie_image_imx;
+@property(nonatomic,retain)IBOutlet UIImageView *movie_image_3d;
+@property(nonatomic,retain)IBOutlet UIView *headerView;
+@property(nonatomic,retain)IBOutlet UIView *footerView;
 
 - (IBAction)clickTodayButton:(id)sender;
 - (IBAction)clickTomorrowButton:(id)sender;

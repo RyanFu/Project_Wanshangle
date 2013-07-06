@@ -8,6 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, MMFilterBarListType) {
+    MMFilterBarListTypeNone = 0,
+    MMFilterBarListTypePopular,
+    MMFilterBarListTypeNearby,
+    MMFilterBarListTypeTime,
+};
+
+@class EGORefreshTableHeaderView;
 @class ApiCmdBar_getAllBars;
 
 @interface BarViewController : UIViewController{
@@ -17,8 +25,11 @@
 @property(nonatomic,retain) IBOutlet UITableView* mTableView;
 @property(nonatomic,retain) NSArray *barsArray;
 @property(nonatomic,retain) ApiCmdBar_getAllBars *apiCmdBar_getAllBars;
+@property(nonatomic,assign) MMFilterBarListType barFilterType;
+@property(nonatomic,retain)EGORefreshTableHeaderView *refreshHeaderView;
+@property(nonatomic,retain)EGORefreshTableHeaderView *refreshTailerView;
 
-- (IBAction)clickTodayButton:(id)sender;
-- (IBAction)clickTomorrowButton:(id)sender;
-- (IBAction)clickWeekendButton:(id)sender;
+- (IBAction)clickTimeButton:(id)sender;
+- (IBAction)clickNearByButton:(id)sender;
+- (IBAction)clickPopularButton:(id)sender;
 @end

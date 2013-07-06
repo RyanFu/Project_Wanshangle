@@ -25,5 +25,11 @@
 @dynamic ktvDetail;
 @dynamic city;
 @dynamic favorite;
+@dynamic nearby;
+@dynamic district;
+@dynamic juan;
+@dynamic seat;
+@dynamic tuan;
+@dynamic zhekou;
 
 @end

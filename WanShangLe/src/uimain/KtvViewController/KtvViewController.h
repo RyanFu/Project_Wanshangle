@@ -8,18 +8,32 @@
 
 #import <UIKit/UIKit.h>
 
-@class ApiCmdKTV_getAllKTVs;
-
 typedef NS_ENUM(NSInteger, NSFilterKTVListType) {
-    NSFilterKTVListTypeFavorite = 0,
+    NSFilterKTVListTypeNone = 0,
+    NSFilterKTVListTypeFavorite,
     NSFilterKTVListTypeNearby,
     NSFilterKTVListTypeAll,
 };
 
+@class ApiCmdKTV_getAllKTVs;
+@class EGORefreshTableHeaderView;
 @interface KtvViewController : UIViewController{
     
 }
-@property(nonatomic,retain)UITableView *mTableView;
-@property(nonatomic,retain)NSArray *ktvsArray;
-@property(nonatomic,retain)ApiCmdKTV_getAllKTVs *apiCmdKTV_getAllKTVs;
+@property(nonatomic,retain) UISearchBar *searchBar;
+@property(nonatomic,retain) UISearchDisplayController *strongSearchDisplayController;
+@property(nonatomic,retain) UITableView *mTableView;
+@property(nonatomic,retain) NSArray *ktvsArray;
+@property(nonatomic,retain) ApiCmdKTV_getAllKTVs *apiCmdKTV_getAllKTVs;
+@property(nonatomic,readwrite) NSFilterKTVListType filterKTVListType;
+@property(nonatomic,retain)EGORefreshTableHeaderView *refreshHeaderView;
+@property(nonatomic,retain)EGORefreshTableHeaderView *refreshTailerView;
+
+@property(nonatomic,retain) IBOutlet UIView *addFavoriteFooterView;
+@property(nonatomic,retain) IBOutlet UIView *noFavoriteFooterView;
+@property(nonatomic,retain) IBOutlet UIView *noGPSView;
+
+- (void)beginSearch;
+- (void)endSearch;
+
 @end

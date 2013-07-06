@@ -20,10 +20,7 @@
 #define MovieButtonTag 10
 #define CinemaButtonTag 11
 
-typedef enum {
-    EGOHeaderView = 0,
-    EGOBottomView
-} EGORefreshView;
+
 
 @interface MovieViewController ()<ApiNotify>{
     UIButton *movieButton;
@@ -52,7 +49,7 @@ typedef enum {
         
         isMoviePanel = YES;
         
-        //        self.navigationItem.hidesBackButton= YES;
+        //self.navigationItem.hidesBackButton= YES;
     }
     return self;
 }
@@ -72,9 +69,9 @@ typedef enum {
     [super dealloc];
 }
 
+#pragma mark -
+#pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
-    
-    [_cinemaViewController viewWillAppear:animated];
     
     self.apiCmdMovie_getAllMovies =  (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
     
@@ -159,6 +156,9 @@ typedef enum {
 - (void)initTableView{
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
     _titleLabel.backgroundColor = [UIColor clearColor];
+    _titleLabel.textColor = [UIColor whiteColor];
+    _titleLabel.font = [UIFont boldSystemFontOfSize:20];
+    _titleLabel.shadowColor = [UIColor colorWithWhite:0.298 alpha:1.000];
     [_titleLabel setTextAlignment:UITextAlignmentCenter];
     
     _movieContentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, iPhoneAppFrame.size.width, iPhoneAppFrame.size.height-44)];
@@ -180,7 +180,7 @@ typedef enum {
     [headerView release];
     
     _movieTableView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
-    _movieTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    _movieTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
     
     [_movieContentView addSubview:_movieTableView];
     [self.view addSubview:_movieContentView];
@@ -272,6 +272,7 @@ typedef enum {
 #pragma mark 【电影-影院】Button Event
 - (void)clickMovieButtonUp:(id)sender{
     
+    if (isMoviePanel)return;
     isMoviePanel = YES;
     [self switchMovieCinemaAnimation];
 }
@@ -284,8 +285,12 @@ typedef enum {
 - (void)clickCinemaButtonUp:(id)sender{
     
     _cinemaViewController.movieDetailButton.hidden = YES;
-    
+    if (!isMoviePanel)return;
     isMoviePanel = NO;
+    
+    if (_cinemaViewController.view.superview==nil) {
+        [self newCinemaController];
+    }
     [self switchMovieCinemaAnimation];
 }
 
@@ -293,7 +298,6 @@ typedef enum {
     
     [self cleanUpButtonBackground];
     [cinemaButton setBackgroundImage:[UIImage imageNamed:@"btn_switch@2x"] forState:UIControlStateNormal];
-    
 }
 
 - (void)cleanUpButtonBackground{
@@ -302,6 +306,9 @@ typedef enum {
 }
 
 - (void)clickBackButton:(id)sender{
+    
+//    [self.navigationController popViewControllerAnimated:YES];
+    
     if (_cinemaViewController.movieDetailButton.hidden) {
         [self.navigationController popViewControllerAnimated:YES];
     }else{
@@ -361,13 +368,12 @@ typedef enum {
     topView.hidden = !_cinemaViewController.movieDetailButton.hidden;
     
     if (topView.hidden) {
-        ABLoggerInfo(@"_cinemaViewController.mMovie.name === %@",_cinemaViewController.mMovie.name);
         _titleLabel.text = _cinemaViewController.mMovie.name;
         self.navigationItem.titleView = _titleLabel;
     }else{
         self.navigationItem.titleView = topView;
     }
-    
+
     [self switchMovieCinemaAnimation];
 }
 

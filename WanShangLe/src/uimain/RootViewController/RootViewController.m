@@ -21,19 +21,19 @@
     WSLUserClickStyle userClickStyle;
     
 }
-@property(nonatomic,retain) MovieViewController* movieViewController;
-@property(nonatomic,retain) KtvViewController* ktvViewController;
-@property(nonatomic,retain) ShowViewController* showViewController;
-@property(nonatomic,retain) BarViewController* barViewController;
+//@property(nonatomic,retain) MovieViewController* movieViewController;
+//@property(nonatomic,retain) KtvViewController* ktvViewController;
+//@property(nonatomic,retain) ShowViewController* showViewController;
+//@property(nonatomic,retain) BarViewController* barViewController;
 @property(nonatomic,retain) UIView *cityPanel;
-@property(nonatomic,retain) UIView *cityPanelMask;
+@property(nonatomic,retain) UIControl *cityPanelMask;
 @end
 
 @implementation RootViewController
-@synthesize movieViewController = _movieViewController;
-@synthesize ktvViewController = _ktvViewController;
-@synthesize showViewController = _showViewController;
-@synthesize barViewController = _barViewController;
+//@synthesize movieViewController = _movieViewController;
+//@synthesize ktvViewController = _ktvViewController;
+//@synthesize showViewController = _showViewController;
+//@synthesize barViewController = _barViewController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -45,7 +45,10 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated{
-    //   [self.navigationController setNavigationBarHidden:YES];
+    ABLoggerMethod();
+}
+- (void)viewDidAppear:(BOOL)animated{
+    ABLoggerMethod();
 }
 
 - (void)viewWillDisappear:(BOOL)animate{
@@ -73,7 +76,7 @@
     [[SIAlertView appearance] setTitleFont:[UIFont systemFontOfSize:20]];
     [[SIAlertView appearance] setTitleColor: [UIColor colorWithRed:0.199 green:0.731 blue:1.000 alpha:1.000]];
     [[SIAlertView appearance] setMessageColor:[UIColor colorWithRed:0.090 green:0.481 blue:0.905 alpha:1.000]];
-    [[SIAlertView appearance] setCornerRadius:12];
+    [[SIAlertView appearance] setCornerRadius:5];
     [[SIAlertView appearance] setShadowRadius:20];
     
     //设置已选择的城市
@@ -105,11 +108,12 @@
     
     if (![self checkUserCity])return;
     
-    if (!_movieViewController) {
-        _movieViewController = [[MovieViewController alloc] initWithNibName:nil bundle:nil];
-    }
+
+        MovieViewController *_movieViewController = [[MovieViewController alloc] initWithNibName:nil bundle:nil];
+
     
     [self.navigationController pushViewController:_movieViewController animated:YES];
+    [_movieViewController release];
 }
 
 //KTV
@@ -118,11 +122,12 @@
     
     if (![self checkUserCity])return;
     
-    if (!_ktvViewController) {
-        _ktvViewController = [[KtvViewController alloc] initWithNibName:(iPhone5?@"KtvViewController":@"KtvViewController") bundle:nil];
-    }
+//    if (!_ktvViewController) {
+        KtvViewController *_ktvViewController = [[KtvViewController alloc] initWithNibName:(iPhone5?@"KtvViewController":@"KtvViewController") bundle:nil];
+//    }
     
     [self.navigationController pushViewController:_ktvViewController animated:YES];
+    [_ktvViewController release];
 }
 
 //演出
@@ -131,11 +136,12 @@
     
     if (![self checkUserCity])return;
     
-    if (!_showViewController) {
-        _showViewController = [[ShowViewController alloc] initWithNibName:(iPhone5?@"ShowViewController_5":@"ShowViewController") bundle:nil];
-    }
+//    if (!_showViewController) {
+        ShowViewController *_showViewController = [[ShowViewController alloc] initWithNibName:(iPhone5?@"ShowViewController_5":@"ShowViewController") bundle:nil];
+//    }
     
     [self.navigationController pushViewController:_showViewController animated:YES];
+    [_showViewController release];
 }
 
 //酒吧
@@ -144,11 +150,12 @@
     
     if (![self checkUserCity])return;
     
-    if (!_barViewController) {
-        _barViewController = [[BarViewController alloc] initWithNibName:(iPhone5?@"BarViewController_5":@"BarViewController") bundle:nil];
-    }
+//    if (!_barViewController) {
+        BarViewController *_barViewController = [[BarViewController alloc] initWithNibName:(iPhone5?@"BarViewController_5":@"BarViewController") bundle:nil];
+//    }
     
     [self.navigationController pushViewController:_barViewController animated:YES];
+    [_barViewController release];
 }
 
 //设置
@@ -184,8 +191,9 @@
 
 - (void)popupCityPanel{
     
-    self.cityPanelMask = [[UIView alloc] initWithFrame:self.view.bounds];
-    _cityPanelMask.backgroundColor = [UIColor colorWithWhite:0.298 alpha:0.150];
+    self.cityPanelMask = [[UIControl alloc] initWithFrame:self.view.bounds];
+    _cityPanelMask.backgroundColor = [UIColor colorWithWhite:0.000 alpha:0.650];
+    [_cityPanelMask addTarget:self action:@selector(dismissCityPanel) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_cityPanelMask];
     [_cityPanelMask release];
     
@@ -249,6 +257,10 @@
     [self selectedCityButtonInPanel:_cityPanel];
     [self startAnimationCityPanel];
     [_cityPanel release];
+}
+
+- (void)dismissCityPanel{
+    [self clickCityButton:nil];
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -361,10 +373,10 @@
 }
 
 - (void)dealloc{
-    self.movieViewController = nil;
-    self.ktvViewController = nil;
-    self.showViewController = nil;
-    self.barViewController = nil;
+//    self.movieViewController = nil;
+//    self.ktvViewController = nil;
+//    self.showViewController = nil;
+//    self.barViewController = nil;
     self.cityPanel = nil;
     self.cityPanelMask = nil;
     [super dealloc];

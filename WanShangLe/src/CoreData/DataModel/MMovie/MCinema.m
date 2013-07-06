@@ -24,5 +24,9 @@
 @dynamic city;
 @dynamic movie_cinemas;
 @dynamic nearby;
+@dynamic juan;
+@dynamic seat;
+@dynamic tuan;
+@dynamic zhekou;
 
 @end

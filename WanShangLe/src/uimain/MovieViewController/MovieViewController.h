@@ -16,13 +16,14 @@
 @interface MovieViewController : UIViewController{
     
 }
-@property(nonatomic,readwrite,assign)BOOL isMoviePanel;
 @property(nonatomic,retain)CinemaViewController *cinemaViewController;
-@property(nonatomic,retain)UITableView *movieTableView;
-@property(nonatomic,retain)NSArray *moviesArray;
 @property(nonatomic,retain)ApiCmdMovie_getAllMovies *apiCmdMovie_getAllMovies;
 @property(nonatomic,retain)ApiCmdMovie_getAllCinemas *apiCmdMovie_getAllCinemas;
 @property(nonatomic,retain)EGORefreshTableHeaderView *refreshHeaderView;
+
+@property(nonatomic,readwrite,assign)BOOL isMoviePanel;
+@property(nonatomic,retain)UITableView *movieTableView;
+@property(nonatomic,retain)NSArray *moviesArray;
 
 - (void)switchMovieCinemaAnimation;
 - (void)pushMovieCinemaAnimation;

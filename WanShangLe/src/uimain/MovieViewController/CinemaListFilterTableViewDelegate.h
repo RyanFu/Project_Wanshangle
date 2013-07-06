@@ -12,8 +12,6 @@
 @interface CinemaListFilterTableViewDelegate : NSObject<UITableViewDelegate,UITableViewDataSource>{
     
 }
-@property (assign)BOOL isOpen;
 @property (assign)BOOL isFavoriteList;
-@property (nonatomic,retain)NSIndexPath *selectIndex;
 @property(nonatomic,assign) CinemaViewController *parentViewController;
 @end

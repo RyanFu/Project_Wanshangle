@@ -156,15 +156,14 @@
 - (BOOL)startLocationUserGPS
 {
     if ([self checkGPSEnable]) {
-        
+        [self stopLocationUserGPS];
         // if locationManager does not currently exist, create it
         if (!_locationManager)
         {
             _locationManager = [[CLLocationManager alloc] init];
-            [_locationManager setDelegate:self];
             _locationManager.distanceFilter = 10.0f; // we don't need to be any more accurate than 10m
         }
-        
+        [_locationManager setDelegate:self];
         [_locationManager startUpdatingLocation];
         return YES;
     }
@@ -191,7 +190,7 @@
         if (self.userLocation) {
             if (self.userLocation.coordinate.latitude == newLocation.coordinate.latitude &&
                 self.userLocation.coordinate.longitude == newLocation.coordinate.longitude) {
-                isNew = NO;
+                isNew = YES;
             }
         }
         

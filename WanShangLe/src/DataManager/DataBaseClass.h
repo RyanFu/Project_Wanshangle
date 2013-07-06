@@ -14,11 +14,11 @@
 @class ApiCmdMovie_getAllMovies,ApiCmdMovie_getAllCinemas;
 @class ApiCmdMovie_getSchedule,ApiCmdMovie_getBuyInfo;
 @class ApiCmdShow_getAllShows,ApiCmdBar_getAllBars;
-@class ApiCmdKTV_getAllKTVs,ApiCmdKTV_getKTVDetail,ApiCmdKTV_getDiscountInfo;
+@class ApiCmdKTV_getAllKTVs,ApiCmdKTV_getBuyList,ApiCmdKTV_getPriceList;
 
 @class MMovie_City,MSchedule,MMovie_Cinema,MMovie,MCinema,MMovieDetail;
 
-@class KKTV,KKTVBuyInfo,KKTVDetail;
+@class KKTV,KKTVBuyInfo,KKTVPriceInfo;
 
 @class SShow;
 

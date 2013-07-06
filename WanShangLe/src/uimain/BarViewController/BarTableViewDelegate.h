@@ -7,10 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "EGORefreshTableHeaderView.h"
 
 @class BarViewController;
-@interface BarTableViewDelegate : NSObject<UITableViewDataSource,UITableViewDelegate>{
+@interface BarTableViewDelegate : NSObject<EGORefreshTableHeaderDelegate,UITableViewDataSource,UITableViewDelegate>{
     
+    UITableView *mTableView;
+    BOOL _reloading;
 }
+@property(nonatomic,assign) EGORefreshTableHeaderView *refreshHeaderView;
+@property(nonatomic,assign) EGORefreshTableHeaderView *refreshTailerView;
 @property(nonatomic,assign) BarViewController *parentViewController;
+@property(nonatomic,assign) UITableView *mTableView;
 @end

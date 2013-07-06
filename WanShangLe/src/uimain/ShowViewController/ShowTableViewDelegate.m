@@ -72,5 +72,80 @@
     [showDetailController release];
 }
 
+#pragma mark -
+#pragma mark Data Source Loading / Reloading Methods
+
+- (void)reloadTableViewDataSource{
+    
+    //    [_model reload];
+	_reloading = YES;
+	
+}
+
+- (void)loadMoreTableViewDataSource {
+    //    [_model loadMore];
+    _reloading = YES;
+}
+
+- (void)doneReLoadingTableViewData
+{
+	//  model should call this when its done loading
+	_reloading = NO;
+//    ABLoggerWarn(@"========== %@",_refreshHeaderView);
+    if (_refreshHeaderView!=nil)
+	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_mTableView];
+}
+
+- (void)doneLoadingTableViewData
+{
+    _reloading = NO;
+    [_refreshTailerView egoRefreshScrollViewDataSourceDidFinishedLoading:mTableView];
+    [mTableView reloadData];
+    _refreshTailerView.frame = CGRectMake(0.0f, mTableView.contentSize.height, mTableView.frame.size.width, mTableView.bounds.size.height);
+}
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    [_refreshTailerView egoRefreshScrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    [_refreshTailerView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+    
+    if (view.tag == EGOHeaderView) {
+        [self reloadTableViewDataSource];
+        [self doneReLoadingTableViewData];
+    } else {
+        [self loadMoreTableViewDataSource];
+        [self doneLoadingTableViewData];
+    }
+
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+	return _reloading; // should return if data source model is reloading
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+	
+	return [NSDate date]; // should return date data source was last changed
+	
+}
+
+- (void)dealloc{
+    
+    [super dealloc];
+}
 
 @end
