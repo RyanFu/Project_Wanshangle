@@ -95,9 +95,7 @@
 		5A507F3F176B09E7001D673D /* CinemaMovieViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A507F3E176B09E6001D673D /* CinemaMovieViewController_5.xib */; };
 		5A5A86611762E43E004E3FF7 /* MovieListTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A86601762E43E004E3FF7 /* MovieListTableViewDelegate.m */; };
 		5A5A86641762E456004E3FF7 /* CinemaListTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A86631762E456004E3FF7 /* CinemaListTableViewDelegate.m */; };
-<<<<<<< HEAD
 		5A76C4CE175DBE8B0067BC30 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A76C4CD175DBE8B0067BC30 /* UIKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-=======
 		5A5E19BC17812E33008A6D97 /* DouBanConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A5E198B17812E33008A6D97 /* DouBanConnection.framework */; };
 		5A5E19BD17812E33008A6D97 /* EverNoteConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A5E198C17812E33008A6D97 /* EverNoteConnection.framework */; };
 		5A5E19BE17812E33008A6D97 /* FacebookConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A5E198D17812E33008A6D97 /* FacebookConnection.framework */; };
@@ -143,7 +141,6 @@
 		5A71F2891786C99E00A81773 /* KKTVPriceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A71F2881786C99E00A81773 /* KKTVPriceInfo.m */; };
 		5A71F28C1786C99E00A81773 /* KKTVBuyInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A71F28B1786C99E00A81773 /* KKTVBuyInfo.m */; };
 		5A76C4CE175DBE8B0067BC30 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A76C4CD175DBE8B0067BC30 /* UIKit.framework */; };
->>>>>>> 3c437c2c9068d229121d6742a0043f99ed0aea75
 		5A76C4D0175DBE8B0067BC30 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A76C4CF175DBE8B0067BC30 /* Foundation.framework */; };
 		5A76C4D2175DBE8B0067BC30 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A76C4D1175DBE8B0067BC30 /* CoreGraphics.framework */; };
 		5A76C4D8175DBE8B0067BC30 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5A76C4D6175DBE8B0067BC30 /* InfoPlist.strings */; };
