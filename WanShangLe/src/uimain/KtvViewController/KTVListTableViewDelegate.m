@@ -15,6 +15,7 @@
     
 }
 @property(nonatomic,assign) NSArray *mArray;
+@property(nonatomic,assign) NSArray *mCount;
 @property(nonatomic,readonly) NSFilterKTVListType filterKTVListType;
 @end
 
@@ -44,7 +45,9 @@
     
     _mArray = _parentViewController.ktvsArray;
     _filterKTVListType = _parentViewController.filterKTVListType;
+    
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
+         _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
         switch (_filterKTVListType) {
             case NSFilterKTVListTypeFavorite:
             case NSFilterKTVListTypeNearby:{
@@ -75,7 +78,8 @@
 #pragma mark 正常模式Cell
 - (UITableViewCell *)ktvCelltableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     ABLoggerMethod();
-    static NSString *CellIdentifier = @"mKTVCell";
+    
+    static NSString *CellIdentifier = @"MKTVCellIdentifier";
     
     KTVTableViewCell * cell = (KTVTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -262,15 +266,13 @@
 #pragma mark Data Source Loading / Reloading Methods
 
 - (void)reloadTableViewDataSource{
-    
-    //    [_model reload];
 	_reloading = YES;
-	
+    
 }
 
 - (void)loadMoreTableViewDataSource {
-    //    [_model loadMore];
     _reloading = YES;
+    [_parentViewController loadMoreData];
 }
 
 - (void)doneReLoadingTableViewData
@@ -285,7 +287,7 @@
     _reloading = NO;
     [_refreshTailerView egoRefreshScrollViewDataSourceDidFinishedLoading:_mTableView];
     [_mTableView reloadData];
-    //    _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+    _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
 }
 
 #pragma mark -
@@ -309,11 +311,9 @@
     
     if (view.tag == EGOHeaderView) {
         [self reloadTableViewDataSource];
-        //        [self performSelector:@selector(doneReLoadingTableViewData) withObject:nil afterDelay:3];
         [self doneReLoadingTableViewData];
     } else {
         [self loadMoreTableViewDataSource];
-        [self doneLoadingTableViewData];
     }
     
 }

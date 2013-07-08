@@ -11,10 +11,14 @@
 
 @class KtvViewController;
 @interface KTVListTableViewDelegate : NSObject<EGORefreshTableHeaderDelegate,UISearchBarDelegate,UISearchDisplayDelegate,UITableViewDataSource,UITableViewDelegate>{
-    BOOL _reloading;
+   
 }
 @property(nonatomic,assign) EGORefreshTableHeaderView *refreshHeaderView;
 @property(nonatomic,assign) EGORefreshTableHeaderView *refreshTailerView;
 @property(nonatomic,assign) KtvViewController *parentViewController;
 @property(nonatomic,assign) UITableView *mTableView;
+@property(nonatomic,readwrite)BOOL reloading;
+
+- (void)doneReLoadingTableViewData;
+- (void)doneLoadingTableViewData;
 @end

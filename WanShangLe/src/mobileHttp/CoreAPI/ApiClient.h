@@ -36,6 +36,6 @@
 /**
  *  execute ApiCmd sync
  **/
-- (NSError*) executeApiCmd:(ApiCmd*) cmd;
+-(NSError*)executeApiCmd:(ApiCmd*) cmd;
 -(NSString*)errorInfo:(NSNumber*)errorNumber;
 @end

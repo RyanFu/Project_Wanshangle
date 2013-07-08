@@ -128,6 +128,7 @@
 	return request;
 }
 
+//分页
 + (NSFetchRequest *) MR_requestAllSortedBy:(NSString *)sortTerm
                                  ascending:(BOOL)ascending
                              withPredicate:(NSPredicate *)searchTerm

@@ -44,6 +44,8 @@
     [paramDict setObject:@"ktv.list" forKey:@"api"];
     NSString *city_id = [[LocationManager defaultLocationManager] getUserCityId];
     [paramDict setObject:city_id forKey:@"cityid"];
+    [paramDict setObject:[NSString stringWithFormat:@"%d",self.offset] forKey:@"offset"];
+    [paramDict setObject:[NSString stringWithFormat:@"%d",self.limit] forKey:@"limit"];
     
     return paramDict;
 }
