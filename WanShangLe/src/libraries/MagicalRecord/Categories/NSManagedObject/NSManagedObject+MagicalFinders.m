@@ -50,6 +50,23 @@
 	return [self MR_executeFetchRequest:request inContext:context];
 }
 
++ (NSArray *) MR_findAllSortedBy:(NSString *)sortTerm
+                       ascending:(BOOL)ascending
+                   withPredicate:(NSPredicate *)searchTerm
+                          offset:(int)offset
+                           limit:(int)limit
+                       inContext:(NSManagedObjectContext *)context
+{
+	NSFetchRequest *request = [self MR_requestAllSortedBy:sortTerm
+                                                ascending:ascending
+                                            withPredicate:searchTerm
+                                                   offset:offset
+                                                    limit:limit
+                                                inContext:context];
+	
+	return [self MR_executeFetchRequest:request inContext:context];
+}
+
 + (NSArray *) MR_findAllSortedBy:(NSString *)sortTerm ascending:(BOOL)ascending withPredicate:(NSPredicate *)searchTerm
 {
 	return [self MR_findAllSortedBy:sortTerm

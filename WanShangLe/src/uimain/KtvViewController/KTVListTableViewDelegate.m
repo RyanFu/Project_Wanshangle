@@ -203,6 +203,35 @@
     return 70.0f;
 }
 
+#pragma mark -
+#pragma mark UITableViewDelegate
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    
+    _filterKTVListType = _parentViewController.filterKTVListType;
+    if (_filterKTVListType != NSFilterKTVListTypeAll) {
+        return nil;
+    }
+    
+    _mArray = _parentViewController.ktvsArray;
+    UILabel *headerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
+    headerView.backgroundColor = [UIColor colorWithWhite:0.829 alpha:1.000];
+    
+    NSString *name = [[_mArray objectAtIndex:section] objectForKey:@"name"];
+    NSArray *list = [[_mArray objectAtIndex:section] objectForKey:@"list"];
+    headerView.text = [NSString stringWithFormat:@"%@  (共%d家)",name,[list count]];
+    
+    return [headerView autorelease];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    _filterKTVListType = _parentViewController.filterKTVListType;
+    if (_filterKTVListType != NSFilterKTVListTypeAll) {
+        return 0;
+    }
+    
+    return 20.0f;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     

@@ -12,6 +12,7 @@ static DataBaseManager *_sharedInstance = nil;
 #import "ChineseToPinyin.h"
 #import "DataBase.h"
 
+#define DataLimit @"10"
 
 @interface DataBaseManager(){
     NSString *updateTimeStamp;
@@ -1560,6 +1561,44 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 - (NSArray *)getAllKTVsListFromCoreDataWithCityName:(NSString *)cityId{
+    if (isEmpty(cityId)) {
+        cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    }
+    
+    return [KKTV MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityId]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+}
+
+//获取 分页 KTV数据
+- (ApiCmd *)getKTVsListFromWeb:(id<ApiNotify>)delegate offset:(NSString *)offset limit:(NSString *)limit{
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    
+    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
+        ABLoggerWarn(@"不能请求 KTV 列表数据，因为已经请求了");
+        return tapiCmd;
+    }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmdKTV_getAllKTVs* apiCmdKTV_getAllKTVs = [[ApiCmdKTV_getAllKTVs alloc] init];
+    apiCmdKTV_getAllKTVs.delegate = delegate;
+    apiCmdKTV_getAllKTVs.offset = offset;
+    
+    apiCmdKTV_getAllKTVs.limit = limit;
+    if (isEmpty(limit)) {
+        apiCmdKTV_getAllKTVs.limit = DataLimit;
+    }
+    
+    apiCmdKTV_getAllKTVs.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    [apiClient executeApiCmdAsync:apiCmdKTV_getAllKTVs];
+    [apiCmdKTV_getAllKTVs.httpRequest setTag:API_KKTVCmd];
+    
+    return [apiCmdKTV_getAllKTVs autorelease];
+}
+- (NSArray *)getKTVsListFromCoreDataOffset:(NSString *)offset limit:(NSString *)limit{
+    return [self getKTVsListFromCoreDataWithCityName:nil offset:offset limit:limit];
+}
+
+- (NSArray *)getKTVsListFromCoreDataWithCityName:(NSString *)cityId offset:(NSString *)offset limit:(NSString *)limit{
     if (isEmpty(cityId)) {
         cityId = [[LocationManager defaultLocationManager] getUserCityId];
     }

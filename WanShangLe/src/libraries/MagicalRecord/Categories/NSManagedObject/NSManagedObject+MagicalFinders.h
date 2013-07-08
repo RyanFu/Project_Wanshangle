@@ -56,4 +56,12 @@
 
 #endif
 
+//分页
++ (NSArray *) MR_findAllSortedBy:(NSString *)sortTerm
+                       ascending:(BOOL)ascending
+                   withPredicate:(NSPredicate *)searchTerm
+                          offset:(int)offset
+                           limit:(int)limit
+                       inContext:(NSManagedObjectContext *)context;
+
 @end
