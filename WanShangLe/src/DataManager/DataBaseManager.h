@@ -158,9 +158,9 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs);
 - (NSArray *)getAllKTVsListFromCoreDataWithCityName:(NSString *)cityId;
 
 //获取 分页 KTV数据
-- (ApiCmd *)getKTVsListFromWeb:(id<ApiNotify>)delegate offset:(NSString *)offset limit:(NSString *)limit;
-- (NSArray *)getKTVsListFromCoreDataOffset:(NSString *)offset limit:(NSString *)limit;
-- (NSArray *)getKTVsListFromCoreDataWithCityName:(NSString *)cityId offset:(NSString *)offset limit:(NSString *)limit;
+- (ApiCmd *)getKTVsListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit;
+- (NSArray *)getKTVsListFromCoreDataOffset:(int)offset limit:(int)limit;
+- (NSArray *)getKTVsListFromCoreDataWithCityName:(NSString *)cityId offset:(int)offset limit:(int)limit;
 
 - (BOOL)getNearbyKTVListFromCoreDataWithCallBack:(GetKTVNearbyList)callback;
 - (NSArray *)getFavoriteKTVListFromCoreData;
@@ -168,7 +168,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs);
 
 - (NSUInteger)getCountOfKTVsListFromCoreData;
 - (NSUInteger)getCountOfKTVsListFromCoreDataWithCityName:(NSString *)cityName;
-- (void)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (NSArray *)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importKTV:(KKTV *)kKTV ValuesForKeysWithObject:(NSDictionary *)aKTVDic;
 - (BOOL)addFavoriteKTVWithId:(NSNumber *)uid;
 - (BOOL)deleteFavoriteKTVWithId:(NSNumber *)uid;

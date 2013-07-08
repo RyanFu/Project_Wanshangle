@@ -63,7 +63,10 @@ typedef enum {
 #define API_KKTVPriceListCmd  262 //KTV 价格列表
 
 //测试宏标记
-#define TestCode
+//#define TestCode
+
+//分页数据
+#define DataLimit 20
 
 //电影数据
 #define UpdatingMoviesList @"UpdatingMoviesList" //正在抓取 电影数据

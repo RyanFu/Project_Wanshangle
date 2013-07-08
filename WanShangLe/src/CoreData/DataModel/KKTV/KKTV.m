@@ -2,35 +2,35 @@
 //  KKTV.m
 //  WanShangLe
 //
-//  Created by stephenliu on 13-6-18.
+//  Created by stephenliu on 13-7-8.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
 #import "KKTV.h"
-#import "City.h"
 #import "KKTVBuyInfo.h"
+#import "KKTVPriceInfo.h"
 
 
 @implementation KKTV
 
-@dynamic uid;
-@dynamic name;
 @dynamic address;
-@dynamic price;
+@dynamic cityId;
 @dynamic discounts;
+@dynamic district;
+@dynamic districtid;
+@dynamic favorite;
+@dynamic juan;
 @dynamic latitude;
 @dynamic longitude;
-@dynamic phoneNumber;
-@dynamic ktvBuyInfo;
-@dynamic ktvDetail;
-@dynamic favorite;
+@dynamic name;
 @dynamic nearby;
-@dynamic district;
-@dynamic juan;
+@dynamic phoneNumber;
+@dynamic price;
 @dynamic seat;
 @dynamic tuan;
+@dynamic uid;
 @dynamic zhekou;
-@dynamic districtid;
-@dynamic cityId;
+@dynamic ktvBuyInfo;
+@dynamic ktvPriceInfo;
 
 @end

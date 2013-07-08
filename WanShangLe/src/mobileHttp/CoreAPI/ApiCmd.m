@@ -52,8 +52,7 @@
     
     self.cityId = nil;
     self.cityName = nil;
-    self.offset = nil;
-    self.limit = nil;
+    self.dataArray = nil;
 }
 
 - (BOOL) hasError {

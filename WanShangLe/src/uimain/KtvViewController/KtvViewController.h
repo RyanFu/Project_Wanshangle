@@ -23,7 +23,8 @@ typedef NS_ENUM(NSInteger, NSFilterKTVListType) {
 @property(nonatomic,retain) UISearchBar *searchBar;
 @property(nonatomic,retain) UISearchDisplayController *strongSearchDisplayController;
 @property(nonatomic,retain) UITableView *mTableView;
-@property(nonatomic,retain) NSArray *ktvsArray;
+@property(nonatomic,retain) NSMutableArray *ktvsArray;
+@property(nonatomic,retain) NSMutableArray *cacheArray;
 @property(nonatomic,retain) ApiCmdKTV_getAllKTVs *apiCmdKTV_getAllKTVs;
 @property(nonatomic,readwrite) NSFilterKTVListType filterKTVListType;
 @property(nonatomic,retain)EGORefreshTableHeaderView *refreshHeaderView;
@@ -36,4 +37,6 @@ typedef NS_ENUM(NSInteger, NSFilterKTVListType) {
 - (void)beginSearch;
 - (void)endSearch;
 
+- (void)loadMoreData;
+- (void)loadNewData;
 @end

@@ -12,8 +12,6 @@ static DataBaseManager *_sharedInstance = nil;
 #import "ChineseToPinyin.h"
 #import "DataBase.h"
 
-#define DataLimit @"10"
-
 @interface DataBaseManager(){
     NSString *updateTimeStamp;
     
@@ -1565,13 +1563,24 @@ static DataBaseManager *_sharedInstance = nil;
         cityId = [[LocationManager defaultLocationManager] getUserCityId];
     }
     
-    return [KKTV MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityId]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+//    return [KKTV MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityId] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [KKTV MR_findAllSortedBy:@"districtid" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityId]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
-//获取 分页 KTV数据
-- (ApiCmd *)getKTVsListFromWeb:(id<ApiNotify>)delegate offset:(NSString *)offset limit:(NSString *)limit{
+#pragma mark 获取 分页 KTV数据
+- (ApiCmd *)getKTVsListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit{
     ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
     
+    offset = (offset<=0)?0:offset;
+    //先从数据库里面读取数据
+    NSArray *coreData_array = [self getKTVsListFromCoreDataOffset:offset limit:limit];
+    
+    if ([coreData_array count]==limit && delegate && [delegate respondsToSelector:@selector(apiNotifyLocationResult:cacheData:)]) {
+        [delegate apiNotifyLocationResult:nil cacheData:coreData_array];
+        return tapiCmd;
+    }
+    
+    if (tapiCmd!=nil)
     if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
         ABLoggerWarn(@"不能请求 KTV 列表数据，因为已经请求了");
         return tapiCmd;
@@ -1584,7 +1593,7 @@ static DataBaseManager *_sharedInstance = nil;
     apiCmdKTV_getAllKTVs.offset = offset;
     
     apiCmdKTV_getAllKTVs.limit = limit;
-    if (isEmpty(limit)) {
+    if (limit==0) {
         apiCmdKTV_getAllKTVs.limit = DataLimit;
     }
     
@@ -1594,16 +1603,17 @@ static DataBaseManager *_sharedInstance = nil;
     
     return [apiCmdKTV_getAllKTVs autorelease];
 }
-- (NSArray *)getKTVsListFromCoreDataOffset:(NSString *)offset limit:(NSString *)limit{
+
+- (NSArray *)getKTVsListFromCoreDataOffset:(int)offset limit:(int)limit{
     return [self getKTVsListFromCoreDataWithCityName:nil offset:offset limit:limit];
 }
 
-- (NSArray *)getKTVsListFromCoreDataWithCityName:(NSString *)cityId offset:(NSString *)offset limit:(NSString *)limit{
+- (NSArray *)getKTVsListFromCoreDataWithCityName:(NSString *)cityId offset:(int)offset limit:(int)limit{
     if (isEmpty(cityId)) {
         cityId = [[LocationManager defaultLocationManager] getUserCityId];
     }
     
-    return [KKTV MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityId]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [KKTV MR_findAllSortedBy:@"districtid" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityId] offset:offset limit:limit inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
 - (BOOL)getNearbyKTVListFromCoreDataWithCallBack:(GetKTVNearbyList)callback{
@@ -1695,12 +1705,13 @@ static DataBaseManager *_sharedInstance = nil;
  ]
  },
  */
-- (void)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+- (NSArray *)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
     CFTimeInterval time1 = Elapsed_Time;
     NSManagedObjectContext *dataBaseContext = [NSManagedObjectContext MR_contextForCurrentThread];
     NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"list"];
     
     KKTV *kKTV = nil;
+    NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:20];
     for (int i=0; i<[array count]; i++) {
         
         NSString *districtStr = [[array objectAtIndex:i] objectForKey:@"districtName"];
@@ -1715,19 +1726,23 @@ static DataBaseManager *_sharedInstance = nil;
             kKTV.district = districtStr;
             kKTV.cityId = apiCmd.cityId;
             [self importKTV:kKTV ValuesForKeysWithObject:[arrayktvs objectAtIndex:j]];
+            [returnArray addObject:kKTV];
         }
     }
     
-    [dataBaseContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        ABLoggerDebug(@"KTV 保存是否成功 ========= %d",success);
-        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
-    }];
+//    [dataBaseContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+//        ABLoggerDebug(@"KTV 保存是否成功 ========= %d",success);
+//        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+//    }];
+    [dataBaseContext MR_saveToPersistentStoreAndWait];
     
     CFTimeInterval time2 = Elapsed_Time;
     ElapsedTime(time2, time1);
     
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
     ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    
+    return [returnArray autorelease];
 }
 
 - (void)importKTV:(KKTV *)kKTV ValuesForKeysWithObject:(NSDictionary *)aKTVDic{

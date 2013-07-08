@@ -311,12 +311,18 @@
                          }
 
                      } completion:^(BOOL finished) {
+                         
+                         if (_pullDirection == EGOPullingDown) {
+                             UITableView *tableView = (UITableView*)scrollView;
+                             if (tableView.tableHeaderView!=nil) {
+                                 [scrollView setContentOffset:CGPointMake(0, 44) animated:YES];
+                             }
+                         }else{
+
+                         }
+                         
                          [self setState:EGOOPullRefreshNormal];
                          
-                         UITableView *tableView = (UITableView*)scrollView;
-                         if (tableView.tableHeaderView!=nil) {
-                            [scrollView setContentOffset:CGPointMake(0, 44) animated:YES]; 
-                         }
                      }];
 }
 

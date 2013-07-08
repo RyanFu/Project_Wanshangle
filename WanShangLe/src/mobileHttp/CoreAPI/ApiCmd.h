@@ -10,6 +10,12 @@
 #import "ApiNotify.h"
 #import "ASIHTTPRequestDelegate.h"
 
+typedef NS_ENUM(NSInteger, WSLDataCacheType) {
+    WSLDataCacheTypeNone = 0,
+    WSLDataCacheTypeCoreData,
+    WSLDataCacheTypeWeb,
+};
+
 @class ASIHTTPRequest;
 /**
  * @author yuqiang
@@ -38,11 +44,14 @@
 @property(nonatomic,retain) NSArray* errorArray;
 @property(nonatomic,retain) NSArray* warnArray;
 
+@property(nonatomic,readwrite) WSLDataCacheType dataCacheType;
+@property(nonatomic,retain) NSArray* dataArray;
+
 @property(nonatomic,retain) ASIHTTPRequest *httpRequest;
 @property(nonatomic,retain) NSString *cityName;
 @property(nonatomic,retain) NSString *cityId;
-@property(nonatomic,retain) NSString *offset;
-@property(nonatomic,retain) NSString *limit;
+@property(nonatomic,readwrite) int offset;
+@property(nonatomic,readwrite) int limit;
 /**
  A JSON object constructed from the response data. If an error occurs while parsing, `nil` will be returned, and the `error` property will be set to the error.
  */

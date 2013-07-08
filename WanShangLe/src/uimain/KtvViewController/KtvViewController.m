@@ -21,6 +21,8 @@
     UIButton *favoriteButton;
     UIButton *nearbyButton;
     UIButton *allButton;
+    
+    int mCount;//分页数据
 }
 @property(nonatomic,retain)UIView *filterIndicator;
 @property(nonatomic,retain)UIView *filterHeaderView;
@@ -34,8 +36,11 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        
         self.title = @"KTV";
-        self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
+        
+        _ktvsArray = [[NSMutableArray alloc] initWithCapacity:20];
+        _cacheArray = [[NSMutableArray alloc] initWithCapacity:20];
     }
     return self;
 }
@@ -65,6 +70,9 @@
     self.mTableView = nil;
     self.ktvBuyViewController = nil;
     
+    self.ktvsArray = nil;
+    self.cacheArray = nil;
+    
     [super dealloc];
 }
 
@@ -72,8 +80,7 @@
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
     
-    self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
-    //    [self updateData:0];
+//    [self updateData:0];
     
 #ifdef TestCode
     [self updatData];//测试代码
@@ -101,9 +108,11 @@
     
     [self clickFilterAllButton:nil];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        [self updateData:0];
-    });
+    [self loadMoreData];
+    
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+//        [self updateData:0];
+//    });
 }
 
 
@@ -201,7 +210,7 @@
     [self setTableViewDelegate];
     
     if (_refreshHeaderView == nil) {
-        EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame: CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height)];
+        EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame: CGRectMake(0.0f, _mTableView.bounds.size.height, _mTableView.frame.size.width, _mTableView.bounds.size.height)];
 		view.delegate = self.ktvListTableViewDelegate;
         view.tag = EGOBottomView;
         view.backgroundColor = [UIColor clearColor];
@@ -350,7 +359,7 @@
     _filterKTVListType=NSFilterKTVListTypeAll;
      [self changeSearchBarState];
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:_filterKTVListType] forKey:KKTV_FilterType];
-    [self formatKTVDataFilterAll];
+
     [self stratAnimationFilterButton:_filterKTVListType];
 }
 
@@ -395,36 +404,38 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        [[DataBaseManager sharedInstance] insertKTVsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
-        
+        NSArray *dataArray = [[DataBaseManager sharedInstance] insertKTVsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
         int tag = [[apiCmd httpRequest] tag];
-        [self updateData:tag];
+        [self addDataIntoCacheData:dataArray];
+        [self updateData:tag withData:[self getCacheData]];
         
     });
     
-    
+    [_ktvListTableViewDelegate doneLoadingTableViewData];
 }
 
-- (void) apiNotifyLocationResult:(id) apiCmd  error:(NSError*) error{
+- (void) apiNotifyLocationResult:(id)apiCmd cacheData:(NSArray*)cacheData{
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        int tag = [[apiCmd httpRequest] tag];
-        [self updateData:tag];
+        [self addDataIntoCacheData:cacheData];
+        [self updateData:API_KKTVCmd withData:[self getCacheData]];
     });
+    
+    [_ktvListTableViewDelegate doneLoadingTableViewData];
 }
 
 - (ApiCmd *)apiGetDelegateApiCmd{
     return _apiCmdKTV_getAllKTVs;
 }
 
-- (void)updateData:(int)tag
+- (void)updateData:(int)tag withData:(NSArray*)dataArray
 {
     ABLogger_int(tag);
     switch (tag) {
         case 0:
         case API_KKTVCmd:
         {
-            [self formatCinemaData];
+            [self formatCinemaData:dataArray];
         }
             break;
         default:
@@ -437,7 +448,7 @@
 
 #pragma mark -
 #pragma mark FormateData
-- (void)formatCinemaData{
+- (void)formatCinemaData:(NSArray*)dataArray{
     switch (_filterKTVListType) {
         case NSFilterKTVListTypeFavorite:{
             [self formatKTVDataFilterFavorite];
@@ -450,7 +461,7 @@
             
         case NSFilterKTVListTypeAll:
         default:{
-            [self formatKTVDataFilterAll];
+            [self formatKTVDataFilterAll:dataArray];
         }
         break;
     }
@@ -466,21 +477,20 @@
 
 #pragma mark -
 #pragma mark FilterCinema FormatData
-- (void)formatKTVDataFilterAll{
+- (void)formatKTVDataFilterAll:(NSArray*)pageArray{
     
-    NSArray *array_coreData = [[DataBaseManager sharedInstance] getAllKTVsListFromCoreData];
+    NSArray *array_coreData = pageArray;
     ABLoggerDebug(@"KTV店 count ==== %d",[array_coreData count]);
     
     NSArray *regionOrder = [[DataBaseManager sharedInstance] getRegionOrder];
     
     NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:10];
-    NSMutableArray *dataArray = [[NSMutableArray alloc] initWithCapacity:10];
     
     for (KKTV *tKTV in array_coreData) {
         NSString *key = tKTV.district;
         
         if (![districtDic objectForKey:key]) {
-            
+            ABLoggerInfo(@"key === %@",key);
             NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:10];
             [districtDic setObject:tarray forKey:key];
             [tarray release];
@@ -494,20 +504,46 @@
             continue;
         }
         
-        NSDictionary *dic = [[NSDictionary alloc] initWithObjectsAndKeys:
-                             [districtDic objectForKey:key],@"list",
-                             key,@"name",nil];
-        [dataArray addObject:dic];
-        [dic release];
+        NSMutableDictionary *dic = nil;
+        
+        BOOL isContinue = NO;
+        
+        for (NSMutableDictionary *tDic in _ktvsArray) {
+            if ([[tDic objectForKey:@"name"] isEqualToString:key]) {
+                dic = tDic;
+                NSMutableArray *tarray = [tDic objectForKey:@"list"];
+                [tarray addObjectsFromArray:[districtDic objectForKey:key]];
+                isContinue = YES;
+                continue;
+            }
+        }
+        
+        if (isContinue) {
+            continue;
+        }
+        
+        if (dic==nil) {
+            dic = [NSMutableDictionary dictionaryWithCapacity:10];
+        }
+            
+        [dic setObject:key forKey:@"name"];
+        [dic setObject:[districtDic objectForKey:key] forKey:@"list"];
+        
+        [_ktvsArray addObject:dic];
     }
-    self.ktvsArray = dataArray;
-    [dataArray release];
+    
+    int number = 0;
+    for (NSDictionary *dic in _ktvsArray) {
+        number += [[dic objectForKey:@"list"] count];
+    }
+    ABLoggerDebug(@"ktv 数组 number ==  %d",number);
+    
     [districtDic release];
     
     [self isDisplayRefreshTailerView];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [_mTableView reloadData];
+        [_ktvListTableViewDelegate doneLoadingTableViewData];
     });
 }
 
@@ -574,6 +610,68 @@
         [_ktvBuyViewController.view removeFromSuperview];
         self.ktvBuyViewController = nil;
     }
+}
+
+#pragma mark -
+#pragma mark 刷新和加载更多
+- (void)loadMoreData{
+    [self updateData:0 withData:[self getCacheData]];
+}
+
+- (void)loadNewData{
+    
+}
+
+//添加缓存数据
+- (void)addDataIntoCacheData:(NSArray *)dataArray{
+    [_cacheArray addObjectsFromArray:dataArray];
+     ABLoggerInfo(@" 添加_cacheArray count == %d",[_cacheArray count]);
+}
+
+//获取缓存数据
+- (NSArray *)getCacheData{
+    
+    if ([_cacheArray count]<=0) {
+        self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getKTVsListFromWeb:self offset:mCount-1 limit:DataLimit];
+        return  nil;
+    }
+    
+    int count = 10; //取10条数据
+    if ([_cacheArray count]<10) {
+        count = [_cacheArray count];//取小于10条数据
+    }
+    
+    for (int i=0;i<[_cacheArray count] ;i++ ) {
+        KKTV *ttktv = [_cacheArray objectAtIndex:i];
+        ABLoggerDebug(@" coredata district id === %@",ttktv.districtid);
+    }
+    
+    NSMutableArray *aPageData = [NSMutableArray arrayWithCapacity:count];
+    for (int i=0; i<count; i++) {
+        KKTV *object = [_cacheArray objectAtIndex:i];
+        [aPageData addObject:object];
+    }
+    
+    mCount += [aPageData count];
+    
+    if (count>0) {
+        [_cacheArray removeObjectsInRange:NSMakeRange(0, count)];
+    }
+    
+    for (int i = 0;i<[aPageData count];i++) {
+        KKTV *object = [aPageData objectAtIndex:i];
+        ABLoggerInfo(@"111district id ===== %@",object.districtid);
+    }
+    
+    for (int i = 0;i<[_cacheArray count];i++) {
+         KKTV *object = [_cacheArray objectAtIndex:i];
+        ABLoggerInfo(@"222 ============== district id ===== %@",object.districtid);
+    }
+    
+    ABLoggerInfo(@"_cacheArray count == %d",[_cacheArray count]);
+    ABLoggerInfo(@"aPageData count == %d",[aPageData count]);
+    
+    return aPageData;
 }
 
 - (void)didReceiveMemoryWarning

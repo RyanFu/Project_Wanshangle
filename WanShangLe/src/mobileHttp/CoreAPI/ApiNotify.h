@@ -22,6 +22,6 @@
 - (ApiCmd *)apiGetDelegateApiCmd;
 
 @optional
-- (void) apiNotifyLocationResult:(id) apiCmd  error:(NSError*) error;
+- (void) apiNotifyLocationResult:(id)apiCmd cacheData:(NSArray*)cacheData;
 
 @end

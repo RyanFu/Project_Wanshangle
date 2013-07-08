@@ -24,6 +24,12 @@ static NSString* valueFormat = @"json";
 static NSString* keyPhoneType = @"phoneType";
 static NSString* valuePhoneType = @"iPhone";
 
+@interface ApiClient(){
+    
+}
+@property (nonatomic,retain) NSOperation *lastAddedOperation;
+@end
+
 @implementation ApiClient
 
 // define getter/setter methods
@@ -177,6 +183,13 @@ static NSString* valuePhoneType = @"iPhone";
     
     @synchronized (_networkQueue) {
         [_networkQueue addOperation:request];
+        
+        // Emulate LIFO execution order by systematically adding new operations as last operation's dependency
+        if ([self.lastAddedOperation isFinished] || [self.lastAddedOperation isCancelled]) {
+            self.lastAddedOperation = nil;
+        }
+        [self.lastAddedOperation addDependency:request];
+        self.lastAddedOperation = request;
     }
     ABLoggerWarn(@"networkQueue ====== %@",[[[ApiClient defaultClient] networkQueue] operations]);
     ABLoggerDebug(@"insert request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
