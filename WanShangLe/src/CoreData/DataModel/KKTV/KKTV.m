@@ -23,7 +23,6 @@
 @dynamic phoneNumber;
 @dynamic ktvBuyInfo;
 @dynamic ktvDetail;
-@dynamic city;
 @dynamic favorite;
 @dynamic nearby;
 @dynamic district;
@@ -31,5 +30,7 @@
 @dynamic seat;
 @dynamic tuan;
 @dynamic zhekou;
+@dynamic districtid;
+@dynamic cityId;
 
 @end

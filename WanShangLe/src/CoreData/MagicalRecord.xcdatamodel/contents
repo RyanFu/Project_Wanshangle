@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12C3103" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12D78" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="BBar" representedClassName="BBar" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
@@ -24,14 +24,15 @@
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="bars" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BBar" inverseName="city" inverseEntity="BBar" syncable="YES"/>
         <relationship name="cinemas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MCinema" inverseName="city" inverseEntity="MCinema" syncable="YES"/>
-        <relationship name="ktvs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="KKTV" inverseName="city" inverseEntity="KKTV" syncable="YES"/>
         <relationship name="movie_citys" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MMovie_City" inverseName="city" inverseEntity="MMovie_City" syncable="YES"/>
         <relationship name="shows" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SShow" inverseName="city" inverseEntity="SShow" syncable="YES"/>
     </entity>
     <entity name="KKTV" representedClassName="KKTV" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cityId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="discounts" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="district" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="districtid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="favorite" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="juan" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
@@ -44,7 +45,6 @@
         <attribute name="tuan" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="zhekou" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <relationship name="city" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="City" inverseName="ktvs" inverseEntity="City" syncable="YES"/>
         <relationship name="ktvBuyInfo" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="KKTVBuyInfo" inverseName="ktv" inverseEntity="KKTVBuyInfo" syncable="YES"/>
         <relationship name="ktvPriceInfo" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="KKTVPriceInfo" inverseName="ktv" inverseEntity="KKTVPriceInfo" syncable="YES"/>
     </entity>
@@ -158,8 +158,8 @@
     <elements>
         <element name="BBar" positionX="-531" positionY="-1032" width="128" height="193"/>
         <element name="BBarDetail" positionX="-747" positionY="-966" width="128" height="118"/>
-        <element name="City" positionX="-162" positionY="-846" width="128" height="148"/>
-        <element name="KKTV" positionX="142" positionY="-936" width="128" height="313"/>
+        <element name="City" positionX="-162" positionY="-846" width="128" height="133"/>
+        <element name="KKTV" positionX="142" positionY="-936" width="128" height="328"/>
         <element name="KKTVBuyInfo" positionX="430" positionY="-909" width="128" height="88"/>
         <element name="KKTVPriceInfo" positionX="430" positionY="-718" width="128" height="90"/>
         <element name="MBuyTicketInfo" positionX="-27" positionY="-63" width="128" height="73"/>

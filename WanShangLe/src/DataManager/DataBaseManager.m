@@ -12,6 +12,7 @@ static DataBaseManager *_sharedInstance = nil;
 #import "ChineseToPinyin.h"
 #import "DataBase.h"
 
+#define DataLimit @"10"
 
 @interface DataBaseManager(){
     NSString *updateTimeStamp;
@@ -1548,7 +1549,7 @@ static DataBaseManager *_sharedInstance = nil;
     
     ApiCmdKTV_getAllKTVs* apiCmdKTV_getAllKTVs = [[ApiCmdKTV_getAllKTVs alloc] init];
     apiCmdKTV_getAllKTVs.delegate = delegate;
-    apiCmdKTV_getAllKTVs.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdKTV_getAllKTVs.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     [apiClient executeApiCmdAsync:apiCmdKTV_getAllKTVs];
     [apiCmdKTV_getAllKTVs.httpRequest setTag:API_KKTVCmd];
     
@@ -1559,12 +1560,50 @@ static DataBaseManager *_sharedInstance = nil;
     return [self getAllKTVsListFromCoreDataWithCityName:nil];
 }
 
-- (NSArray *)getAllKTVsListFromCoreDataWithCityName:(NSString *)cityName{
-    if (isEmpty(cityName)) {
-        cityName = [[LocationManager defaultLocationManager] getUserCity];
+- (NSArray *)getAllKTVsListFromCoreDataWithCityName:(NSString *)cityId{
+    if (isEmpty(cityId)) {
+        cityId = [[LocationManager defaultLocationManager] getUserCityId];
     }
     
-    return [KKTV MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [KKTV MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityId]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+}
+
+//获取 分页 KTV数据
+- (ApiCmd *)getKTVsListFromWeb:(id<ApiNotify>)delegate offset:(NSString *)offset limit:(NSString *)limit{
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    
+    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
+        ABLoggerWarn(@"不能请求 KTV 列表数据，因为已经请求了");
+        return tapiCmd;
+    }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmdKTV_getAllKTVs* apiCmdKTV_getAllKTVs = [[ApiCmdKTV_getAllKTVs alloc] init];
+    apiCmdKTV_getAllKTVs.delegate = delegate;
+    apiCmdKTV_getAllKTVs.offset = offset;
+    
+    apiCmdKTV_getAllKTVs.limit = limit;
+    if (isEmpty(limit)) {
+        apiCmdKTV_getAllKTVs.limit = DataLimit;
+    }
+    
+    apiCmdKTV_getAllKTVs.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    [apiClient executeApiCmdAsync:apiCmdKTV_getAllKTVs];
+    [apiCmdKTV_getAllKTVs.httpRequest setTag:API_KKTVCmd];
+    
+    return [apiCmdKTV_getAllKTVs autorelease];
+}
+- (NSArray *)getKTVsListFromCoreDataOffset:(NSString *)offset limit:(NSString *)limit{
+    return [self getKTVsListFromCoreDataWithCityName:nil offset:offset limit:limit];
+}
+
+- (NSArray *)getKTVsListFromCoreDataWithCityName:(NSString *)cityId offset:(NSString *)offset limit:(NSString *)limit{
+    if (isEmpty(cityId)) {
+        cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    }
+    
+    return [KKTV MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityId]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
 - (BOOL)getNearbyKTVListFromCoreDataWithCallBack:(GetKTVNearbyList)callback{
@@ -1600,10 +1639,10 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (NSArray *)getFavoriteKTVListFromCoreDataWithCityName:(NSString *)cityName{
     if (isEmpty(cityName)) {
-        cityName = [[LocationManager defaultLocationManager] getUserCity];
+        cityName = [[LocationManager defaultLocationManager] getUserCityId];
     }
     
-    return [KKTV MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@ and favorite = YES", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [KKTV MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and favorite = YES", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
 - (NSUInteger)getCountOfKTVsListFromCoreData{
@@ -1620,44 +1659,66 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 /*
+ 
  {
- "timestamp":"1369275251",
- "errors":[],
- "data":{
- "count":10,
- "infos":[
+ httpCode: 200,
+ errors: [ ],
+ data: {
+ count: "2",
+ list: [
  {
- "id":30011,
- "name":"钱柜静安店1",
- "addr":"静安区乌鲁木齐路21号",
- "lowprice":35,
- "tel":13800999900,
- "longitude":24.2355,
- "latitude":42.2352,
- "discounts":9
+ districtName: "罗湖区",
+ list: [
+ {
+ id: "4",
+ uniquekey: "4e102c824e1953e791027ea00e54234b",
+ name: "镭射卡拉OK",
+ description: "",
+ address: "丹沙路沙湾花园",
+ contactphone: "0755-28749649",
+ latitude: "22.61036",
+ longitude: "114.16132",
+ cityid: "4",
+ districtid: "2",
+ logourl: "logourl",
+ coverurl: "http://i2.dpfile.com/pc/000c14f9d31465a8820b18e3f42ed45d(700x700)/thumb.jpg",
+ specialoffers: "",
+ trafficroutes: "655路",
+ exturl: "http://dpurl.cn/p/Cs9r4Ka-A4",
+ createtime: "2013-07-03 16:37:37",
+ createdbysuid: "11",
+ lastmodifiedtime: "2013-07-05 15:59:05",
+ lastmodifiedbysuid: "1",
+ source: "1",
+ currentstatus: "3"
+ }
+ ]
  },
  */
 - (void)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
     CFTimeInterval time1 = Elapsed_Time;
-    
+    NSManagedObjectContext *dataBaseContext = [NSManagedObjectContext MR_contextForCurrentThread];
     NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"list"];
     
     KKTV *kKTV = nil;
     for (int i=0; i<[array count]; i++) {
         
-        kKTV = [KKTV MR_findFirstByAttribute:@"uid" withValue:[[array objectAtIndex:i] objectForKey:@"id"] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-        if (kKTV == nil)
-        {
-            ABLoggerInfo(@"插入 一条 KTV 新数据 ======= %@",[[array objectAtIndex:i] objectForKey:@"name"]);
-            kKTV = [KKTV MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        NSString *districtStr = [[array objectAtIndex:i] objectForKey:@"districtName"];
+        NSArray *arrayktvs = [[array objectAtIndex:i] objectForKey:@"list"];
+        for (int j=0; j<[arrayktvs count]; j++) {
+            kKTV = [KKTV MR_findFirstByAttribute:@"uid" withValue:[[arrayktvs objectAtIndex:j] objectForKey:@"id"] inContext:dataBaseContext];
+            if (kKTV == nil)
+            {
+                ABLoggerInfo(@"插入 一条 KTV 新数据 ======= %@",[[arrayktvs objectAtIndex:j] objectForKey:@"name"]);
+                kKTV = [KKTV MR_createInContext:dataBaseContext];
+            }
+            kKTV.district = districtStr;
+            kKTV.cityId = apiCmd.cityId;
+            [self importKTV:kKTV ValuesForKeysWithObject:[arrayktvs objectAtIndex:j]];
         }
-        [self importKTV:kKTV ValuesForKeysWithObject:[array objectAtIndex:i]];
-        
-        City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
-        kKTV.city = city;
     }
     
-    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+    [dataBaseContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         ABLoggerDebug(@"KTV 保存是否成功 ========= %d",success);
         ABLoggerDebug(@"错误信息 ========= %@",[error description]);
     }];
@@ -1672,6 +1733,7 @@ static DataBaseManager *_sharedInstance = nil;
 - (void)importKTV:(KKTV *)kKTV ValuesForKeysWithObject:(NSDictionary *)aKTVDic{
     kKTV.name = [aKTVDic objectForKey:@"name"];
     kKTV.uid = [aKTVDic objectForKey:@"id"];
+    kKTV.districtid = [aKTVDic objectForKey:@"districtid"];
     kKTV.address = [aKTVDic objectForKey:@"address"];
     kKTV.phoneNumber = [aKTVDic objectForKey:@"contactphone"];
     kKTV.longitude = [NSNumber numberWithFloat:[[aKTVDic objectForKey:@"longitude"] floatValue]];

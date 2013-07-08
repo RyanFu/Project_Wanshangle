@@ -128,6 +128,36 @@
 	return request;
 }
 
++ (NSFetchRequest *) MR_requestAllSortedBy:(NSString *)sortTerm
+                                 ascending:(BOOL)ascending
+                             withPredicate:(NSPredicate *)searchTerm
+                                    offset:(int)offset
+                                     limit:(int)limit
+                                 inContext:(NSManagedObjectContext *)context
+{
+	NSFetchRequest *request = [self MR_requestAllInContext:context];
+	if (searchTerm)
+    {
+        [request setPredicate:searchTerm];
+    }
+	[request setFetchBatchSize:[self MR_defaultBatchSize]];
+    [request setFetchLimit:limit];
+    [request setFetchOffset:offset];
+	
+    NSMutableArray* sortDescriptors = [[[NSMutableArray alloc] init] autorelease];
+    NSArray* sortKeys = [sortTerm componentsSeparatedByString:@","];
+    for (NSString* sortKey in sortKeys)
+    {
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:sortKey ascending:ascending];
+        [sortDescriptors addObject:sortDescriptor];
+        [sortDescriptor release];
+    }
+    
+	[request setSortDescriptors:sortDescriptors];
+    
+	return request;
+}
+
 + (NSFetchRequest *) MR_requestAllSortedBy:(NSString *)sortTerm ascending:(BOOL)ascending withPredicate:(NSPredicate *)searchTerm;
 {
 	NSFetchRequest *request = [self MR_requestAllSortedBy:sortTerm

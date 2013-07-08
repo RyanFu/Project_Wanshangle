@@ -28,5 +28,11 @@
 + (NSFetchRequest *) MR_requestAllSortedBy:(NSString *)sortTerm ascending:(BOOL)ascending withPredicate:(NSPredicate *)searchTerm;
 + (NSFetchRequest *) MR_requestAllSortedBy:(NSString *)sortTerm ascending:(BOOL)ascending withPredicate:(NSPredicate *)searchTerm inContext:(NSManagedObjectContext *)context;
 
-
+//分页
++ (NSFetchRequest *) MR_requestAllSortedBy:(NSString *)sortTerm
+                                 ascending:(BOOL)ascending
+                             withPredicate:(NSPredicate *)searchTerm
+                                    offset:(int)offset
+                                     limit:(int)limit
+                                 inContext:(NSManagedObjectContext *)context;
 @end

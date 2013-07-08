@@ -152,12 +152,20 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs);
 - (void)importBar:(BBar *)bBar ValuesForKeysWithObject:(NSDictionary *)aBarDic;
 
 /************ KTV ***************/
+//获取 全部 KTV数据
 - (ApiCmd *)getAllKTVsListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllKTVsListFromCoreData;
-- (NSArray *)getAllKTVsListFromCoreDataWithCityName:(NSString *)cityName;
+- (NSArray *)getAllKTVsListFromCoreDataWithCityName:(NSString *)cityId;
+
+//获取 分页 KTV数据
+- (ApiCmd *)getKTVsListFromWeb:(id<ApiNotify>)delegate offset:(NSString *)offset limit:(NSString *)limit;
+- (NSArray *)getKTVsListFromCoreDataOffset:(NSString *)offset limit:(NSString *)limit;
+- (NSArray *)getKTVsListFromCoreDataWithCityName:(NSString *)cityId offset:(NSString *)offset limit:(NSString *)limit;
+
 - (BOOL)getNearbyKTVListFromCoreDataWithCallBack:(GetKTVNearbyList)callback;
 - (NSArray *)getFavoriteKTVListFromCoreData;
 - (NSArray *)getFavoriteKTVListFromCoreDataWithCityName:(NSString *)cityName;
+
 - (NSUInteger)getCountOfKTVsListFromCoreData;
 - (NSUInteger)getCountOfKTVsListFromCoreDataWithCityName:(NSString *)cityName;
 - (void)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
