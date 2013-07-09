@@ -331,15 +331,8 @@ static DataBaseManager *_sharedInstance = nil;
         ABLoggerWarn(@"不能 插入 电影_影院，不能为空");
         return;
     }
-    
-    if ([[[[CacheManager sharedInstance] mUserDefaults] objectForKey:InsertingMovie_CinemaList] intValue]) {
-        ABLoggerWarn(@"不能 插入 电影_影院，因为已经请求了");
-        return;
-    }
-    
+
     ABLoggerDebug(@"插入 电影--影院 关联表-数据");
-    
-    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"1" forKey:InsertingMovie_CinemaList];
     
     MMovie *aMovie = nil;
     MCinema *aCinema = nil;
@@ -370,8 +363,6 @@ static DataBaseManager *_sharedInstance = nil;
         ABLoggerDebug(@"电影-影院-关联表-保存是否成功 ========= %d",success);
         ABLoggerDebug(@"错误信息 ========= %@",[error description]);
     }];
-    
-    [[[CacheManager sharedInstance] mUserDefaults] setObject:@"0" forKey:InsertingMovie_CinemaList];
 }
 //=========== 关联表 ===============/
 
@@ -909,7 +900,7 @@ static DataBaseManager *_sharedInstance = nil;
     MMovie_Cinema *movie_cinema = nil;
     NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%@",[aCinema.city name],[aCinema.uid intValue],aMovie.uid];
     movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-    
+    [movie_cinema_uid release];
     return movie_cinema.schedule;
 }
 
@@ -1652,7 +1643,7 @@ static DataBaseManager *_sharedInstance = nil;
         cityName = [[LocationManager defaultLocationManager] getUserCityId];
     }
     
-    return [KKTV MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and favorite = YES", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [KKTV MR_findAllSortedBy:@"districtid" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and favorite = YES", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
 - (NSUInteger)getCountOfKTVsListFromCoreData{

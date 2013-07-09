@@ -24,8 +24,8 @@
     ABLoggerMethod();
     [super awakeFromNib];
     
-    [self setSelectionStyle:UITableViewCellSelectionStyleGray];
-    [self setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+    [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+    [self setAccessoryType:UITableViewCellAccessoryNone];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

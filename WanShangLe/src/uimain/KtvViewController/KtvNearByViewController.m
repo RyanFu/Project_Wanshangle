@@ -18,6 +18,7 @@
 #import "KTVFavoriteListTableViewDelegate.h"
 #import "KTVNearByListTableViewDelegate.h"
 
+#define TableView_Y 74
 #define MArray @"MArray"
 #define CacheArray @"CacheArray"
 
@@ -126,11 +127,7 @@
     [self initFilterButtonHeaderView];
     
     [self updateSettingFilter];
-}
-
-- (void)viewWillDisappear:(BOOL)animated{
-    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:_filterKTVListType] forKey:KKTV_FilterType];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [self loadMoreData];//初始化加载
 }
 
 
@@ -149,7 +146,7 @@
 
 - (void)initFilterButtonHeaderView{
     //创建TopView
-    _filterHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
+    _filterHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
     UIButton *bt1 = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *bt2 = [UIButton buttonWithType:UIButtonTypeCustom];
     UIButton *bt3 = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -185,7 +182,6 @@
 
 - (UITableView *)allTableView
 {
-    ABLoggerWarn(@" TableView All =======  %@",_allTableView);
     if (_allTableView != nil) {
         return _allTableView;
     }
@@ -197,7 +193,6 @@
 
 - (UITableView *)nearByTableView
 {
-    ABLoggerWarn(@" TableView NearBy =======  %@",_nearByTableView);
     if (_nearByTableView != nil) {
         return _nearByTableView;
     }
@@ -209,7 +204,6 @@
 
 - (UITableView *)favoriteTableView
 {
-    ABLoggerWarn(@" TableView Favorite =======  %@",_favoriteTableView);
     if (_favoriteTableView != nil) {
         return _favoriteTableView;
     }
@@ -228,6 +222,7 @@
         _allTableView.tableHeaderView = self.searchBar;
     }
     [self initRefreshHeaderView];
+    [_allTableView setBackgroundColor:[UIColor clearColor]];
     [self.view addSubview:_allTableView];
     
     if (_allArray==nil) {
@@ -236,6 +231,8 @@
     if (_allCache==nil) {
         _allCache = [[NSMutableArray alloc] initWithCapacity:10];
     }
+
+_allTableView.frame = CGRectMake(0, _filterHeaderView.bounds.size.height, iPhoneAppFrame.size.width, self.view.bounds.size.height-44);
 }
 
 - (void)initNearByTableView{
@@ -243,6 +240,7 @@
         self.nearByTableView = [self createTableView];
     }
     [self initNearByRefreshHeaderView];
+    [_nearByTableView setBackgroundColor:[UIColor blueColor]];
     [self.view addSubview:_nearByTableView];
     
     if (_nearByArray==nil) {
@@ -251,6 +249,8 @@
     if (_nearByCache==nil) {
         _nearByCache = [[NSMutableArray alloc] initWithCapacity:10];
     }
+    
+    _nearByTableView.frame = CGRectMake(0, _filterHeaderView.bounds.size.height, iPhoneAppFrame.size.width, self.view.bounds.size.height-44);
 }
 
 - (void)initFavoriteTableView {
@@ -258,21 +258,23 @@
         self.favoriteTableView = [self createTableView];
     }
     [self setFavoriteTableViewDelegate];
+    [_favoriteTableView setBackgroundColor:[UIColor greenColor]];
     [self.view addSubview:_favoriteTableView];
     
     if (_favoriteArray==nil) {
         _favoriteArray = [[NSMutableArray alloc] initWithCapacity:10];
     }
+    
+    _favoriteTableView.frame = CGRectMake(0, _filterHeaderView.bounds.size.height, iPhoneAppFrame.size.width, self.view.bounds.size.height-44);
 }
 
 - (UITableView *)createTableView{
-    
-    UITableView *tbView = [[UITableView alloc] initWithFrame:CGRectMake(0, _filterHeaderView.bounds.size.height, iPhoneAppFrame.size.width, 464.0f) style:UITableViewStylePlain];
+    UITableView *tbView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     tbView.backgroundColor = [UIColor whiteColor];
     tbView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     
-    tbView.tableHeaderView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
     tbView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+    
     return [tbView autorelease];
 }
 
@@ -375,8 +377,6 @@
     }
     _allTableView.dataSource = _allListDelegate;
     _allTableView.delegate = _allListDelegate;
-    _refreshTailerView.delegate = _allListDelegate;
-    _refreshHeaderView.delegate = _allListDelegate;
 }
 
 - (void)setNearByTableViewDelegate{
@@ -386,8 +386,6 @@
     }
     _nearByTableView.dataSource = _nearByListDelegate;
     _nearByTableView.delegate = _nearByListDelegate;
-    _refreshNearByHeaderView.delegate = _nearByListDelegate;
-    _refreshNearByTailerView.delegate = _nearByListDelegate;
 }
 
 - (void)setFavoriteTableViewDelegate{
@@ -407,10 +405,21 @@
     frame1.origin.y = -_filterHeaderView.bounds.size.height;
     _filterHeaderView.frame = frame1;
     
-    CGRect frame2 = _allTableView.frame;
-    frame2.origin.y = 0;
-    _allTableView.frame = frame2;
-    
+    switch (_filterKTVListType) {
+        case NSFilterKTVListTypeNearby:{
+            CGRect frame2 = _nearByTableView.frame;
+            frame2.origin.y = 0;
+            _nearByTableView.frame = frame2;
+        }
+            break;
+            
+        default:{
+            CGRect frame2 = _allTableView.frame;
+            frame2.origin.y = 0;
+            _allTableView.frame = frame2;
+        }
+            break;
+    }
 }
 
 -(void)endSearch{
@@ -421,9 +430,21 @@
         frame1.origin.y = 0;
         _filterHeaderView.frame = frame1;
         
-        CGRect frame2 = _allTableView.frame;
-        frame2.origin.y = _filterHeaderView.bounds.size.height;
-        _allTableView.frame = frame2;
+        switch (_filterKTVListType) {
+            case NSFilterKTVListTypeNearby:{
+                CGRect frame2 = _nearByTableView.frame;
+                frame2.origin.y = _filterHeaderView.bounds.size.height;
+                _nearByTableView.frame = frame2;
+            }
+                break;
+                
+            default:{
+                CGRect frame2 = _allTableView.frame;
+                frame2.origin.y = _filterHeaderView.bounds.size.height;
+                _allTableView.frame = frame2;
+            }
+                break;
+        }
         
     } completion:^(BOOL finished) {
         
@@ -456,8 +477,41 @@
 
 - (void)changeDataTypeState{
     
+    //    switch (_filterKTVListType) {
+    //        case NSFilterKTVListTypeFavorite:{
+    //            [_mTableView setContentOffset:CGPointMake(0, 0) animated:NO];
+    //
+    //            _mTableView.tableHeaderView = nil;
+    //            _refreshTailerView.hidden = YES;
+    //            _refreshHeaderView.hidden = YES;
+    //        }
+    //            break;
+    //        case NSFilterKTVListTypeNearby:{
+    //            [_mTableView setContentOffset:CGPointMake(0, 0) animated:NO];
+    //
+    //            _mTableView.tableHeaderView = nil;
+    //            _refreshTailerView.hidden = NO;
+    //            _refreshHeaderView.hidden = NO;
+    //        }
+    //            break;
+    //
+    //        case NSFilterKTVListTypeAll:{
+    //            _mTableView.tableHeaderView = nil;
+    //            [_mTableView setTableHeaderView:self.searchBar];
+    //            [_mTableView setContentOffset:CGPointMake(0, 44) animated:NO];
+    //
+    //            _mTableView.tableFooterView = nil;
+    //            _refreshTailerView.hidden = NO;
+    //            _refreshHeaderView.hidden = NO;
+    //        }
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    
     switch (_filterKTVListType) {
         case NSFilterKTVListTypeFavorite:{
+            
             [self.view bringSubviewToFront:self.favoriteTableView];
             self.favoriteListDelegate.mArray = self.favoriteArray;
         }
@@ -470,7 +524,6 @@
         default:{
             [self.view bringSubviewToFront:self.allTableView];
             self.allListDelegate.mArray = self.allArray;
-            [_allTableView setContentOffset:CGPointMake(0, 44) animated:NO];
         }
             break;
     }
@@ -498,6 +551,7 @@
     }
     _filterKTVListType=NSFilterKTVListTypeFavorite;
     [self changeDataTypeState];
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:_filterKTVListType] forKey:KKTV_FilterType];
     [self formatKTVDataFilterFavorite];
     [self stratAnimationFilterButton:_filterKTVListType];
     
@@ -511,16 +565,12 @@
     }
     _filterKTVListType=NSFilterKTVListTypeNearby;
     [self changeDataTypeState];
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:_filterKTVListType] forKey:KKTV_FilterType];
     [self formatKTVDataFilterNearby];
     [self stratAnimationFilterButton:_filterKTVListType];
     
     [self cleanUpTableView];
     _nearByTableView.hidden = NO;
-    
-    if ([_nearByArray count]<=0) {
-        self.refreshNearByTailerView.hidden = YES;
-        [self loadMoreData];
-    }
 }
 
 - (void)clickFilterAllButton:(id)sender{
@@ -529,16 +579,11 @@
     }
     _filterKTVListType=NSFilterKTVListTypeAll;
     [self changeDataTypeState];
-    
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:_filterKTVListType] forKey:KKTV_FilterType];
     [self stratAnimationFilterButton:_filterKTVListType];
     
     [self cleanUpTableView];
     _allTableView.hidden = NO;
-    
-    if ([_allArray count]<=0) {
-         self.refreshTailerView.hidden = YES;
-        [self loadMoreData];
-    }
 }
 
 - (void)cleanUpTableView{
@@ -581,10 +626,7 @@
 #pragma mark apiNotiry
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
-    if (error!=nil) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self reloadPullRefreshData];
-        });
+    if (error) {
         return;
     }
     
@@ -593,9 +635,6 @@
         NSArray *dataArray = [[DataBaseManager sharedInstance] insertKTVsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
         
         if (dataArray==nil || [dataArray count]<=0) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self reloadPullRefreshData];
-            });
             return;
         }
         int tag = [[apiCmd httpRequest] tag];
@@ -683,10 +722,6 @@
         [[districtDic objectForKey:key] addObject:tKTV];
     }
     
-    if (!isLoadMoreAll) {
-        [_allArray removeAllObjects];
-    }
-    
     for (NSString *key in regionOrder) {
         
         if (![districtDic objectForKey:key]) {
@@ -723,12 +758,6 @@
     
     [districtDic release];
     
-    _refreshTailerView.hidden = NO;
-    if ([_allArray count]<=0 || _allArray==nil) {
-        _refreshTailerView.hidden = YES;
-        
-    }
-    
     dispatch_async(dispatch_get_main_queue(), ^{
         [self reloadPullRefreshData];
     });
@@ -742,10 +771,9 @@
         ABLoggerInfo(@"附近 KTV count=== %d",[ktvs count]);
         [self.nearByArray addObjectsFromArray:ktvs];
         
-        _refreshNearByTailerView.hidden = NO;
+        _nearByTableView.tableFooterView = nil;
         if ([ktvs count]<=0) {
             _nearByTableView.tableFooterView = _noGPSView;
-            _refreshNearByTailerView.hidden = YES;
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -753,7 +781,7 @@
         });
     }];
     
-    [self reloadPullRefreshData];
+    [_nearByTableView reloadData];
 }
 
 - (void)formatKTVDataFilterFavorite{
@@ -805,7 +833,6 @@
             break;
         default:{
             isLoadMoreAll = YES;
-            [self setAllTableViewDelegate];
         }
             break;
     }
@@ -821,10 +848,22 @@
             break;
         default:{
             isLoadMoreAll = NO;
-            [_allCache removeAllObjects];
         }
             break;
     }
+    
+    NSMutableDictionary *tDic = [_dataManagerDic objectForKey:[NSNumber numberWithInt:_filterKTVListType]];
+    if (!tDic) {
+        tDic = [NSMutableDictionary dictionaryWithCapacity:2];
+        NSMutableArray *t_mArray = [NSMutableArray arrayWithCapacity:10];
+        NSMutableArray *t_cacheArray = [NSMutableArray arrayWithCapacity:10];
+        [tDic setObject:t_cacheArray forKey:CacheArray];
+        [tDic setObject:t_mArray forKey:MArray];
+        [_dataManagerDic setObject:tDic forKey:[NSNumber numberWithInt:_filterKTVListType]];
+    }
+    
+    [[tDic objectForKey:MArray] removeAllObjects];
+    [[tDic objectForKey:CacheArray] removeAllObjects];
     
     [self updateData:0 withData:[self getCacheData]];
 }
@@ -841,17 +880,14 @@
             }else{
                 [_nearByListDelegate doneReLoadingTableViewData];
             }
-            _refreshNearByTailerView.frame = CGRectMake(0.0f, _nearByTableView.contentSize.height, _nearByTableView.frame.size.width, _nearByTableView.bounds.size.height);
         }
             break;
         default:{
-            [self setAllTableViewDelegate];
             if (isLoadMoreAll) {
-                [_allListDelegate doneLoadingTableViewData];
+                [_nearByListDelegate doneLoadingTableViewData];
             }else{
-                [_allListDelegate doneReLoadingTableViewData];
+                [_nearByListDelegate doneReLoadingTableViewData];
             }
-            _refreshTailerView.frame = CGRectMake(0.0f, _allTableView.contentSize.height, _allTableView.frame.size.width, _allTableView.bounds.size.height);
         }
             break;
     }
@@ -879,10 +915,6 @@
             number += [[dic objectForKey:@"list"] count];
         }
         ABLoggerDebug(@"ktv 数组 number ==  %d",number);
-        
-        if (!isLoadMoreAll) {
-            number = 0;
-        }
         
         self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getKTVsListFromWeb:self offset:number limit:DataLimit];
         return  nil;

@@ -88,6 +88,7 @@
     [shareBt setBackgroundImage:[UIImage imageNamed:@"btn_share_f@2x"] forState:UIControlStateHighlighted];
     UIBarButtonItem *shareItem = [[UIBarButtonItem alloc] initWithCustomView:shareBt];
     self.navigationItem.rightBarButtonItem = shareItem;
+    [shareItem release];
 }
 
 - (void)initTableView{
@@ -96,7 +97,7 @@
     _mTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _mTableView.backgroundColor = [UIColor clearColor];
     _mTableView.tableHeaderView = _headerView;
-    _mTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    _mTableView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
 }
 
 - (void)setTableViewDelegate{

@@ -5,37 +5,28 @@
 //  Created by stephenliu on 13-6-8.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
-#import "KTVListTableViewDelegate.h"
+#import "KTVAllListTableViewDelegate.h"
 #import "KTVBuyViewController.h"
 #import "KtvViewController.h"
 #import "KTVTableViewCell.h"
 #import "KKTV.h"
 
-@interface KTVListTableViewDelegate(){
+#define TagTuan 500
+
+@interface KTVAllListTableViewDelegate(){
     
 }
-@property(nonatomic,assign) NSArray *mArray;
-@property(nonatomic,assign) NSArray *mCount;
 @property(nonatomic,readonly) NSFilterKTVListType filterKTVListType;
 @end
 
-@implementation KTVListTableViewDelegate
+@implementation KTVAllListTableViewDelegate
 
 #pragma mark -
 #pragma mark UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    _mArray = _parentViewController.ktvsArray;
-    _filterKTVListType = _parentViewController.filterKTVListType;
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
-        switch (_filterKTVListType) {
-            case NSFilterKTVListTypeAll:{
-                return [_parentViewController.ktvsArray count];
-            }
-            default:{
-                return 1;
-            }
-        }
+        return [_mArray count];
     }
     //搜索模式
     return 1;
@@ -43,30 +34,21 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
-    _mArray = _parentViewController.ktvsArray;
-    _filterKTVListType = _parentViewController.filterKTVListType;
-    
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
-         _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
-        switch (_filterKTVListType) {
-            case NSFilterKTVListTypeFavorite:
-            case NSFilterKTVListTypeNearby:{
-                return [_mArray count];
-            }
-            case NSFilterKTVListTypeAll:{
-                return [[[_mArray objectAtIndex:section] objectForKey:@"list"] count];
-            }
-            default:{
-                return 0;
-            }
-        }
+        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+        return [[[_mArray objectAtIndex:section] objectForKey:@"list"] count];
     }
+    
     return 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
+        
+        if ([_mArray count]<=0 || _mArray==nil) {
+            return nil;
+        }
         
         return [self ktvCelltableView:tableView cellForRowAtIndexPath:indexPath];
     }
@@ -94,7 +76,7 @@
 -(KTVTableViewCell *)createNewMocieCell{
     ABLoggerMethod();
     KTVTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"KTVTableViewCell" owner:self options:nil] objectAtIndex:0];
-    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+    [cell setAccessoryType:UITableViewCellAccessoryNone];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
@@ -103,32 +85,12 @@
     
     KKTV *aKTV = nil;
     int row = indexPath.row;
-    _mArray = _parentViewController.ktvsArray;
-    _filterKTVListType = _parentViewController.filterKTVListType;
     
     cell.ktv_distance.hidden = YES;
     cell.ktv_image_location.hidden = YES;
     
-    switch (_filterKTVListType) {
-        case NSFilterKTVListTypeFavorite:{
-            aKTV = [_mArray objectAtIndex:row];
-        }
-            break;
-        case NSFilterKTVListTypeNearby:{
-            aKTV = [_mArray objectAtIndex:row];
-            cell.ktv_distance.hidden = NO;
-            cell.ktv_image_location.hidden = NO;
-        }
-            break;
-            
-        case NSFilterKTVListTypeAll:{
-            NSArray *list = [[_mArray objectAtIndex:indexPath.section] objectForKey:@"list"];
-            aKTV = [list objectAtIndex:row];
-        }
-            break;
-        default:
-            break;
-    }
+    NSArray *list = [[_mArray objectAtIndex:indexPath.section] objectForKey:@"list"];
+    aKTV = [list objectAtIndex:row];
     
     [self configureCell:cell withObject:aKTV];
 }
@@ -152,6 +114,11 @@
         [array addObject:cell.ktv_image_tuan];
     }
     
+    [[cell viewWithTag:TagTuan] removeFromSuperview];
+    if ([array count]<=0) {
+        return;
+    }
+    
     int twidth = 0;
     UIView *view = [[UIView alloc] init];
     for (int i=0;i<[array count];i++) {
@@ -169,6 +136,7 @@
     CGRect tFrame = [(UIView *)[array lastObject] frame];
     int width = (int)tFrame.origin.x+ tFrame.size.width;
     [cell addSubview:view];
+    view.tag = TagTuan;
     [view release];
     
     int nameSize_width = (cell.bounds.size.width-width-cell.ktv_name.frame.origin.x);
@@ -211,12 +179,6 @@
 #pragma mark UITableViewDelegate
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     
-    _filterKTVListType = _parentViewController.filterKTVListType;
-    if (_filterKTVListType != NSFilterKTVListTypeAll) {
-        return nil;
-    }
-    
-    _mArray = _parentViewController.ktvsArray;
     UILabel *headerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
     headerView.backgroundColor = [UIColor colorWithWhite:0.829 alpha:1.000];
     
@@ -228,10 +190,6 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    _filterKTVListType = _parentViewController.filterKTVListType;
-    if (_filterKTVListType != NSFilterKTVListTypeAll) {
-        return 0;
-    }
     
     return 20.0f;
 }
@@ -243,33 +201,24 @@
     
     KKTV *aKTV = nil;
     int row = indexPath.row;
-    _filterKTVListType = _parentViewController.filterKTVListType;
-    switch (_filterKTVListType) {
-        case NSFilterKTVListTypeNearby:
-        case NSFilterKTVListTypeFavorite:{
-            aKTV = [_mArray objectAtIndex:row];
-        }
-            break;
-        case NSFilterKTVListTypeNone:
-        case NSFilterKTVListTypeAll:{
-            NSArray *list = [[_mArray objectAtIndex:indexPath.section] objectForKey:@"list"];
-            aKTV = [list objectAtIndex:row];
-        }
-            break;
-    }
+    
+    NSArray *list = [[_mArray objectAtIndex:indexPath.section] objectForKey:@"list"];
+    aKTV = [list objectAtIndex:row];
     
     ktvBuyController.mKTV = aKTV;
     [_parentViewController.navigationController pushViewController:ktvBuyController animated:YES];
+    [ktvBuyController release];
 }
 
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods
-
+/*加载新数据*/
 - (void)reloadTableViewDataSource{
 	_reloading = YES;
-    
+    [_parentViewController loadNewData];
 }
 
+/*加载更多*/
 - (void)loadMoreTableViewDataSource {
     _reloading = YES;
     [_parentViewController loadMoreData];
@@ -280,14 +229,15 @@
 	//  model should call this when its done loading
 	_reloading = NO;
     [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_mTableView];
+    [_mTableView reloadData];
 }
 
 - (void)doneLoadingTableViewData
 {
-    _reloading = NO;
     [_refreshTailerView egoRefreshScrollViewDataSourceDidFinishedLoading:_mTableView];
     [_mTableView reloadData];
     _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+    _reloading = NO;
 }
 
 #pragma mark -
@@ -311,7 +261,6 @@
     
     if (view.tag == EGOHeaderView) {
         [self reloadTableViewDataSource];
-        [self doneReLoadingTableViewData];
     } else {
         [self loadMoreTableViewDataSource];
     }

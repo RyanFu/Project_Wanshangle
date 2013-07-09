@@ -208,21 +208,19 @@
     
     [self parseResponseData];
     
-    NSError *error = nil;
+     NSError *error = nil;
     if (statusCode != 200) {
         ABLoggerWarn(@"请求失败 ========= %d",statusCode);
         error = [NSError errorWithDomain:@"api error" code:statusCode userInfo:nil];
-        if (self!=nil)
-        [self apiNotifyResult:self error:error];
-        return;
     }
     
     if (delegate && [delegate respondsToSelector:@selector(apiNotifyResult:error:)]) {
         // call delegate
         [delegate apiNotifyResult:self error:error];
-    }else if(self!=nil){
-        [self apiNotifyResult:self error:error];
     }
+    
+    if (self!=nil && error!=nil)
+        [self apiNotifyResult:self error:error];
 }
 
 /**

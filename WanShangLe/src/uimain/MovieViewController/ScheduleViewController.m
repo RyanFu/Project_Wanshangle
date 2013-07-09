@@ -193,6 +193,7 @@
     [shareBt setBackgroundImage:[UIImage imageNamed:@"btn_share_f@2x"] forState:UIControlStateHighlighted];
     UIBarButtonItem *shareItem = [[UIBarButtonItem alloc] initWithCustomView:shareBt];
     self.navigationItem.rightBarButtonItem = shareItem;
+    [shareItem release];
 }
 
 #pragma mark -

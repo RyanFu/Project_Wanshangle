@@ -191,7 +191,7 @@
 
 - (void)popupCityPanel{
     
-    self.cityPanelMask = [[UIControl alloc] initWithFrame:self.view.bounds];
+    _cityPanelMask = [[UIControl alloc] initWithFrame:self.view.bounds];
     _cityPanelMask.backgroundColor = [UIColor colorWithWhite:0.000 alpha:0.650];
     [_cityPanelMask addTarget:self action:@selector(dismissCityPanel) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_cityPanelMask];
@@ -210,6 +210,7 @@
     [bt1 setTag:1];
     [bt1 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [_cityPanel addSubview:bt1];
+    [bt1 release];
     [bt1 performBlock:^(JSButton *sender) {
         [[LocationManager defaultLocationManager] setUserCity:@"北京市" CallBack:^{
             [self setSelectedButton:bt1];
@@ -222,6 +223,7 @@
     [bt2 setTag:2];
     [bt2 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [_cityPanel addSubview:bt2];
+    [bt2 release];
     [bt2 performBlock:^(JSButton *sender) {
         [[LocationManager defaultLocationManager] setUserCity:@"上海市" CallBack:^{
             [self setSelectedButton:bt2];
@@ -234,6 +236,7 @@
     [bt3 setTag:3];
     [bt3 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [_cityPanel addSubview:bt3];
+    [bt3 release];
     [bt3 performBlock:^(JSButton *sender) {
         [[LocationManager defaultLocationManager] setUserCity:@"广州市" CallBack:^{
             [self setSelectedButton:bt3];
@@ -244,6 +247,7 @@
     JSButton *bt4 = [[JSButton alloc] initWithFrame:CGRectMake(245,30,70,35)];
     [bt4 setTitle:@"深圳" forState:UIControlStateNormal];
     [bt4 setTag:4];
+    [bt4 release];
     [bt4 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [_cityPanel addSubview:bt4];
     [bt4 performBlock:^(JSButton *sender) {

@@ -38,6 +38,11 @@ typedef enum{
 	EGOOPullRefreshLoading,	
 } EGOPullRefreshState;
 
+typedef enum {
+    EGOHeaderView = 0,
+    EGOBottomView
+} EGORefreshView;
+
 @protocol EGORefreshTableHeaderDelegate;
 @interface EGORefreshTableHeaderView : UIView {
 	

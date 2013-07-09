@@ -10,13 +10,14 @@
 #import "EGORefreshTableHeaderView.h"
 
 @class KtvViewController;
-@interface KTVListTableViewDelegate : NSObject<EGORefreshTableHeaderDelegate,UISearchBarDelegate,UISearchDisplayDelegate,UITableViewDataSource,UITableViewDelegate>{
+@interface KTVNearByListTableViewDelegate : NSObject<EGORefreshTableHeaderDelegate,UITableViewDataSource,UITableViewDelegate>{
    
 }
 @property(nonatomic,assign) EGORefreshTableHeaderView *refreshHeaderView;
 @property(nonatomic,assign) EGORefreshTableHeaderView *refreshTailerView;
 @property(nonatomic,assign) KtvViewController *parentViewController;
 @property(nonatomic,assign) UITableView *mTableView;
+@property(nonatomic,assign) NSArray *mArray;
 @property(nonatomic,readwrite)BOOL reloading;
 
 - (void)doneReLoadingTableViewData;

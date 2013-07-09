@@ -109,7 +109,7 @@ static CGFloat const kLabelVMargin = 10;
     imageView.frame = CGRectMake(0, 0, 320, 44);
     [self.searchBar insertSubview:imageView atIndex:0];
     
-    self.strongSearchDisplayController = [[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self];
+    self.strongSearchDisplayController = [[[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self] autorelease];
     self.searchDisplayController.searchResultsDataSource = self;
     self.searchDisplayController.searchResultsDelegate = self;
     self.searchDisplayController.delegate = self;

@@ -40,6 +40,7 @@
     [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_f@2x"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backItem;
+    [backItem release];
     
     UIButton *shareBt = [UIButton buttonWithType:UIButtonTypeCustom];
     [shareBt setFrame:CGRectMake(0, 0, 45, 32)];
@@ -48,6 +49,7 @@
     [shareBt setBackgroundImage:[UIImage imageNamed:@"btn_share_f@2x"] forState:UIControlStateHighlighted];
     UIBarButtonItem *shareItem = [[UIBarButtonItem alloc] initWithCustomView:shareBt];
     self.navigationItem.rightBarButtonItem = shareItem;
+    [shareItem release];
 }
 
 #pragma mark -

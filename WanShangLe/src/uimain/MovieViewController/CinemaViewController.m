@@ -270,6 +270,7 @@
     MovieDetailViewController *movieDetailController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
     movieDetailController.mMovie = self.mMovie;
     [_mparentController.navigationController pushViewController:movieDetailController animated:YES];
+    [movieDetailController release];
 }
 
 - (void)clickSearchBar:(id)sender{

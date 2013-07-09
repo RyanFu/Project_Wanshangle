@@ -137,6 +137,7 @@
     [shareBt setBackgroundImage:[UIImage imageNamed:@"btn_share_f@2x"] forState:UIControlStateHighlighted];
     UIBarButtonItem *shareItem = [[UIBarButtonItem alloc] initWithCustomView:shareBt];
     self.navigationItem.rightBarButtonItem = shareItem;
+    [shareItem release];
 }
 
 #pragma mark -
@@ -150,6 +151,7 @@
     MovieDetailViewController *movieDetailController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
     movieDetailController.mMovie = self.mMovie;
     [self.navigationController pushViewController:movieDetailController animated:YES];
+    [movieDetailController release];
 }
 
 - (void)cleanUpButtonBackground{

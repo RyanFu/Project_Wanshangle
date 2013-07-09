@@ -141,8 +141,8 @@
 		NSDate *date = [_delegate egoRefreshTableHeaderDataSourceLastUpdated:self];
 		
 		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-//		[formatter setAMSymbol:@"AM"];
-//		[formatter setPMSymbol:@"PM"];
+        //		[formatter setAMSymbol:@"AM"];
+        //		[formatter setPMSymbol:@"PM"];
         [formatter setAMSymbol:@"上午"];
         [formatter setPMSymbol:@"下午"];
 		[formatter setDateFormat:@"yyyy-MM-dd HH:mm aaa"];
@@ -156,7 +156,7 @@
 		_lastUpdatedLabel.text = nil;
 		
 	}
-
+    
 }
 
 - (void)setState:(EGOPullRefreshState)aState{
@@ -190,7 +190,7 @@
             }
 			[_activityView stopAnimating];
 			[CATransaction begin];
-			[CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions]; 
+			[CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
 			_arrowImage.hidden = NO;
 			_arrowImage.transform = CATransform3DIdentity;
 			[CATransaction commit];
@@ -204,7 +204,7 @@
 			_statusLabel.text = NSLocalizedString(@"加载中...", @"Loading Status");
 			[_activityView startAnimating];
 			[CATransaction begin];
-			[CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions]; 
+			[CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
 			_arrowImage.hidden = YES;
 			[CATransaction commit];
 			
@@ -220,7 +220,7 @@
 #pragma mark -
 #pragma mark ScrollView Methods
 
-- (void)egoRefreshScrollViewDidScroll:(UIScrollView *)scrollView {	
+- (void)egoRefreshScrollViewDidScroll:(UIScrollView *)scrollView {
 	
 	if (_state == EGOOPullRefreshLoading) {
 		
@@ -302,27 +302,49 @@
     }
 }
 
-- (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView {	
+- (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView {
     
     [UIView animateWithDuration:0.3
                      animations:^{
                          if (_pullDirection == EGOPullingDown) {
                              [scrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
-                         }
-
-                     } completion:^(BOOL finished) {
-                         [scrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
-                         
-                         UITableView *tableView = (UITableView*)scrollView;
-                         if (_pullDirection == EGOPullingDown) {
                              
-                             if (tableView.tableHeaderView!=nil) {
-                                 [tableView setContentOffset:CGPointMake(0, 44) animated:YES];
+                             UITableView *tableView = (UITableView*)scrollView;
+                             if (_pullDirection == EGOPullingDown) {
+                                 
+                                 if (tableView.tableHeaderView!=nil) {
+                                     [tableView setContentOffset:CGPointMake(0, 44) animated:YES];
+                                 }
                              }
+
                          }
+                         
+                     } completion:^(BOOL finished) {
+                         
+//                         UITableView *tableView = (UITableView*)scrollView;
+//                         if (_pullDirection == EGOPullingDown) {
+//                             
+//                             if (tableView.tableHeaderView!=nil) {
+//                                 [tableView setContentOffset:CGPointMake(0, 44) animated:YES];
+//                             }
+//                         }
+                        
+                         
+//                         if (_pullDirection == EGOPullingDown) {
+//                             [scrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
+//                         }
+                         
                          [self setState:EGOOPullRefreshNormal];
-                         
-                         
+                         [UIView animateWithDuration:0.3
+                                          animations:^{
+                                              if (_pullDirection == EGOPullingUp) {
+                                                  [scrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
+                                              }
+//                                              [scrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
+
+                                          } completion:^(BOOL finished) {
+                                              
+                                          }];
                      }];
 }
 

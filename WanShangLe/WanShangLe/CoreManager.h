@@ -6,11 +6,6 @@
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
-typedef enum {
-    EGOHeaderView = 0,
-    EGOBottomView
-} EGORefreshView;
-
 #import "ABLogger.h"
 #import "LocationManager.h"
 #import "ReachabilityManager.h"
@@ -68,25 +63,14 @@ typedef enum {
 //分页数据
 #define DataLimit 20
 
-//电影数据
-#define UpdatingMoviesList @"UpdatingMoviesList" //正在抓取 电影数据
-//影院数据
-#define UpdatingCinemasList @"UpdatingCinemasList" //正在抓取 影院数据
-//关联表
-#define InsertingMovie_CinemaList @"InsertingMovie_CinemaList" //正在抓取 影院数据
-
 //用户选择的城市
 #define UserState @"administrativeArea"
 
 //用户偏好设置
 #define MMovie_CinemaFilterType @"MMovie_CinemaFilterType"
 #define BBar_ActivityFilterType @"BBar_ActivityFilterType"
-#define KKTV_FilterType @"KKTV_FilterType"
-
-
-//时间戳
-#define MMovieTimeStamp @"MMovieTimeStamp"
-#define MCinemaTimeStamp @"MCinemaTimeStamp"
+#define KKTV_FilterType         @"KKTV_FilterType"
+#define SShow_FilterType        @"SShow_FilterType"
 
 //判断设备ios版本
 #define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
