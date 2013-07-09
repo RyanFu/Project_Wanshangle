@@ -145,10 +145,10 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (NSString *)getWhickWeek:(NSDate*)aDate{
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-
+    
     NSInteger unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSWeekdayCalendarUnit |
     NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
-
+    
     NSDateComponents *comps = [calendar components:unitFlags fromDate:aDate];
     int week = [comps weekday];
     
@@ -181,11 +181,11 @@ static DataBaseManager *_sharedInstance = nil;
     return weekStr;
     
     /*
-    int month = [comps month];
-    int day = [comps day];
-    int hour = [comps hour];
-    int min = [comps minute];
-    int sec = [comps second];*/
+     int month = [comps month];
+     int day = [comps day];
+     int hour = [comps hour];
+     int min = [comps minute];
+     int sec = [comps second];*/
 }
 
 #pragma mark 获取时间
@@ -225,7 +225,7 @@ static DataBaseManager *_sharedInstance = nil;
     NSInteger interval = [zone secondsFromGMTForDate: formatDate];
     
     NSDate *localeDate = [formatDate  dateByAddingTimeInterval: interval];
-
+    
     ABLoggerDebug(@"localeDate ====== %@", localeDate);
     
     return localeDate;
@@ -238,33 +238,33 @@ static DataBaseManager *_sharedInstance = nil;
                            cType:(WSLRecommendLookType)cType
                         delegate:(id<ApiNotify>)delegate{
     
-//    if (!isEmpty(movieId)) {
-//        
-//        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-//        MMovie *aMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:movieId inContext:context];
-//        if (aMovie==nil) {
-//            return NO;
-//        }
-//        
-//        BOOL canRequest = YES;
-//        switch (cType) {
-//            case WSLRecommendLookTypeRecommend:
-//                canRequest = ![aMovie.movieDetail.doneRec boolValue];
-//                break;
-//            case WSLRecommendLookTypeLook:
-//                canRequest = ![aMovie.movieDetail.doneLook boolValue];
-//                break;
-//                
-//            default:
-//                break;
-//        }
-//        
-//        if (!canRequest) {
-//            return NO;
-//        }
-//    }else{
-//        return NO;
-//    }
+    //    if (!isEmpty(movieId)) {
+    //
+    //        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    //        MMovie *aMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:movieId inContext:context];
+    //        if (aMovie==nil) {
+    //            return NO;
+    //        }
+    //
+    //        BOOL canRequest = YES;
+    //        switch (cType) {
+    //            case WSLRecommendLookTypeRecommend:
+    //                canRequest = ![aMovie.movieDetail.doneRec boolValue];
+    //                break;
+    //            case WSLRecommendLookTypeLook:
+    //                canRequest = ![aMovie.movieDetail.doneLook boolValue];
+    //                break;
+    //
+    //            default:
+    //                break;
+    //        }
+    //
+    //        if (!canRequest) {
+    //            return NO;
+    //        }
+    //    }else{
+    //        return NO;
+    //    }
     
     ApiClient* apiClient = [ApiClient defaultClient];
     
@@ -331,7 +331,7 @@ static DataBaseManager *_sharedInstance = nil;
         ABLoggerWarn(@"不能 插入 电影_影院，不能为空");
         return;
     }
-
+    
     ABLoggerDebug(@"插入 电影--影院 关联表-数据");
     
     MMovie *aMovie = nil;
@@ -448,7 +448,7 @@ static DataBaseManager *_sharedInstance = nil;
         NSString *tname = [dic objectForKey:@"name"];
         
         NSString *aName = [ChineseToPinyin pinyinFromChiniseString:tname];
-
+        
         ABLoggerInfo(@"range ===== %@",NSStringFromRange(NSMakeRange(0, aName.length)));
         if ([city_name isEqualToString:aName]) {
             ABLoggerWarn(@"相等");
@@ -460,7 +460,7 @@ static DataBaseManager *_sharedInstance = nil;
         
         NSRange range=[city_name rangeOfString:aName options:NSCaseInsensitiveSearch];
         if(range.location!=NSNotFound){
-             return [dic objectForKey:@"name"];
+            return [dic objectForKey:@"name"];
         }
     }
     
@@ -575,11 +575,11 @@ static DataBaseManager *_sharedInstance = nil;
         [returnArray addObject:movie_city.movie];
     }
     
-//    returnArray = (NSMutableArray *)[returnArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-//        NSString *first =  [(MMovie*)a name];
-//        NSString *second = [(MMovie*)b name];
-//        return [first compare:second];
-//    }];
+    //    returnArray = (NSMutableArray *)[returnArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+    //        NSString *first =  [(MMovie*)a name];
+    //        NSString *second = [(MMovie*)b name];
+    //        return [first compare:second];
+    //    }];
     
     return returnArray;
 }
@@ -1554,7 +1554,7 @@ static DataBaseManager *_sharedInstance = nil;
         cityId = [[LocationManager defaultLocationManager] getUserCityId];
     }
     
-//    return [KKTV MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityId] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    //    return [KKTV MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityId] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     return [KKTV MR_findAllSortedBy:@"districtid" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityId]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
@@ -1572,10 +1572,10 @@ static DataBaseManager *_sharedInstance = nil;
     }
     
     if (tapiCmd!=nil)
-    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
-        ABLoggerWarn(@"不能请求 KTV 列表数据，因为已经请求了");
-        return tapiCmd;
-    }
+        if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
+            ABLoggerWarn(@"不能请求 KTV 列表数据，因为已经请求了");
+            return tapiCmd;
+        }
     
     ApiClient* apiClient = [ApiClient defaultClient];
     
@@ -1632,7 +1632,7 @@ static DataBaseManager *_sharedInstance = nil;
     }];
     
     return isSuccess;
-
+    
 }
 - (NSArray *)getFavoriteKTVListFromCoreData{
     return [self getFavoriteKTVListFromCoreDataWithCityName:nil];
@@ -1721,10 +1721,10 @@ static DataBaseManager *_sharedInstance = nil;
         }
     }
     
-//    [dataBaseContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-//        ABLoggerDebug(@"KTV 保存是否成功 ========= %d",success);
-//        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
-//    }];
+    //    [dataBaseContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+    //        ABLoggerDebug(@"KTV 保存是否成功 ========= %d",success);
+    //        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    //    }];
     [dataBaseContext MR_saveToPersistentStoreAndWait];
     
     CFTimeInterval time2 = Elapsed_Time;
@@ -1746,7 +1746,7 @@ static DataBaseManager *_sharedInstance = nil;
     kKTV.latitude = [NSNumber numberWithFloat:[[aKTVDic objectForKey:@"latitude"] floatValue]];
 }
 
-- (BOOL)addFavoriteKTVWithId:(NSNumber *)uid{
+- (BOOL)addFavoriteKTVWithId:(NSString *)uid{
     
     NSManagedObjectContext* threadContext = [NSManagedObjectContext MR_contextForCurrentThread];
     KKTV *tKTV = [KKTV MR_findFirstByAttribute:@"uid" withValue:uid inContext:threadContext];
@@ -1757,15 +1757,16 @@ static DataBaseManager *_sharedInstance = nil;
     
     tKTV.favorite = [NSNumber numberWithBool:YES];
     
-    [threadContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        ABLoggerDebug(@"收藏KTV 保存是否成功 ========= %d",success);
-        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
-    }];
+    [threadContext MR_saveToPersistentStoreAndWait];
+    //    [threadContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+    //        ABLoggerDebug(@"收藏KTV 保存是否成功 ========= %d",success);
+    //        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    //    }];
     
     return YES;
 }
 
-- (BOOL)deleteFavoriteKTVWithId:(NSNumber *)uid{
+- (BOOL)deleteFavoriteKTVWithId:(NSString *)uid{
     
     NSManagedObjectContext* threadContext = [NSManagedObjectContext MR_contextForCurrentThread];
     KKTV *tKTV = [KKTV MR_findFirstByAttribute:@"uid" withValue:uid inContext:threadContext];
@@ -1775,11 +1776,11 @@ static DataBaseManager *_sharedInstance = nil;
     }
     
     tKTV.favorite = [NSNumber numberWithBool:NO];
-    
-    [threadContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        ABLoggerDebug(@"收藏KTV 保存是否成功 ========= %d",success);
-        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
-    }];
+    [threadContext MR_saveToPersistentStoreAndWait];
+    //    [threadContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+    //        ABLoggerDebug(@"收藏KTV 保存是否成功 ========= %d",success);
+    //        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    //    }];
     
     return YES;
 }

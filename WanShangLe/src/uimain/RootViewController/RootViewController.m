@@ -108,9 +108,9 @@
     
     if (![self checkUserCity])return;
     
-
-        MovieViewController *_movieViewController = [[MovieViewController alloc] initWithNibName:nil bundle:nil];
-
+    
+    MovieViewController *_movieViewController = [[MovieViewController alloc] initWithNibName:nil bundle:nil];
+    
     
     [self.navigationController pushViewController:_movieViewController animated:YES];
     [_movieViewController release];
@@ -122,9 +122,9 @@
     
     if (![self checkUserCity])return;
     
-//    if (!_ktvViewController) {
-        KtvViewController *_ktvViewController = [[KtvViewController alloc] initWithNibName:(iPhone5?@"KtvViewController":@"KtvViewController") bundle:nil];
-//    }
+    //    if (!_ktvViewController) {
+    KtvViewController *_ktvViewController = [[KtvViewController alloc] initWithNibName:(iPhone5?@"KtvViewController":@"KtvViewController") bundle:nil];
+    //    }
     
     [self.navigationController pushViewController:_ktvViewController animated:YES];
     [_ktvViewController release];
@@ -136,9 +136,9 @@
     
     if (![self checkUserCity])return;
     
-//    if (!_showViewController) {
-        ShowViewController *_showViewController = [[ShowViewController alloc] initWithNibName:(iPhone5?@"ShowViewController_5":@"ShowViewController") bundle:nil];
-//    }
+    //    if (!_showViewController) {
+    ShowViewController *_showViewController = [[ShowViewController alloc] initWithNibName:(iPhone5?@"ShowViewController_5":@"ShowViewController") bundle:nil];
+    //    }
     
     [self.navigationController pushViewController:_showViewController animated:YES];
     [_showViewController release];
@@ -150,9 +150,9 @@
     
     if (![self checkUserCity])return;
     
-//    if (!_barViewController) {
-        BarViewController *_barViewController = [[BarViewController alloc] initWithNibName:(iPhone5?@"BarViewController_5":@"BarViewController") bundle:nil];
-//    }
+    //    if (!_barViewController) {
+    BarViewController *_barViewController = [[BarViewController alloc] initWithNibName:(iPhone5?@"BarViewController_5":@"BarViewController") bundle:nil];
+    //    }
     
     [self.navigationController pushViewController:_barViewController animated:YES];
     [_barViewController release];
@@ -210,7 +210,7 @@
     [bt1 setTag:1];
     [bt1 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [_cityPanel addSubview:bt1];
-    [bt1 release];
+    
     [bt1 performBlock:^(JSButton *sender) {
         [[LocationManager defaultLocationManager] setUserCity:@"北京市" CallBack:^{
             [self setSelectedButton:bt1];
@@ -223,7 +223,6 @@
     [bt2 setTag:2];
     [bt2 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [_cityPanel addSubview:bt2];
-    [bt2 release];
     [bt2 performBlock:^(JSButton *sender) {
         [[LocationManager defaultLocationManager] setUserCity:@"上海市" CallBack:^{
             [self setSelectedButton:bt2];
@@ -233,10 +232,9 @@
     
     JSButton *bt3 = [[JSButton alloc] initWithFrame:CGRectMake(165,30,70,35)];
     [bt3 setTitle:@"广州" forState:UIControlStateNormal];
-    [bt3 setTag:3];
     [bt3 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [_cityPanel addSubview:bt3];
-    [bt3 release];
+    [bt3 setTag:3];
     [bt3 performBlock:^(JSButton *sender) {
         [[LocationManager defaultLocationManager] setUserCity:@"广州市" CallBack:^{
             [self setSelectedButton:bt3];
@@ -244,12 +242,13 @@
         ABLoggerInfo(@"手动选择城市 广州");
     } forEvents:UIControlEventTouchUpInside];
     
+    
     JSButton *bt4 = [[JSButton alloc] initWithFrame:CGRectMake(245,30,70,35)];
     [bt4 setTitle:@"深圳" forState:UIControlStateNormal];
     [bt4 setTag:4];
-    [bt4 release];
     [bt4 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [_cityPanel addSubview:bt4];
+    
     [bt4 performBlock:^(JSButton *sender) {
         [[LocationManager defaultLocationManager] setUserCity:@"深圳市" CallBack:^{
             [self setSelectedButton:bt4];
@@ -261,6 +260,10 @@
     [self selectedCityButtonInPanel:_cityPanel];
     [self startAnimationCityPanel];
     [_cityPanel release];
+    [bt4 release];
+    [bt3 release];
+    [bt2 release];
+    [bt1 release];
 }
 
 - (void)dismissCityPanel{
@@ -312,7 +315,7 @@
             img = [UIImage imageNamed:@"btn_location_icon_black@2x"];
             NSArray *array = [NSArray arrayWithObjects:@"北京",@"上海",@"广州",@"深圳", nil];
             bt = (UIButton *)[panel viewWithTag:(1+[array indexOfObject:locationCity])];
-
+            
         }
         UIImageView *locationImg = [[UIImageView alloc] initWithImage:img];
         locationImg.frame = CGRectMake(2, 11, 12, 12);
@@ -377,10 +380,10 @@
 }
 
 - (void)dealloc{
-//    self.movieViewController = nil;
-//    self.ktvViewController = nil;
-//    self.showViewController = nil;
-//    self.barViewController = nil;
+    //    self.movieViewController = nil;
+    //    self.ktvViewController = nil;
+    //    self.showViewController = nil;
+    //    self.barViewController = nil;
     self.cityPanel = nil;
     self.cityPanelMask = nil;
     [super dealloc];

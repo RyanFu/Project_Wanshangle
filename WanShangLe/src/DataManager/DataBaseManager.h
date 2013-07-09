@@ -170,8 +170,8 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs);
 - (NSUInteger)getCountOfKTVsListFromCoreDataWithCityName:(NSString *)cityName;
 - (NSArray *)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importKTV:(KKTV *)kKTV ValuesForKeysWithObject:(NSDictionary *)aKTVDic;
-- (BOOL)addFavoriteKTVWithId:(NSNumber *)uid;
-- (BOOL)deleteFavoriteKTVWithId:(NSNumber *)uid;
+- (BOOL)addFavoriteKTVWithId:(NSString *)uid;
+- (BOOL)deleteFavoriteKTVWithId:(NSString *)uid;
 
 //获得KTV 团购列表 KTV Info
 - (ApiCmd *)getKTVTuanGouListFromWebWithaKTV:(KKTV *)aKTV

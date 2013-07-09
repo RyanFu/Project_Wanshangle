@@ -46,6 +46,11 @@
 		5A1BDD2A1763361200D610AA /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A1BDD291763361100D610AA /* CoreText.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		5A246F37175DD0D100C000CA /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A246F36175DD0D100C000CA /* MapKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		5A246F39175DD0D600C000CA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A246F38175DD0D600C000CA /* CoreLocation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		5A3752D6178C461A0071AACF /* KTVAllListManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A3752D5178C461A0071AACF /* KTVAllListManagerDelegate.m */; };
+		5A3752DA178C46590071AACF /* KtvManagerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A3752D8178C46590071AACF /* KtvManagerViewController.m */; };
+		5A3752DB178C46590071AACF /* KtvManagerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A3752D9178C46590071AACF /* KtvManagerViewController.xib */; };
+		5A3752DF178C469A0071AACF /* KTVManagerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A3752DD178C469A0071AACF /* KTVManagerCell.m */; };
+		5A3752E0178C469A0071AACF /* KTVManagerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A3752DE178C469A0071AACF /* KTVManagerCell.xib */; };
 		5A4294BD176EAB4C00D9B987 /* ShowDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4294BB176EAB4C00D9B987 /* ShowDetailViewController.m */; };
 		5A4294BE176EAB4C00D9B987 /* ShowDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A4294BC176EAB4C00D9B987 /* ShowDetailViewController.xib */; };
 		5A4294C1176EB3D200D9B987 /* ShowViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A4294C0176EB3D200D9B987 /* ShowViewController_5.xib */; };
@@ -564,6 +569,14 @@
 		5A246F36175DD0D100C000CA /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		5A246F38175DD0D600C000CA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		5A246F42175DE9CC00C000CA /* CoreManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreManager.h; sourceTree = "<group>"; };
+		5A3752D4178C461A0071AACF /* KTVAllListManagerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KTVAllListManagerDelegate.h; sourceTree = "<group>"; };
+		5A3752D5178C461A0071AACF /* KTVAllListManagerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KTVAllListManagerDelegate.m; sourceTree = "<group>"; };
+		5A3752D7178C46590071AACF /* KtvManagerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KtvManagerViewController.h; sourceTree = "<group>"; };
+		5A3752D8178C46590071AACF /* KtvManagerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KtvManagerViewController.m; sourceTree = "<group>"; };
+		5A3752D9178C46590071AACF /* KtvManagerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KtvManagerViewController.xib; sourceTree = "<group>"; };
+		5A3752DC178C469A0071AACF /* KTVManagerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KTVManagerCell.h; sourceTree = "<group>"; };
+		5A3752DD178C469A0071AACF /* KTVManagerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KTVManagerCell.m; sourceTree = "<group>"; };
+		5A3752DE178C469A0071AACF /* KTVManagerCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KTVManagerCell.xib; sourceTree = "<group>"; };
 		5A4294BA176EAB4C00D9B987 /* ShowDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowDetailViewController.h; sourceTree = "<group>"; };
 		5A4294BB176EAB4C00D9B987 /* ShowDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowDetailViewController.m; sourceTree = "<group>"; };
 		5A4294BC176EAB4C00D9B987 /* ShowDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowDetailViewController.xib; sourceTree = "<group>"; };
@@ -2603,6 +2616,14 @@
 				5AFDF37A1773E6E7000C38A0 /* SettingViewController.h */,
 				5AFDF37B1773E6E7000C38A0 /* SettingViewController.m */,
 				5AFDF37C1773E6E7000C38A0 /* SettingViewController.xib */,
+				5A3752D7178C46590071AACF /* KtvManagerViewController.h */,
+				5A3752D8178C46590071AACF /* KtvManagerViewController.m */,
+				5A3752D9178C46590071AACF /* KtvManagerViewController.xib */,
+				5A3752D4178C461A0071AACF /* KTVAllListManagerDelegate.h */,
+				5A3752D5178C461A0071AACF /* KTVAllListManagerDelegate.m */,
+				5A3752DC178C469A0071AACF /* KTVManagerCell.h */,
+				5A3752DD178C469A0071AACF /* KTVManagerCell.m */,
+				5A3752DE178C469A0071AACF /* KTVManagerCell.xib */,
 			);
 			path = SettingViewController;
 			sourceTree = "<group>";
@@ -2931,6 +2952,8 @@
 				5AAD10141786B5B600479B61 /* cell_top_n@2x.png in Resources */,
 				5AAD10151786B5B600479B61 /* tag_lower_price.png in Resources */,
 				5AAD101A1786BA9B00479B61 /* KTVBuyCell.xib in Resources */,
+				5A3752DB178C46590071AACF /* KtvManagerViewController.xib in Resources */,
+				5A3752E0178C469A0071AACF /* KTVManagerCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3127,6 +3150,9 @@
 				5A9A05D0178BCAEA009FE5FD /* KTVAllListTableViewDelegate.m in Sources */,
 				5A9A05D1178BCAEA009FE5FD /* KTVFavoriteListTableViewDelegate.m in Sources */,
 				5A9A05D2178BCAEA009FE5FD /* KTVNearByListTableViewDelegate.m in Sources */,
+				5A3752D6178C461A0071AACF /* KTVAllListManagerDelegate.m in Sources */,
+				5A3752DA178C46590071AACF /* KtvManagerViewController.m in Sources */,
+				5A3752DF178C469A0071AACF /* KTVManagerCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

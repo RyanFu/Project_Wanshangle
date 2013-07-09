@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface SettingViewController : UIViewController
-
+-(IBAction)clickCinemaManager:(id)sender;
+-(IBAction)clickKTVManager:(id)sender;
 @end
