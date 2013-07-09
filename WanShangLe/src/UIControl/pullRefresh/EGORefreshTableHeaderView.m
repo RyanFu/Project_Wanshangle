@@ -304,24 +304,24 @@
 
 - (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView {	
     
-    [UIView animateWithDuration:.3
+    [UIView animateWithDuration:0.3
                      animations:^{
                          if (_pullDirection == EGOPullingDown) {
                              [scrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
                          }
 
                      } completion:^(BOOL finished) {
+                         [scrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
                          
+                         UITableView *tableView = (UITableView*)scrollView;
                          if (_pullDirection == EGOPullingDown) {
-                             UITableView *tableView = (UITableView*)scrollView;
+                             
                              if (tableView.tableHeaderView!=nil) {
-                                 [scrollView setContentOffset:CGPointMake(0, 44) animated:YES];
+                                 [tableView setContentOffset:CGPointMake(0, 44) animated:YES];
                              }
-                         }else{
-
                          }
-                         
                          [self setState:EGOOPullRefreshNormal];
+                         
                          
                      }];
 }

@@ -1575,7 +1575,7 @@ static DataBaseManager *_sharedInstance = nil;
     //先从数据库里面读取数据
     NSArray *coreData_array = [self getKTVsListFromCoreDataOffset:offset limit:limit];
     
-    if ([coreData_array count]==limit && delegate && [delegate respondsToSelector:@selector(apiNotifyLocationResult:cacheData:)]) {
+    if ([coreData_array count]>0 && delegate && [delegate respondsToSelector:@selector(apiNotifyLocationResult:cacheData:)]) {
         [delegate apiNotifyLocationResult:nil cacheData:coreData_array];
         return tapiCmd;
     }

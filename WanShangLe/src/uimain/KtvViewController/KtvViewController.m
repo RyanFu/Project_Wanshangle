@@ -39,6 +39,7 @@
         
         self.title = @"KTV";
         
+        _dataManagerDic = [[NSMutableDictionary alloc] init];
         _ktvsArray = [[NSMutableArray alloc] initWithCapacity:20];
         _cacheArray = [[NSMutableArray alloc] initWithCapacity:20];
     }
@@ -72,6 +73,7 @@
     
     self.ktvsArray = nil;
     self.cacheArray = nil;
+    self.dataManagerDic = nil;
     
     [super dealloc];
 }
@@ -108,11 +110,7 @@
     
     [self clickFilterAllButton:nil];
     
-    [self loadMoreData];
-    
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-//        [self updateData:0];
-//    });
+    [self loadMoreData];//初始化加载
 }
 
 
@@ -405,13 +403,15 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         NSArray *dataArray = [[DataBaseManager sharedInstance] insertKTVsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+        
+        if (dataArray==nil || [dataArray count]<=0) {
+            return;
+        }
         int tag = [[apiCmd httpRequest] tag];
         [self addDataIntoCacheData:dataArray];
         [self updateData:tag withData:[self getCacheData]];
         
     });
-    
-    [_ktvListTableViewDelegate doneLoadingTableViewData];
 }
 
 - (void) apiNotifyLocationResult:(id)apiCmd cacheData:(NSArray*)cacheData{
@@ -420,8 +420,6 @@
         [self addDataIntoCacheData:cacheData];
         [self updateData:API_KKTVCmd withData:[self getCacheData]];
     });
-    
-    [_ktvListTableViewDelegate doneLoadingTableViewData];
 }
 
 - (ApiCmd *)apiGetDelegateApiCmd{

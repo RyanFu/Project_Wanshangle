@@ -212,6 +212,7 @@
     if (statusCode != 200) {
         ABLoggerWarn(@"请求失败 ========= %d",statusCode);
         error = [NSError errorWithDomain:@"api error" code:statusCode userInfo:nil];
+        if (self!=nil)
         [self apiNotifyResult:self error:error];
         return;
     }
@@ -251,7 +252,7 @@
     [[[ApiClient defaultClient] requestArray] removeObject:self];
     ABLoggerWarn(@"request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
-    ABLoggerWarn(@"apiNotifyResult called, you should override this method to have your own implementation");
+    ABLoggerWarn(@"apiNotifyResult Error");
 }
 
 - (ApiCmd *)apiGetDelegateApiCmd{
