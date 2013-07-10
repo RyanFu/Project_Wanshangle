@@ -186,17 +186,17 @@
     }
     
     if (self.getUserGPSLocation) {
-        BOOL isNew = YES;
+        BOOL isSuccess = YES;
         if (self.userLocation) {
             if (self.userLocation.coordinate.latitude == newLocation.coordinate.latitude &&
                 self.userLocation.coordinate.longitude == newLocation.coordinate.longitude) {
-                isNew = YES;
+                isSuccess = YES;
             }
         }
         
         self.userLocation = newLocation;
         if (_getUserGPSLocation) {
-            _getUserGPSLocation(isNew);
+            _getUserGPSLocation(isSuccess);
             self.getUserGPSLocation = nil;
         }
     }
@@ -235,6 +235,10 @@
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
     ABLoggerWarn(@"fail to location");
+    if (_getUserGPSLocation) {
+        _getUserGPSLocation(NO);
+        self.getUserGPSLocation = nil;
+    }
 }
 
 - (NSString *)getUserCity{

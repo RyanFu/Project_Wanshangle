@@ -108,10 +108,7 @@
     
     if (![self checkUserCity])return;
     
-    
     MovieViewController *_movieViewController = [[MovieViewController alloc] initWithNibName:nil bundle:nil];
-    
-    
     [self.navigationController pushViewController:_movieViewController animated:YES];
     [_movieViewController release];
 }
@@ -133,10 +130,7 @@
     
     if (![self checkUserCity])return;
     
-    //    if (!_showViewController) {
     ShowViewController *_showViewController = [[ShowViewController alloc] initWithNibName:(iPhone5?@"ShowViewController_5":@"ShowViewController") bundle:nil];
-    //    }
-    
     [self.navigationController pushViewController:_showViewController animated:YES];
     [_showViewController release];
 }
@@ -147,10 +141,7 @@
     
     if (![self checkUserCity])return;
     
-    //    if (!_barViewController) {
     BarViewController *_barViewController = [[BarViewController alloc] initWithNibName:(iPhone5?@"BarViewController_5":@"BarViewController") bundle:nil];
-    //    }
-    
     [self.navigationController pushViewController:_barViewController animated:YES];
     [_barViewController release];
 }
@@ -158,6 +149,7 @@
 //设置
 - (void)clickSettingButton:(id)sender{
     
+    if (![self checkUserCity])return;
     SettingViewController* settingController = [[SettingViewController alloc] initWithNibName:@"SettingViewController" bundle:nil];
     [self.navigationController pushViewController:settingController animated:YES];
     [settingController release];

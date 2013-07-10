@@ -15,8 +15,8 @@
  @author stephenliu
  */
 
-typedef void (^GetCinemaNearbyList)(NSArray *cinemas);
-typedef void (^GetKTVNearbyList)(NSArray *ktvs);
+typedef void (^GetCinemaNearbyList)(NSArray *cinemas,BOOL isSuccess);
+typedef void (^GetKTVNearbyList)(NSArray *ktvs,BOOL isSuccess);
 
 @interface DataBaseManager : NSObject{
     

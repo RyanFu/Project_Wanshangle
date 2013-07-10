@@ -97,7 +97,9 @@
     _mTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _mTableView.backgroundColor = [UIColor clearColor];
     _mTableView.tableHeaderView = _headerView;
-    _mTableView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+    UIView *view = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)] autorelease];
+    view.backgroundColor = [UIColor redColor];
+    _mTableView.tableFooterView = view;
 }
 
 - (void)setTableViewDelegate{

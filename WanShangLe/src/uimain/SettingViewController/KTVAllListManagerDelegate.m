@@ -33,7 +33,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
-//        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
         
         if (section==0) {
             return [_mFavoriteArray count];
@@ -103,16 +102,47 @@
         aKTV = [list objectAtIndex:row];
     }
     
+    [_mTableView beginUpdates];
     if (!bt.selected) {
         [[DataBaseManager sharedInstance] addFavoriteKTVWithId:aKTV.uid];
         bt.selected = YES;
+        [cell.ktvFavoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
+        [_mFavoriteArray addObject:aKTV];
+        [_mTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:[_mFavoriteArray count]-1 inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+        
     }else{
         [[DataBaseManager sharedInstance] deleteFavoriteKTVWithId:aKTV.uid];
         bt.selected = NO;
+         [cell.ktvFavoriteButton setImage:[UIImage imageNamed:@"btn_unFavorite_n@2x"] forState:UIControlStateNormal];
+        int deleteRow = [_mFavoriteArray indexOfObject:aKTV];
+        
+        int refreshSection = -1;
+        int refreshRow = -1;
+        for (int i=0;i<[_mArray count];i++) {
+            NSString *districtName = [[_mArray objectAtIndex:i] objectForKey:@"name"];
+            if ([aKTV.district isEqualToString:districtName]) {
+                refreshSection = i;
+                NSArray *list = [[_mArray objectAtIndex:refreshSection] objectForKey:@"list"];
+                refreshRow = [list indexOfObject:aKTV];
+                refreshSection ++;//第一个区是收藏区，全部list是从第二个区
+            }
+        }
+
+        
+        [_mFavoriteArray removeObject:aKTV];
+        [_mTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:deleteRow inSection:0]] withRowAnimation:UITableViewRowAnimationRight];
+        
+        if (refreshSection >0 && refreshRow >=0) {
+            ABLoggerDebug(@"section ===== %d row ===== %d",refreshSection,refreshRow);
+            [_mTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:refreshRow inSection:refreshSection]] withRowAnimation:UITableViewRowAnimationNone];
+        }
     }
     
-    [_parentViewController formatKTVDataFilterFavorite];
-    [_mTableView reloadData];
+   [_mTableView endUpdates];
+    
+//    [_parentViewController formatKTVDataFilterFavorite];
+//    [_mTableView reloadData];
+    _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
 }
 
 - (void)configCell:(KTVManagerCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -125,7 +155,6 @@
         NSArray *list = [[_mArray objectAtIndex:indexPath.section-1] objectForKey:@"list"];
         aKTV = [list objectAtIndex:row];
     }
-
     
     [self configureCell:cell withObject:aKTV];
 }
@@ -133,11 +162,14 @@
 - (void)configureCell:(KTVManagerCell *)cell withObject:(KKTV *)aKTV {
     
     cell.ktvFavoriteButton.selected = NO;
+    [cell.ktvFavoriteButton setImage:[UIImage imageNamed:@"btn_unFavorite_n@2x"] forState:UIControlStateNormal];
     
     cell.ktv_name.text = aKTV.name;
+    cell.ktv_address.text = aKTV.address;
     
     if ([aKTV.favorite boolValue]) {
         cell.ktvFavoriteButton.selected = YES;
+        [cell.ktvFavoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
     }
 }
 

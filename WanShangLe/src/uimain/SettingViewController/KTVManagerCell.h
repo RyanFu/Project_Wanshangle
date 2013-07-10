@@ -12,6 +12,7 @@
 
 }
 @property(nonatomic,retain)IBOutlet UILabel *ktv_name;
+@property(nonatomic,retain)IBOutlet UILabel *ktv_address;
 @property(nonatomic,retain)IBOutlet UIButton *ktvFavoriteButton;
 
 @end

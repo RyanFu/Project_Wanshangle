@@ -15,6 +15,7 @@
 #import "KTVNearByListTableViewDelegate.h"
 
 @interface KtvNearByViewController()<ApiNotify>{
+    BOOL isLoadMore;
 }
 @property(nonatomic,retain)KTVNearByListTableViewDelegate *nearByListDelegate;
 @end
@@ -71,6 +72,7 @@
 {
     [super viewDidLoad];
     [self.view addSubview:self.mTableView];
+    
     [self loadMoreData];//初始化加载
 }
 
@@ -116,12 +118,14 @@
 - (void)setTableViewDelegate{
     if (_nearByListDelegate==nil) {
         _nearByListDelegate = [[KTVNearByListTableViewDelegate alloc] init];
-        _nearByListDelegate.parentViewController = self;
     }
+    _nearByListDelegate.parentViewController = self;
     _mTableView.dataSource = _nearByListDelegate;
     _mTableView.delegate = _nearByListDelegate;
     _nearByListDelegate.mTableView = _mTableView;
     _nearByListDelegate.mArray = _mArray;
+    _nearByListDelegate.refreshHeaderView = self.refreshNearByHeaderView;
+    _nearByListDelegate.refreshTailerView = self.refreshNearByTailerView;
 }
 
 #pragma mark -
@@ -224,10 +228,18 @@
 
 - (void)formatKTVDataFilterNearby{
     ABLoggerWarn(@" 附近 影院");
+}
+
+- (void)getUserGPSLocation{
     
-    [[DataBaseManager sharedInstance] getNearbyKTVListFromCoreDataWithCallBack:^(NSArray *ktvs) {
+    
+    BOOL isSuccess = [[DataBaseManager sharedInstance] getNearbyKTVListFromCoreDataWithCallBack:^(NSArray *ktvs,BOOL isSuccess) {
         
         ABLoggerInfo(@"附近 KTV count=== %d",[ktvs count]);
+        if (!isLoadMore) {//更新数据
+            [_mArray removeAllObjects];
+        }
+        
         [self.mArray addObjectsFromArray:ktvs];
         
         _refreshNearByTailerView.hidden = NO;
@@ -237,21 +249,38 @@
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            
+            [self reloadPullRefreshData];
         });
     }];
     
-    [self reloadPullRefreshData];
+    if (!isSuccess) {
+        _mTableView.tableFooterView = _noGPSView;
+        _refreshNearByTailerView.hidden = YES;
+        _refreshNearByHeaderView.hidden = YES;
+    }
+
 }
 #pragma mark -
 #pragma mark 刷新和加载更多
 - (void)loadMoreData{
+    isLoadMore = YES;
+    [self updateData:0 withData:[self getCacheData]];
+}
+
+- (void)loadNewData{
+    isLoadMore = NO;
+    [_mCacheArray removeAllObjects];
     [self updateData:0 withData:[self getCacheData]];
 }
 
 - (void)reloadPullRefreshData{
     
-    [_nearByListDelegate doneLoadingTableViewData];
+    if (isLoadMore) {
+        [_nearByListDelegate doneLoadingTableViewData];
+    }else{
+        
+        [_nearByListDelegate doneReLoadingTableViewData];
+    }
     
     _refreshNearByTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
 }

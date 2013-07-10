@@ -8,6 +8,7 @@
 
 #import "SettingViewController.h"
 #import "KtvManagerViewController.h"
+#import "SuggestionViewController.h"
 
 @interface SettingViewController ()
 
@@ -29,6 +30,8 @@
     [super viewDidLoad];
 
     [self initBarButtonItem];
+    
+    [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, 505)];
 }
 
 #pragma mark -
@@ -60,6 +63,12 @@
     KtvManagerViewController *ktvController = [[KtvManagerViewController alloc] initWithNibName:@"KtvManagerViewController" bundle:nil];
     [self.navigationController pushViewController:ktvController animated:YES];
     [ktvController release];
+}
+
+-(IBAction)clickSuggestionButton:(id)sender{
+    SuggestionViewController *suggestionController = [[SuggestionViewController alloc] initWithNibName:@"SuggestionViewController" bundle:nil];
+    [self.navigationController pushViewController:suggestionController animated:YES];
+    [suggestionController release];
 }
 
 - (void)didReceiveMemoryWarning

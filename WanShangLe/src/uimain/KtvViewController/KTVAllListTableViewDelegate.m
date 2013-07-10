@@ -58,7 +58,6 @@
 #pragma mark -
 #pragma mark 正常模式Cell
 - (UITableViewCell *)ktvCelltableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    ABLoggerMethod();
     
     static NSString *CellIdentifier = @"MKTVCellIdentifier";
     

@@ -20,7 +20,7 @@ typedef NS_ENUM(NSInteger, NSFilterKTVListType) {
 @property(nonatomic,readwrite) NSFilterKTVListType filterKTVListType;
 @property(nonatomic,retain) UIView *filterIndicator;
 @property(nonatomic,retain) UIView *filterHeaderView;
-@property(nonatomic,assign) UIViewController *mSelectedController;
+@property(nonatomic,retain) UIViewController *mSelectedController;
 @property(nonatomic,assign) UITableView *mTableView;
 @property(nonatomic,assign) NSMutableArray *mArray;;
 @end

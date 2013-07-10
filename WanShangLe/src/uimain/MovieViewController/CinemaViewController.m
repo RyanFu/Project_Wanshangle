@@ -533,7 +533,7 @@
     self.cinemasArray = nil;
     _filterTableView.tableFooterView = nil;
     
-    [[DataBaseManager sharedInstance] getNearbyCinemasListFromCoreDataWithCallBack:^(NSArray *cinemas) {
+    BOOL isSuccess = [[DataBaseManager sharedInstance] getNearbyCinemasListFromCoreDataWithCallBack:^(NSArray *cinemas,BOOL isSuccess) {
         
         ABLoggerInfo(@"nearby cinema count=== %d",[cinemas count]);
         self.cinemasArray = cinemas;

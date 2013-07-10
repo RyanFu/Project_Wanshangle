@@ -8,7 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SettingViewController : UIViewController
+@interface SettingViewController : UIViewController{
+    
+}
+@property(nonatomic,retain)IBOutlet UIScrollView *mScrollView;
+
 -(IBAction)clickCinemaManager:(id)sender;
 -(IBAction)clickKTVManager:(id)sender;
+-(IBAction)clickSuggestionButton:(id)sender;
 @end

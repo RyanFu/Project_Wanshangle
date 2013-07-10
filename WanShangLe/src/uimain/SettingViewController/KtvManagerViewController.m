@@ -211,35 +211,33 @@
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
     if (error!=nil) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self reloadPullRefreshData];
-        });
+        [self reloadPullRefreshData];
         return;
     }
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    
         NSArray *dataArray = [[DataBaseManager sharedInstance] insertKTVsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
         
         if (dataArray==nil || [dataArray count]<=0) {
-            dispatch_async(dispatch_get_main_queue(), ^{
+//            dispatch_async(dispatch_get_main_queue(), ^{
                 [self reloadPullRefreshData];
-            });
+//            });
             return;
         }
         int tag = [[apiCmd httpRequest] tag];
         [self addDataIntoCacheData:dataArray];
         [self updateData:tag withData:[self getCacheData]];
         
-    });
+//    });
 }
 
 - (void) apiNotifyLocationResult:(id)apiCmd cacheData:(NSArray*)cacheData{
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self addDataIntoCacheData:cacheData];
         [self updateData:API_KKTVCmd withData:[self getCacheData]];
-    });
+//    });
 }
 
 - (ApiCmd *)apiGetDelegateApiCmd{
@@ -327,10 +325,10 @@
     
     [self formatKTVDataFilterFavorite];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
+//    dispatch_async(dispatch_get_main_queue(), ^{
 
         [self reloadPullRefreshData];
-    });
+//    });
 }
 
 - (void)formatKTVDataFilterFavorite{
@@ -381,10 +379,10 @@
         count = [_mCacheArray count];//取小于10条数据
     }
     
-    for (int i=0;i<[_mCacheArray count] ;i++ ) {
-        KKTV *ttktv = [_mCacheArray objectAtIndex:i];
-//        ABLoggerDebug(@"2222  coredata district id === %@",ttktv.districtid);
-    }
+//    for (int i=0;i<[_mCacheArray count] ;i++ ) {
+//        KKTV *ttktv = [_mCacheArray objectAtIndex:i];
+////        ABLoggerDebug(@"2222  coredata district id === %@",ttktv.districtid);
+//    }
     
     NSMutableArray *aPageData = [NSMutableArray arrayWithCapacity:count];
     for (int i=0; i<count; i++) {
@@ -396,15 +394,15 @@
         [_mCacheArray removeObjectsInRange:NSMakeRange(0, count)];
     }
     
-    for (int i = 0;i<[aPageData count];i++) {
-        KKTV *object = [aPageData objectAtIndex:i];
-//        ABLoggerInfo(@"111district id ===== %@",object.districtid);
-    }
+//    for (int i = 0;i<[aPageData count];i++) {
+//        KKTV *object = [aPageData objectAtIndex:i];
+////        ABLoggerInfo(@"111district id ===== %@",object.districtid);
+//    }
     
-    for (int i = 0;i<[_mCacheArray count];i++) {
-        KKTV *object = [_mCacheArray objectAtIndex:i];
-//        ABLoggerInfo(@"222 ============== district id ===== %@",object.districtid);
-    }
+//    for (int i = 0;i<[_mCacheArray count];i++) {
+//        KKTV *object = [_mCacheArray objectAtIndex:i];
+////        ABLoggerInfo(@"222 ============== district id ===== %@",object.districtid);
+//    }
     
     ABLoggerInfo(@"_cacheArray count == %d",[_mCacheArray count]);
     ABLoggerInfo(@"aPageData count == %d",[aPageData count]);

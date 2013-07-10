@@ -17,7 +17,7 @@
 @property(nonatomic,assign) KtvManagerViewController *parentViewController;
 @property(nonatomic,assign) UITableView *mTableView;
 @property(nonatomic,assign) NSArray *mArray;
-@property(nonatomic,assign) NSArray *mFavoriteArray;
+@property(nonatomic,assign) NSMutableArray *mFavoriteArray;
 @property(nonatomic,readwrite)BOOL reloading;
 
 - (void)doneLoadingTableViewData;

@@ -9,6 +9,7 @@
 #import "KKTV.h"
 #import "KTVBuyViewController.h"
 #import "KtvFavoriteViewController.h"
+#import "KtvManagerViewController.h"
 #import "KTVFavoriteListTableViewDelegate.h"
 
 @interface KtvFavoriteViewController(){
@@ -52,7 +53,7 @@
     [self.view addSubview:self.mTableView];
     
     //第一次调用
-    [self formatKTVDataFilterFavorite];
+//    [self formatKTVDataFilterFavorite];
 }
 
 
@@ -101,6 +102,16 @@
     _favoriteListDelegate.mTableView = _mTableView;
 }
 
+#pragma mark -
+#pragma mark UIButton Event
+- (IBAction)clickAddFavoriteButton:(id)sender{
+    KtvManagerViewController *ktvManager = [[KtvManagerViewController alloc] initWithNibName:@"KtvManagerViewController" bundle:nil];
+    [[CacheManager sharedInstance].rootNavController pushViewController:ktvManager animated:YES];
+    [ktvManager release];
+}
+
+#pragma mark -
+#pragma mark 格式化数据
 - (void)formatKTVDataFilterFavorite{
     NSArray *array_coreData = [[DataBaseManager sharedInstance] getFavoriteKTVListFromCoreData];
     ABLoggerDebug(@"常去 KTV count ==== %d",[array_coreData count]);
@@ -114,12 +125,14 @@
             _ktvBuyViewController = [[KTVBuyViewController alloc]
                                      initWithNibName:(iPhone5?@"KTVBuyViewController_5":@"KTVBuyViewController")
                                      bundle:nil];
-            
         }
         _ktvBuyViewController.mKTV = [array_coreData lastObject];
         _ktvBuyViewController.view.frame = _mTableView.frame;
         [self.view addSubview:_ktvBuyViewController.view];
-        
+        _ktvBuyViewController.mTableView.tableFooterView=_ktvBuyViewController.addFavoriteFooterView;
+        [_ktvBuyViewController.addFavoriteButton addTarget:self action:@selector(clickAddFavoriteButton:) forControlEvents:UIControlEventTouchUpInside];
+    }else{
+        [self cleanFavoriteKTVBuyViewController];
     }
     
     if ([array_coreData count]>0) {

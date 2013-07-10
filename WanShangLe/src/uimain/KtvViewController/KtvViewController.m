@@ -51,8 +51,9 @@
 #pragma mark -
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
-    
+    [_mSelectedController viewWillAppear:animated];
 }
+
 - (void)viewWillDisappear:(BOOL)animated{
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:_filterKTVListType] forKey:KKTV_FilterType];
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -120,19 +121,21 @@
         _allController = [[KtvAllViewController alloc] initWithNibName:@"KtvAllViewController" bundle:nil];
         _allController.mParentController = self;
     }
+    self.mSelectedController = _allController;
     UIView *currentActiveView = [self.view viewWithTag:KTVVIEW];
     [currentActiveView removeFromSuperview];
-    
-    _allController.view.frame = CGRectMake(0, KTVVIEW_Y, self.view.bounds.size.width, self.view.bounds.size.height-KTVVIEW_Y);
     _allController.view.tag = KTVVIEW;
     
     [self.view addSubview:_allController.view];
+    [self.view bringSubviewToFront:_allController.view];
+    _allController.view.frame = CGRectMake(0, KTVVIEW_Y, self.view.bounds.size.width, self.view.bounds.size.height-KTVVIEW_Y);
 }
 
 - (void)switchToNearByTableView{
     if (_nearByController==nil) {
         _nearByController = [[KtvNearByViewController alloc] initWithNibName:@"KtvNearByViewController" bundle:nil];
     }
+    self.mSelectedController = _nearByController;
     UIView *currentActiveView = [self.view viewWithTag:KTVVIEW];
     [currentActiveView removeFromSuperview];
     
@@ -140,12 +143,14 @@
     _nearByController.view.tag = KTVVIEW;
     
     [self.view addSubview:_nearByController.view];
+    [self.view bringSubviewToFront:_nearByController.view];
 }
 
 - (void)switchToFavoriteTableView {
     if (_favoriteController==nil) {
         _favoriteController = [[KtvFavoriteViewController alloc] initWithNibName:@"KtvFavoriteViewController" bundle:nil];
     }
+    self.mSelectedController = _favoriteController;
     UIView *currentActiveView = [self.view viewWithTag:KTVVIEW];
     [currentActiveView removeFromSuperview];
 
@@ -153,6 +158,7 @@
     _favoriteController.view.tag = KTVVIEW;
     
     [self.view addSubview:_favoriteController.view];
+     [self.view bringSubviewToFront:_favoriteController.view];
 }
 
 #pragma mark-
@@ -244,24 +250,29 @@
 {
     [super didReceiveMemoryWarning];
     ABLoggerWarn(@"接收到内存警告了");
-    
-    switch (_filterKTVListType) {
-        case NSFilterKTVListTypeFavorite:{
-            self.allController = nil;
-            self.nearByController = nil;
-        }
-            break;
-        case NSFilterKTVListTypeNearby:{
-            self.allController = nil;
-            self.favoriteController = nil;
-        }
-            break;
-        default:{
-            self.favoriteController = nil;
-            self.nearByController = nil;
-        }
-            break;
-    }
+    [self cleanUpMemory];
+//    switch (_filterKTVListType) {
+//        case NSFilterKTVListTypeFavorite:{
+//            self.allController = nil;
+//            self.nearByController = nil;
+//        }
+//            break;
+//        case NSFilterKTVListTypeNearby:{
+//            self.allController = nil;
+//            self.favoriteController = nil;
+//        }
+//            break;
+//        default:{
+//            self.favoriteController = nil;
+//            self.nearByController = nil;
+//        }
+//            break;
+//    }
 }
 
+- (void)cleanUpMemory{
+    self.allController = nil;
+    self.favoriteController = nil;
+    self.nearByController = nil;
+}
 @end

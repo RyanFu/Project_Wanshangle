@@ -13,6 +13,8 @@
 }
 @property(nonatomic,retain) KKTV *mKTV;
 @property(nonatomic,retain) NSArray *mArray;
+@property(nonatomic,retain) IBOutlet UIButton *addFavoriteButton;
+@property(nonatomic,retain) IBOutlet UIView *addFavoriteFooterView;
 @property(nonatomic,retain) IBOutlet UIView *headerView;
 @property(nonatomic,retain) IBOutlet UITableView *mTableView;
 @property(nonatomic,retain) IBOutlet UIButton *favoriteButton;

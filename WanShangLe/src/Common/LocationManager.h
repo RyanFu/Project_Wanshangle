@@ -10,7 +10,7 @@
 #import <MapKit/MapKit.h>
 
 typedef void (^SetUserCityCallBack)(void);
-typedef void (^GetUserGPSLocation)(BOOL isNewLocation);
+typedef void (^GetUserGPSLocation)(BOOL isSuccess);
 
 /**
  @author stephenliu

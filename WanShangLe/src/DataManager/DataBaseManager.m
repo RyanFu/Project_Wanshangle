@@ -1121,7 +1121,7 @@ static DataBaseManager *_sharedInstance = nil;
     
     NSArray *cinemas = [self getAllCinemasListFromCoreData];
     LocationManager *lm = [LocationManager defaultLocationManager];
-    BOOL isSuccess =  [lm getUserGPSLocationWithCallBack:^(BOOL isNewLocation) {
+    BOOL isSuccess =  [lm getUserGPSLocationWithCallBack:^(BOOL isSuccess) {
         for (MCinema *tCinema in cinemas) {
             double distance = [lm distanceBetweenUserToLatitude:[tCinema.latitude doubleValue] longitude:[tCinema.longitue doubleValue]];
             tCinema.nearby = [NSNumber numberWithInt:distance];
@@ -1135,8 +1135,8 @@ static DataBaseManager *_sharedInstance = nil;
             return [cinema1.nearby compare:cinema2.nearby];
         }];
         
-        if (mCallBack && isNewLocation) {
-            mCallBack(array);
+        if (mCallBack) {
+            mCallBack(array,isSuccess);
         }
     }];
     
@@ -1612,7 +1612,8 @@ static DataBaseManager *_sharedInstance = nil;
     
     NSArray *ktvs = [self getAllKTVsListFromCoreData];
     LocationManager *lm = [LocationManager defaultLocationManager];
-    BOOL isSuccess =  [lm getUserGPSLocationWithCallBack:^(BOOL isNewLocation) {
+    BOOL isSuccess =  [lm getUserGPSLocationWithCallBack:^(BOOL isSuccess) {
+        
         for (KKTV *tKTV in ktvs) {
             double distance = [lm distanceBetweenUserToLatitude:[tKTV.latitude doubleValue] longitude:[tKTV.longitude doubleValue]];
             tKTV.nearby = [NSNumber numberWithInt:distance];
@@ -1626,8 +1627,8 @@ static DataBaseManager *_sharedInstance = nil;
             return [cinema1.nearby compare:cinema2.nearby];
         }];
         
-        if (mCallBack && isNewLocation) {
-            mCallBack(array);
+        if (mCallBack) {
+            mCallBack(array,isSuccess);
         }
     }];
     
