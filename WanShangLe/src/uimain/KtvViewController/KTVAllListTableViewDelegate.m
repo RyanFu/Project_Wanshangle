@@ -7,7 +7,7 @@
 //
 #import "KTVAllListTableViewDelegate.h"
 #import "KTVBuyViewController.h"
-#import "KtvViewController.h"
+#import "KtvAllViewController.h"
 #import "KTVTableViewCell.h"
 #import "KKTV.h"
 
@@ -16,7 +16,6 @@
 @interface KTVAllListTableViewDelegate(){
     
 }
-@property(nonatomic,readonly) NSFilterKTVListType filterKTVListType;
 @end
 
 @implementation KTVAllListTableViewDelegate
@@ -179,19 +178,28 @@
 #pragma mark UITableViewDelegate
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     
-    UILabel *headerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
-    headerView.backgroundColor = [UIColor colorWithWhite:0.829 alpha:1.000];
-    
-    NSString *name = [[_mArray objectAtIndex:section] objectForKey:@"name"];
-    NSArray *list = [[_mArray objectAtIndex:section] objectForKey:@"list"];
-    headerView.text = [NSString stringWithFormat:@"%@  (共%d家)",name,[list count]];
-    
-    return [headerView autorelease];
+    if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
+        UILabel *headerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
+        headerView.backgroundColor = [UIColor colorWithWhite:0.829 alpha:1.000];
+        
+        NSString *name = [[_mArray objectAtIndex:section] objectForKey:@"name"];
+        NSArray *list = [[_mArray objectAtIndex:section] objectForKey:@"list"];
+        headerView.text = [NSString stringWithFormat:@"%@  (共%d家)",name,[list count]];
+        
+        return [headerView autorelease];
+
+    }
+    //搜索模式
+    return nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     
-    return 20.0f;
+    if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
+        return 20.0f;
+    }
+    //搜索模式
+    return 0.0f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -339,14 +347,13 @@
     
     [self scrollTableViewToSearchBarAnimated:YES];
     [_parentViewController endSearch];
-    [_mTableView resignFirstResponder];
+//    [_mTableView resignFirstResponder];
 }
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
-    //    [[SearchCoreManager share] Search:searchString searchArray:nil nameMatch:_searchByName phoneMatch:_searchByPhone];
-    
-    [_mTableView reloadData];
+//    [[SearchCoreManager share] Search:searchString searchArray:nil nameMatch:_searchByName phoneMatch:_searchByPhone];
+//    [_mTableView reloadData];
     
     return YES;
 }

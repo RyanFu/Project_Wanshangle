@@ -7,7 +7,7 @@
 //
 #import "KTVNearByListTableViewDelegate.h"
 #import "KTVBuyViewController.h"
-#import "KtvViewController.h"
+#import "KtvNearByViewController.h"
 #import "KTVTableViewCell.h"
 #import "KKTV.h"
 
@@ -16,7 +16,6 @@
 @interface KTVNearByListTableViewDelegate(){
     
 }
-@property(nonatomic,readonly) NSFilterKTVListType filterKTVListType;
 @end
 
 @implementation KTVNearByListTableViewDelegate

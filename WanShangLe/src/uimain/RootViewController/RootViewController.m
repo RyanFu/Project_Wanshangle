@@ -121,13 +121,10 @@
     userClickStyle = WSLUserClickStyleKTV;
     
     if (![self checkUserCity])return;
-    
-    //    if (!_ktvViewController) {
-    KtvViewController *_ktvViewController = [[KtvViewController alloc] initWithNibName:(iPhone5?@"KtvViewController":@"KtvViewController") bundle:nil];
-    //    }
-    
-    [self.navigationController pushViewController:_ktvViewController animated:YES];
-    [_ktvViewController release];
+
+    KtvViewController *ktvViewController = [[KtvViewController alloc] initWithNibName:(iPhone5?@"KtvViewController_5":@"KtvViewController") bundle:nil];    
+    [self.navigationController pushViewController:ktvViewController animated:YES];
+    [ktvViewController release];
 }
 
 //演出

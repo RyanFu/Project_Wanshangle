@@ -6,9 +6,9 @@
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 #import "KTVFavoriteListTableViewDelegate.h"
-#import "KTVBuyViewController.h"
-#import "KtvViewController.h"
+#import "KtvFavoriteViewController.h"
 #import "KTVTableViewCell.h"
+#import "KTVBuyViewController.h"
 #import "KKTV.h"
 
 #define TagTuan 500
@@ -16,7 +16,6 @@
 @interface KTVFavoriteListTableViewDelegate(){
     
 }
-@property(nonatomic,readonly) NSFilterKTVListType filterKTVListType;
 @end
 
 @implementation KTVFavoriteListTableViewDelegate
@@ -67,8 +66,6 @@
     
     KKTV *aKTV = nil;
     int row = indexPath.row;
-
-    _filterKTVListType = _parentViewController.filterKTVListType;
     
     cell.ktv_distance.hidden = YES;
     cell.ktv_image_location.hidden = YES;
@@ -150,9 +147,7 @@
     KTVBuyViewController *ktvBuyController = [[KTVBuyViewController alloc] initWithNibName:iPhone5?@"KTVBuyViewController_5":@"KTVBuyViewController" bundle:nil];
     
     int row = indexPath.row;
-    _filterKTVListType = _parentViewController.filterKTVListType;
     KKTV *aKTV = [_mArray objectAtIndex:row];
-
     ktvBuyController.mKTV = aKTV;
     [_parentViewController.navigationController pushViewController:ktvBuyController animated:YES];
     [ktvBuyController release];
