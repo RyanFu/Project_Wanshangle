@@ -33,7 +33,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
-        
         if (section==0) {
             return [_mFavoriteArray count];
         }
@@ -46,7 +45,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
-        
+        [self resetRefreshTailerView];
         if (indexPath.section!=0) {
             if ([_mArray count]<=0 || _mArray==nil) {
                 return nil;
@@ -138,11 +137,16 @@
         }
     }
     
-   [_mTableView endUpdates];
+   [_mTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];//解决第一次收藏KTV的时候，第一个区视图不显示Bug
     
+   [_mTableView endUpdates];
 //    [_parentViewController formatKTVDataFilterFavorite];
 //    [_mTableView reloadData];
-    _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+    
+}
+
+- (void)resetRefreshTailerView{
+   _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
 }
 
 - (void)configCell:(KTVManagerCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -197,10 +201,33 @@
 #pragma mark UITableViewDelegate
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     if (section==0) {
-        return nil;
+        UILabel *headerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 30.0f)];
+        headerView.backgroundColor = [UIColor colorWithWhite:0.502 alpha:1.000];
+        headerView.text = [NSString stringWithFormat:@"已收藏的KTV店"];
+        return [headerView autorelease];
     }
     
-    UILabel *headerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
+    if (section==1) {
+        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50.0f)];
+        
+        UILabel *label1 = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 30.0f)];
+        label1.backgroundColor = [UIColor colorWithWhite:0.502 alpha:1.000];
+        label1.text = [NSString stringWithFormat:@"全部KTV店"];
+        
+        UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(0, 30, 320, 20.0f)];
+        label2.backgroundColor = [UIColor colorWithWhite:0.829 alpha:1.000];
+        NSString *name = [[_mArray objectAtIndex:section-1] objectForKey:@"name"];
+        NSArray *list = [[_mArray objectAtIndex:section-1] objectForKey:@"list"];
+        label2.text = [NSString stringWithFormat:@"%@  (共%d家)",name,[list count]];
+        
+        [headerView addSubview:label1];
+        [headerView addSubview:label2];
+        [label1 release];
+        [label2 release];
+        return [headerView autorelease];
+    }
+    
+    UILabel *headerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 20.0f)];
     headerView.backgroundColor = [UIColor colorWithWhite:0.829 alpha:1.000];
     
     NSString *name = [[_mArray objectAtIndex:section-1] objectForKey:@"name"];
@@ -212,7 +239,14 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     if (section==0) {
-        return 0;
+        if (_mFavoriteArray==nil || [_mFavoriteArray count]<=0) {
+            return 0.0f;
+        }
+        return 30.0f;
+    }
+    
+    if (section==1) {
+        return 50.0f;
     }
     return 20.0f;
 }

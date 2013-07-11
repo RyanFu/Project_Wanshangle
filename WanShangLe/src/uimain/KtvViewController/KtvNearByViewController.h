@@ -24,4 +24,5 @@
 @property(nonatomic,retain) NSMutableArray *mCacheArray;
 
 - (void)loadMoreData;
+- (void)loadNewData;
 @end

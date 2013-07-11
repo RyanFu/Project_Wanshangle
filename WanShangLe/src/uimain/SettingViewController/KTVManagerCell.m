@@ -35,14 +35,9 @@
     // Configure the view for the selected state
 }
 
-- (IBAction)panGestureRecognizerTouchEvent:(UITapGestureRecognizer*)gesture{
-    ABLoggerDebug(@"点击我了");
-}
-
-#pragma mark - UIGestureRecognizerDelegate
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-    
-    return YES;
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
+    [super setHighlighted:highlighted animated:animated];
+    ABLoggerInfo(@"setHighlighted:%@ animated:%@", (highlighted?@"YES":@"NO"), (animated?@"YES":@"NO"));
 }
 
 -(void)dealloc{

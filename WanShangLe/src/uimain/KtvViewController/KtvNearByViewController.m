@@ -53,7 +53,12 @@
 #pragma mark -
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
-    [self loadNewData];//初始化加载
+    
+    if ([self checkGPS]) {
+        if (_mArray==nil || [_mArray count]<=0) {
+            [self loadNewData];//初始化加载
+        }
+    }
 }
 
 - (void)updatData{
@@ -247,6 +252,7 @@
 }
 
 - (void)loadNewData{
+    ABLoggerMethod();
     isLoadMore = NO;
     [_mCacheArray removeAllObjects];
     [_mArray removeAllObjects];
@@ -267,9 +273,16 @@
 }
 
 - (void)displayNOGPS:(BOOL)noGPS{
+
     _mTableView.tableFooterView = noGPS?_noGPSView:[[[UIView alloc] initWithFrame:CGRectZero]autorelease];
     _refreshNearByTailerView.hidden = noGPS;
     _refreshNearByHeaderView.hidden = noGPS;
+    
+    if (noGPS) {//没有GPS
+        [_mCacheArray removeAllObjects];
+        [_mArray removeAllObjects];
+        [self reloadPullRefreshData];
+    }  
 }
 
 - (void)reloadPullRefreshData{

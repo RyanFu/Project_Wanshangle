@@ -29,6 +29,12 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if ([_mArray count]<=0) {//每次刷新表的时候检测是否有数据
+        _refreshTailerView.hidden = YES;
+    }else{
+         _refreshTailerView.hidden = NO;
+    }
+    
   return [_mArray count];
 }
 
@@ -40,20 +46,21 @@
 #pragma mark -
 #pragma mark 正常模式Cell
 - (UITableViewCell *)ktvCelltableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+    ABLoggerMethod();
     static NSString *CellIdentifier = @"MKTVCellIdentifier";
-    
-    if ([_mArray count]<=0 || _mArray==nil) {
-        return nil;
-    }
-    
+
     KTVTableViewCell * cell = (KTVTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [self createNewMocieCell];
     }
     
+    if ([_mArray count]<=0 || _mArray==nil){
+        return cell;
+    }
+    
     [self configCell:cell cellForRowAtIndexPath:indexPath];
     
+    ABLoggerDebug(@"返回cell");
     return cell;
 }
 
