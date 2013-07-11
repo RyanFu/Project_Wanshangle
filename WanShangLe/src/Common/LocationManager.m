@@ -15,7 +15,6 @@
 }
 @property (nonatomic, retain) CLGeocoder *geoCoder;
 @property (nonatomic, retain) MKMapView *map;
-@property (nonatomic, retain) CLLocation *userLocation;
 @property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic, copy) SetUserCityCallBack userCityCallBack;
 @property (nonatomic, copy) GetUserGPSLocation getUserGPSLocation;
@@ -166,6 +165,11 @@
         [_locationManager setDelegate:self];
         [_locationManager startUpdatingLocation];
         return YES;
+    }else{
+        if (self.getUserGPSLocation) {
+            _getUserGPSLocation(NO,NO);
+            self.getUserGPSLocation = nil;
+        }
     }
     
     return NO;
@@ -196,7 +200,7 @@
         
         self.userLocation = newLocation;
         if (_getUserGPSLocation) {
-            _getUserGPSLocation(isSuccess);
+            _getUserGPSLocation(YES,isSuccess);
             self.getUserGPSLocation = nil;
         }
     }
@@ -236,7 +240,7 @@
 {
     ABLoggerWarn(@"fail to location");
     if (_getUserGPSLocation) {
-        _getUserGPSLocation(NO);
+        _getUserGPSLocation(YES,NO);
         self.getUserGPSLocation = nil;
     }
 }

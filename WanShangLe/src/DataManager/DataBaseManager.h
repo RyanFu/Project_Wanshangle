@@ -16,7 +16,7 @@
  */
 
 typedef void (^GetCinemaNearbyList)(NSArray *cinemas,BOOL isSuccess);
-typedef void (^GetKTVNearbyList)(NSArray *ktvs,BOOL isSuccess);
+typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 
 @interface DataBaseManager : NSObject{
     
@@ -163,6 +163,12 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs,BOOL isSuccess);
 - (NSArray *)getKTVsListFromCoreDataWithCityName:(NSString *)cityId offset:(int)offset limit:(int)limit;
 
 - (BOOL)getNearbyKTVListFromCoreDataWithCallBack:(GetKTVNearbyList)callback;
+//KTV附近分页
+- (ApiCmd *)getNearbyKTVListFromCoreDataWithCallBack:(id<ApiNotify>)delegate
+                                            Latitude:(CLLocationDegrees)latitude
+                                           longitude:(CLLocationDegrees)longitude
+                                              offset:(int)offset
+                                               limit:(int)limit;
 - (NSArray *)getFavoriteKTVListFromCoreData;
 - (NSArray *)getFavoriteKTVListFromCoreDataWithCityName:(NSString *)cityName;
 

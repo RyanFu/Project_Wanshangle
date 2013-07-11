@@ -10,7 +10,7 @@
 #import <MapKit/MapKit.h>
 
 typedef void (^SetUserCityCallBack)(void);
-typedef void (^GetUserGPSLocation)(BOOL isSuccess);
+typedef void (^GetUserGPSLocation)(BOOL isEnableGPS, BOOL isSuccess);
 
 /**
  @author stephenliu
@@ -20,11 +20,14 @@ typedef void (^GetUserGPSLocation)(BOOL isSuccess);
 }
 @property(nonatomic,retain) NSString *locationCity;
 @property(nonatomic,assign) UIButton *cityLabel;
+@property(nonatomic,retain) CLLocation *userLocation;
 /**
  single instance
  @returns instancetype
  */
 + (instancetype)defaultLocationManager;
+
+- (BOOL)checkGPSEnable;
 
 /**
  start to location user GPS
