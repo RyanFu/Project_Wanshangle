@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface KTVManagerCell : UITableViewCell{
+@interface KTVManagerCell : UITableViewCell<UIGestureRecognizerDelegate>{
 
 }
 @property(nonatomic,retain)IBOutlet UILabel *ktv_name;
 @property(nonatomic,retain)IBOutlet UILabel *ktv_address;
 @property(nonatomic,retain)IBOutlet UIButton *ktvFavoriteButton;
-
+- (IBAction)panGestureRecognizerTouchEvent:(UITapGestureRecognizer*)gesture;
 @end
