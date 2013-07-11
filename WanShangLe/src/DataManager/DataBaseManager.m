@@ -1121,7 +1121,7 @@ static DataBaseManager *_sharedInstance = nil;
     
     NSArray *cinemas = [self getAllCinemasListFromCoreData];
     LocationManager *lm = [LocationManager defaultLocationManager];
-    BOOL isSuccess =  [lm getUserGPSLocationWithCallBack:^(BOOL isSuccess) {
+    BOOL isSuccess =  [lm getUserGPSLocationWithCallBack:^(BOOL isEnableGPS, BOOL isSuccess) {
         for (MCinema *tCinema in cinemas) {
             double distance = [lm distanceBetweenUserToLatitude:[tCinema.latitude doubleValue] longitude:[tCinema.longitue doubleValue]];
             tCinema.nearby = [NSNumber numberWithInt:distance];
@@ -1612,7 +1612,7 @@ static DataBaseManager *_sharedInstance = nil;
     
     NSArray *ktvs = [self getAllKTVsListFromCoreData];
     LocationManager *lm = [LocationManager defaultLocationManager];
-    BOOL isSuccess =  [lm getUserGPSLocationWithCallBack:^(BOOL isSuccess) {
+    BOOL isSuccess =  [lm getUserGPSLocationWithCallBack:^(BOOL isEnableGPS, BOOL isSuccess) {
         
         for (KKTV *tKTV in ktvs) {
             double distance = [lm distanceBetweenUserToLatitude:[tKTV.latitude doubleValue] longitude:[tKTV.longitude doubleValue]];
@@ -1635,6 +1635,43 @@ static DataBaseManager *_sharedInstance = nil;
     return isSuccess;
     
 }
+
+//KTV附近分页
+- (ApiCmd *)getNearbyKTVListFromCoreDataWithCallBack:(id<ApiNotify>)delegate
+                                            Latitude:(CLLocationDegrees)latitude
+                                           longitude:(CLLocationDegrees)longitude
+                                              offset:(int)offset
+                                               limit:(int)limit
+{
+    offset = (offset<=0)?0:offset;
+
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    
+    if (tapiCmd!=nil)
+        if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
+            ABLoggerWarn(@"不能请求 KTV 列表数据，因为已经请求了");
+            return tapiCmd;
+        }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmdKTV_getAllKTVs* apiCmdKTV_getAllKTVs = [[ApiCmdKTV_getAllKTVs alloc] init];
+    apiCmdKTV_getAllKTVs.delegate = delegate;
+    apiCmdKTV_getAllKTVs.offset = offset;
+    
+    apiCmdKTV_getAllKTVs.limit = limit;
+    if (limit==0) {
+        apiCmdKTV_getAllKTVs.limit = DataLimit;
+    }
+    
+    apiCmdKTV_getAllKTVs.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    [apiCmdKTV_getAllKTVs.httpRequest setTag:API_KKTVCmd];
+    [apiClient executeApiCmdAsync:apiCmdKTV_getAllKTVs];
+    
+    return [apiCmdKTV_getAllKTVs autorelease];
+
+}
+
 - (NSArray *)getFavoriteKTVListFromCoreData{
     return [self getFavoriteKTVListFromCoreDataWithCityName:nil];
 }
