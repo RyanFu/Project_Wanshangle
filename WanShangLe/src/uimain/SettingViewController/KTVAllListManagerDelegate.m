@@ -102,6 +102,11 @@
     }
     
     [_mTableView beginUpdates];
+    
+    if ([_mFavoriteArray count]==0) {
+        [_mTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];//解决第一次收藏KTV的时候，第一个区视图不显示Bug
+    }
+    
     if (!bt.selected) {
         [[DataBaseManager sharedInstance] addFavoriteKTVWithId:aKTV.uid];
         bt.selected = YES;
@@ -136,8 +141,6 @@
             [_mTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:refreshRow inSection:refreshSection]] withRowAnimation:UITableViewRowAnimationNone];
         }
     }
-    
-   [_mTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];//解决第一次收藏KTV的时候，第一个区视图不显示Bug
     
    [_mTableView endUpdates];
 //    [_parentViewController formatKTVDataFilterFavorite];
@@ -367,9 +370,8 @@
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
-    //    [[SearchCoreManager share] Search:searchString searchArray:nil nameMatch:_searchByName phoneMatch:_searchByPhone];
-    
-    [_mTableView reloadData];
+//    [[SearchCoreManager share] Search:searchString searchArray:nil nameMatch:_searchByName phoneMatch:_searchByPhone];
+//    [_mTableView reloadData];
     
     return YES;
 }
