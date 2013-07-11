@@ -19,9 +19,8 @@
 
 @required
 - (void) apiNotifyResult:(id) apiCmd  error:(NSError*) error;
-- (ApiCmd *)apiGetDelegateApiCmd;
-
 @optional
 - (void) apiNotifyLocationResult:(id)apiCmd cacheData:(NSArray*)cacheData;
-
+- (ApiCmd *)apiGetDelegateApiCmd;
+- (ApiCmd *)apiGetDelegateApiCmdWithTag:(int)cmdTag;
 @end

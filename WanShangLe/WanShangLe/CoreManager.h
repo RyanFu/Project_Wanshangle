@@ -40,22 +40,23 @@
 
 //API HTTPRequest Tag
 //-------------MMovie----------------/
-#define API_MMovieCmd  100 //电影
-#define API_MMovieDetailCmd  101 //电影详情
+#define API_MMovieCmd           100 //电影
+#define API_MMovieDetailCmd     101 //电影详情
 #define API_MMovieRecOrLookCmd  102 //电影推荐想看
-#define API_MCinemaCmd 120 //影院
-#define API_MScheduleCmd 140 //排期
-#define API_MBuyInfoCmd 160//购买信息
+#define API_MCinemaCmd          120 //影院
+#define API_MScheduleCmd        140 //排期
+#define API_MBuyInfoCmd         160//购买信息
 //-------------SShow----------------/
-#define API_SShowCmd  180 //演出
-#define API_SShowDetailCmd  200 //演出详情
+#define API_SShowCmd            180 //演出
+#define API_SShowDetailCmd      200 //演出详情
 //-------------BBar----------------/
-#define API_BBarCmd  220 //演出
-#define API_BBarDetailCmd  240 //演出详情
+#define API_BBarCmd             220 //演出
+#define API_BBarDetailCmd       240 //演出详情
 //-------------KKTV----------------/
-#define API_KKTVCmd  260 //KTV
-#define API_KKTVBuyListCmd  261 //KTV 团购列表
-#define API_KKTVPriceListCmd  262 //KTV 价格列表
+#define API_KKTVCmd             260 //KTV 分页列表
+#define API_KKTVSearchCmd       261 //KTV 搜索列表
+#define API_KKTVBuyListCmd      265 //KTV 团购列表
+#define API_KKTVPriceListCmd    266 //KTV 价格列表
 
 //测试宏标记
 //#define TestCode

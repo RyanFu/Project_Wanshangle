@@ -49,10 +49,9 @@
     
     self.mArray = nil;
     self.mCacheArray = nil;
+    self.msearchDisplayController = nil;
     self.tableViewDelegate = nil;
-    
     self.searchBar = nil;
-    self.strongSearchDisplayController = nil;
     
     [super dealloc];
 }
@@ -159,12 +158,11 @@
         }
         
         [self setTableViewDelegate];
-        
         self.searchBar.delegate = _tableViewDelegate;
-        self.strongSearchDisplayController = [[[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self] autorelease];
-        self.searchDisplayController.searchResultsDataSource = _tableViewDelegate;
-        self.searchDisplayController.searchResultsDelegate = _tableViewDelegate;
-        self.searchDisplayController.delegate = _tableViewDelegate;
+        self.msearchDisplayController = [[[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:self] autorelease];
+        self.msearchDisplayController.searchResultsDataSource = _tableViewDelegate;
+        self.msearchDisplayController.searchResultsDelegate = _tableViewDelegate;
+        self.msearchDisplayController.delegate = _tableViewDelegate;
     }
     
 }
@@ -198,6 +196,7 @@
     _tableViewDelegate.mArray = _mArray;
     _tableViewDelegate.mTableView = _mTableView;
     _tableViewDelegate.mFavoriteArray = _mFavoriteArray;
+    _tableViewDelegate.msearchDisplayController = _msearchDisplayController;
 }
 
 #pragma mark-
@@ -215,29 +214,20 @@
         return;
     }
     
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    NSArray *dataArray = [[DataBaseManager sharedInstance] insertKTVsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
     
-        NSArray *dataArray = [[DataBaseManager sharedInstance] insertKTVsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
-        
-        if (dataArray==nil || [dataArray count]<=0) {
-//            dispatch_async(dispatch_get_main_queue(), ^{
-                [self reloadPullRefreshData];
-//            });
-            return;
-        }
-        int tag = [[apiCmd httpRequest] tag];
-        [self addDataIntoCacheData:dataArray];
-        [self updateData:tag withData:[self getCacheData]];
-        
-//    });
+    if (dataArray==nil || [dataArray count]<=0) {
+        [self reloadPullRefreshData];
+        return;
+    }
+    int tag = [[apiCmd httpRequest] tag];
+    [self addDataIntoCacheData:dataArray];
+    [self updateData:tag withData:[self getCacheData]];
 }
 
 - (void) apiNotifyLocationResult:(id)apiCmd cacheData:(NSArray*)cacheData{
-    
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self addDataIntoCacheData:cacheData];
-        [self updateData:API_KKTVCmd withData:[self getCacheData]];
-//    });
+    [self addDataIntoCacheData:cacheData];
+    [self updateData:API_KKTVCmd withData:[self getCacheData]];
 }
 
 - (ApiCmd *)apiGetDelegateApiCmd{
@@ -268,15 +258,21 @@
     NSArray *regionOrder = [[DataBaseManager sharedInstance] getRegionOrder];
     
     NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:10];
+    NSMutableDictionary *district_id_Dic = [[NSMutableDictionary alloc] initWithCapacity:10];
     
     for (KKTV *tKTV in array_coreData) {
         NSString *key = tKTV.district;
+        NSString *districtId = tKTV.districtid;
         
         if (![districtDic objectForKey:key]) {
             ABLoggerInfo(@"key === %@",key);
+            ABLoggerInfo(@"districtId === %@",districtId);
             NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:10];
             [districtDic setObject:tarray forKey:key];
+            [districtDic setObject:key forKey:@"districtId"];
             [tarray release];
+            
+            [district_id_Dic setObject:districtId forKey:key];
         }
         [[districtDic objectForKey:key] addObject:tKTV];
     }
@@ -295,7 +291,36 @@
             if ([[tDic objectForKey:@"name"] isEqualToString:key]) {
                 dic = tDic;
                 NSMutableArray *tarray = [tDic objectForKey:@"list"];
-                [tarray addObjectsFromArray:[districtDic objectForKey:key]];
+//                [tarray addObjectsFromArray:[districtDic objectForKey:key]];
+                
+                /*===============防止数组tarray加入重复的KTV，根据KTV.uid 来筛选判断===================*/
+                NSMutableArray *addedArray = [districtDic objectForKey:key];
+                for (int i=0;i<[addedArray count];i++) {
+                    KKTV *ktv1 = [addedArray objectAtIndex:i];
+                    
+                    BOOL isadd = YES;
+                    for (int j=0;j<[tarray count];j++) {
+                        KKTV *ktv2 = [tarray objectAtIndex:j];
+                        if ([ktv1.uid intValue]==[ktv2.uid intValue]) {
+                            isadd = NO;
+                            break;
+                        }
+                    }
+                    
+                    if (isadd) {
+                        [tarray addObject:ktv1];
+                    }
+                }
+                /*========================================================*/
+                
+//                returnArray = (NSMutableArray *)[returnArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+//                    NSString *first =  [(MMovie*)a name];
+//                    NSString *second = [(MMovie*)b name];
+//                    return [first compare:second];
+//                }];
+                
+                [tDic setObject:[district_id_Dic objectForKey:key] forKey:@"districtId"];
+                
                 isContinue = YES;
                 continue;
             }
@@ -310,12 +335,14 @@
         }
         
         [dic setObject:key forKey:@"name"];
+        [dic setObject:[district_id_Dic objectForKey:key] forKey:@"districtId"];
         [dic setObject:[districtDic objectForKey:key] forKey:@"list"];
         
         [_mArray addObject:dic];
     }
     
     [districtDic release];
+    [district_id_Dic release];
     
     _refreshTailerView.hidden = NO;
     if ([_mArray count]<=0 || _mArray==nil) {
@@ -343,6 +370,10 @@
 #pragma mark 刷新和加载更多
 - (void)loadMoreData{
     [self updateData:0 withData:[self getCacheData]];
+}
+
+- (void)loadNewData{
+    
 }
 
 - (void)reloadPullRefreshData{
@@ -379,11 +410,6 @@
         count = [_mCacheArray count];//取小于10条数据
     }
     
-//    for (int i=0;i<[_mCacheArray count] ;i++ ) {
-//        KKTV *ttktv = [_mCacheArray objectAtIndex:i];
-////        ABLoggerDebug(@"2222  coredata district id === %@",ttktv.districtid);
-//    }
-    
     NSMutableArray *aPageData = [NSMutableArray arrayWithCapacity:count];
     for (int i=0; i<count; i++) {
         KKTV *object = [_mCacheArray objectAtIndex:i];
@@ -393,16 +419,6 @@
     if (count>0) {
         [_mCacheArray removeObjectsInRange:NSMakeRange(0, count)];
     }
-    
-//    for (int i = 0;i<[aPageData count];i++) {
-//        KKTV *object = [aPageData objectAtIndex:i];
-////        ABLoggerInfo(@"111district id ===== %@",object.districtid);
-//    }
-    
-//    for (int i = 0;i<[_mCacheArray count];i++) {
-//        KKTV *object = [_mCacheArray objectAtIndex:i];
-////        ABLoggerInfo(@"222 ============== district id ===== %@",object.districtid);
-//    }
     
     ABLoggerInfo(@"_cacheArray count == %d",[_mCacheArray count]);
     ABLoggerInfo(@"aPageData count == %d",[aPageData count]);

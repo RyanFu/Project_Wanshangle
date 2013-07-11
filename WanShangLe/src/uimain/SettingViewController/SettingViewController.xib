@@ -317,7 +317,7 @@
 							<object class="IBUILabel" id="987914729">
 								<reference key="NSNextResponder" ref="662744615"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{257, 191}, {42, 21}}</string>
+								<string key="NSFrame">{{246, 191}, {59, 21}}</string>
 								<reference key="NSSuperview" ref="662744615"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="292618188"/>
@@ -331,6 +331,7 @@
 								<reference key="IBUITextColor" ref="230237769"/>
 								<nil key="IBUIHighlightedColor"/>
 								<int key="IBUIBaselineAdjustment">0</int>
+								<int key="IBUITextAlignment">1</int>
 								<reference key="IBUIFontDescription" ref="97602694"/>
 								<reference key="IBUIFont" ref="1021477897"/>
 								<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
@@ -445,6 +446,11 @@
 									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="290612866"/>
+								<object class="NSCustomResource" key="IBUIHighlightedBackgroundImage" id="411883931">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">cell_middle_f@2x.png</string>
+								</object>
+								<reference key="IBUISelectedBackgroundImage" ref="411883931"/>
 								<object class="NSCustomResource" key="IBUINormalBackgroundImage" id="120617228">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">cell_middle_n@2x.png</string>
@@ -471,11 +477,8 @@
 									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="290612866"/>
-								<object class="NSCustomResource" key="IBUIHighlightedBackgroundImage" id="400618240">
-									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">cell_middle_f@2x.png</string>
-								</object>
-								<reference key="IBUISelectedBackgroundImage" ref="400618240"/>
+								<reference key="IBUIHighlightedBackgroundImage" ref="411883931"/>
+								<reference key="IBUISelectedBackgroundImage" ref="411883931"/>
 								<reference key="IBUINormalBackgroundImage" ref="228962538"/>
 								<reference key="IBUIFontDescription" ref="61032978"/>
 								<reference key="IBUIFont" ref="802729642"/>
@@ -610,8 +613,8 @@
 									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="290612866"/>
-								<reference key="IBUIHighlightedBackgroundImage" ref="400618240"/>
-								<reference key="IBUISelectedBackgroundImage" ref="400618240"/>
+								<reference key="IBUIHighlightedBackgroundImage" ref="411883931"/>
+								<reference key="IBUISelectedBackgroundImage" ref="411883931"/>
 								<reference key="IBUINormalBackgroundImage" ref="120617228"/>
 								<reference key="IBUIFontDescription" ref="61032978"/>
 								<reference key="IBUIFont" ref="802729642"/>
@@ -635,8 +638,8 @@
 									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="290612866"/>
-								<reference key="IBUIHighlightedBackgroundImage" ref="400618240"/>
-								<reference key="IBUISelectedBackgroundImage" ref="400618240"/>
+								<reference key="IBUIHighlightedBackgroundImage" ref="411883931"/>
+								<reference key="IBUISelectedBackgroundImage" ref="411883931"/>
 								<reference key="IBUINormalBackgroundImage" ref="120617228"/>
 								<reference key="IBUIFontDescription" ref="61032978"/>
 								<reference key="IBUIFont" ref="802729642"/>
@@ -660,8 +663,8 @@
 									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="290612866"/>
-								<reference key="IBUIHighlightedBackgroundImage" ref="400618240"/>
-								<reference key="IBUISelectedBackgroundImage" ref="400618240"/>
+								<reference key="IBUIHighlightedBackgroundImage" ref="411883931"/>
+								<reference key="IBUISelectedBackgroundImage" ref="411883931"/>
 								<reference key="IBUINormalBackgroundImage" ref="228962538"/>
 								<reference key="IBUIFontDescription" ref="61032978"/>
 								<reference key="IBUIFont" ref="802729642"/>
@@ -684,6 +687,7 @@
 								<string key="NSFrame">{{292, 483}, {7, 13}}</string>
 								<reference key="NSSuperview" ref="662744615"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>

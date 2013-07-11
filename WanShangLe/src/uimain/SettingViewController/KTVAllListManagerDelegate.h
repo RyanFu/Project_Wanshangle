@@ -14,10 +14,12 @@
    
 }
 @property(nonatomic,assign) EGORefreshTableHeaderView *refreshTailerView;
-@property(nonatomic,assign) KtvManagerViewController *parentViewController;
+@property(nonatomic,assign) KtvManagerViewController  *parentViewController;
+@property(nonatomic,assign) UISearchDisplayController *msearchDisplayController;
 @property(nonatomic,assign) UITableView *mTableView;
 @property(nonatomic,assign) NSArray *mArray;
 @property(nonatomic,assign) NSMutableArray *mFavoriteArray;
+@property(nonatomic,assign) NSMutableArray *mSearchArray;
 @property(nonatomic,readwrite)BOOL reloading;
 
 - (void)doneLoadingTableViewData;

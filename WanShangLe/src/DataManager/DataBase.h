@@ -18,6 +18,7 @@
 #import "ApiCmdKTV_getAllKTVs.h"
 #import "ApiCmdKTV_getBuyList.h"
 #import "ApiCmdKTV_getPriceList.h"
+#import "ApiCmdKTV_getSearchKTVs.h"
 
 #import "City.h"
 #import "ApiCmd.h"

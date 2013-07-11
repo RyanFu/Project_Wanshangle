@@ -486,6 +486,8 @@
 		5AAD10151786B5B600479B61 /* tag_lower_price.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AAD100C1786B5B600479B61 /* tag_lower_price.png */; };
 		5AAD10181786BA7400479B61 /* KTVBuyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AAD10171786BA7200479B61 /* KTVBuyCell.m */; };
 		5AAD101A1786BA9B00479B61 /* KTVBuyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AAD10191786BA9900479B61 /* KTVBuyCell.xib */; };
+		5AAE873D178E8E1500D2F8C2 /* ApiCmdKTV_getSearchKTVs.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AAE873C178E8E1500D2F8C2 /* ApiCmdKTV_getSearchKTVs.m */; };
+		5AAE8740178E960500D2F8C2 /* KtvManagerSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AAE873F178E960400D2F8C2 /* KtvManagerSearchController.m */; };
 		5AB358061760381C002A6803 /* NSDate-Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB358051760381C002A6803 /* NSDate-Utilities.m */; };
 		5AE906B91778137F0076394E /* CinemaListFilterTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AE906B81778137F0076394E /* CinemaListFilterTableViewDelegate.m */; };
 		5AE9A29A1784260B00700D49 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AE9A2991784260B00700D49 /* BaseViewController.m */; };
@@ -1171,6 +1173,10 @@
 		5AAD10161786BA7000479B61 /* KTVBuyCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KTVBuyCell.h; sourceTree = "<group>"; };
 		5AAD10171786BA7200479B61 /* KTVBuyCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KTVBuyCell.m; sourceTree = "<group>"; };
 		5AAD10191786BA9900479B61 /* KTVBuyCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KTVBuyCell.xib; sourceTree = "<group>"; };
+		5AAE873B178E8E1500D2F8C2 /* ApiCmdKTV_getSearchKTVs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCmdKTV_getSearchKTVs.h; sourceTree = "<group>"; };
+		5AAE873C178E8E1500D2F8C2 /* ApiCmdKTV_getSearchKTVs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmdKTV_getSearchKTVs.m; sourceTree = "<group>"; };
+		5AAE873E178E960400D2F8C2 /* KtvManagerSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KtvManagerSearchController.h; sourceTree = "<group>"; };
+		5AAE873F178E960400D2F8C2 /* KtvManagerSearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KtvManagerSearchController.m; sourceTree = "<group>"; };
 		5AB358041760381C002A6803 /* NSDate-Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate-Utilities.h"; sourceTree = "<group>"; };
 		5AB358051760381C002A6803 /* NSDate-Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate-Utilities.m"; sourceTree = "<group>"; };
 		5AE906B71778137F0076394E /* CinemaListFilterTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaListFilterTableViewDelegate.h; sourceTree = "<group>"; };
@@ -1358,6 +1364,8 @@
 			children = (
 				5AF26F9C17704BCC00C53D1B /* ApiCmdKTV_getAllKTVs.h */,
 				5AF26F9D17704BCC00C53D1B /* ApiCmdKTV_getAllKTVs.m */,
+				5AAE873B178E8E1500D2F8C2 /* ApiCmdKTV_getSearchKTVs.h */,
+				5AAE873C178E8E1500D2F8C2 /* ApiCmdKTV_getSearchKTVs.m */,
 				5AF26F9F17704CDB00C53D1B /* ApiCmdKTV_getBuyList.h */,
 				5AF26FA017704CDB00C53D1B /* ApiCmdKTV_getBuyList.m */,
 				5AF26FA117704CDB00C53D1B /* ApiCmdKTV_getPriceList.h */,
@@ -2714,6 +2722,8 @@
 				5A3752D7178C46590071AACF /* KtvManagerViewController.h */,
 				5A3752D8178C46590071AACF /* KtvManagerViewController.m */,
 				5A3752D9178C46590071AACF /* KtvManagerViewController.xib */,
+				5AAE873E178E960400D2F8C2 /* KtvManagerSearchController.h */,
+				5AAE873F178E960400D2F8C2 /* KtvManagerSearchController.m */,
 				5A3752D4178C461A0071AACF /* KTVAllListManagerDelegate.h */,
 				5A3752D5178C461A0071AACF /* KTVAllListManagerDelegate.m */,
 				5A3752DC178C469A0071AACF /* KTVManagerCell.h */,
@@ -3265,6 +3275,8 @@
 				5A17EBBD178CF66C0032C802 /* KtvNearByViewController.m in Sources */,
 				5A17EBCB178D10CF0032C802 /* KtvViewController.m in Sources */,
 				5A26F4F2178D6ED9002E7609 /* SuggestionViewController.m in Sources */,
+				5AAE873D178E8E1500D2F8C2 /* ApiCmdKTV_getSearchKTVs.m in Sources */,
+				5AAE8740178E960500D2F8C2 /* KtvManagerSearchController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

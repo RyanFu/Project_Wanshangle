@@ -575,11 +575,11 @@ static DataBaseManager *_sharedInstance = nil;
         [returnArray addObject:movie_city.movie];
     }
     
-    //    returnArray = (NSMutableArray *)[returnArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-    //        NSString *first =  [(MMovie*)a name];
-    //        NSString *second = [(MMovie*)b name];
-    //        return [first compare:second];
-    //    }];
+//    returnArray = (NSMutableArray *)[returnArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+//        NSString *first =  [(MMovie*)a name];
+//        NSString *second = [(MMovie*)b name];
+//        return [first compare:second];
+//    }];
     
     return returnArray;
 }
@@ -1595,6 +1595,36 @@ static DataBaseManager *_sharedInstance = nil;
     return [apiCmdKTV_getAllKTVs autorelease];
 }
 
+#pragma mark 搜索 KTV数据
+- (ApiCmd *)getKTVsSearchListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit searchString:(NSString *)searchString{
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    
+    offset = (offset<=0)?0:offset;
+    
+    if (tapiCmd!=nil)
+        if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
+            ABLoggerWarn(@"不能请求 KTV 列表数据，因为已经请求了");
+            return tapiCmd;
+        }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmdKTV_getSearchKTVs* apiCmdKTV_getSearchKTVs = [[ApiCmdKTV_getSearchKTVs alloc] init];
+    apiCmdKTV_getSearchKTVs.delegate = delegate;
+    apiCmdKTV_getSearchKTVs.offset = offset;
+    
+    apiCmdKTV_getSearchKTVs.limit = limit;
+    if (limit==0) {
+        apiCmdKTV_getSearchKTVs.limit = DataLimit;
+    }
+    apiCmdKTV_getSearchKTVs.searchString = searchString;
+    apiCmdKTV_getSearchKTVs.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    [apiClient executeApiCmdAsync:apiCmdKTV_getSearchKTVs];
+    [apiCmdKTV_getSearchKTVs.httpRequest setTag:API_KKTVCmd];
+    
+    return [apiCmdKTV_getSearchKTVs autorelease];
+}
+
 - (NSArray *)getKTVsListFromCoreDataOffset:(int)offset limit:(int)limit{
     return [self getKTVsListFromCoreDataWithCityName:nil offset:offset limit:limit];
 }
@@ -1607,6 +1637,7 @@ static DataBaseManager *_sharedInstance = nil;
     return [KKTV MR_findAllSortedBy:@"districtid" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityId] offset:offset limit:limit inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
+#pragma mark 附近 KTV数据
 - (BOOL)getNearbyKTVListFromCoreDataWithCallBack:(GetKTVNearbyList)callback{
     GetKTVNearbyList mCallBack = [callback copy];
     
@@ -1636,7 +1667,7 @@ static DataBaseManager *_sharedInstance = nil;
     
 }
 
-//KTV附近分页
+#pragma mark 附近 分页 KTV数据
 - (ApiCmd *)getNearbyKTVListFromCoreDataWithCallBack:(id<ApiNotify>)delegate
                                             Latitude:(CLLocationDegrees)latitude
                                            longitude:(CLLocationDegrees)longitude

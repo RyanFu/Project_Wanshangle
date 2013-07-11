@@ -10,11 +10,12 @@
 
 @class ApiCmdKTV_getAllKTVs;
 @class EGORefreshTableHeaderView;
+
 @interface KtvManagerViewController : UIViewController{
     
 }
 @property(nonatomic,retain) UISearchBar *searchBar;
-@property(nonatomic,retain) UISearchDisplayController *strongSearchDisplayController;
+@property(nonatomic,retain) UISearchDisplayController *msearchDisplayController;
 
 @property(nonatomic,retain) ApiCmdKTV_getAllKTVs *apiCmdKTV_getAllKTVs;
 @property(nonatomic,retain) EGORefreshTableHeaderView *refreshTailerView;
@@ -23,6 +24,9 @@
 @property(nonatomic,retain) NSMutableArray *mArray;
 @property(nonatomic,retain) NSMutableArray *mFavoriteArray;
 @property(nonatomic,retain) NSMutableArray *mCacheArray;
+
 - (void)loadMoreData;
+- (void)loadNewData;
 - (void)formatKTVDataFilterFavorite;
+- (void)formatKTVDataFilterAll:(NSArray*)pageArray;
 @end

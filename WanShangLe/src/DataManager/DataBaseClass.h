@@ -14,7 +14,7 @@
 @class ApiCmdMovie_getAllMovies,ApiCmdMovie_getAllCinemas;
 @class ApiCmdMovie_getSchedule,ApiCmdMovie_getBuyInfo;
 @class ApiCmdShow_getAllShows,ApiCmdBar_getAllBars;
-@class ApiCmdKTV_getAllKTVs,ApiCmdKTV_getBuyList,ApiCmdKTV_getPriceList;
+@class ApiCmdKTV_getAllKTVs,ApiCmdKTV_getBuyList,ApiCmdKTV_getPriceList,ApiCmdKTV_getSearchKTVs;
 
 @class MMovie_City,MSchedule,MMovie_Cinema,MMovie,MCinema,MMovieDetail;
 

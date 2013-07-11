@@ -162,18 +162,23 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (NSArray *)getKTVsListFromCoreDataOffset:(int)offset limit:(int)limit;
 - (NSArray *)getKTVsListFromCoreDataWithCityName:(NSString *)cityId offset:(int)offset limit:(int)limit;
 
-- (BOOL)getNearbyKTVListFromCoreDataWithCallBack:(GetKTVNearbyList)callback;
+//获取 搜索 TKV列表
+- (ApiCmd *)getKTVsSearchListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit searchString:(NSString *)searchString;
+
 //KTV附近分页
+- (BOOL)getNearbyKTVListFromCoreDataWithCallBack:(GetKTVNearbyList)callback;
 - (ApiCmd *)getNearbyKTVListFromCoreDataWithCallBack:(id<ApiNotify>)delegate
                                             Latitude:(CLLocationDegrees)latitude
                                            longitude:(CLLocationDegrees)longitude
                                               offset:(int)offset
                                                limit:(int)limit;
+//KTV收藏分页
 - (NSArray *)getFavoriteKTVListFromCoreData;
 - (NSArray *)getFavoriteKTVListFromCoreDataWithCityName:(NSString *)cityName;
 
 - (NSUInteger)getCountOfKTVsListFromCoreData;
 - (NSUInteger)getCountOfKTVsListFromCoreDataWithCityName:(NSString *)cityName;
+
 - (NSArray *)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importKTV:(KKTV *)kKTV ValuesForKeysWithObject:(NSDictionary *)aKTVDic;
 - (BOOL)addFavoriteKTVWithId:(NSString *)uid;
