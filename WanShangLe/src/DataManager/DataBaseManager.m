@@ -655,34 +655,54 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 /**
+ movies: [
  {
- "timestamp":1369275251,
- "errors":[],
- "data":{
- "count":20,
- "movies":[
- {
- "id":101,
- "name":"钢铁侠三",
- "webImg":"http://img31.mtime.cn/mt/2013/05/03/124825.16945557.jpg",
- "aword":"一个世纪英雄再次拯救我们"
+ id: "35",
+ uniquekey: "3a35241f73cb36a91fb90d4339272798",
+ name: "不二神探",
+ url: "http://movie.douban.com/subject/10604486/",
+ rating: "5.3",
+ ratingcount: "531",
+ director: "王子鸣",
+ star: "文章,李连杰,刘诗诗,陈妍希,柳岩,马伊琍,黄晓明,佟大为,冯德伦,吴京,邹兆龙,郑嘉颖,梁小龙,谢天华,张梓琳,邓丽欣,田亮,方力申,梁家仁,林雪,何超仪",
+ type: "喜剧,动作,犯罪",
+ hotstarttime: null,
+ tag: "0",
+ startday: "2013-06-21",
+ description: "短短数日内，三起“微笑杀人案”震动全城。调查过程中，青年警探、警局“活宝”王不二（文章饰）语出惊人：这是一起连环谋杀案！遂与搭档黄非红（李连杰饰）开始了一段惊悚刺激，同时又状况不断的“缉凶”之旅。黄非红在旁边看似总是乌龙，但其实是真正的功夫高手，每到关键时刻，他总能帮助王不二化险为夷。案件侦办过程中，王不二先是将怀疑对像锁定为女明星刘金水（刘诗诗饰），随着案情的深入，刘金水的嫌疑被逐渐撇清，她的姐姐戴依依（柳岩饰）等人又成了王不二的怀疑对象。最后，王不二决定假扮刘金水的男友来引诱凶手现身。与此同时，危险也慢慢向王不二靠近，真相即将大白于天下，王不二与凶手的终极对决，也就此展开……",
+ duration: "98",
+ coverurl: "http://em.wanshangle.com:8888/attachments/image/movie/78332_1373265685.gif",
+ imagesurl: "http://img3.douban.com/img/trailer/medium/1994465296.jpg,http://img3.douban.com/view/photo/albumicon/public/p1989440172.jpg,http://img3.douban.com/view/photo/albumicon/public/p1958082672.jpg,http://img3.douban.com/view/photo/albumicon/public/p1994516377.jpg,http://img3.douban.com/view/photo/albumicon/public/p1979919731.jpg",
+ trailersurl: "http://movie.douban.com/trailer/135868/#content",
+ status: "0",
+ coverimg: "",
+ createtime: "2013-06-28 13:56:47",
+ createdbysuid: "9",
+ lastmodifiedtime: "2013-07-08 14:41:37",
+ lastmodifiedbysuid: "12",
+ currentstatus: "3",
+ votecountadded: "0",
+ ratingadded: "0",
+ ratingcountadded: "0",
+ recommendadded: "0",
+ wantedadded: "0"
  },
  
- "dynamic":[
+ dynamic: [
  {
- "id":101,
- "rating":7.8,
- "ratingFrom":"豆瓣",
- "ratingpeople":120000,
- "newMovie":0,
- "viewtypes":[0,1,1]
+ rating: 5.3,
+ ratingFrom: "豆瓣",
+ ratingCount: "531",
+ viewtypes: [
+ "0",
+ "1",
+ "1"
+ ]
  },
- 
- "deletions":[]
  ***/
 - (void)importMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData
 {
-    ABLoggerInfo(@"amovieData == %@",amovieData);
+//    ABLoggerInfo(@"amovieData == %@",amovieData);
     mMovie.uid = [amovieData objectForKey:@"id"];
     mMovie.name = [amovieData objectForKey:@"name"];
     mMovie.webImg = [amovieData objectForKey:@"coverurl"];
@@ -1169,9 +1189,8 @@ static DataBaseManager *_sharedInstance = nil;
     
     for (int i=0; i<[info_array count]; i++) {
         
-        NSArray *cinema_array = [[info_array objectAtIndex:i] objectForKey:@"cinemas"];
-        NSArray *dynamic_array = [[info_array objectAtIndex:i] objectForKey:@"dynamic"];
-        NSString *district = [[info_array objectAtIndex:i] objectForKey:@"district"];
+        NSArray *cinema_array = [[info_array objectAtIndex:i] objectForKey:@"list"];
+        NSString *districtName = [[info_array objectAtIndex:i] objectForKey:@"districtName"];
         
         for(int j=0; j<[cinema_array count]; j++) {
             
@@ -1184,28 +1203,10 @@ static DataBaseManager *_sharedInstance = nil;
                 mCinema = [MCinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
             }
             //            [cinemas addObject:mCinema];
-            mCinema.district = district;
+            mCinema.district = districtName;
             mCinema.cityId = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName].uid;
             [self importCinema:mCinema ValuesForKeysWithObject:cinema_dic];
         }
-        
-        /*
-         for(int j=0; j<[dynamic_array count]; j++) {
-         
-         NSDictionary *cinema_dic = [cinema_array objectAtIndex:j];
-         
-         mCinema = [MCinema MR_findFirstByAttribute:@"uid" withValue:[cinema_dic objectForKey:@"cinemaid"] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-         if (mCinema == nil)
-         {
-         ABLoggerInfo(@"插入 一条影院 新数据 ======= %@",[cinema_dic objectForKey:@"name"]);
-         mCinema = [MCinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-         }
-         //            [cinemas addObject:mCinema];
-         mCinema.district = district;
-         mCinema.city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
-         [self importCinema:mCinema ValuesForKeysWithObject:cinema_dic];
-         }*/
-        
     }
     
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
@@ -1227,52 +1228,87 @@ static DataBaseManager *_sharedInstance = nil;
 
 /*
  {
- "httpCode":200,
- "errors":[
- ],
- "data":{
- "count":1,
- "infos":[
+ httpCode: 200,
+ errors: [ ],
+ data: {
+ count: 2,
+ infos: [
  {
- "district":"",
- "cinemas":[],
- "dynamic":[]
+ districtName: "海淀区",
+ list: [
+ {
+ id: "94",
+ uniquekey: "3bc32f5056f3c01b957aa62dccb741f7",
+ name: "17.5今典花园影城",
+ shortname: "17.5今典花园店",
+ description: "",
+ address: "北京市海淀区文慧园北路9号蒙太奇大厦二层",
+ contactphonex: "010-62228452",
+ contactphonetypex: "1",
+ contactphoney: "",
+ contactphonetypey: "1",
+ contactphonez: "",
+ contactphonetypez: "1",
+ latitude: "39.958636",
+ longitude: "116.367761",
+ cityid: "1",
+ districtid: "8",
+ logourl: "logourl",
+ coverurl: "http://em.wanshangle.com:8888/attachments/image/cinema/71670_1372211089.jpg",
+ specialoffers: "",
+ trafficroutes: "乘坐498路到今典花园下；乘坐21路、331路、375路、387路、392路、490路、498路、562路、604路、632路、691路、693路、80路、84电车到文慧桥北下车",
+ exturl: "",
+ createtime: "2013-06-26 09:59:48",
+ createdbysuid: "11",
+ lastmodifiedtime: "2013-06-26 10:02:27",
+ lastmodifiedbysuid: "11",
+ source: "1",
+ currentstatus: "3"
+ },
+ {},
+ {},
+ {},
+ {},
+ {}
+ ],
+ dynamic: [
+ {
+ cinemaid: "94",
+ rounds: 0,
+ prices: "0-0",
+ channel: [
+ 0,
+ 1,
+ 1
+ ],
+ hotmovies: [ ]
+ },
+ {},
+ {},
+ {},
+ {},
+ {}
+ ]
+ },
+ {
+ districtName: "东城区",
+ list: [],
+ dynamic: []
  }
  ]
  },
- "token":null,
- "timestamp":"1372063052"
- }
- 
- 
- 
- 
- {
- "error":{},
- "timestamp":"1369275251",
- "data":{
- "count": 10,
- "info": [
- {
- "district": "朝阳区",
- "cinemas": [
- {
- "id":10011,
- "name":"大望路电影院1",
- "addr":"大望路510号",
- "tel":13800990099,
- "longitue":34.2343,
- "latitude":57.3445
- },
+ token: null,
+ timestamp: "1373621139"
  */
 - (void)importCinema:(MCinema *)mCinema ValuesForKeysWithObject:(NSDictionary *)aCinemaData
 {
-    mCinema.uid = [NSNumber numberWithInt:[[aCinemaData objectForKey:@"id"] intValue]];
+    mCinema.uid = [aCinemaData objectForKey:@"id"];
     mCinema.name = [aCinemaData objectForKey:@"name"];
     mCinema.address = [aCinemaData objectForKey:@"address"];
     mCinema.phoneNumber = [aCinemaData objectForKey:@"contactphonex"];
     mCinema.longitue = [NSNumber numberWithDouble:[[aCinemaData objectForKey:@"longitude"] doubleValue]];
     mCinema.latitude = [NSNumber numberWithDouble:[[aCinemaData objectForKey:@"latitude"] doubleValue]];
+    mCinema.districtId = [aCinemaData objectForKey:@"districtid"];
 }
 //========================================= 影院 =========================================/
 
