@@ -55,7 +55,9 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (NSString *)getTimeFromDate:(NSString *)dateStr;
 - (NSString *)timeByAddingTimeInterval:(int)time fromDate:(NSString *)dateStr;
 
+//清除
 - (void)cleanUp;
+//通用的数据库保存函数
 - (void)saveInManagedObjectContext:(NSManagedObjectContext *)coreDataContext;
 
 /**
@@ -82,6 +84,9 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (NSString *)getNowUserCityId;
 - (City *)getNowUserCityFromCoreData;
 - (City *)getNowUserCityFromCoreDataWithName:(NSString *)name;
+
+//测试 城市筛选
+- (NSArray *)getUnCurrentCity;
 
 /************ 电影 ***************/
 - (ApiCmd *)getAllMoviesListFromWeb:(id<ApiNotify>)delegate;

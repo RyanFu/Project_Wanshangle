@@ -2,7 +2,7 @@
 //  MMovie.m
 //  WanShangLe
 //
-//  Created by stephenliu on 13-6-7.
+//  Created by stephenliu on 13-7-12.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -14,6 +14,7 @@
 @implementation MMovie
 
 @dynamic aword;
+@dynamic duration;
 @dynamic iMaxD;
 @dynamic name;
 @dynamic newMovie;
@@ -24,9 +25,8 @@
 @dynamic twoD;
 @dynamic uid;
 @dynamic webImg;
+@dynamic locationData;
 @dynamic movie_cinemas;
 @dynamic movieDetail;
-@dynamic movie_citys;
-@dynamic duration;
 
 @end

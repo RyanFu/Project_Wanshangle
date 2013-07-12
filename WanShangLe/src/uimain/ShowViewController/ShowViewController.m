@@ -430,7 +430,7 @@
     ABLogger_int(tag);
     switch (tag) {
         case 0:
-        case API_SShowCmd:
+        case API_SShow_Type_All_Cmd:
         {
             NSArray *array = [[DataBaseManager sharedInstance] getAllShowsListFromCoreData];
             self.showsArray = array;
