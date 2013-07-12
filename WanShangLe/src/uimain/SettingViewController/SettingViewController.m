@@ -58,7 +58,7 @@
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     [self cleanDistanceFilterButtonState];
     int index = [[userDefault objectForKey:DistanceFilter] intValue];
-    [(UIButton *)[_distanceFilterBtns objectAtIndex:index-1] setSelected:YES];
+    [(UIButton *)[_distanceFilterBtns objectAtIndex:index] setSelected:YES];
     
     float cacheSize = [[DataBaseManager sharedInstance] CoreDataSize]/1024.0/1024.0;
     _cacheLabel.text = [NSString stringWithFormat:@"%0.2fM",cacheSize];
@@ -88,7 +88,7 @@
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     int index = [(UIButton *)sender tag];
     [(UIButton *)[_distanceFilterBtns objectAtIndex:index-1] setSelected:YES];
-    [userDefault setObject:[NSString stringWithFormat:@"%d",index] forKey:DistanceFilter];
+    [userDefault setObject:[NSString stringWithFormat:@"%d",index-1] forKey:DistanceFilter];
 
 }
 
