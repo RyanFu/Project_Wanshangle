@@ -19,7 +19,7 @@
 #define CacheArray @"CacheArray"
 
 @interface KtvManagerViewController()<ApiNotify>{
-    
+    UIButton *cityBtn;
 }
 @property(nonatomic,retain)KTVAllListManagerDelegate *tableViewDelegate;
 @end
@@ -31,7 +31,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         
-        self.title = @"KTV店";
+        self.title = @"管理常去KTV";
     }
     return self;
 }
@@ -62,19 +62,19 @@
     
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     [self initBarButtonItem];
     [self initTableView];
+    [self updateCityDisplayState];
     
     [self loadMoreData];
 }
-
-- (void)viewWillDisappear:(BOOL)animated{
-}
-
 
 #pragma mark -
 #pragma mark 初始化数据
@@ -87,8 +87,23 @@
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backItem;
     [backItem release];
+    
+    cityBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [cityBtn setFrame:CGRectMake(0, 0, 45, 32)];
+    [cityBtn addTarget:self action:@selector(clickCityButton:) forControlEvents:UIControlEventTouchUpInside];
+    [cityBtn setBackgroundImage:[UIImage imageNamed:@"btn_Blue_BarButtonItem_n@2x"] forState:UIControlStateNormal];
+    [cityBtn setBackgroundImage:[UIImage imageNamed:@"btn_Blue_BarButtonItem_f@2x"] forState:UIControlStateHighlighted];
+    [cityBtn setTitle:@"" forState:UIControlStateNormal];
+    [cityBtn setTintColor:[UIColor whiteColor]];
+    UIBarButtonItem *cityBtnItem = [[UIBarButtonItem alloc] initWithCustomView:cityBtn];
+    self.navigationItem.rightBarButtonItem = cityBtnItem;
+    [cityBtnItem release];
 }
 
+- (void)updateCityDisplayState{
+    NSString *cityName = [[LocationManager defaultLocationManager] getUserCity];
+    [cityBtn setTitle:cityName forState:UIControlStateNormal];
+}
 #pragma mark -
 #pragma mark 初始化TableView
 - (void)initTableView{
@@ -248,6 +263,9 @@
     [self formatKTVDataFilterAll:dataArray];
 }
 
+- (void)clickCityButton:(id)sender{
+    
+}
 #pragma mark -
 #pragma mark FilterCinema FormatData
 - (void)formatKTVDataFilterAll:(NSArray*)pageArray{

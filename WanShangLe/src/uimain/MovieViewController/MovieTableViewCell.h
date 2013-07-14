@@ -9,20 +9,15 @@
 #import <UIKit/UIKit.h>
 
 @interface MovieTableViewCell : UITableViewCell{
-    IBOutlet UILabel *movie_name;
-    IBOutlet UILabel *movie_word;
-    IBOutlet UILabel *movie_rating;
-    IBOutlet UILabel *movie_new;
-    IBOutlet UIImageView *movie_imageView;
-}
-@property(nonatomic,retain) UILabel *movie_name;
-@property(nonatomic,retain) UILabel *movie_word;
-@property(nonatomic,retain) UILabel *movie_rating;
-@property(nonatomic,retain) UILabel *movie_new;
-@property(nonatomic,retain) UIImageView *movie_imageView;
 
-@property(nonatomic,retain)IBOutlet UIImageView *movie_image_new;
-@property(nonatomic,retain)IBOutlet UIImageView *movie_image_3dimx;
-@property(nonatomic,retain)IBOutlet UIImageView *movie_image_imx;
-@property(nonatomic,retain)IBOutlet UIImageView *movie_image_3d;
+}
+@property(nonatomic,retain) IBOutlet UILabel *movie_name;
+@property(nonatomic,retain) IBOutlet UILabel *movie_word;
+@property(nonatomic,retain) IBOutlet UILabel *movie_rating;
+@property(nonatomic,retain) IBOutlet UIImageView *movie_imageView;
+
+@property(nonatomic,retain) IBOutlet UIImageView *movie_image_new;
+@property(nonatomic,retain) IBOutlet UIImageView *movie_image_3dimx;
+@property(nonatomic,retain) IBOutlet UIImageView *movie_image_imx;
+@property(nonatomic,retain) IBOutlet UIImageView *movie_image_3d;
 @end

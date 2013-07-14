@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12D78" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12C3103" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="BBar" representedClassName="BBar" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cityId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dataType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="locationData" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phoneNumber" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="popular" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="barDetail" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="BBarDetail" inverseName="bar" inverseEntity="BBarDetail" syncable="YES"/>
-        <relationship name="city" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="City" inverseName="bars" inverseEntity="City" syncable="YES"/>
     </entity>
     <entity name="BBarDetail" representedClassName="BBarDetail" syncable="YES">
         <attribute name="introduce" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="locationData" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="recommendation" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wantLook" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -22,20 +25,19 @@
     <entity name="City" representedClassName="City" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="bars" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BBar" inverseName="city" inverseEntity="BBar" syncable="YES"/>
-        <relationship name="cinemas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MCinema" inverseName="city" inverseEntity="MCinema" syncable="YES"/>
-        <relationship name="movie_citys" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MMovie_City" inverseName="city" inverseEntity="MMovie_City" syncable="YES"/>
-        <relationship name="shows" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SShow" inverseName="city" inverseEntity="SShow" syncable="YES"/>
     </entity>
     <entity name="KKTV" representedClassName="KKTV" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="cityId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cityName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dataType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="discounts" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="district" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="districtid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="favorite" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="juan" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="locationData" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="nearby" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
@@ -50,39 +52,47 @@
     </entity>
     <entity name="KKTVBuyInfo" representedClassName="KKTVBuyInfo" syncable="YES">
         <attribute name="discountInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
+        <attribute name="locationData" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="ktv" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="KKTV" inverseName="ktvBuyInfo" inverseEntity="KKTV" syncable="YES"/>
     </entity>
     <entity name="KKTVPriceInfo" representedClassName="KKTVPriceInfo" syncable="YES">
+        <attribute name="locationData" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="schedule" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="ktv" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="KKTV" inverseName="ktvPriceInfo" inverseEntity="KKTV" syncable="YES"/>
     </entity>
     <entity name="MBuyTicketInfo" representedClassName="MBuyTicketInfo" syncable="YES">
         <attribute name="groupBuyInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
+        <attribute name="locationData" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="MCinema" representedClassName="MCinema" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cityId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cityName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dataType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="district" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="districtId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="favorite" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="juan" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
+        <attribute name="locationData" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="longitue" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="nearby" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="phoneNumber" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="seat" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="tuan" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <attribute name="uid" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="zhekou" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <relationship name="city" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="City" inverseName="cinemas" inverseEntity="City" syncable="YES"/>
         <relationship name="movie_cinemas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MMovie_Cinema" inverseName="cinema" inverseEntity="MMovie_Cinema" syncable="YES"/>
     </entity>
     <entity name="MMovie" representedClassName="MMovie" syncable="YES">
         <attribute name="aword" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="duration" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="iMaxD" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="locationData" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="newMovie" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="rating" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
@@ -93,24 +103,20 @@
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="webImg" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="movie_cinemas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MMovie_Cinema" inverseName="movie" inverseEntity="MMovie_Cinema" syncable="YES"/>
-        <relationship name="movie_citys" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MMovie_City" inverseName="movie" inverseEntity="MMovie_City" syncable="YES"/>
         <relationship name="movieDetail" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovieDetail" inverseName="movie" inverseEntity="MMovieDetail" syncable="YES"/>
     </entity>
     <entity name="MMovie_Cinema" representedClassName="MMovie_Cinema" syncable="YES">
+        <attribute name="locationData" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="cinema" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MCinema" inverseName="movie_cinemas" inverseEntity="MCinema" syncable="YES"/>
         <relationship name="movie" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MMovie" inverseName="movie_cinemas" inverseEntity="MMovie" syncable="YES"/>
         <relationship name="schedule" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MSchedule" inverseName="movie_cinema" inverseEntity="MSchedule" syncable="YES"/>
     </entity>
-    <entity name="MMovie_City" representedClassName="MMovie_City" syncable="YES">
-        <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="city" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="City" inverseName="movie_citys" inverseEntity="City" syncable="YES"/>
-        <relationship name="movie" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovie" inverseName="movie_citys" inverseEntity="MMovie" syncable="YES"/>
-    </entity>
     <entity name="MMovieDetail" representedClassName="MMovieDetail" syncable="YES">
         <attribute name="doneLook" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="doneRec" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="info" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
+        <attribute name="locationData" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="recommendadded" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wantedadded" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="movie" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovie" inverseName="movieDetail" inverseEntity="MMovie" syncable="YES"/>
@@ -118,6 +124,7 @@
     <entity name="MSchedule" representedClassName="MSchedule" syncable="YES">
         <attribute name="date" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="isToday" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="locationData" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lowPrice" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="movieCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="scheduleInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
@@ -127,8 +134,11 @@
     </entity>
     <entity name="SShow" representedClassName="SShow" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cityId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dataType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="locationData" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="price" optional="YES" attributeType="Transformable" valueTransformerName="NSArrayToNSValueTransformer" syncable="YES"/>
@@ -139,12 +149,12 @@
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="webImg" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="where" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="city" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="City" inverseName="shows" inverseEntity="City" syncable="YES"/>
         <relationship name="showDetail" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="SShowDetail" inverseName="show" inverseEntity="SShowDetail" syncable="YES"/>
     </entity>
     <entity name="SShowDetail" representedClassName="SShowDetail" syncable="YES">
         <attribute name="buyInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
         <attribute name="introduce" optional="YES" attributeType="String" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
+        <attribute name="locationData" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="recommendation" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wantLook" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -156,21 +166,20 @@
         <attribute name="webTimeStamp" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="BBar" positionX="-531" positionY="-1032" width="128" height="193"/>
-        <element name="BBarDetail" positionX="-747" positionY="-966" width="128" height="118"/>
-        <element name="City" positionX="-162" positionY="-846" width="128" height="133"/>
-        <element name="KKTV" positionX="142" positionY="-936" width="128" height="328"/>
-        <element name="KKTVBuyInfo" positionX="430" positionY="-909" width="128" height="88"/>
-        <element name="KKTVPriceInfo" positionX="430" positionY="-718" width="128" height="90"/>
-        <element name="MBuyTicketInfo" positionX="-27" positionY="-63" width="128" height="73"/>
-        <element name="MCinema" positionX="99" positionY="-306" width="128" height="270"/>
-        <element name="MMovie" positionX="-443" positionY="-351" width="128" height="270"/>
-        <element name="MMovie_Cinema" positionX="-173" positionY="-313" width="128" height="103"/>
-        <element name="MMovie_City" positionX="-450" positionY="-531" width="128" height="88"/>
-        <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="133"/>
-        <element name="MSchedule" positionX="-189" positionY="-67" width="128" height="163"/>
-        <element name="SShow" positionX="-173" positionY="-1384" width="128" height="268"/>
-        <element name="SShowDetail" positionX="-371" positionY="-1377" width="128" height="133"/>
-        <element name="TimeStamp" positionX="-774" positionY="-639" width="128" height="88"/>
+        <element name="BBar" positionX="-522" positionY="-805" width="128" height="223"/>
+        <element name="BBarDetail" positionX="-711" positionY="-757" width="128" height="133"/>
+        <element name="City" positionX="-171" positionY="-730" width="128" height="73"/>
+        <element name="KKTV" positionX="142" positionY="-838" width="128" height="373"/>
+        <element name="KKTVBuyInfo" positionX="430" positionY="-909" width="128" height="103"/>
+        <element name="KKTVPriceInfo" positionX="439" positionY="-567" width="128" height="103"/>
+        <element name="MBuyTicketInfo" positionX="-27" positionY="-63" width="128" height="88"/>
+        <element name="MCinema" positionX="99" positionY="-306" width="128" height="328"/>
+        <element name="MMovie" positionX="-443" positionY="-351" width="128" height="268"/>
+        <element name="MMovie_Cinema" positionX="-173" positionY="-313" width="128" height="118"/>
+        <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="148"/>
+        <element name="MSchedule" positionX="-189" positionY="-67" width="128" height="178"/>
+        <element name="SShow" positionX="-137" positionY="-1204" width="128" height="298"/>
+        <element name="SShowDetail" positionX="-335" positionY="-1044" width="128" height="148"/>
+        <element name="TimeStamp" positionX="-164" positionY="-612" width="128" height="88"/>
     </elements>
 </model>

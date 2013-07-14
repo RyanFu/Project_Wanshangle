@@ -24,7 +24,6 @@
 #import "ApiCmd.h"
 
 #import "MMovie_Cinema.h"
-#import "MMovie_City.h"
 #import "MMovie.h"
 #import "MMovieDetail.h"
 #import "MCinema.h"

@@ -282,26 +282,26 @@ static DataBaseManager *_sharedInstance = nil;
 #pragma mark -
 #pragma mark 关联表
 /************ 关联表 ***************/
-- (MMovie_City *)getFirstMMovie_CityFromCoreData:(NSString *)u_id;
-{
-    MMovie_City *mMovie_city = nil;
-    mMovie_city = [MMovie_City MR_findFirstByAttribute:@"uid" withValue:u_id inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-    
-    return mMovie_city;
-}
-
-- (MMovie_City *)insertMMovie_CityWithMovie:(MMovie *)a_movie andCity:(City *)a_city{
-    
-    MMovie_City *mMovie_city = nil;
-    
-    ABLoggerInfo(@"插入 电影_城市 关联表 新数据 [a_city name] ======= %@",[a_city name]);
-    mMovie_city = [MMovie_City MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-    mMovie_city.uid = [NSString stringWithFormat:@"%@%@",[a_city name],a_movie.uid];
-    mMovie_city.city = a_city;
-    mMovie_city.movie = a_movie;
-    
-    return mMovie_city;
-}
+//- (MMovie_City *)getFirstMMovie_CityFromCoreData:(NSString *)u_id;
+//{
+//    MMovie_City *mMovie_city = nil;
+//    mMovie_city = [MMovie_City MR_findFirstByAttribute:@"uid" withValue:u_id inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+//    
+//    return mMovie_city;
+//}
+//
+//- (MMovie_City *)insertMMovie_CityWithMovie:(MMovie *)a_movie andCity:(City *)a_city{
+//    
+//    MMovie_City *mMovie_city = nil;
+//    
+//    ABLoggerInfo(@"插入 电影_城市 关联表 新数据 [a_city name] ======= %@",[a_city name]);
+//    mMovie_city = [MMovie_City MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+//    mMovie_city.uid = [NSString stringWithFormat:@"%@%@",[a_city name],a_movie.uid];
+//    mMovie_city.city = a_city;
+//    mMovie_city.movie = a_movie;
+//    
+//    return mMovie_city;
+//}
 
 - (MMovie_Cinema *)insertMMovie_CinemaWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema{
     
@@ -312,7 +312,7 @@ static DataBaseManager *_sharedInstance = nil;
         return movie_cinema;
     }
     
-    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%@",[aCinema.city name],[aCinema.uid intValue],aMovie.uid];
+    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%d%@",aCinema.cityId,aCinema.cityName,[aCinema.uid intValue],aMovie.uid];
     movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     if (movie_cinema == nil) {
         movie_cinema = [MMovie_Cinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
@@ -346,7 +346,7 @@ static DataBaseManager *_sharedInstance = nil;
             
             aCinema = [cinemas objectAtIndex:j];
             
-            NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%@",[aCinema.city name],[aCinema.uid intValue],aMovie.uid];
+            NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%d%@",aCinema.cityId,aCinema.cityName,[aCinema.uid intValue],aMovie.uid];
             movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
             if (movie_cinema == nil) {
                 movie_cinema = [MMovie_Cinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
@@ -532,6 +532,14 @@ static DataBaseManager *_sharedInstance = nil;
     return city;
 }
 
+//测试 城市筛选
+- (NSArray *)getUnCurrentCity{
+    
+    NSString *cityId = nil;
+    cityId = [[LocationManager defaultLocationManager] getUserCityId];
+
+    return [City MR_findAllSortedBy:@"uid" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"uid != %@",cityId] offset:0 limit:1000 inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+}
 //========================================= 城市 =========================================/
 
 #pragma mark -
@@ -563,40 +571,21 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (NSArray *)getAllMoviesListFromCoreDataWithCityName:(NSString *)cityName{
     
-    if (isEmpty(cityName)) {
-        cityName = [[LocationManager defaultLocationManager] getUserCity];
-    }
-    
-    NSArray *array = [MMovie_City MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-    
-    NSMutableArray *returnArray = [NSMutableArray arrayWithCapacity:10];
-    
-    for (MMovie_City *movie_city in array) {
-        [returnArray addObject:movie_city.movie];
-    }
-    
 //    returnArray = (NSMutableArray *)[returnArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
 //        NSString *first =  [(MMovie*)a name];
 //        NSString *second = [(MMovie*)b name];
 //        return [first compare:second];
 //    }];
     
-    return returnArray;
+    return [MMovie MR_findAllInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
 - (NSUInteger)getCountOfMoviesListFromCoreData{
-    return [self getCountOfCinemasListFromCoreDataWithCityName:nil];
+    return [self getCountOfMoviesListFromCoreDataWithCityName:nil];
 }
 
 - (NSUInteger)getCountOfMoviesListFromCoreDataWithCityName:(NSString *)cityName{
-    
-    if (isEmpty(cityName)) {
-        cityName = [[LocationManager defaultLocationManager] getUserCity];
-    }
-    
-    City *city = [City MR_findFirstByAttribute:@"name" withValue:cityName inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-    
-    return [[city movie_citys] count];
+    return [MMovie MR_countOfEntitiesWithContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
 
@@ -622,13 +611,13 @@ static DataBaseManager *_sharedInstance = nil;
         }
         [self importMovie:mMovie ValuesForKeysWithObject:[array objectAtIndex:i]];
         
-        City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
-        
-        MMovie_City *movie_city = nil;
-        movie_city = [self getFirstMMovie_CityFromCoreData:[NSString stringWithFormat:@"%@%@",[city name],mMovie.uid]];
-        if (movie_city == nil) {
-            [self insertMMovie_CityWithMovie:mMovie andCity:city];
-        }
+//        City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
+//        
+//        MMovie_City *movie_city = nil;
+//        movie_city = [self getFirstMMovie_CityFromCoreData:[NSString stringWithFormat:@"%@%@",[city name],mMovie.uid]];
+//        if (movie_city == nil) {
+//            [self insertMMovie_CityWithMovie:mMovie andCity:city];
+//        }
         
         [self importDynamicMovie:mMovie ValuesForKeysWithObject:[array_dynamic objectAtIndex:i]];
         
@@ -666,34 +655,54 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 /**
+ movies: [
  {
- "timestamp":1369275251,
- "errors":[],
- "data":{
- "count":20,
- "movies":[
- {
- "id":101,
- "name":"钢铁侠三",
- "webImg":"http://img31.mtime.cn/mt/2013/05/03/124825.16945557.jpg",
- "aword":"一个世纪英雄再次拯救我们"
+ id: "35",
+ uniquekey: "3a35241f73cb36a91fb90d4339272798",
+ name: "不二神探",
+ url: "http://movie.douban.com/subject/10604486/",
+ rating: "5.3",
+ ratingcount: "531",
+ director: "王子鸣",
+ star: "文章,李连杰,刘诗诗,陈妍希,柳岩,马伊琍,黄晓明,佟大为,冯德伦,吴京,邹兆龙,郑嘉颖,梁小龙,谢天华,张梓琳,邓丽欣,田亮,方力申,梁家仁,林雪,何超仪",
+ type: "喜剧,动作,犯罪",
+ hotstarttime: null,
+ tag: "0",
+ startday: "2013-06-21",
+ description: "短短数日内，三起“微笑杀人案”震动全城。调查过程中，青年警探、警局“活宝”王不二（文章饰）语出惊人：这是一起连环谋杀案！遂与搭档黄非红（李连杰饰）开始了一段惊悚刺激，同时又状况不断的“缉凶”之旅。黄非红在旁边看似总是乌龙，但其实是真正的功夫高手，每到关键时刻，他总能帮助王不二化险为夷。案件侦办过程中，王不二先是将怀疑对像锁定为女明星刘金水（刘诗诗饰），随着案情的深入，刘金水的嫌疑被逐渐撇清，她的姐姐戴依依（柳岩饰）等人又成了王不二的怀疑对象。最后，王不二决定假扮刘金水的男友来引诱凶手现身。与此同时，危险也慢慢向王不二靠近，真相即将大白于天下，王不二与凶手的终极对决，也就此展开……",
+ duration: "98",
+ coverurl: "http://em.wanshangle.com:8888/attachments/image/movie/78332_1373265685.gif",
+ imagesurl: "http://img3.douban.com/img/trailer/medium/1994465296.jpg,http://img3.douban.com/view/photo/albumicon/public/p1989440172.jpg,http://img3.douban.com/view/photo/albumicon/public/p1958082672.jpg,http://img3.douban.com/view/photo/albumicon/public/p1994516377.jpg,http://img3.douban.com/view/photo/albumicon/public/p1979919731.jpg",
+ trailersurl: "http://movie.douban.com/trailer/135868/#content",
+ status: "0",
+ coverimg: "",
+ createtime: "2013-06-28 13:56:47",
+ createdbysuid: "9",
+ lastmodifiedtime: "2013-07-08 14:41:37",
+ lastmodifiedbysuid: "12",
+ currentstatus: "3",
+ votecountadded: "0",
+ ratingadded: "0",
+ ratingcountadded: "0",
+ recommendadded: "0",
+ wantedadded: "0"
  },
  
- "dynamic":[
+ dynamic: [
  {
- "id":101,
- "rating":7.8,
- "ratingFrom":"豆瓣",
- "ratingpeople":120000,
- "newMovie":0,
- "viewtypes":[0,1,1]
+ rating: 5.3,
+ ratingFrom: "豆瓣",
+ ratingCount: "531",
+ viewtypes: [
+ "0",
+ "1",
+ "1"
+ ]
  },
- 
- "deletions":[]
  ***/
 - (void)importMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData
 {
-    ABLoggerInfo(@"amovieData == %@",amovieData);
+//    ABLoggerInfo(@"amovieData == %@",amovieData);
     mMovie.uid = [amovieData objectForKey:@"id"];
     mMovie.name = [amovieData objectForKey:@"name"];
     mMovie.webImg = [amovieData objectForKey:@"coverurl"];
@@ -898,7 +907,7 @@ static DataBaseManager *_sharedInstance = nil;
 - (MSchedule *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema{
     
     MMovie_Cinema *movie_cinema = nil;
-    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%@",[aCinema.city name],[aCinema.uid intValue],aMovie.uid];
+    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%d%@",aCinema.cityId,aCinema.cityName,[aCinema.uid intValue],aMovie.uid];
     movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     [movie_cinema_uid release];
     return movie_cinema.schedule;
@@ -968,7 +977,7 @@ static DataBaseManager *_sharedInstance = nil;
     
     NSDictionary *dataDic = [objectData objectForKey:@"data"];
     
-    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%d%@",[aCinema.city name],[aCinema.uid intValue],aMovie.uid];
+    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%d%@",aCinema.cityId,aCinema.cityName,[aCinema.uid intValue],aMovie.uid];
     MMovie_Cinema *movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     if (movie_cinema == nil) {
         MMovie *tMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:aMovie.uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
@@ -1109,10 +1118,10 @@ static DataBaseManager *_sharedInstance = nil;
 - (NSArray *)getAllCinemasListFromCoreDataWithCityName:(NSString *)cityName{
     
     if (isEmpty(cityName)) {
-        cityName = [[LocationManager defaultLocationManager] getUserCity];
+        cityName = [[LocationManager defaultLocationManager] getUserCityId];
     }
     
-    return [MCinema MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [MCinema MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
 - (BOOL)getNearbyCinemasListFromCoreDataWithCallBack:(GetCinemaNearbyList)callback{
@@ -1149,10 +1158,10 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (NSArray *)getFavoriteCinemasListFromCoreDataWithCityName:(NSString *)cityName{
     if (isEmpty(cityName)) {
-        cityName = [[LocationManager defaultLocationManager] getUserCity];
+        cityName = [[LocationManager defaultLocationManager] getUserCityId];
     }
     
-    return [MCinema MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@ and favorite = YES", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [MCinema MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and favorite = YES", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
 - (NSUInteger)getCountOfCinemasListFromCoreData{
@@ -1162,9 +1171,9 @@ static DataBaseManager *_sharedInstance = nil;
 - (NSUInteger)getCountOfCinemasListFromCoreDataWithCityName:(NSString *)cityName{
     
     if (isEmpty(cityName)) {
-        cityName = [[LocationManager defaultLocationManager] getUserCity];
+        cityName = [[LocationManager defaultLocationManager] getUserCityId];
     }
-    int count = [MCinema MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    int count = [MCinema MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     return count;
 }
 
@@ -1180,9 +1189,8 @@ static DataBaseManager *_sharedInstance = nil;
     
     for (int i=0; i<[info_array count]; i++) {
         
-        NSArray *cinema_array = [[info_array objectAtIndex:i] objectForKey:@"cinemas"];
-        NSArray *dynamic_array = [[info_array objectAtIndex:i] objectForKey:@"dynamic"];
-        NSString *district = [[info_array objectAtIndex:i] objectForKey:@"district"];
+        NSArray *cinema_array = [[info_array objectAtIndex:i] objectForKey:@"list"];
+        NSString *districtName = [[info_array objectAtIndex:i] objectForKey:@"districtName"];
         
         for(int j=0; j<[cinema_array count]; j++) {
             
@@ -1195,28 +1203,10 @@ static DataBaseManager *_sharedInstance = nil;
                 mCinema = [MCinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
             }
             //            [cinemas addObject:mCinema];
-            mCinema.district = district;
-            mCinema.city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
+            mCinema.district = districtName;
+            mCinema.cityId = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName].uid;
             [self importCinema:mCinema ValuesForKeysWithObject:cinema_dic];
         }
-        
-        /*
-         for(int j=0; j<[dynamic_array count]; j++) {
-         
-         NSDictionary *cinema_dic = [cinema_array objectAtIndex:j];
-         
-         mCinema = [MCinema MR_findFirstByAttribute:@"uid" withValue:[cinema_dic objectForKey:@"cinemaid"] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-         if (mCinema == nil)
-         {
-         ABLoggerInfo(@"插入 一条影院 新数据 ======= %@",[cinema_dic objectForKey:@"name"]);
-         mCinema = [MCinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-         }
-         //            [cinemas addObject:mCinema];
-         mCinema.district = district;
-         mCinema.city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
-         [self importCinema:mCinema ValuesForKeysWithObject:cinema_dic];
-         }*/
-        
     }
     
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
@@ -1238,52 +1228,87 @@ static DataBaseManager *_sharedInstance = nil;
 
 /*
  {
- "httpCode":200,
- "errors":[
- ],
- "data":{
- "count":1,
- "infos":[
+ httpCode: 200,
+ errors: [ ],
+ data: {
+ count: 2,
+ infos: [
  {
- "district":"",
- "cinemas":[],
- "dynamic":[]
+ districtName: "海淀区",
+ list: [
+ {
+ id: "94",
+ uniquekey: "3bc32f5056f3c01b957aa62dccb741f7",
+ name: "17.5今典花园影城",
+ shortname: "17.5今典花园店",
+ description: "",
+ address: "北京市海淀区文慧园北路9号蒙太奇大厦二层",
+ contactphonex: "010-62228452",
+ contactphonetypex: "1",
+ contactphoney: "",
+ contactphonetypey: "1",
+ contactphonez: "",
+ contactphonetypez: "1",
+ latitude: "39.958636",
+ longitude: "116.367761",
+ cityid: "1",
+ districtid: "8",
+ logourl: "logourl",
+ coverurl: "http://em.wanshangle.com:8888/attachments/image/cinema/71670_1372211089.jpg",
+ specialoffers: "",
+ trafficroutes: "乘坐498路到今典花园下；乘坐21路、331路、375路、387路、392路、490路、498路、562路、604路、632路、691路、693路、80路、84电车到文慧桥北下车",
+ exturl: "",
+ createtime: "2013-06-26 09:59:48",
+ createdbysuid: "11",
+ lastmodifiedtime: "2013-06-26 10:02:27",
+ lastmodifiedbysuid: "11",
+ source: "1",
+ currentstatus: "3"
+ },
+ {},
+ {},
+ {},
+ {},
+ {}
+ ],
+ dynamic: [
+ {
+ cinemaid: "94",
+ rounds: 0,
+ prices: "0-0",
+ channel: [
+ 0,
+ 1,
+ 1
+ ],
+ hotmovies: [ ]
+ },
+ {},
+ {},
+ {},
+ {},
+ {}
+ ]
+ },
+ {
+ districtName: "东城区",
+ list: [],
+ dynamic: []
  }
  ]
  },
- "token":null,
- "timestamp":"1372063052"
- }
- 
- 
- 
- 
- {
- "error":{},
- "timestamp":"1369275251",
- "data":{
- "count": 10,
- "info": [
- {
- "district": "朝阳区",
- "cinemas": [
- {
- "id":10011,
- "name":"大望路电影院1",
- "addr":"大望路510号",
- "tel":13800990099,
- "longitue":34.2343,
- "latitude":57.3445
- },
+ token: null,
+ timestamp: "1373621139"
  */
 - (void)importCinema:(MCinema *)mCinema ValuesForKeysWithObject:(NSDictionary *)aCinemaData
 {
-    mCinema.uid = [NSNumber numberWithInt:[[aCinemaData objectForKey:@"id"] intValue]];
+    mCinema.uid = [aCinemaData objectForKey:@"id"];
     mCinema.name = [aCinemaData objectForKey:@"name"];
     mCinema.address = [aCinemaData objectForKey:@"address"];
     mCinema.phoneNumber = [aCinemaData objectForKey:@"contactphonex"];
     mCinema.longitue = [NSNumber numberWithDouble:[[aCinemaData objectForKey:@"longitude"] doubleValue]];
     mCinema.latitude = [NSNumber numberWithDouble:[[aCinemaData objectForKey:@"latitude"] doubleValue]];
+    mCinema.districtId = [aCinemaData objectForKey:@"districtid"];
 }
 //========================================= 影院 =========================================/
 
@@ -1304,7 +1329,7 @@ static DataBaseManager *_sharedInstance = nil;
     apiCmdShow_getAllShows.delegate = delegate;
     apiCmdShow_getAllShows.cityName = [[LocationManager defaultLocationManager] getUserCity];
     [apiClient executeApiCmdAsync:apiCmdShow_getAllShows];
-    [apiCmdShow_getAllShows.httpRequest setTag:API_SShowCmd];
+    [apiCmdShow_getAllShows.httpRequest setTag:API_SShow_Type_All_Cmd];
     
     return [apiCmdShow_getAllShows autorelease];
 }
@@ -1317,10 +1342,10 @@ static DataBaseManager *_sharedInstance = nil;
 - (NSArray *)getAllShowsListFromCoreDataWithCityName:(NSString *)cityName{
     
     if (isEmpty(cityName)) {
-        cityName = [[LocationManager defaultLocationManager] getUserCity];
+        cityName = [[LocationManager defaultLocationManager] getUserCityId];
     }
     
-    return [SShow MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [SShow MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
 - (NSUInteger)getCountOfShowsListFromCoreData{
@@ -1329,9 +1354,9 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (NSUInteger)getCountOfShowsListFromCoreDataWithCityName:(NSString *)cityName{
     if (isEmpty(cityName)) {
-        cityName = [[LocationManager defaultLocationManager] getUserCity];
+        cityName = [[LocationManager defaultLocationManager] getUserCityId];
     }
-    int count = [SShow MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    int count = [SShow MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     return count;
 }
 
@@ -1374,7 +1399,7 @@ static DataBaseManager *_sharedInstance = nil;
         [self importShow:sShow ValuesForKeysWithObject:[array objectAtIndex:i]];
         
         City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
-        sShow.city = city;
+        sShow.cityId = city.uid;
     }
     
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
@@ -1426,7 +1451,7 @@ static DataBaseManager *_sharedInstance = nil;
     apiCmdBar_getAllBars.delegate = delegate;
     apiCmdBar_getAllBars.cityName = [[LocationManager defaultLocationManager] getUserCity];
     [apiClient executeApiCmdAsync:apiCmdBar_getAllBars];
-    [apiCmdBar_getAllBars.httpRequest setTag:API_BBarCmd];
+    [apiCmdBar_getAllBars.httpRequest setTag:API_BBarTimeCmd];
     
     return [apiCmdBar_getAllBars autorelease];
     
@@ -1438,10 +1463,10 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (NSArray *)getAllBarsListFromCoreDataWithCityName:(NSString *)cityName{
     if (isEmpty(cityName)) {
-        cityName = [[LocationManager defaultLocationManager] getUserCity];
+        cityName = [[LocationManager defaultLocationManager] getUserCityId];
     }
     
-    return [BBar MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [BBar MR_findAllSortedBy:@"name" ascending:NO withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityName]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
 - (NSUInteger)getCountOfBarsListFromCoreData{
@@ -1450,9 +1475,9 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (NSUInteger)getCountOfBarsListFromCoreDataWithCityName:(NSString *)cityName{
     if (isEmpty(cityName)) {
-        cityName = [[LocationManager defaultLocationManager] getUserCity];
+        cityName = [[LocationManager defaultLocationManager] getUserCityId];
     }
-    int count = [BBar MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    int count = [BBar MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     return count;
 }
 
@@ -1473,7 +1498,7 @@ static DataBaseManager *_sharedInstance = nil;
         [self importBar:bBar ValuesForKeysWithObject:[array objectAtIndex:i]];
         
         City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
-        bBar.city = city;
+        bBar.cityId = city.uid;
     }
     
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
@@ -1721,9 +1746,9 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (NSUInteger)getCountOfKTVsListFromCoreDataWithCityName:(NSString *)cityName{
     if (isEmpty(cityName)) {
-        cityName = [[LocationManager defaultLocationManager] getUserCity];
+        cityName = [[LocationManager defaultLocationManager] getUserCityId];
     }
-    int count = [KKTV MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"city.name = %@", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    int count = [KKTV MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     return count;
     
 }

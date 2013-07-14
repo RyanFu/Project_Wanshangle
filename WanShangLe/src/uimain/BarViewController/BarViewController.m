@@ -324,7 +324,7 @@
     ABLogger_int(tag);
     switch (tag) {
         case 0:
-        case API_BBarCmd:
+        case API_BBarTimeCmd:
         {
             NSArray *array = [[DataBaseManager sharedInstance] getAllBarsListFromCoreData];
             self.barsArray = array;

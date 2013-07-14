@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SuggestionViewController : UIViewController
-@property(nonatomic,retain)IBOutlet UITextView *adviceView;
+@interface SuggestionViewController : UIViewController<UITextViewDelegate>
+@property(nonatomic,retain)IBOutlet UITextView *adviceTextView;
+@property(nonatomic,retain)IBOutlet UILabel *placeHoldText;
 @end

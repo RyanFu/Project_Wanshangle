@@ -2,7 +2,7 @@
 //  KKTV.m
 //  WanShangLe
 //
-//  Created by stephenliu on 13-7-8.
+//  Created by stephenliu on 13-7-12.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -30,6 +30,9 @@
 @dynamic tuan;
 @dynamic uid;
 @dynamic zhekou;
+@dynamic cityName;
+@dynamic locationData;
+@dynamic dataType;
 @dynamic ktvBuyInfo;
 @dynamic ktvPriceInfo;
 

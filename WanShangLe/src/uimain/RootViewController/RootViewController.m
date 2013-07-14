@@ -16,6 +16,7 @@
 #import "JSButton.h"
 #import "SIAlertView.h"
 #import "UIImageView+WebCache.h"
+#import "City.h"
 
 @interface RootViewController (){
     WSLUserClickStyle userClickStyle;

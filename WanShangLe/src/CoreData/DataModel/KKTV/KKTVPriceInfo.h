@@ -2,7 +2,7 @@
 //  KKTVPriceInfo.h
 //  WanShangLe
 //
-//  Created by stephenliu on 13-7-5.
+//  Created by stephenliu on 13-7-12.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -15,6 +15,7 @@
 
 @property (nonatomic, retain) id schedule;
 @property (nonatomic, retain) NSString * uid;
+@property (nonatomic, retain) NSString * locationData;
 @property (nonatomic, retain) KKTV *ktv;
 
 @end

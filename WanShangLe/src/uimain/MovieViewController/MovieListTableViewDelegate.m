@@ -117,10 +117,8 @@
     MMovie *movie = [_parentViewController.moviesArray objectAtIndex:indexPath.row];
     [cell.movie_imageView setImageWithURL:[NSURL URLWithString:movie.webImg]
                          placeholderImage:[UIImage imageNamed:@"movie_placeholder@2x"] options:SDWebImageRetryFailed];
-    cell.movie_new.hidden = YES;
-    if ([movie.newMovie boolValue]) {
-        cell.movie_new.hidden = NO;
-    }
+    
+    [cell.movie_imageView setFrame:CGRectMake(5, 1, 65, 87)];//解决图片显示尺寸不正常的Bug
     
     int ratingPeople = [movie.ratingpeople intValue];
     if (ratingPeople >10000) {
@@ -188,7 +186,7 @@
 #pragma mark -
 #pragma mark UITableViewDelegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 80.0f;
+    return 90.0f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{

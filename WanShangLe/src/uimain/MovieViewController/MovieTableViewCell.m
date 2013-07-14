@@ -12,7 +12,6 @@
 
 @synthesize movie_imageView;
 @synthesize movie_name;
-@synthesize movie_new;
 @synthesize movie_rating;
 @synthesize movie_word;
 
@@ -48,7 +47,6 @@
     
     self.movie_word = nil;
     self.movie_rating = nil;
-    self.movie_new = nil;
     self.movie_name = nil;
     self.movie_imageView = nil;
     [super dealloc];
