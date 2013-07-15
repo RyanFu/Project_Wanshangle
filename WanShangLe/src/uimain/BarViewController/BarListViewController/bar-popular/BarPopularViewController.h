@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-@class ApiCmdBar_getPopularBars;
+@class ApiCmdBar_getAllBars;
 @class EGORefreshTableHeaderView;
 @class BarViewController;
 @interface BarPopularViewController : UIViewController{
@@ -15,7 +15,7 @@
 }
 
 @property(nonatomic,assign) BarViewController *mParentController;
-@property(nonatomic,retain) ApiCmdBar_getPopularBars *apiCmdBar_getPopularBars;
+@property(nonatomic,retain) ApiCmdBar_getAllBars *apiCmdBar_getAllBars;
 @property(nonatomic,retain) EGORefreshTableHeaderView *refreshHeaderView;
 @property(nonatomic,retain) EGORefreshTableHeaderView *refreshTailerView;
 

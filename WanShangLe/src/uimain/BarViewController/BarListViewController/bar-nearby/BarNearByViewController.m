@@ -7,11 +7,12 @@
 //
 
 #import "BarNearByViewController.h"
-#import "ApiCmdBar_getNearByBars.h"
+#import "ApiCmdBar_getAllBars.h"
 #import "EGORefreshTableHeaderView.h"
 #import "ASIHTTPRequest.h"
 #import "BBar.h"
 #import "ApiCmd.h"
+#import "BarViewController.h"
 #import "BarNearByListTableViewDelegate.h"
 
 @interface BarNearByViewController()<ApiNotify>{
@@ -33,10 +34,10 @@
 
 - (void)dealloc{
     
-    [_apiCmdBar_getNearByBars.httpRequest clearDelegatesAndCancel];
-    _apiCmdBar_getNearByBars.delegate = nil;
-    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdBar_getNearByBars];
-    self.apiCmdBar_getNearByBars = nil;
+    [_apiCmdBar_getAllBars.httpRequest clearDelegatesAndCancel];
+    _apiCmdBar_getAllBars.delegate = nil;
+    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdBar_getAllBars];
+    self.apiCmdBar_getAllBars = nil;
     
     self.refreshNearByHeaderView = nil;
     self.refreshNearByTailerView = nil;
@@ -64,7 +65,7 @@
 - (void)updatData{
     for (int i=0; i<10; i++) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//            self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
+            //            self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
         });
     }
 }
@@ -168,7 +169,7 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        NSArray *dataArray = [[DataBaseManager sharedInstance] insertKTVsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+        NSArray *dataArray = [[DataBaseManager sharedInstance] insertBarsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
         
         if (dataArray==nil || [dataArray count]<=0) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -187,12 +188,12 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self addDataIntoCacheData:cacheData];
-        [self updateData:API_KKTVCmd withData:[self getCacheData]];
+        [self updateData:API_BBarNearByCmd withData:[self getCacheData]];
     });
 }
 
 - (ApiCmd *)apiGetDelegateApiCmd{
-    return _apiCmdBar_getNearByBars;
+    return _apiCmdBar_getAllBars;
 }
 
 - (void)updateData:(int)tag withData:(NSArray*)dataArray
@@ -204,7 +205,7 @@
     ABLogger_int(tag);
     switch (tag) {
         case 0:
-        case API_KKTVCmd:
+        case API_BBarNearByCmd:
         {
             [self formatKTVData:dataArray];
         }
@@ -225,9 +226,9 @@
 }
 
 - (void)formatKTVDataFilterNearby:(NSArray *)dataArray{
-    ABLoggerWarn(@" 附近 影院");
+    ABLoggerWarn(@" 附近 酒吧");
     
-    ABLoggerInfo(@"附近 KTV count=== %d",[dataArray count]);
+    ABLoggerInfo(@"附近 酒吧 count=== %d",[dataArray count]);
     
     [self.mArray addObjectsFromArray:dataArray];
     
@@ -273,7 +274,7 @@
 }
 
 - (void)displayNOGPS:(BOOL)noGPS{
-
+    
     _mTableView.tableFooterView = noGPS?_noGPSView:[[[UIView alloc] initWithFrame:CGRectZero]autorelease];
     _refreshNearByTailerView.hidden = noGPS;
     _refreshNearByHeaderView.hidden = noGPS;
@@ -282,7 +283,7 @@
         [_mCacheArray removeAllObjects];
         [_mArray removeAllObjects];
         [self reloadPullRefreshData];
-    }  
+    }
 }
 
 - (void)reloadPullRefreshData{
@@ -320,24 +321,28 @@
             number = 0;
             [lm getUserGPSLocationWithCallBack:^(BOOL isEnableGPS,BOOL isSuccess) {
                 if (isSuccess) {
-                    self.apiCmdBar_getNearByBars = (ApiCmdBar_getNearByBars *)[[DataBaseManager sharedInstance]
-                                                                         getNearbyBarListFromCoreDataWithCallBack:self
+                    self.apiCmdBar_getAllBars = (ApiCmdBar_getAllBars *)[[DataBaseManager sharedInstance]
+                                                                         getBarsNearByListFromWeb:self
+                                                                         offset:number
+                                                                         limit:DataLimit
                                                                          Latitude:latitude
                                                                          longitude:longitude
-                                                                         offset:number
-                                                                         limit:DataLimit];
+                                                                         dataType:OrderNearBy
+                                                                         isNewData:!isLoadMore];
                 }else{
                     [self displayNOGPS:YES];
                 }
             }];
             
         }else{//加载更多KTV附近
-            self.apiCmdBar_getNearByBars = (ApiCmdBar_getNearByBars *)[[DataBaseManager sharedInstance]
-                                                                 getNearbyBarListFromCoreDataWithCallBack:self
+            self.apiCmdBar_getAllBars = (ApiCmdBar_getAllBars *)[[DataBaseManager sharedInstance]
+                                                                 getBarsNearByListFromWeb:self
+                                                                 offset:number
+                                                                 limit:DataLimit
                                                                  Latitude:latitude
                                                                  longitude:longitude
-                                                                 offset:number
-                                                                 limit:DataLimit];
+                                                                 dataType:OrderNearBy
+                                                                 isNewData:!isLoadMore];
         }
         
         return  nil;
@@ -349,12 +354,6 @@
         count = [_mCacheArray count];//取小于10条数据
     }
     
-    //    for (int i=0;i<[_mCacheArray count] ;i++ ) {
-    //        KKTV *ttktv = [_mCacheArray objectAtIndex:i];
-    //        ABLoggerInfo(@"1111_cacheArray count == %d",[_mCacheArray count]);
-    //        ABLoggerDebug(@"2222  coredata district id === %@",ttktv.districtid);
-    //    }
-    
     NSMutableArray *aPageData = [NSMutableArray arrayWithCapacity:count];
     for (int i=0; i<count; i++) {
         KKTV *object = [_mCacheArray objectAtIndex:i];
@@ -364,16 +363,6 @@
     if (count>0) {
         [_mCacheArray removeObjectsInRange:NSMakeRange(0, count)];
     }
-    
-    //    for (int i = 0;i<[aPageData count];i++) {
-    //        KKTV *object = [aPageData objectAtIndex:i];
-    //        ABLoggerInfo(@"111district id ===== %@",object.districtid);
-    //    }
-    
-    //    for (int i = 0;i<[_mCacheArray count];i++) {
-    //        KKTV *object = [_mCacheArray objectAtIndex:i];
-    //        ABLoggerInfo(@"222 ============== district id ===== %@",object.districtid);
-    //    }
     
     ABLoggerInfo(@"_cacheArray count == %d",[_mCacheArray count]);
     ABLoggerInfo(@"aPageData count == %d",[aPageData count]);

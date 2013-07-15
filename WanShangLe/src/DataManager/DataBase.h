@@ -39,7 +39,5 @@
 //酒吧
 #import "BBar.h"
 #import "ApiCmdBar_getAllBars.h"
-#import "ApiCmdBar_getNearByBars.h"
-#import "ApiCmdBar_getPopularBars.h"
 #import "ApiCmdBar_getBarDetail.h"
 

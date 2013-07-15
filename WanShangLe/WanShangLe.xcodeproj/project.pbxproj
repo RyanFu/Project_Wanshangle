@@ -123,8 +123,6 @@
 		5A5A422F179391A600954902 /* BarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A4221179391A600954902 /* BarViewController.m */; };
 		5A5A4230179391A600954902 /* BarViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A5A4222179391A600954902 /* BarViewController.xib */; };
 		5A5A4231179391A600954902 /* BarViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A5A4223179391A600954902 /* BarViewController_5.xib */; };
-		5A5A4236179395C000954902 /* ApiCmdBar_getNearByBars.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A4233179395C000954902 /* ApiCmdBar_getNearByBars.m */; };
-		5A5A4237179395C000954902 /* ApiCmdBar_getPopularBars.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A4235179395C000954902 /* ApiCmdBar_getPopularBars.m */; };
 		5A5A423A17939A0D00954902 /* BBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A423917939A0D00954902 /* BBar.m */; };
 		5A5A423F17939ACF00954902 /* BarDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5A423D17939ACF00954902 /* BarDetailViewController.m */; };
 		5A5A424017939ACF00954902 /* BarDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A5A423E17939ACF00954902 /* BarDetailViewController.xib */; };
@@ -719,10 +717,6 @@
 		5A5A4221179391A600954902 /* BarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BarViewController.m; sourceTree = "<group>"; };
 		5A5A4222179391A600954902 /* BarViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BarViewController.xib; sourceTree = "<group>"; };
 		5A5A4223179391A600954902 /* BarViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BarViewController_5.xib; sourceTree = "<group>"; };
-		5A5A4232179395C000954902 /* ApiCmdBar_getNearByBars.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCmdBar_getNearByBars.h; sourceTree = "<group>"; };
-		5A5A4233179395C000954902 /* ApiCmdBar_getNearByBars.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmdBar_getNearByBars.m; sourceTree = "<group>"; };
-		5A5A4234179395C000954902 /* ApiCmdBar_getPopularBars.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCmdBar_getPopularBars.h; sourceTree = "<group>"; };
-		5A5A4235179395C000954902 /* ApiCmdBar_getPopularBars.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmdBar_getPopularBars.m; sourceTree = "<group>"; };
 		5A5A423817939A0D00954902 /* BBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBar.h; sourceTree = "<group>"; };
 		5A5A423917939A0D00954902 /* BBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBar.m; sourceTree = "<group>"; };
 		5A5A423C17939ACF00954902 /* BarDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarDetailViewController.h; sourceTree = "<group>"; };
@@ -1373,10 +1367,6 @@
 			children = (
 				5A429515176EFBC000D9B987 /* ApiCmdBar_getAllBars.h */,
 				5A429516176EFBC000D9B987 /* ApiCmdBar_getAllBars.m */,
-				5A5A4232179395C000954902 /* ApiCmdBar_getNearByBars.h */,
-				5A5A4233179395C000954902 /* ApiCmdBar_getNearByBars.m */,
-				5A5A4234179395C000954902 /* ApiCmdBar_getPopularBars.h */,
-				5A5A4235179395C000954902 /* ApiCmdBar_getPopularBars.m */,
 				5A5A424717939D3400954902 /* ApiCmdBar_getBarDetail.h */,
 				5A5A424817939D3400954902 /* ApiCmdBar_getBarDetail.m */,
 			);
@@ -3388,8 +3378,6 @@
 				5A5A422B179391A600954902 /* BarTimeViewController.m in Sources */,
 				5A5A422D179391A600954902 /* BarTableViewCell.m in Sources */,
 				5A5A422F179391A600954902 /* BarViewController.m in Sources */,
-				5A5A4236179395C000954902 /* ApiCmdBar_getNearByBars.m in Sources */,
-				5A5A4237179395C000954902 /* ApiCmdBar_getPopularBars.m in Sources */,
 				5A5A423A17939A0D00954902 /* BBar.m in Sources */,
 				5A5A423F17939ACF00954902 /* BarDetailViewController.m in Sources */,
 				5A5A424917939D3400954902 /* ApiCmdBar_getBarDetail.m in Sources */,

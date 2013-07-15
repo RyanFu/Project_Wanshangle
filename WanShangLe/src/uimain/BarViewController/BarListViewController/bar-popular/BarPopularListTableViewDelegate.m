@@ -48,6 +48,10 @@
         cell = [self createNewMocieCell];
     }
     
+    if ([_mArray count]<=0) {
+        return cell;
+    }
+    
     [self configCell:cell cellForRowAtIndexPath:indexPath];
     
     return cell;
@@ -68,9 +72,9 @@
     
     cell.bar_distance.hidden = YES;
     cell.bar_image_location.hidden = YES;
-
+    
     abar = [_mArray objectAtIndex:row];
-
+    
     [self configureCell:cell withObject:abar];
 }
 
@@ -79,7 +83,7 @@
     cell.bar_event_name.text = abar.name;
     cell.bar_name.text = abar.barName;
     cell.bar_date.text = abar.begintime;
-    cell.bar_popular.text = abar.popular;
+    cell.bar_popular.text = [NSString stringWithFormat:@"%d",[abar.popular intValue]];
     
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:4];
     if ([abar.zhekou boolValue]) {
@@ -139,7 +143,7 @@
 #pragma mark -
 #pragma mark UITableViewDelegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-       return 80;
+    return 80;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{

@@ -24,18 +24,17 @@
 #pragma mark UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    
+    if ([[[_mArray objectAtIndex:0] objectForKey:ListKey] count]<=0 &&
+        [[[_mArray objectAtIndex:1] objectForKey:ListKey] count]<=0) {//每次刷新表的时候检测是否有数据
+        _refreshTailerView.hidden = YES;
+    }else{
+        _refreshTailerView.hidden = NO;
+    }
     return [_mArray count];
     
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
-    if ([_mArray count]<=0) {//每次刷新表的时候检测是否有数据
-        _refreshTailerView.hidden = YES;
-    }else{
-        _refreshTailerView.hidden = NO;
-    }
     
     _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
     
@@ -44,14 +43,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    if ([_mArray count]<=0 || _mArray==nil) {
-        return nil;
-    }
-    
     return [self barCelltableView:tableView cellForRowAtIndexPath:indexPath];
-    
-    
 }
 
 #pragma mark -
@@ -64,6 +56,11 @@
     if (cell == nil) {
         cell = [self createNewMocieCell];
     }
+    
+    if ([[[_mArray objectAtIndex:0] objectForKey:ListKey] count]<=0 &&
+        [[[_mArray objectAtIndex:1] objectForKey:ListKey] count]<=0){
+        return cell;
+        }
     
     [self configCell:cell cellForRowAtIndexPath:indexPath];
     
@@ -97,7 +94,7 @@
     cell.bar_event_name.text = abar.name;
     cell.bar_name.text = abar.barName;
     cell.bar_date.text = abar.begintime;
-    cell.bar_popular.text = abar.popular;
+    cell.bar_popular.text = [NSString stringWithFormat:@"%d",[abar.popular intValue]];
     
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:4];
     if ([abar.zhekou boolValue]) {
@@ -176,8 +173,10 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     
+    if ([[[_mArray objectAtIndex:section] objectForKey:ListKey] count]<=0) {
+        return 0;
+    }
     return 20.0f;
-    
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{

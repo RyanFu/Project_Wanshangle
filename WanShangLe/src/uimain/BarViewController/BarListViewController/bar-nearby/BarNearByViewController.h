@@ -8,14 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@class ApiCmdBar_getNearByBars;
+@class ApiCmdBar_getAllBars;
 @class EGORefreshTableHeaderView;
 @interface BarNearByViewController : UIViewController{
     
 }
-@property(nonatomic,retain) ApiCmdBar_getNearByBars *apiCmdBar_getNearByBars;
-@property(nonatomic,retain)EGORefreshTableHeaderView *refreshNearByHeaderView;
-@property(nonatomic,retain)EGORefreshTableHeaderView *refreshNearByTailerView;
+@property(nonatomic,retain) ApiCmdBar_getAllBars *apiCmdBar_getAllBars;
+@property(nonatomic,retain) EGORefreshTableHeaderView *refreshNearByHeaderView;
+@property(nonatomic,retain) EGORefreshTableHeaderView *refreshNearByTailerView;
 
 @property(nonatomic,retain) IBOutlet UIView *noGPSView;
 @property(nonatomic,retain) UITableView *mTableView;

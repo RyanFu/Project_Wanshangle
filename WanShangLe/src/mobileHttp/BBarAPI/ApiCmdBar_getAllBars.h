@@ -8,11 +8,10 @@
 
 #import "ApiCmd.h"
 
-@interface ApiCmdBar_getAllBars : ApiCmd
-{
-@private
-    
+@interface ApiCmdBar_getAllBars : ApiCmd{
 }
+@property(nonatomic,readwrite)double latitude;
+@property(nonatomic,readwrite)double longitude;
 - (NSMutableDictionary*) getParamDict;
 - (void) parseResultData:(NSDictionary*) dictionary;
 

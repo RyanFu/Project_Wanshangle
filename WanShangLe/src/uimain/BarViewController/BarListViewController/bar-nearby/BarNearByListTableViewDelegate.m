@@ -88,7 +88,7 @@
     cell.bar_event_name.text = abar.name;
     cell.bar_name.text = abar.barName;
     cell.bar_date.text = abar.begintime;
-    cell.bar_popular.text = abar.popular;
+    cell.bar_popular.text = [NSString stringWithFormat:@"%d",[abar.popular intValue]];
     
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:4];
     if ([abar.zhekou boolValue]) {

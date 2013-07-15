@@ -314,6 +314,8 @@
                                  
                                  if (tableView.tableHeaderView!=nil) {
                                      [tableView setContentOffset:CGPointMake(0, 44) animated:YES];
+                                 }else{
+                                     [tableView setContentOffset:CGPointMake(0, 0) animated:YES];
                                  }
                              }
 

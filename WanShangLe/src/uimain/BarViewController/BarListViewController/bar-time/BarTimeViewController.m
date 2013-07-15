@@ -20,10 +20,6 @@
 #define MArray @"MArray"
 #define CacheArray @"CacheArray"
 
-#define TodayKey @"今天"
-#define TomorrowKey @"明天"
-#define ListKey @"list"
-
 @interface BarTimeViewController()<ApiNotify>{
     BOOL isLoadMoreAll;
 }
@@ -76,7 +72,7 @@
 - (void)updatData{
     for (int i=0; i<10; i++) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//            self.apiCmdBar_getAllBars = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
+            //            self.apiCmdBar_getAllBars = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
         });
     }
 }
@@ -208,7 +204,7 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self addDataIntoCacheData:cacheData];
-        [self updateData:API_KKTVCmd withData:[self getCacheData]];
+        [self updateData:API_BBarTimeCmd withData:[self getCacheData]];
     });
 }
 
@@ -225,7 +221,7 @@
     ABLogger_int(tag);
     switch (tag) {
         case 0:
-        case API_KKTVCmd:
+        case API_BBarTimeCmd:
         {
             [self formatKTVData:dataArray];
         }
@@ -263,10 +259,6 @@
         }
     }
     
-    if (!isLoadMoreAll) {
-        [_mArray removeAllObjects];
-    }
-    
     _refreshTailerView.hidden = NO;
     if ([_mArray count]<=0 || _mArray==nil) {
         _refreshTailerView.hidden = YES;
@@ -276,7 +268,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self reloadPullRefreshData];
     });
-
+    
 }
 
 #pragma mark -
@@ -285,8 +277,6 @@
     
     isLoadMoreAll = YES;
     [self setTableViewDelegate];
-    
-    
     [self updateData:0 withData:[self getCacheData]];
 }
 
@@ -294,6 +284,8 @@
     
     isLoadMoreAll = NO;
     [_mCacheArray removeAllObjects];
+    [[[_mArray objectAtIndex:0] objectForKey:ListKey] removeAllObjects];
+    [[[_mArray objectAtIndex:1] objectForKey:ListKey] removeAllObjects];
     
     [self updateData:0 withData:[self getCacheData]];
 }
@@ -331,7 +323,7 @@
         }
         self.apiCmdBar_getAllBars = (ApiCmdBar_getAllBars *)[[DataBaseManager sharedInstance] getBarsListFromWeb:self
                                                                                                           offset:number
-                                                                                                            limit:DataLimit
+                                                                                                           limit:DataLimit
                                                                                                         Latitude:-1
                                                                                                        longitude:-1
                                                                                                         dataType:OrderTime

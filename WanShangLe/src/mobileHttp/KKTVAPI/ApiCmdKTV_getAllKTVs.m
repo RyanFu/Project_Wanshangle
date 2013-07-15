@@ -23,7 +23,6 @@
 
 - (void) dealloc {
     
-    self.dataType = nil;
 	[super dealloc];
 }
 
@@ -47,7 +46,6 @@
     [paramDict setObject:city_id forKey:@"cityid"];
     [paramDict setObject:[NSString stringWithFormat:@"%d",self.offset] forKey:@"offset"];
     [paramDict setObject:[NSString stringWithFormat:@"%d",self.limit] forKey:@"limit"];
-    [paramDict setObject:self.dataType forKey:@"order"];
     
     return paramDict;
 }

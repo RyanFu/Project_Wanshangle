@@ -9,9 +9,10 @@
 #import "BBar.h"
 #import "BarPopularViewController.h"
 #import "BarDetailViewController.h"
+#import "BarViewController.h"
 #import "BarPopularListTableViewDelegate.h"
 #import "EGORefreshTableHeaderView.h"
-#import "ApiCmdBar_getPopularBars.h"
+#import "ApiCmdBar_getAllBars.h"
 
 #import "ASIHTTPRequest.h"
 #import "ApiCmd.h"
@@ -20,7 +21,7 @@
 #define CacheArray @"CacheArray"
 
 @interface BarPopularViewController()<ApiNotify>{
-     BOOL isLoadMoreAll;
+    BOOL isLoadMoreAll;
 }
 @property(nonatomic,retain)BarPopularListTableViewDelegate *favoriteListDelegate;
 @end
@@ -36,11 +37,11 @@
 }
 
 - (void)dealloc{
-
-    [_apiCmdBar_getPopularBars.httpRequest clearDelegatesAndCancel];
-    _apiCmdBar_getPopularBars.delegate = nil;
-    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdBar_getPopularBars];
-    self.apiCmdBar_getPopularBars = nil;
+    
+    [_apiCmdBar_getAllBars.httpRequest clearDelegatesAndCancel];
+    _apiCmdBar_getAllBars.delegate = nil;
+    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdBar_getAllBars];
+    self.apiCmdBar_getAllBars = nil;
     
     _refreshHeaderView.delegate = nil;
     _refreshTailerView.delegate = nil;
@@ -70,7 +71,7 @@
     [self.view addSubview:self.mTableView];
     
     //第一次调用
-//    [self formatKTVDataFilterFavorite];
+    [self loadMoreData];//初始化加载
 }
 
 
@@ -150,11 +151,172 @@
     _favoriteListDelegate.refreshTailerView = self.refreshTailerView;
     [_refreshHeaderView refreshLastUpdatedDate];
 }
+#pragma mark -
+#pragma mark apiNotiry
+-(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
+    
+    if (error!=nil) {
+        [self reloadPullRefreshData];
+        return;
+    }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSArray *dataArray = [[DataBaseManager sharedInstance] insertBarsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+        
+        if (dataArray==nil || [dataArray count]<=0) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self reloadPullRefreshData];
+            });
+            return;
+        }
+        int tag = [[apiCmd httpRequest] tag];
+        [self addDataIntoCacheData:dataArray];
+        [self updateData:tag withData:[self getCacheData]];
+        
+    });
+}
+
+- (void) apiNotifyLocationResult:(id)apiCmd cacheData:(NSArray*)cacheData{
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self addDataIntoCacheData:cacheData];
+        [self updateData:API_BBarTimeCmd withData:[self getCacheData]];
+    });
+}
+
+- (ApiCmd *)apiGetDelegateApiCmd{
+    return _apiCmdBar_getAllBars;
+}
+
+- (void)updateData:(int)tag withData:(NSArray*)dataArray
+{
+    if (dataArray==nil || [dataArray count]<=0) {
+        return;
+    }
+    
+    ABLogger_int(tag);
+    switch (tag) {
+        case 0:
+        case API_BBarTimeCmd:
+        {
+            [self formatKTVData:dataArray];
+        }
+            break;
+        default:
+        {
+            NSAssert(0, @"没有从网络抓取到数据");
+        }
+            break;
+    }
+}
 
 #pragma mark -
-#pragma mark 格式化数据
-- (void)formatKTVDataFilterFavorite{
+#pragma mark FormateData
+- (void)formatKTVData:(NSArray*)dataArray{
     
+    [self formatKTVDataFilterAll:dataArray];
+}
+
+#pragma mark -
+#pragma mark FilterCinema FormatData
+- (void)formatKTVDataFilterAll:(NSArray*)pageArray{
+    
+    ABLoggerDebug(@"酒吧 人气 count ==== %d",[pageArray count]);
+    [_mArray addObjectsFromArray:pageArray];
+    
+    _refreshTailerView.hidden = NO;
+    if ([_mArray count]<=0 || _mArray==nil) {
+        _refreshTailerView.hidden = YES;
+        
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self reloadPullRefreshData];
+    });
+    
+}
+
+
+#pragma mark -
+#pragma mark 刷新和加载更多
+- (void)loadMoreData{
+    
+    isLoadMoreAll = YES;
+    [self setTableViewDelegate];
+    [self updateData:0 withData:[self getCacheData]];
+}
+
+- (void)loadNewData{
+    
+    isLoadMoreAll = NO;
+    [_mCacheArray removeAllObjects];
+    [_mArray removeAllObjects];
+    
+    [self updateData:0 withData:[self getCacheData]];
+}
+
+- (void)reloadPullRefreshData{
+    
+    [self setTableViewDelegate];
+    if (isLoadMoreAll) {
+        [_favoriteListDelegate doneLoadingTableViewData];
+    }else{
+        [_favoriteListDelegate doneReLoadingTableViewData];
+    }
+    _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+    
+}
+
+//添加缓存数据
+- (void)addDataIntoCacheData:(NSArray *)dataArray{
+    
+    [self.mCacheArray addObjectsFromArray:dataArray];
+}
+
+//获取缓存数据
+- (NSArray *)getCacheData{
+    
+    if ([_mCacheArray count]<=0) {
+        int number = 0;
+        for (NSDictionary *dic in self.mArray) {
+            number += [[dic objectForKey:@"list"] count];
+        }
+        ABLoggerDebug(@"酒吧 数组 number ==  %d",number);
+        
+        if (!isLoadMoreAll) {
+            number = 0;
+        }
+        self.apiCmdBar_getAllBars = (ApiCmdBar_getAllBars *)[[DataBaseManager sharedInstance] getBarsListFromWeb:self
+                                                                                                          offset:number
+                                                                                                           limit:DataLimit
+                                                                                                        Latitude:-1
+                                                                                                       longitude:-1
+                                                                                                        dataType:OrderPopular
+                                                                                                       isNewData:!isLoadMoreAll];
+        return  nil;
+    }
+    
+    ABLoggerInfo(@"_cacheArray count == %d",[_mCacheArray count]);
+    int count = 10; //取10条数据
+    if ([_mCacheArray count]<10) {
+        count = [_mCacheArray count];//取小于10条数据
+    }
+    
+    NSMutableArray *aPageData = [NSMutableArray arrayWithCapacity:count];
+    for (int i=0; i<count; i++) {
+        BBar *object = [_mCacheArray objectAtIndex:i];
+        [aPageData addObject:object];
+    }
+    
+    if (count>0) {
+        [_mCacheArray removeObjectsInRange:NSMakeRange(0, count)];
+    }
+    
+    ABLoggerInfo(@"_cacheArray count == %d",[_mCacheArray count]);
+    ABLoggerInfo(@"aPageData count == %d",[aPageData count]);
+    
+    return aPageData;
 }
 
 #pragma mark -

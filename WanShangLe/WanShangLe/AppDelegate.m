@@ -10,7 +10,7 @@
 #import "RootViewController.h"
 #import "ApiConfig.h"
 #import <ShareSDK/ShareSDK.h>
-#import "City.h"
+#import "BBar.h"
 
 @interface AppDelegate(){
     
@@ -109,7 +109,17 @@
             ABLoggerDebug(@"city name = %@ id = %@ locationDate = %@",tCity.name,tCity.uid,tCity.locationDate);
         }
     }*/
+    /*
+    NSArray *arrays = [[DataBaseManager sharedInstance] getBarsListFromCoreDataWithCityName:nil
+                                                                                     offset:0
+                                                                                      limit:30
+                                                                                   Latitude:-1
+                                                                                  longitude:-1
+                                                                                   dataType:@"1"
+                                                                                  validDate:@"20130715214708154"];
     
+    ABLoggerDebug(@"bar count ====== %d",[arrays count]);
+     */
     return YES;
 }
 

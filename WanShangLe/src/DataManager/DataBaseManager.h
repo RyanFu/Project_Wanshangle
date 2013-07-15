@@ -154,7 +154,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 
 /************************ 酒吧 *********************************/
 /***************************************************************/
-//酒吧 分页 
+//分页 时间和人气 酒吧 
 - (ApiCmd *)getBarsListFromWeb:(id<ApiNotify>)delegate
                         offset:(int)offset
                          limit:(int)limit
@@ -163,13 +163,23 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
                       dataType:(NSString *)dataType
                      isNewData:(BOOL)isNewData;
 
+//附近 酒吧
+- (ApiCmd *)getBarsNearByListFromWeb:(id<ApiNotify>)delegate
+                        offset:(int)offset
+                         limit:(int)limit
+                      Latitude:(CLLocationDegrees)latitude
+                     longitude:(CLLocationDegrees)longitude
+                      dataType:(NSString *)dataType
+                     isNewData:(BOOL)isNewData;
+
+//从数据库里读数据
 - (NSArray *)getBarsListFromCoreDataOffset:(int)offset
                                      limit:(int)limit
                                   Latitude:(CLLocationDegrees)latitude
                                  longitude:(CLLocationDegrees)longitude
                                   dataType:(NSString *)dataType
                                  validDate:(NSString *)validDate;
-
+//从数据库里读数据
 - (NSArray *)getBarsListFromCoreDataWithCityName:(NSString *)cityId
                                           offset:(int)offset
                                            limit:(int)limit
@@ -178,13 +188,15 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
                                         dataType:(NSString *)dataType
                                        validDate:(NSString *)validDate;
 
+//向数据库里插入数据
+- (NSArray *)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (void)importBar:(BBar *)bBar ValuesForKeysWithObject:(NSDictionary *)aBarDic;
+
 - (ApiCmd *)getAllBarsListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllBarsListFromCoreData;
 - (NSArray *)getAllBarsListFromCoreDataWithCityName:(NSString *)cityName;
 - (NSUInteger)getCountOfBarsListFromCoreData;
 - (NSUInteger)getCountOfBarsListFromCoreDataWithCityName:(NSString *)cityName;
-- (NSArray *)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
-- (void)importBar:(BBar *)bBar ValuesForKeysWithObject:(NSDictionary *)aBarDic;
 
 /************************ KTV *********************************/
 /***************************************************************/

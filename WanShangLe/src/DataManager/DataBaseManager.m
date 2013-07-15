@@ -1515,6 +1515,7 @@ static DataBaseManager *_sharedInstance = nil;
         timeStamp.uid = uid;
         timeStamp.locationDate = [self getTodayTimeStamp];
         [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
+        validDate = timeStamp.locationDate;
     }else{
         if (timeStamp!=nil) {
             if (([validDate compare:timeStamp.locationDate options:NSNumericSearch] != NSOrderedDescending)) {
@@ -1543,18 +1544,58 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdBar_getAllBars* apiCmdBar_getAllBars = [[ApiCmdBar_getAllBars alloc] init];
     apiCmdBar_getAllBars.delegate = delegate;
     apiCmdBar_getAllBars.offset = offset;
-    
     apiCmdBar_getAllBars.limit = limit;
     if (limit==0) {
         apiCmdBar_getAllBars.limit = DataLimit;
     }
     
     apiCmdBar_getAllBars.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdBar_getAllBars.dataType = dataType;
     [apiClient executeApiCmdAsync:apiCmdBar_getAllBars];
-    [apiCmdBar_getAllBars.httpRequest setTag:API_KKTVCmd];
+    [apiCmdBar_getAllBars.httpRequest setTag:API_BBarTimeCmd];
     
     return [apiCmdBar_getAllBars autorelease];
     
+}
+
+//附近 酒吧
+- (ApiCmd *)getBarsNearByListFromWeb:(id<ApiNotify>)delegate
+                              offset:(int)offset
+                               limit:(int)limit
+                            Latitude:(CLLocationDegrees)latitude
+                           longitude:(CLLocationDegrees)longitude
+                            dataType:(NSString *)dataType
+                           isNewData:(BOOL)isNewData{
+    
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    
+    offset = (offset<0)?0:offset;
+    
+    //因为数据库里没有数据或是数据过期，所以向服务器请求数据
+    if (tapiCmd!=nil)
+        if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
+            ABLoggerWarn(@"不能请求 酒吧 列表数据，因为已经请求了");
+            return tapiCmd;
+        }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmdBar_getAllBars* apiCmdBar_getAllBars = [[ApiCmdBar_getAllBars alloc] init];
+    apiCmdBar_getAllBars.delegate = delegate;
+    apiCmdBar_getAllBars.offset = offset;
+    apiCmdBar_getAllBars.limit = limit;
+    if (limit==0) {
+        apiCmdBar_getAllBars.limit = DataLimit;
+    }
+    
+    apiCmdBar_getAllBars.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdBar_getAllBars.dataType = dataType;
+    apiCmdBar_getAllBars.latitude = latitude;
+    apiCmdBar_getAllBars.longitude = longitude;
+    [apiClient executeApiCmdAsync:apiCmdBar_getAllBars];
+    [apiCmdBar_getAllBars.httpRequest setTag:API_BBarNearByCmd];
+    
+    return [apiCmdBar_getAllBars autorelease];
 }
 
 - (NSArray *)getBarsListFromCoreDataOffset:(int)offset
@@ -1577,12 +1618,20 @@ static DataBaseManager *_sharedInstance = nil;
                                        validDate:(NSString *)validDate{
     NSString *sortStr = @"begintime";
     BOOL isAscending = YES;
-    if ([dataType intValue]==2) {
+    if ([dataType intValue]==2) {//1代表时间，2代表人气，3代表附近
         sortStr = @"popular";
         isAscending = NO;
     }
+    if (isEmpty(cityId)) {
+        cityId = [[LocationManager defaultLocationManager] getUserCityId];    
+    }
     
-    return [BBar MR_findAllSortedBy:sortStr ascending:isAscending withPredicate:[NSPredicate predicateWithFormat:@"locationDate >= %@",validDate] offset:offset limit:limit inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [BBar MR_findAllSortedBy:sortStr
+                          ascending:isAscending
+                      withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and locationDate >= %@ and dataType = %@",cityId,validDate,dataType]
+                             offset:offset
+                              limit:limit
+                          inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
 
@@ -1596,7 +1645,8 @@ static DataBaseManager *_sharedInstance = nil;
     BBar *bBar = nil;
     for (int i=0; i<[array count]; i++) {
         
-        bBar = [BBar MR_findFirstByAttribute:@"uid" withValue:[[array objectAtIndex:i] objectForKey:@"id"] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+//        bBar = [BBar MR_findFirstByAttribute:@"uid" withValue:[[array objectAtIndex:i] objectForKey:@"id"] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        bBar = [BBar MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and dataType = %@",[[array objectAtIndex:i] objectForKey:@"id"],apiCmd.dataType] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
         if (bBar == nil)
         {
             ABLoggerInfo(@"插入 一条 酒吧 新数据 ======= %@",[[array objectAtIndex:i] objectForKey:@"name"]);
@@ -1606,6 +1656,7 @@ static DataBaseManager *_sharedInstance = nil;
         
         City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
         bBar.cityId = city.uid;
+        bBar.dataType = apiCmd.dataType; //数据类型，1是时间过滤，2是人气过滤，3是附近
         [returnArray addObject:bBar];
     }
     
@@ -1673,7 +1724,7 @@ static DataBaseManager *_sharedInstance = nil;
     bBar.barId = [aBarDic objectForKey:@"barid"];
     bBar.name = [aBarDic objectForKey:@"eventname"];
     bBar.barName = [aBarDic objectForKey:@"barname"];
-    bBar.popular = [aBarDic objectForKey:@"hotadded"];
+    bBar.popular = [NSNumber numberWithInt:[[aBarDic objectForKey:@"hotadded"] integerValue]];
     bBar.address = [aBarDic objectForKey:@"address"];
     bBar.begintime = [aBarDic objectForKey:@"begintime"];
     bBar.phoneNumber = [[aBarDic objectForKey:@"tel"] stringValue];

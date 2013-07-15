@@ -53,6 +53,7 @@
     self.cityId = nil;
     self.cityName = nil;
     self.dataArray = nil;
+    self.dataType = nil;
 }
 
 - (BOOL) hasError {

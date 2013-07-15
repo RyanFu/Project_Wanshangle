@@ -22,7 +22,7 @@
 @property (nonatomic, retain) NSNumber * longitude;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * phoneNumber;
-@property (nonatomic, retain) NSString * popular;
+@property (nonatomic, retain) NSNumber * popular;
 @property (nonatomic, retain) NSString * uid;
 @property (nonatomic, retain) NSNumber * juan;
 @property (nonatomic, retain) NSNumber * zhekou;

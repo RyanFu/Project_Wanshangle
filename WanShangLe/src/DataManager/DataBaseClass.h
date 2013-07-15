@@ -37,8 +37,6 @@
 //-------------酒吧----------------/
 @class BBar;
 @class ApiCmdBar_getAllBars;
-@class ApiCmdBar_getNearByBars;
-@class ApiCmdBar_getPopularBars;
 @class ApiCmdBar_getBarDetail;
 //分页数据
 #define DataLimit 20

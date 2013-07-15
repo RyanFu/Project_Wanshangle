@@ -50,6 +50,7 @@ typedef NS_ENUM(NSInteger, WSLDataCacheType) {
 @property(nonatomic,retain) ASIHTTPRequest *httpRequest;
 @property(nonatomic,retain) NSString *cityName;
 @property(nonatomic,retain) NSString *cityId;
+@property(nonatomic,retain) NSString *dataType;
 @property(nonatomic,readwrite) int offset;
 @property(nonatomic,readwrite) int limit;
 /**
