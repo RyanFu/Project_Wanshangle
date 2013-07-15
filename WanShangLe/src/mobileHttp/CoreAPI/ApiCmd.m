@@ -71,6 +71,10 @@
     return [warnArray count] > 0;
 }
 
++(NSString *)getTimeStampUid:(NSString *)type{
+    return nil;
+}
+
 /*
  object.name = path;
  object.hash = [[self responseHeaders] objectForKey:@"ETag"];

@@ -2,7 +2,7 @@
 //  MMovie_Cinema.h
 //  WanShangLe
 //
-//  Created by stephenliu on 13-7-12.
+//  Created by stephenliu on 13-7-15.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -13,8 +13,8 @@
 
 @interface MMovie_Cinema : NSManagedObject
 
+@property (nonatomic, retain) NSString * locationDate;
 @property (nonatomic, retain) NSString * uid;
-@property (nonatomic, retain) NSString * locationData;
 @property (nonatomic, retain) MCinema *cinema;
 @property (nonatomic, retain) MMovie *movie;
 @property (nonatomic, retain) MSchedule *schedule;

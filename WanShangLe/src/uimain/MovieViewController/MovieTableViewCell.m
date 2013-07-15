@@ -29,8 +29,9 @@
     ABLoggerMethod();
     [super awakeFromNib];
     
-    [self setSelectionStyle:UITableViewCellSelectionStyleGray];
-    [self setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+    [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+    [self setAccessoryType:UITableViewCellAccessoryNone];
+    
     UIView *bgView = [[[UIView alloc] initWithFrame:self.bounds] autorelease];
     [bgView setBackgroundColor:[UIColor colorWithWhite:0.996 alpha:1.000]];
     [self setBackgroundView:bgView];
@@ -39,8 +40,6 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
 
 -(void)dealloc{

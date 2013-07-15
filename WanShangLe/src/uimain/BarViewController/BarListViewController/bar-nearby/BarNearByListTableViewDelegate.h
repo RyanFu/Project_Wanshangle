@@ -9,14 +9,17 @@
 #import <Foundation/Foundation.h>
 #import "EGORefreshTableHeaderView.h"
 
-@class BarViewController;
-@interface BarTableViewDelegate : NSObject<EGORefreshTableHeaderDelegate,UITableViewDataSource,UITableViewDelegate>{
-    
-    UITableView *mTableView;
-    BOOL _reloading;
+@class BarNearByViewController;
+@interface BarNearByListTableViewDelegate : NSObject<EGORefreshTableHeaderDelegate,UITableViewDataSource,UITableViewDelegate>{
+   
 }
 @property(nonatomic,assign) EGORefreshTableHeaderView *refreshHeaderView;
 @property(nonatomic,assign) EGORefreshTableHeaderView *refreshTailerView;
-@property(nonatomic,assign) BarViewController *parentViewController;
+@property(nonatomic,assign) BarNearByViewController *parentViewController;
 @property(nonatomic,assign) UITableView *mTableView;
+@property(nonatomic,assign) NSArray *mArray;
+@property(nonatomic,readwrite)BOOL reloading;
+
+- (void)doneReLoadingTableViewData;
+- (void)doneLoadingTableViewData;
 @end

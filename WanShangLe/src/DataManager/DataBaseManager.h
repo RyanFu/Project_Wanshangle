@@ -44,7 +44,9 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (NSString*)md5PathForKey:(NSString *) key;
 
 //日期-时间
-- (BOOL)isToday:(NSString *)timeStamp;
+- (BOOL)isToday:(NSString *)date;
+- (BOOL)isTomorrow:(NSString *)date;
+
 - (NSString *)getTodayTimeStamp;
 - (NSString *)getTodayZeroTimeStamp;
 //获取星期几
@@ -60,6 +62,17 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (void)cleanUp;
 //通用的数据库保存函数
 - (void)saveInManagedObjectContext:(NSManagedObjectContext *)coreDataContext;
+
+/************ 城市 ***************/
+- (void)insertAllCitysIntoCoreData;
+- (City *)insertCityIntoCoreDataWith:(NSString *)cityName;
+- (NSString *)validateCity:(NSString *)cityName;
+- (NSString *)getNowUserCityId;
+- (City *)getNowUserCityFromCoreData;
+- (City *)getNowUserCityFromCoreDataWithName:(NSString *)name;
+
+//测试 城市筛选
+- (NSArray *)getUnCurrentCity;
 
 /**
  推荐和想看接口
@@ -78,18 +91,8 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (void)insertMMovie_CinemaWithMovies:(NSArray *)movies andCinemas:(NSArray *)cinemas;
 - (MMovie_Cinema *)insertMMovie_CinemaWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema;
 
-/************ 城市 ***************/
-- (void)insertAllCitysIntoCoreData;
-- (City *)insertCityIntoCoreDataWith:(NSString *)cityName;
-- (NSString *)validateCity:(NSString *)cityName;
-- (NSString *)getNowUserCityId;
-- (City *)getNowUserCityFromCoreData;
-- (City *)getNowUserCityFromCoreDataWithName:(NSString *)name;
-
-//测试 城市筛选
-- (NSArray *)getUnCurrentCity;
-
-/************ 电影 ***************/
+/************************  电影 *********************************/
+/***************************************************************/
 - (ApiCmd *)getAllMoviesListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllMoviesListFromCoreData;
 - (NSArray *)getAllMoviesListFromCoreDataWithCityName:(NSString *)cityName;
@@ -139,7 +142,8 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (BOOL)deleteFavoriteCinemaWithId:(NSNumber *)uid;
 - (NSArray *)getRegionOrder;
 
-/************ 演出 ***************/
+/************************ 演出 *********************************/
+/***************************************************************/
 - (ApiCmd *)getAllShowsListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllShowsListFromCoreData;
 - (NSArray *)getAllShowsListFromCoreDataWithCityName:(NSString *)cityName;
@@ -148,16 +152,42 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (void)insertShowsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importShow:(SShow *)sShow ValuesForKeysWithObject:(NSDictionary *)ashowDic;
 
-/************ 酒吧 ***************/
+/************************ 酒吧 *********************************/
+/***************************************************************/
+//酒吧 分页 
+- (ApiCmd *)getBarsListFromWeb:(id<ApiNotify>)delegate
+                        offset:(int)offset
+                         limit:(int)limit
+                      Latitude:(CLLocationDegrees)latitude
+                     longitude:(CLLocationDegrees)longitude
+                      dataType:(NSString *)dataType
+                     isNewData:(BOOL)isNewData;
+
+- (NSArray *)getBarsListFromCoreDataOffset:(int)offset
+                                     limit:(int)limit
+                                  Latitude:(CLLocationDegrees)latitude
+                                 longitude:(CLLocationDegrees)longitude
+                                  dataType:(NSString *)dataType
+                                 validDate:(NSString *)validDate;
+
+- (NSArray *)getBarsListFromCoreDataWithCityName:(NSString *)cityId
+                                          offset:(int)offset
+                                           limit:(int)limit
+                                        Latitude:(CLLocationDegrees)latitude
+                                       longitude:(CLLocationDegrees)longitude
+                                        dataType:(NSString *)dataType
+                                       validDate:(NSString *)validDate;
+
 - (ApiCmd *)getAllBarsListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllBarsListFromCoreData;
 - (NSArray *)getAllBarsListFromCoreDataWithCityName:(NSString *)cityName;
 - (NSUInteger)getCountOfBarsListFromCoreData;
 - (NSUInteger)getCountOfBarsListFromCoreDataWithCityName:(NSString *)cityName;
-- (void)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (NSArray *)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importBar:(BBar *)bBar ValuesForKeysWithObject:(NSDictionary *)aBarDic;
 
-/************ KTV ***************/
+/************************ KTV *********************************/
+/***************************************************************/
 //获取 全部 KTV数据
 - (ApiCmd *)getAllKTVsListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllKTVsListFromCoreData;

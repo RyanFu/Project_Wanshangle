@@ -61,6 +61,8 @@ typedef NS_ENUM(NSInteger, WSLDataCacheType) {
 - (BOOL) hasError;
 - (BOOL) hasWarn;
 
++(NSString *)getTimeStampUid:(NSString *)type;
+
 -(void) notifyDelegate:(NSDictionary*) dictionary;
 
 /**

@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, NSFilterShowListType) {
+    NSFilterShowListNoneData = 0,
+    NSFilterShowListTypeData,
+    NSFilterShowListTimeData,
+    NSFilterShowListOrderData
+};
+
 @class ApiCmdShow_getAllShows;
 @class EGORefreshTableHeaderView;
 
@@ -21,22 +28,35 @@
 @property(nonatomic,retain) IBOutlet UIButton* typeButton;
 @property(nonatomic,retain) IBOutlet UIButton* timeButton;
 @property(nonatomic,retain) IBOutlet UIButton* orderButton;
-@property(nonatomic,retain) IBOutlet UITableView* mTableView;
 @property(nonatomic,retain) IBOutlet UIView* typeView;
 @property(nonatomic,retain) IBOutlet UIView* timeView;
 @property(nonatomic,retain) IBOutlet UIView* orderView;
+
+@property(nonatomic,retain) IBOutlet UIImageView* typeArrowImg;
+@property(nonatomic,retain) IBOutlet UIImageView* timeArrowImg;
+@property(nonatomic,retain) IBOutlet UIImageView* orderArrowImg;
+
+@property(nonatomic,retain) IBOutlet UITableView *mTableView;
+@property(nonatomic,retain) NSMutableArray *mArray;
+@property(nonatomic,retain) NSMutableArray *mCacheArray;
 @property(nonatomic,retain) NSArray *showsArray;
+
 @property(nonatomic,retain) ApiCmdShow_getAllShows *apiCmdShow_getAllShows;
 @property(nonatomic,retain)EGORefreshTableHeaderView *refreshHeaderView;
 @property(nonatomic,retain)EGORefreshTableHeaderView *refreshTailerView;
+@property(nonatomic,readwrite)NSFilterShowListType filterShowListType;
+
+@property(nonatomic,readwrite)int selectedType;
+@property(nonatomic,readwrite)int selectedTime;
+@property(nonatomic,readwrite)int selectedOrder;
 
 - (IBAction)clickTypeButton:(id)sender;
 - (IBAction)clickTimeButton:(id)sender;
 - (IBAction)clickOrderButton:(id)sender;
+
 - (IBAction)clickTypeSubButtonDown:(id)sender;
-- (IBAction)clickTypeSubButtonUp:(id)sender;
 - (IBAction)clickTimeSubButtonDown:(id)sender;
-- (IBAction)clickTimeSubButtonUp:(id)sender;
 - (IBAction)clickOrderSubButtonDown:(id)sender;
-- (IBAction)clickOrderSubButtonUp:(id)sender;
+
+- (IBAction)clickMarkView:(id)sender;
 @end

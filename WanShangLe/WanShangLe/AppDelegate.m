@@ -10,6 +10,7 @@
 #import "RootViewController.h"
 #import "ApiConfig.h"
 #import <ShareSDK/ShareSDK.h>
+#import "City.h"
 
 @interface AppDelegate(){
     
@@ -97,6 +98,17 @@
     
     CFTimeInterval time2 = Elapsed_Time;
     ElapsedTime(time2, time1);
+    
+    /* 测试本地时间戳
+    NSArray *arrays = [City MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"locationDate > %@",@"20130715095231898"]];
+    for (City *tCity in arrays) {
+        
+        if ([tCity.locationDate compare:@"20130715095234733" options:NSNumericSearch] == NSOrderedDescending ||
+            [tCity.locationDate compare:@"20130715095234733" options:NSNumericSearch] == NSOrderedSame) {
+            
+            ABLoggerDebug(@"city name = %@ id = %@ locationDate = %@",tCity.name,tCity.uid,tCity.locationDate);
+        }
+    }*/
     
     return YES;
 }

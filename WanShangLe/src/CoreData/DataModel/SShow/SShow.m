@@ -2,7 +2,7 @@
 //  SShow.m
 //  WanShangLe
 //
-//  Created by stephenliu on 13-7-12.
+//  Created by stephenliu on 13-7-15.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -13,8 +13,11 @@
 @implementation SShow
 
 @dynamic address;
+@dynamic cityId;
+@dynamic dataType;
 @dynamic date;
 @dynamic latitude;
+@dynamic locationDate;
 @dynamic longitude;
 @dynamic name;
 @dynamic price;
@@ -25,9 +28,6 @@
 @dynamic uid;
 @dynamic webImg;
 @dynamic where;
-@dynamic cityId;
-@dynamic locationData;
-@dynamic dataType;
 @dynamic showDetail;
 
 @end

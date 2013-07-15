@@ -37,12 +37,25 @@
     return self.httpRequest;
 }
 
+//http://api.wanshangle.com:10000/api? appId=000001&sign=sign&time=1371988912&v=1.0&api=bar.eventlist&cityid=0755&&offset=0&limit=30&order=3
 - (NSMutableDictionary*) getParamDict {
     NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
     
-    [paramDict setObject:@"extaccount.join" forKey:@"api"];
+    [paramDict setObject:@"bar.eventlist" forKey:@"api"];
+    self.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    [paramDict setObject:self.cityId forKey:@"cityid"];
+    [paramDict setObject:[NSString stringWithFormat:@"%d",self.offset] forKey:@"offset"];
+    [paramDict setObject:[NSString stringWithFormat:@"%d",self.limit] forKey:@"limit"];
+    [paramDict setObject:self.cityId forKey:@"order"];
     
     return paramDict;
+}
+
++(NSString *)getTimeStampUid:(NSString *)type{
+    NSString *cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    NSString *key = [NSString stringWithFormat:@"api=bar.eventlist&cityid=%@&order=%@",cityId,type];
+//   return md5(key);
+    return key;
 }
 
 

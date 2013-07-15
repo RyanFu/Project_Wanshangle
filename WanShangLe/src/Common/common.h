@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#define DEGREES_TO_RADIANS(x) (M_PI * x / 180.0)
+
 extern NSDate* parseDateFromNSNumber(NSNumber* number);
 
 extern BOOL parseBoolFromString(NSString* boolValue);

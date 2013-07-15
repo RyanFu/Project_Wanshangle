@@ -103,13 +103,15 @@ static DataBaseManager *_sharedInstance = nil;
 
 #pragma mark -
 #pragma mark 日期-时间
-- (BOOL)isToday:(NSString *)timeStamp{
-    
-    if (isEmpty(timeStamp)) {
-        return NO;
-    }
-    
-    return [[self getTodayTimeStamp] intValue]==[timeStamp intValue];
+- (BOOL)isToday:(NSString *)date{
+   _timeFormatter.dateFormat = @"yyyy-MM-dd";
+    NSString *nowDate = [_timeFormatter stringFromDate:[NSDate date]];
+    NSString *cmpDate = [[date componentsSeparatedByString:@" "] objectAtIndex:0];
+    return ([nowDate compare:cmpDate options:NSNumericSearch] == NSOrderedSame);
+}
+
+- (BOOL)isTomorrow:(NSString *)date{
+    return YES;
 }
 
 - (NSString *)getTodayTimeStamp{
@@ -123,7 +125,7 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (NSString *)getTodayZeroTimeStamp{
     //formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss ZZZ";
-    _timeFormatter.dateFormat = @"yyyyMMdd000000SSS";
+    _timeFormatter.dateFormat = @"yyyyMMdd000000000";
     NSString *updateTimeStamp = [_timeFormatter stringFromDate:[NSDate date]];
     ABLoggerInfo(@"today time stamp is ===== %@",updateTimeStamp);
     return updateTimeStamp;
@@ -609,7 +611,7 @@ static DataBaseManager *_sharedInstance = nil;
     MMovie *mMovie = nil;
     for (int i=0; i<[array count]; i++) {
         
-        mMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:[NSNumber numberWithInt:[[[array objectAtIndex:i] objectForKey:@"id"] intValue]]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        mMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:[[array objectAtIndex:i] objectForKey:@"id"]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
         if (mMovie == nil)
         {
             ABLoggerInfo(@"插入 一条 New电影 新数据 ======= %@",[[array objectAtIndex:i] objectForKey:@"name"]);
@@ -719,9 +721,9 @@ static DataBaseManager *_sharedInstance = nil;
 - (void)importDynamicMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData
 {
     ABLoggerInfo(@"amovieData == %@",amovieData);
-    mMovie.rating = [NSNumber numberWithInt:[[amovieData objectForKey:@"rating"] intValue]];
+    mMovie.rating = [NSString stringWithFormat:@"%d",[[amovieData objectForKey:@"rating"] intValue]];
     mMovie.ratingFrom = [amovieData objectForKey:@"ratingFrom"];
-    mMovie.ratingpeople = [NSNumber numberWithInt:[[amovieData objectForKey:@"ratingCount"] intValue]];
+    mMovie.ratingpeople = [amovieData objectForKey:@"ratingcount"];
     mMovie.newMovie = [amovieData objectForKey:@"newMovie"];
     mMovie.twoD = [NSNumber numberWithInt:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:0] intValue]];
     mMovie.threeD = [NSNumber numberWithInt:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:1] intValue]];
@@ -1487,10 +1489,109 @@ static DataBaseManager *_sharedInstance = nil;
     return count;
 }
 
-- (void)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+#pragma mark 酒吧 分页 时间
+- (ApiCmd *)getBarsListFromWeb:(id<ApiNotify>)delegate
+                        offset:(int)offset
+                         limit:(int)limit
+                      Latitude:(CLLocationDegrees)latitude
+                     longitude:(CLLocationDegrees)longitude
+                      dataType:(NSString *)dataType
+                     isNewData:(BOOL)isNewData{
+    
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    
+    offset = (offset<0)?0:offset;
+    
+    NSString *validDate = [self getTodayZeroTimeStamp];;
+    NSString *uid = [ApiCmdBar_getAllBars getTimeStampUid:dataType];
+    TimeStamp *timeStamp = [TimeStamp MR_findFirstByAttribute:@"uid" withValue:uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    //判断是否刷新数据
+    if (isNewData) {
+        if (timeStamp == nil)
+        {
+            ABLoggerInfo(@"插入 酒吧 TimeStamp 新数据 ======= %@",uid);
+            timeStamp = [TimeStamp MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        }
+        timeStamp.uid = uid;
+        timeStamp.locationDate = [self getTodayTimeStamp];
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
+    }else{
+        if (timeStamp!=nil) {
+            if (([validDate compare:timeStamp.locationDate options:NSNumericSearch] != NSOrderedDescending)) {
+                validDate = timeStamp.locationDate;
+            }
+        }
+    }
+    
+    //先从数据库里面读取数据
+    NSArray *coreData_array = [self getBarsListFromCoreDataOffset:offset limit:limit Latitude:latitude longitude:longitude dataType:dataType validDate:validDate];
+    
+    if ([coreData_array count]>0 && delegate && [delegate respondsToSelector:@selector(apiNotifyLocationResult:cacheData:)]) {
+        [delegate apiNotifyLocationResult:nil cacheData:coreData_array];
+        return tapiCmd;
+    }
+    
+    //因为数据库里没有数据或是数据过期，所以向服务器请求数据
+    if (tapiCmd!=nil)
+        if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
+            ABLoggerWarn(@"不能请求 酒吧 列表数据，因为已经请求了");
+            return tapiCmd;
+        }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmdBar_getAllBars* apiCmdBar_getAllBars = [[ApiCmdBar_getAllBars alloc] init];
+    apiCmdBar_getAllBars.delegate = delegate;
+    apiCmdBar_getAllBars.offset = offset;
+    
+    apiCmdBar_getAllBars.limit = limit;
+    if (limit==0) {
+        apiCmdBar_getAllBars.limit = DataLimit;
+    }
+    
+    apiCmdBar_getAllBars.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    [apiClient executeApiCmdAsync:apiCmdBar_getAllBars];
+    [apiCmdBar_getAllBars.httpRequest setTag:API_KKTVCmd];
+    
+    return [apiCmdBar_getAllBars autorelease];
+    
+}
+
+- (NSArray *)getBarsListFromCoreDataOffset:(int)offset
+                                     limit:(int)limit
+                                  Latitude:(CLLocationDegrees)latitude
+                                 longitude:(CLLocationDegrees)longitude
+                                  dataType:(NSString *)dataType
+                                 validDate:(NSString *)validDate{
+    
+    return [self getBarsListFromCoreDataWithCityName:nil offset:offset limit:limit Latitude:latitude longitude:longitude dataType:dataType validDate:validDate];
+    
+}
+
+- (NSArray *)getBarsListFromCoreDataWithCityName:(NSString *)cityId
+                                          offset:(int)offset
+                                           limit:(int)limit
+                                        Latitude:(CLLocationDegrees)latitude
+                                       longitude:(CLLocationDegrees)longitude
+                                        dataType:(NSString *)dataType
+                                       validDate:(NSString *)validDate{
+    NSString *sortStr = @"begintime";
+    BOOL isAscending = YES;
+    if ([dataType intValue]==2) {
+        sortStr = @"popular";
+        isAscending = NO;
+    }
+    
+    return [BBar MR_findAllSortedBy:sortStr ascending:isAscending withPredicate:[NSPredicate predicateWithFormat:@"locationDate >= %@",validDate] offset:offset limit:limit inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+}
+
+
+
+- (NSArray *)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
     CFTimeInterval time1 = Elapsed_Time;
     
-    NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"pubs"];
+    NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:20];
+    NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"events"];
     
     BBar *bBar = nil;
     for (int i=0; i<[array count]; i++) {
@@ -1505,6 +1606,7 @@ static DataBaseManager *_sharedInstance = nil;
         
         City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
         bBar.cityId = city.uid;
+        [returnArray addObject:bBar];
     }
     
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
@@ -1518,38 +1620,66 @@ static DataBaseManager *_sharedInstance = nil;
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
     ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
+    return [returnArray autorelease];
 }
 
 /*
  {
- "errors":[],
- "data":{
- "count":10,
- "pubs":[
+ httpCode: 200,
+ errors: [ ],
+ data: {
+ count: 16,
+ events: [
  {
- "id":40011,
- "name":"万圣节女士Party1",
- "popular":52,
- "address":"希尔顿酒店",
- "date":"2013-7-15",
- "tel":13800383800,
- "intro":"活动介绍：1，*****",
- "recommended":100,
- "like":100,
- "scene":"http://sdjflsajlfaslf.png",
- "longitude":34.2343,
- "latitude":57.3445
+ id: "1",
+ barid: "1",
+ barname: "bar",
+ eventname: "欢乐相聚",
+ address: "",
+ latitude: "31.21569",
+ longitude: "121.43956",
+ type: "1",
+ cityid: "0",
+ districtid: "1",
+ begintime: "2013-07-15 10:00:00",
+ endtime: "2013-07-16",
+ eventtime: "10.5",
+ hotadded: "41",
+ price: "60",
+ recommendadded: "29",
+ wantedadded: "11",
+ description: null,
+ eventurl: null,
+ tag: "0",
+ currentstatus: "3",
+ createtime: "2013-07-15 15:32:43",
+ createdbysuid: "11",
+ lastmodifiedtime: "2013-07-15 15:45:52",
+ lastmodifiedbysuid: "11",
+ hot: 41,
+ recommend: 29,
+ want: 11
  },
+ {},
+ {}
+ ]
+ },
+ token: null,
+ timestamp: "1373876492"
+ }
  */
 - (void)importBar:(BBar *)bBar ValuesForKeysWithObject:(NSDictionary *)aBarDic{
-    bBar.uid = [[aBarDic objectForKey:@"id"] stringValue];
-    bBar.name = [aBarDic objectForKey:@"name"];
-    bBar.popular = [aBarDic objectForKey:@"popular"];
+    bBar.uid = [aBarDic objectForKey:@"id"];
+    bBar.barId = [aBarDic objectForKey:@"barid"];
+    bBar.name = [aBarDic objectForKey:@"eventname"];
+    bBar.barName = [aBarDic objectForKey:@"barname"];
+    bBar.popular = [aBarDic objectForKey:@"hotadded"];
     bBar.address = [aBarDic objectForKey:@"address"];
-    bBar.date = [aBarDic objectForKey:@"date"];
+    bBar.begintime = [aBarDic objectForKey:@"begintime"];
     bBar.phoneNumber = [[aBarDic objectForKey:@"tel"] stringValue];
-    bBar.longitude = [aBarDic objectForKey:@"longitude"];
-    bBar.latitude = [aBarDic objectForKey:@"latitude"];
+//    bBar.longitude = [aBarDic objectForKey:@"longitude"];
+//    bBar.latitude = [aBarDic objectForKey:@"latitude"];
+    bBar.locationDate = [self getTodayTimeStamp];
 }
 //========================================= 酒吧 =========================================/
 

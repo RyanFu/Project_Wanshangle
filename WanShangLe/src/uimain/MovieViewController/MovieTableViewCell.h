@@ -14,7 +14,7 @@
 @property(nonatomic,retain) IBOutlet UILabel *movie_name;
 @property(nonatomic,retain) IBOutlet UILabel *movie_word;
 @property(nonatomic,retain) IBOutlet UILabel *movie_rating;
-@property(nonatomic,retain) IBOutlet UIImageView *movie_imageView;
+@property(nonatomic,retain) UIImageView *movie_imageView;
 
 @property(nonatomic,retain) IBOutlet UIImageView *movie_image_new;
 @property(nonatomic,retain) IBOutlet UIImageView *movie_image_3dimx;

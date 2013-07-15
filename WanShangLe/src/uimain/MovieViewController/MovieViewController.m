@@ -56,11 +56,16 @@
 
 - (void)dealloc{
     
-    self.moviesArray = nil;
-    self.movieTableView = nil;
+    [[_apiCmdMovie_getAllMovies httpRequest] clearDelegatesAndCancel];
+    _apiCmdMovie_getAllMovies.delegate = nil;
+    self.apiCmdMovie_getAllMovies = nil;
+    
+    [MovieListTableViewDelegate cancelPreviousPerformRequestsWithTarget:_movieDelegate];
     self.movieDelegate = nil;
     
-    self.apiCmdMovie_getAllMovies = nil;
+    self.moviesArray = nil;
+    self.movieTableView = nil;
+    
     self.movieContentView = nil;
     self.topView = nil;
     self.titleLabel = nil;
@@ -180,7 +185,7 @@
     [headerView release];
     
     _movieTableView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
-    _movieTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLineEtched;
+    _movieTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     [_movieContentView addSubview:_movieTableView];
     [self.view addSubview:_movieContentView];
@@ -204,6 +209,7 @@
         [_movieTableView addSubview:view];
         self.refreshHeaderView = view;
         [view release];
+        view = nil;
     }
     
     [_refreshHeaderView refreshLastUpdatedDate];

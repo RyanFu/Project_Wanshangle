@@ -2,7 +2,7 @@
 //  KKTVBuyInfo.h
 //  WanShangLe
 //
-//  Created by stephenliu on 13-7-12.
+//  Created by stephenliu on 13-7-15.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -14,8 +14,8 @@
 @interface KKTVBuyInfo : NSManagedObject
 
 @property (nonatomic, retain) id discountInfo;
+@property (nonatomic, retain) NSString * locationDate;
 @property (nonatomic, retain) NSString * uid;
-@property (nonatomic, retain) NSString * locationData;
 @property (nonatomic, retain) KKTV *ktv;
 
 @end

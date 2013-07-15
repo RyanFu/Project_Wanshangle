@@ -8,11 +8,10 @@
 
 #import "ApiCmd.h"
 
-@interface ApiCmdKTV_getAllKTVs : ApiCmd
-{
-@private
-    
+@interface ApiCmdKTV_getAllKTVs : ApiCmd{
+
 }
+@property(nonatomic,retain) NSString *dataType;
 - (NSMutableDictionary*) getParamDict;
 - (void) parseResultData:(NSDictionary*) dictionary;
 

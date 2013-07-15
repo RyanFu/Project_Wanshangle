@@ -142,6 +142,7 @@ static NSString* valuePhoneType = @"iPhone";
     [postDict setValue:[ApiConfig getApiAppId] forKey:keyAppId];
     [postDict setValue:@"1.0" forKey:@"v"];
     [postDict setValue:@"sign" forKey:@"sign"];
+    [postDict setValue:[NSString stringWithFormat:@"%0.0f",[[NSDate date] timeIntervalSince1970]] forKey:@"time"];
     
     NSMutableString *urlStr = [[NSMutableString alloc] init];
     [urlStr appendString:[ApiConfig getApiRequestUrl]];

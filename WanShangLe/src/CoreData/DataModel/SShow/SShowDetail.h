@@ -2,7 +2,7 @@
 //  SShowDetail.h
 //  WanShangLe
 //
-//  Created by stephenliu on 13-7-12.
+//  Created by stephenliu on 13-7-15.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -15,10 +15,10 @@
 
 @property (nonatomic, retain) id buyInfo;
 @property (nonatomic, retain) NSString * introduce;
+@property (nonatomic, retain) NSString * locationDate;
 @property (nonatomic, retain) NSNumber * recommendation;
 @property (nonatomic, retain) NSString * uid;
 @property (nonatomic, retain) NSNumber * wantLook;
-@property (nonatomic, retain) NSString * locationData;
 @property (nonatomic, retain) SShow *show;
 
 @end

@@ -14,7 +14,7 @@
 
 @interface ShowViewController ()<ApiNotify>
 @property(nonatomic,retain) ShowTableViewDelegate *showTableViewDelegate;
-@property(nonatomic,retain) UIView *maskView;
+@property(nonatomic,retain) UIControl *maskView;
 
 @end
 
@@ -24,6 +24,9 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        
+        self.title = @"演出";
+        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             self.apiCmdShow_getAllShows = (ApiCmdShow_getAllShows *)[[DataBaseManager sharedInstance] getAllShowsListFromWeb:self];
         });
@@ -64,44 +67,38 @@
     [super dealloc];
 }
 
+#pragma mark -
+#pragma mark UIView Cycle
 - (void)viewWillAppear:(BOOL)animated{
     [self.navigationController setNavigationBarHidden:NO];
     
     self.apiCmdShow_getAllShows = (ApiCmdShow_getAllShows *)[[DataBaseManager sharedInstance] getAllShowsListFromWeb:self];
-    
-#ifdef TestCode
-    [self updatData];//测试代码
-#endif
-    
 }
 
-- (void)updatData{
-    for (int i=0; i<10; i++) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            self.apiCmdShow_getAllShows = (ApiCmdShow_getAllShows *)[[DataBaseManager sharedInstance] getAllShowsListFromWeb:self];
-        });
-    }
+- (void)viewWillDisappear:(BOOL)animated{
+    
+    //保存用户的选项
+    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+    NSString *selectedTypeData = [NSString stringWithFormat:@"%d#%d#%d",_selectedType,_selectedTime,_selectedOrder];
+    [userDefault setObject:selectedTypeData forKey:SShow_FilterType];
+    [userDefault synchronize];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    _showTableViewDelegate = [[ShowTableViewDelegate alloc] init];
-    _showTableViewDelegate.parentViewController = self;
-    [self setTableViewDelegate];
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         [self updateData:0];
     });
     
-    _maskView = [[UIView alloc] initWithFrame:self.view.bounds];
-    [_maskView setBackgroundColor:[UIColor colorWithWhite:0.000 alpha:0.680]];
-    
     [self initUIBarItem];
+    [self initData];
     [self initRefreshHeaderView];
+    [self setTableViewDelegate];
 }
 
+#pragma mark -
+#pragma mark 初始化数据
 - (void)initUIBarItem{
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton setFrame:CGRectMake(0, 0, 45, 30)];
@@ -112,6 +109,49 @@
     self.navigationItem.leftBarButtonItem = backItem;
     [backItem release];
     
+}
+
+- (void)initData{
+    if (_mArray==nil) {
+        _mArray = [[NSMutableArray alloc] initWithCapacity:10];
+    }
+    if (_mCacheArray==nil) {
+        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:10];
+    }
+    
+    _maskView = [[UIControl alloc] initWithFrame:self.view.bounds];
+    [_maskView setBackgroundColor:[UIColor colorWithWhite:0.000 alpha:0.680]];
+    [_maskView addTarget:self action:@selector(clickMarkView:) forControlEvents:UIControlEventTouchUpInside];
+    
+    _showTableViewDelegate = [[ShowTableViewDelegate alloc] init];
+    _showTableViewDelegate.parentViewController = self;
+    
+    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+    NSString *selectedTypeData = [userDefault objectForKey:SShow_FilterType];
+    if (!isEmpty(selectedTypeData)) {
+        NSArray *typeArray = [selectedTypeData componentsSeparatedByString:@"#"];
+        for (int i=0;i<[typeArray count];i++) {
+            int index = [[typeArray objectAtIndex:i] intValue];
+            switch (i) {
+                case 0:
+                    [(UIButton *)[_typeBts objectAtIndex:index] setSelected:YES];
+                    _selectedType = index;
+                    break;
+                case 1:
+                    [(UIButton *)[_timeBts objectAtIndex:index] setSelected:YES];
+                    _selectedTime = index;
+                    break;
+                default:
+                    [(UIButton *)[_orderBts objectAtIndex:index] setSelected:YES];
+                    _selectedOrder = index;
+                    break;
+            }
+        }
+    }else{
+        [(UIButton *)[_typeBts objectAtIndex:0] setSelected:YES];
+        [(UIButton *)[_timeBts objectAtIndex:0] setSelected:YES];
+        [(UIButton *)[_orderBts objectAtIndex:0] setSelected:YES];
+    }
 }
 
 - (void)setTableViewDelegate{
@@ -129,7 +169,8 @@
         view.backgroundColor = [UIColor clearColor];
 		[_mTableView addSubview:view];
 		self.refreshTailerView = view;
-		[view release];view=nil;
+		[view release];
+        view=nil;
         
         view = [[EGORefreshTableHeaderView alloc] initWithFrame: CGRectMake(0.0f, - _mTableView.bounds.size.height, _mTableView.frame.size.width, _mTableView.bounds.size.height)];
         view.delegate = _showTableViewDelegate;
@@ -138,6 +179,7 @@
         [_mTableView addSubview:view];
         self.refreshHeaderView = view;
         [view release];
+        view=nil;
     }
     
     [_refreshHeaderView refreshLastUpdatedDate];
@@ -147,7 +189,7 @@
 }
 
 #pragma mark -
-#pragma mark xib Button event
+#pragma mark UIButton event
 
 - (void)clickBackButton:(id)sender{
     
@@ -157,11 +199,17 @@
 //点击类型按钮
 - (IBAction)clickTypeButton:(id)sender{
     
+    if (_filterShowListType == NSFilterShowListTypeData) {
+        return;
+    }
+    
+    _filterShowListType = NSFilterShowListTypeData;
+    
     [self cleanUpPanelView];
+    
     _typeButton.selected = YES;
     [_typeView setAlpha:0];
     
-    [_mTableView addSubview:_maskView];
     [self.view addSubview:_typeView];
     
     CGRect newFrame = _typeView.frame;
@@ -174,6 +222,7 @@
         CGRect newFrame = _typeView.frame;
         newFrame.origin = CGPointMake(_typeButton.frame.origin.x, _typeButton.frame.origin.y+_typeButton.frame.size.height);
         _typeView.frame = newFrame;
+        _typeArrowImg.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(180));
     } completion:^(BOOL finished) {
         
     }];
@@ -181,11 +230,17 @@
 
 //点击时间按钮
 - (IBAction)clickTimeButton:(id)sender{
- [self cleanUpPanelView];
+    
+    if (_filterShowListType == NSFilterShowListTimeData) {
+        return;
+    }
+    
+    _filterShowListType = NSFilterShowListTimeData;
+    
+    [self cleanUpPanelView];
     [_timeView setAlpha:0];
     _timeButton.selected = YES;
-    
-    [_mTableView addSubview:_maskView];
+   
     [self.view addSubview:_timeView];
     
     CGRect newFrame = _timeView.frame;
@@ -200,6 +255,7 @@
         newFrame.origin = CGPointMake(_timeButton.frame.origin.x - (_timeView.frame.size.width-_timeButton.frame.size.width)/2,
                                       _timeButton.frame.origin.y+_timeButton.frame.size.height);
         _timeView.frame = newFrame;
+         _timeArrowImg.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(180));
     } completion:^(BOOL finished) {
         
     }];
@@ -207,11 +263,17 @@
 
 //点击顺序按钮
 - (IBAction)clickOrderButton:(id)sender{
- [self cleanUpPanelView];
+    
+    if (_filterShowListType == NSFilterShowListOrderData) {
+        return;
+    }
+    
+    _filterShowListType = NSFilterShowListOrderData;
+    
+    [self cleanUpPanelView];
     [_orderView setAlpha:0];
     _orderButton.selected = YES;
     
-    [_mTableView addSubview:_maskView];
     [self.view addSubview:_orderView];
     
     CGRect newFrame = _orderView.frame;
@@ -226,6 +288,7 @@
         newFrame.origin = CGPointMake(_orderButton.frame.origin.x - (_orderView.frame.size.width-_orderButton.frame.size.width),
                                       _orderButton.frame.origin.y+_orderButton.frame.size.height);
         _orderView.frame = newFrame;
+        _orderArrowImg.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(180));
     } completion:^(BOOL finished) {
         
     }];
@@ -239,6 +302,20 @@
     _timeButton.selected = NO;
     _orderButton.selected = NO;
     _typeButton.selected = NO;
+    
+    [_mTableView setScrollEnabled:NO];
+    [_mTableView addSubview:_maskView];
+    
+    _typeArrowImg.transform = CGAffineTransformIdentity;
+    _timeArrowImg.transform = CGAffineTransformIdentity;
+    _orderArrowImg.transform = CGAffineTransformIdentity;
+}
+
+- (IBAction)clickMarkView:(id)sender{
+    [self cleanUpPanelView];
+    _filterShowListType = NSFilterShowListNoneData;
+    [_maskView removeFromSuperview];
+    [_mTableView setScrollEnabled:YES];
 }
 
 - (IBAction)clickTypeSubButtonDown:(id)sender{
@@ -248,40 +325,7 @@
     [self cleanUpTypeSubButton];
     [bt setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
     
-    switch (tag) {
-        case 1:{
-            
-        }
-            
-            break;
-        case 2:{
-            
-        }
-            
-            break;
-        case 3:{
-            
-        }
-            
-            break;
-        case 4:{
-            
-        }
-            
-            break;
-        case 5:{
-            
-        }
-            
-            break;
-        default:
-            break;
-    }
-}
-
-- (IBAction)clickTypeSubButtonUp:(id)sender{
-    [_typeView removeFromSuperview];
-    [_maskView removeFromSuperview];
+    _selectedType = tag-1;
 }
 
 - (void)cleanUpTypeSubButton{
@@ -297,40 +341,7 @@
     [self cleanUpTimeSubButton];
     [bt setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
     
-    switch (tag) {
-        case 1:{
-            
-        }
-            
-            break;
-        case 2:{
-            
-        }
-            
-            break;
-        case 3:{
-            
-        }
-            
-            break;
-        case 4:{
-            
-        }
-            
-            break;
-        case 5:{
-            
-        }
-            
-            break;
-        default:
-            break;
-    }
-}
-
-- (IBAction)clickTimeSubButtonUp:(id)sender{
-    [_timeView removeFromSuperview];
-    [_maskView removeFromSuperview];
+    _selectedTime = tag-1;
 }
 
 - (void)cleanUpTimeSubButton{
@@ -346,40 +357,7 @@
     [self cleanUpOrderSubButton];
     [bt setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
     
-    switch (tag) {
-        case 1:{
-            
-        }
-            
-            break;
-        case 2:{
-            
-        }
-            
-            break;
-        case 3:{
-            
-        }
-            
-            break;
-        case 4:{
-            
-        }
-            
-            break;
-        case 5:{
-            
-        }
-            
-            break;
-        default:
-            break;
-    }
-}
-
-- (IBAction)clickOrderSubButtonUp:(id)sender{
-    [_orderView removeFromSuperview];
-    [_maskView removeFromSuperview];
+    _selectedOrder = tag-1;
 }
 
 - (void)cleanUpOrderSubButton{

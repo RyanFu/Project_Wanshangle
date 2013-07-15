@@ -2,7 +2,7 @@
 //  MMovieDetail.m
 //  WanShangLe
 //
-//  Created by stephenliu on 13-7-12.
+//  Created by stephenliu on 13-7-15.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -15,9 +15,9 @@
 @dynamic doneLook;
 @dynamic doneRec;
 @dynamic info;
+@dynamic locationDate;
 @dynamic recommendadded;
 @dynamic wantedadded;
-@dynamic locationData;
 @dynamic movie;
 
 @end
