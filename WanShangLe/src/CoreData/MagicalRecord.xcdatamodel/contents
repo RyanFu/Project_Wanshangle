@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12C3103" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12D78" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="ActionState" syncable="YES">
+        <attribute name="like" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="locationDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="recommend" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="vote" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="wantLook" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+    </entity>
     <entity name="BBar" representedClassName="BBar" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="cityId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dataType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="locationData" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="locationDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phoneNumber" optional="YES" attributeType="String" syncable="YES"/>
@@ -16,13 +25,14 @@
     </entity>
     <entity name="BBarDetail" representedClassName="BBarDetail" syncable="YES">
         <attribute name="introduce" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="locationData" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="locationDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="recommendation" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wantLook" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="bar" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="BBar" inverseName="barDetail" inverseEntity="BBar" syncable="YES"/>
     </entity>
     <entity name="City" representedClassName="City" syncable="YES">
+        <attribute name="locationDate" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -37,7 +47,7 @@
         <attribute name="favorite" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="juan" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="locationData" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="locationDate" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="nearby" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
@@ -52,7 +62,7 @@
     </entity>
     <entity name="KKTVBuyInfo" representedClassName="KKTVBuyInfo" syncable="YES">
         <attribute name="discountInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
-        <attribute name="locationData" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="locationDate" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="ktv" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="KKTV" inverseName="ktvBuyInfo" inverseEntity="KKTV" syncable="YES"/>
     </entity>
@@ -161,16 +171,15 @@
         <relationship name="show" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="SShow" inverseName="showDetail" inverseEntity="SShow" syncable="YES"/>
     </entity>
     <entity name="TimeStamp" representedClassName="TimeStamp" syncable="YES">
-        <attribute name="localTimeStamp" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="localTimeStamp" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="webTimeStamp" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="BBar" positionX="-522" positionY="-805" width="128" height="223"/>
-        <element name="BBarDetail" positionX="-711" positionY="-757" width="128" height="133"/>
-        <element name="City" positionX="-171" positionY="-730" width="128" height="73"/>
-        <element name="KKTV" positionX="142" positionY="-838" width="128" height="373"/>
-        <element name="KKTVBuyInfo" positionX="430" positionY="-909" width="128" height="103"/>
+        <element name="BBar" positionX="-522" positionY="-805" width="128" height="225"/>
+        <element name="BBarDetail" positionX="-711" positionY="-757" width="128" height="135"/>
+        <element name="City" positionX="-171" positionY="-730" width="128" height="90"/>
+        <element name="KKTV" positionX="142" positionY="-838" width="128" height="375"/>
+        <element name="KKTVBuyInfo" positionX="430" positionY="-909" width="128" height="105"/>
         <element name="KKTVPriceInfo" positionX="439" positionY="-567" width="128" height="103"/>
         <element name="MBuyTicketInfo" positionX="-27" positionY="-63" width="128" height="88"/>
         <element name="MCinema" positionX="99" positionY="-306" width="128" height="328"/>
@@ -180,6 +189,7 @@
         <element name="MSchedule" positionX="-189" positionY="-67" width="128" height="178"/>
         <element name="SShow" positionX="-137" positionY="-1204" width="128" height="298"/>
         <element name="SShowDetail" positionX="-335" positionY="-1044" width="128" height="148"/>
-        <element name="TimeStamp" positionX="-164" positionY="-612" width="128" height="88"/>
+        <element name="TimeStamp" positionX="-164" positionY="-612" width="128" height="75"/>
+        <element name="ActionState" positionX="160" positionY="192" width="128" height="150"/>
     </elements>
 </model>

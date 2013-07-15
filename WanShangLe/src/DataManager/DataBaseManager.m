@@ -13,7 +13,6 @@ static DataBaseManager *_sharedInstance = nil;
 #import "DataBase.h"
 
 @interface DataBaseManager(){
-    NSString *updateTimeStamp;
     
 }
 @property(nonatomic,retain)NSDateFormatter *timeFormatter;
@@ -46,7 +45,6 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 - (void)dealloc {
-    [updateTimeStamp release];
     self.timeFormatter = nil;
     [super dealloc];
 }
@@ -116,12 +114,18 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (NSString *)getTodayTimeStamp{
     
-    if (!updateTimeStamp) {
-        //formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss ZZZ";
-        _timeFormatter.dateFormat = @"yyyyMMdd";
-        updateTimeStamp = [[_timeFormatter stringFromDate:[NSDate date]] retain];
-        ABLoggerInfo(@"today time stamp is ===== %@",updateTimeStamp);
-    }
+    //formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss ZZZ";
+    _timeFormatter.dateFormat = @"yyyyMMddHHmmssSSS";
+    NSString *updateTimeStamp = [_timeFormatter stringFromDate:[NSDate date]];
+    ABLoggerInfo(@"获取当前时间 ===== %@",updateTimeStamp);
+    return updateTimeStamp;
+}
+
+- (NSString *)getTodayZeroTimeStamp{
+    //formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss ZZZ";
+    _timeFormatter.dateFormat = @"yyyyMMdd000000SSS";
+    NSString *updateTimeStamp = [_timeFormatter stringFromDate:[NSDate date]];
+    ABLoggerInfo(@"today time stamp is ===== %@",updateTimeStamp);
     return updateTimeStamp;
 }
 
@@ -286,20 +290,20 @@ static DataBaseManager *_sharedInstance = nil;
 //{
 //    MMovie_City *mMovie_city = nil;
 //    mMovie_city = [MMovie_City MR_findFirstByAttribute:@"uid" withValue:u_id inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-//    
+//
 //    return mMovie_city;
 //}
 //
 //- (MMovie_City *)insertMMovie_CityWithMovie:(MMovie *)a_movie andCity:(City *)a_city{
-//    
+//
 //    MMovie_City *mMovie_city = nil;
-//    
+//
 //    ABLoggerInfo(@"插入 电影_城市 关联表 新数据 [a_city name] ======= %@",[a_city name]);
 //    mMovie_city = [MMovie_City MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 //    mMovie_city.uid = [NSString stringWithFormat:@"%@%@",[a_city name],a_movie.uid];
 //    mMovie_city.city = a_city;
 //    mMovie_city.movie = a_movie;
-//    
+//
 //    return mMovie_city;
 //}
 
@@ -426,6 +430,8 @@ static DataBaseManager *_sharedInstance = nil;
     [userDefaults setObject:city.uid forKey:newCityName];
     [userDefaults synchronize];
     
+    city.locationDate = [self getTodayTimeStamp];
+    
     [self saveInManagedObjectContext:context];
     
     return city;
@@ -537,7 +543,7 @@ static DataBaseManager *_sharedInstance = nil;
     
     NSString *cityId = nil;
     cityId = [[LocationManager defaultLocationManager] getUserCityId];
-
+    
     return [City MR_findAllSortedBy:@"uid" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"uid != %@",cityId] offset:0 limit:1000 inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 //========================================= 城市 =========================================/
@@ -571,11 +577,11 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (NSArray *)getAllMoviesListFromCoreDataWithCityName:(NSString *)cityName{
     
-//    returnArray = (NSMutableArray *)[returnArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-//        NSString *first =  [(MMovie*)a name];
-//        NSString *second = [(MMovie*)b name];
-//        return [first compare:second];
-//    }];
+    //    returnArray = (NSMutableArray *)[returnArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+    //        NSString *first =  [(MMovie*)a name];
+    //        NSString *second = [(MMovie*)b name];
+    //        return [first compare:second];
+    //    }];
     
     return [MMovie MR_findAllInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
@@ -611,13 +617,13 @@ static DataBaseManager *_sharedInstance = nil;
         }
         [self importMovie:mMovie ValuesForKeysWithObject:[array objectAtIndex:i]];
         
-//        City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
-//        
-//        MMovie_City *movie_city = nil;
-//        movie_city = [self getFirstMMovie_CityFromCoreData:[NSString stringWithFormat:@"%@%@",[city name],mMovie.uid]];
-//        if (movie_city == nil) {
-//            [self insertMMovie_CityWithMovie:mMovie andCity:city];
-//        }
+        //        City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
+        //
+        //        MMovie_City *movie_city = nil;
+        //        movie_city = [self getFirstMMovie_CityFromCoreData:[NSString stringWithFormat:@"%@%@",[city name],mMovie.uid]];
+        //        if (movie_city == nil) {
+        //            [self insertMMovie_CityWithMovie:mMovie andCity:city];
+        //        }
         
         [self importDynamicMovie:mMovie ValuesForKeysWithObject:[array_dynamic objectAtIndex:i]];
         
@@ -702,7 +708,7 @@ static DataBaseManager *_sharedInstance = nil;
  ***/
 - (void)importMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData
 {
-//    ABLoggerInfo(@"amovieData == %@",amovieData);
+    //    ABLoggerInfo(@"amovieData == %@",amovieData);
     mMovie.uid = [amovieData objectForKey:@"id"];
     mMovie.name = [amovieData objectForKey:@"name"];
     mMovie.webImg = [amovieData objectForKey:@"coverurl"];
@@ -1700,7 +1706,7 @@ static DataBaseManager *_sharedInstance = nil;
                                                limit:(int)limit
 {
     offset = (offset<=0)?0:offset;
-
+    
     ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
     
     if (tapiCmd!=nil)
@@ -1725,7 +1731,7 @@ static DataBaseManager *_sharedInstance = nil;
     [apiClient executeApiCmdAsync:apiCmdKTV_getAllKTVs];
     
     return [apiCmdKTV_getAllKTVs autorelease];
-
+    
 }
 
 - (NSArray *)getFavoriteKTVListFromCoreData{

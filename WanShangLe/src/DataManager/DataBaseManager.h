@@ -46,6 +46,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 //日期-时间
 - (BOOL)isToday:(NSString *)timeStamp;
 - (NSString *)getTodayTimeStamp;
+- (NSString *)getTodayZeroTimeStamp;
 //获取星期几
 - (NSString *)getNowDate;
 - (NSString *)getTodayWeek;
