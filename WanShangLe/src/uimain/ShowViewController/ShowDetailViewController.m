@@ -7,11 +7,20 @@
 //
 
 #import "ShowDetailViewController.h"
+#import "ApiCmdShow_getShowDetail.h"
 #import <ShareSDK/ShareSDK.h>
+#import "UIImageView+WebCache.h"
 #import "AppDelegate.h"
+#import "ApiCmd.h"
+#import "ASIHTTPRequest.h"
+#import "SShow.h"
+#import "SShowDetail.h"
 
-@interface ShowDetailViewController ()
-
+@interface ShowDetailViewController()<ApiNotify>{
+    
+}
+@property(nonatomic,retain)SShowDetail *mShowDetail;
+@property(nonatomic,retain)ApiCmdShow_getShowDetail *apiCmdShow_getShowDetail;
 @end
 
 @implementation ShowDetailViewController
@@ -25,11 +34,35 @@
     return self;
 }
 
+- (void)dealloc{
+    
+    [_apiCmdShow_getShowDetail.httpRequest clearDelegatesAndCancel];
+    _apiCmdShow_getShowDetail.delegate = nil;
+    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdShow_getShowDetail];
+    self.apiCmdShow_getShowDetail = nil;
+    
+    self.show_portImgView = nil;
+    self.mShow = nil;
+    self.mShowDetail = nil;
+    [super dealloc];
+}
+
+#pragma mark -
+#pragma mark UIView Cycle
+- (void)viewWillAppear:(BOOL)animated{
+     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 
     [self initBarItem];
+    [self initData];
 }
 
 - (void)initBarItem{
@@ -52,12 +85,163 @@
     [shareItem release];
 }
 
+- (void)initData{
+    
+    //初试化海报图片
+    _show_portImgView = [[UIImageView alloc] initWithFrame:CGRectMake(9, 10, 89, 119)];
+    _show_portImgView.image = [UIImage imageNamed:@"show_placeholder_L@2x"];
+    [_mScrollView addSubview:_show_portImgView];
+
+    if ([[DataBaseManager sharedInstance] isSelectedLike:_mShow.uid withType:SShow_Type]) {
+        [_show_yesButton setBackgroundImage:[UIImage imageNamed:@"bar_btn_yes_blue_n@2x"] forState:UIControlStateNormal];
+    }
+    if ([[DataBaseManager sharedInstance] isSelectedWantLook:_mShow.uid withType:SShow_Type]) {
+        [_show_wantLookButton setBackgroundImage:[UIImage imageNamed:@"bar_btn_yes_blue_n@2x"] forState:UIControlStateNormal];
+    }
+    
+     self.mShowDetail = [[DataBaseManager sharedInstance] getShowDetailFromCoreDataWithId:_mShow.uid];
+
+    if (_mShowDetail==nil) {//演出详情为空
+
+        self.apiCmdShow_getShowDetail = (ApiCmdShow_getShowDetail *)[[DataBaseManager sharedInstance] getShowDetailFromWeb:self showId:_mShow.uid];
+
+    }else{
+        [self initShowDetailData];
+    }
+    
+    [_show_portImgView setImageWithURL:[NSURL URLWithString:_mShow.webImg]
+             placeholderImage:[UIImage imageNamed:@"show_placeholder_L@2x"]
+                      options:SDWebImageRetryFailed];
+
+    
+    _show_name.text = _mShow.name;
+    
+    int ratingPeople = [_mShow.ratingpeople intValue];
+    NSString *scopeStr = @"人";
+    if (ratingPeople >10000) {
+        ratingPeople = ratingPeople/10000;
+        scopeStr = @"万人";
+    }
+    _show_rating.text = [NSString stringWithFormat:@"%@评分: %@ (%d%@)",_mShow.ratingfrom,_mShow.rating,ratingPeople,scopeStr];
+    _show_address.text = _mShow.address;
+    _show_time.text = _mShow.beginTime;
+    _show_yes.text = [NSString stringWithFormat:@"%d",[_mShow.recommend intValue]];
+    _show_wantLook.text = [NSString stringWithFormat:@"%d",[_mShow.wantLook intValue]];
+}
+
+- (void)initShowDetailData{
+    
+    _show_introduce.text = self.mShowDetail.introduce;
+    CGSize misize = [_show_introduce.text sizeWithFont:_show_introduce.font constrainedToSize:CGSizeMake(_show_introduce.bounds.size.width, MAXFLOAT)];
+    
+    if (misize.height>_show_introduce.bounds.size.height) {
+        
+         float extendHeight = misize.height - _show_introduce.frame.size.height;
+        
+        CGRect introFrame = _show_introduce.frame;
+        introFrame.size.height = misize.height;
+        _show_introduce.frame = introFrame;
+
+        [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height+extendHeight)];
+        
+        CGRect bgImgFrame = _show_introBgImgView.frame;
+        bgImgFrame.size.height += extendHeight;
+        _show_introBgImgView.frame = bgImgFrame;
+    }
+    
+    self.show_prices.text = _mShowDetail.prices;
+    CGSize pricesSize = [self.show_prices.text sizeWithFont:self.show_prices.font constrainedToSize:CGSizeMake(MAXFLOAT, _show_prices.bounds.size.height)];
+    CGRect newPricesFrame = _show_prices.frame;
+    newPricesFrame.size.width = pricesSize.width;
+    _show_prices.frame = newPricesFrame;
+    _show_priceScrollView.contentSize = pricesSize;
+    
+}
+
 #pragma mark -
 #pragma mark 点击按钮 Event
 
 - (void)clickBackButton:(id)sender{
     [self.navigationController popViewControllerAnimated:YES];
 }
+
+- (IBAction)clickBuyButton:(id)sender{
+    
+}
+- (IBAction)clickYesButton:(id)sender{
+    
+}
+- (IBAction)clickWantLookButton:(id)sender{
+    
+}
+
+
+#pragma mark -
+#pragma mark apiNotiry
+-(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
+    
+    if (error!=nil) {
+        return;
+    }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+       self.mShowDetail = [[DataBaseManager sharedInstance] insertShowDetailIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+
+        [self updateData:0];
+        
+    });
+}
+
+- (void) apiNotifyLocationResult:(id)apiCmd cacheData:(NSArray*)cacheData{
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self updateData:0];
+    });
+}
+
+- (ApiCmd *)apiGetDelegateApiCmd{
+    return _apiCmdShow_getShowDetail;
+}
+
+- (void)updateData:(int)tag
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        ABLogger_int(tag);
+        switch (tag) {
+            case 0:
+            case API_SShowDetailCmd:
+            {
+                [self initShowDetailData];
+            }
+                break;
+            case 12:
+            {
+            
+            }
+                break;
+                
+            default:
+            {
+                NSAssert(0, @"没有从网络抓取到数据");
+            }
+                break;
+        }
+    });
+}
+
+#pragma mark -
+#pragma mark FormateData
+- (void)formatKTVData:(NSArray*)dataArray{
+    
+    [self formatKTVDataFilterAll:dataArray];
+}
+
+#pragma mark -
+#pragma mark FilterCinema FormatData
+- (void)formatKTVDataFilterAll:(NSArray*)pageArray{
+}
+
 
 - (void)shareButtonClick:(id)sender{
     

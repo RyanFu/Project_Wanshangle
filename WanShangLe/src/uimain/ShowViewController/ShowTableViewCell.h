@@ -14,5 +14,7 @@
 @property(nonatomic,retain) IBOutlet UILabel *show_name;
 @property(nonatomic,retain) IBOutlet UILabel *show_price;
 @property(nonatomic,retain) IBOutlet UILabel *show_rating;
-@property(nonatomic,retain) IBOutlet UIImageView *show_imageView;
+@property(nonatomic,retain) IBOutlet UILabel *show_time;
+@property(nonatomic,retain) IBOutlet UILabel *show_address;
+@property(nonatomic,retain) UIImageView *show_imageView;
 @end

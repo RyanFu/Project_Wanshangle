@@ -11,6 +11,7 @@
 @class City;
 @class ApiCmd;
 @class TimeStamp;
+@class ActionState;
 
 //-------------电影模块----------------/
 @class MMovie_City;
@@ -33,7 +34,9 @@
 @class ApiCmdKTV_getSearchKTVs;
 //-------------演出----------------/
 @class SShow;
+@class SShowDetail;
 @class ApiCmdShow_getAllShows;
+@class ApiCmdShow_getShowDetail;
 //-------------酒吧----------------/
 @class BBar;
 @class ApiCmdBar_getAllBars;
@@ -57,8 +60,11 @@
 #define API_BBarPopularCmd      2 //酒吧 人气
 #define API_BBarNearByCmd       3 //酒吧 附近
 #define API_BBarDetailCmd       4 //酒吧 详情
+#define API_BBarRecOrLookCmd    5 //酒吧 详情
 
 //-------------SShow----------------/
+#define API_SShowCmd                      100 //演出
+#define API_SShowDetailCmd                      101 //演出
 #define API_SShow_Type_All_Cmd              1 //演出 类型 全部
 #define API_SShow_Type_VocalConcert_Cmd     2 //演出 类型 演唱会
 #define API_SShow_Type_Music_Cmd            3 //演出 类型 音乐会
@@ -73,12 +79,12 @@
 #define API_SShow_Time_Weekend_Cmd          4 //演出 时间 周末
 #define API_SShow_Time_InThreeDay_Cmd       5 //演出 时间 三天内
 
-#define API_SShow_Oreder_Recommend_Cmd      1 //演出 排序 推荐
-#define API_SShow_Oreder_Time_Cmd           2 //演出 排序 时间先后
-#define API_SShow_Oreder_PriceL_Cmd         3 //演出 排序 价格低到高
-#define API_SShow_Oreder_PriceH_Cmd         4 //演出 排序 价格高到低
-#define API_SShow_Oreder_Distance_Cmd       5 //演出 排序 距离近到远
-#define API_SShow_Oreder_Rating_Cmd         6 //演出 排序 评分高到低
+#define API_SShow_Oreder_Recommend_Cmd      0 //演出 排序 推荐
+#define API_SShow_Oreder_Time_Cmd           1 //演出 排序 时间先后
+#define API_SShow_Oreder_PriceL_Cmd         2 //演出 排序 价格低到高
+#define API_SShow_Oreder_PriceH_Cmd         3 //演出 排序 价格高到低
+#define API_SShow_Oreder_Distance_Cmd       4 //演出 排序 距离近到远
+#define API_SShow_Oreder_Rating_Cmd         5 //演出 排序 评分高到低
 
 #define API_SShowDetailCmd                  302 //演出 详情
 
@@ -99,15 +105,17 @@
 #import "SystemDataUpdater.h"
 #import "SystemDataUpdater1_0.h"  // updator for version 1.0
 
+/*******赞和想看*********/
+#define MMovie_Type @"MMovie_Type"
+#define BBar_Type   @"BBar_Type"
+#define SShow_Type  @"SShow_Type"
+#define KKTV_Type   @"KKTV_Type"
 
 //用户偏好设置
 #define MMovie_CinemaFilterType @"MMovie_CinemaFilterType"
 #define BBar_ActivityFilterType @"BBar_ActivityFilterType"
 #define KKTV_FilterType         @"KKTV_FilterType"
 #define SShow_FilterType        @"SShow_FilterType"
-//#define SShow_FilterTypeData    @"SShow_FilterTypeData"
-//#define SShow_FilterTimeData    @"SShow_FilterTimeData"
-//#define SShow_FilterOrderData   @"SShow_FilterOrderData"
 
 //用户选择的城市
 #define UserState @"administrativeArea"

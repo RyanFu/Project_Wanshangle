@@ -22,7 +22,7 @@
 }
 
 - (void) dealloc {
-    
+    self.dataType = nil;
 	[super dealloc];
 }
 
@@ -37,12 +37,30 @@
     return self.httpRequest;
 }
 
+//http://api.wanshangle.com:10000/api? appId=000001&api=perform.list&sign=sign&token=&cityid=021
 - (NSMutableDictionary*) getParamDict {
     NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
     
-    [paramDict setObject:@"extaccount.join" forKey:@"api"];
+    [paramDict setObject:@"perform.list" forKey:@"api"];
+    [paramDict setObject:self.cityId forKey:@"cityid"];
+    
+    [paramDict setObject:[NSString stringWithFormat:@"%d",self.offset] forKey:@"offset"];
+    [paramDict setObject:[NSString stringWithFormat:@"%d",self.limit] forKey:@"limit"];
+    
+//    if ([self.dataType intValue]==3) {//3代表附近的酒吧
+//        [paramDict setObject:[NSString stringWithFormat:@"%f",_latitude] forKey:@"lat"];
+//        [paramDict setObject:[NSString stringWithFormat:@"%f",_longitude] forKey:@"lng"];
+//    }
+//    [paramDict setObject:self.dataType forKey:@"order"];
     
     return paramDict;
+}
+
++(NSString *)getTimeStampUid:(NSString *)type{
+    NSString *cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    NSString *key = [NSString stringWithFormat:@"api=perform.list&cityid=%@&order=%@",cityId,type];
+    //   return md5(key);
+    return key;
 }
 
 

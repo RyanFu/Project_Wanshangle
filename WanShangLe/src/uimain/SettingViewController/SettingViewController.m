@@ -52,10 +52,10 @@
 }
 
 - (void)initData{
+     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     
     [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, 505)];
     
-    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     [self cleanDistanceFilterButtonState];
     int index = [[userDefault objectForKey:DistanceFilter] intValue];
     [(UIButton *)[_distanceFilterBtns objectAtIndex:index] setSelected:YES];
@@ -87,8 +87,9 @@
     
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     int index = [(UIButton *)sender tag];
-    [(UIButton *)[_distanceFilterBtns objectAtIndex:index-1] setSelected:YES];
-    [userDefault setObject:[NSString stringWithFormat:@"%d",index-1] forKey:DistanceFilter];
+    [(UIButton *)[_distanceFilterBtns objectAtIndex:index] setSelected:YES];
+    [userDefault setObject:[NSString stringWithFormat:@"%d",index] forKey:DistanceFilter];
+    [userDefault synchronize];
 
 }
 

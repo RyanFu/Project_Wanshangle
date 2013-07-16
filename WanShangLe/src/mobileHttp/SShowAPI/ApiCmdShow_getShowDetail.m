@@ -6,10 +6,10 @@
 //
 //
 
-#import "ApiCmdBar_getBarDetail.h"
+#import "ApiCmdShow_getShowDetail.h"
 #import "common.h"
 
-@implementation ApiCmdBar_getBarDetail
+@implementation ApiCmdShow_getShowDetail
 
 - (id)init
 {
@@ -22,7 +22,7 @@
 }
 
 - (void) dealloc {
-    self.barId = nil;
+    self.showId = nil;
 	[super dealloc];
 }
 
@@ -30,19 +30,18 @@
     [super prepareExecuteApiCmd];
     
     // prepare http request
-    NSURL *url = [NSURL URLWithString:@"https://raw.github.com/zyallday/HelloWorld/master/mobileapidemo/all-pubs-list.json"];
+    NSURL *url = [NSURL URLWithString:@"https://raw.github.com/zyallday/HelloWorld/master/mobileapidemo/performance-list.json"];
     
     [self.httpRequest setURL:url];
     
     return self.httpRequest;
 }
-
-//http://api.wanshangle.com:10000/api? appId=000001&sign=sign&time=1371988912&v=1.0&api=bar.events&barid=12
+//http://api.wanshangle.com:10000/api? appId=000001&api=perform.info&time=1371988912&v=1.0&sign=sign&token=&performid=22
 - (NSMutableDictionary*) getParamDict {
     NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
     
-    [paramDict setObject:@"bar.events" forKey:@"api"];
-    [paramDict setObject:self.barId forKey:@"barid"];
+    [paramDict setObject:@"perform.info" forKey:@"api"];
+    [paramDict setObject:self.showId forKey:@"performid"];
     
     return paramDict;
 }

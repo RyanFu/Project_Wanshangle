@@ -9,11 +9,15 @@
 #import <UIKit/UIKit.h>
 
 @class BBar;
-@interface BarDetailViewController : UIViewController<UIActionSheetDelegate,
-UIAlertViewDelegate>
+@interface BarDetailViewController : UIViewController<UIActionSheetDelegate,UIAlertViewDelegate>
 @property(nonatomic,retain) BBar *mBar;
-
 @property(nonatomic,retain) IBOutlet UIScrollView *mScrollView;
--(IBAction)clickRecommendButton:(id)sender;
--(IBAction)clickWantLookButton:(id)sender;
+@property(nonatomic,retain) IBOutlet UILabel *bar_event;
+@property(nonatomic,retain) IBOutlet UILabel *bar_name;
+@property(nonatomic,retain) IBOutlet UILabel *bar_address;
+@property(nonatomic,retain) IBOutlet UILabel *bar_yes;
+@property(nonatomic,retain) UIImageView *barDetailImg;
+@property(nonatomic,retain) IBOutlet UIButton *bar_yesButton;
+-(IBAction)clickYESButton:(id)sender;
+-(IBAction)clickPhoneButton:(id)sender;
 @end

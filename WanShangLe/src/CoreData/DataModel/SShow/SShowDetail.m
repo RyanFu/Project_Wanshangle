@@ -2,7 +2,7 @@
 //  SShowDetail.m
 //  WanShangLe
 //
-//  Created by stephenliu on 13-7-15.
+//  Created by stephenliu on 13-7-16.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -12,12 +12,13 @@
 
 @implementation SShowDetail
 
-@dynamic buyInfo;
-@dynamic introduce;
 @dynamic locationDate;
 @dynamic recommendation;
 @dynamic uid;
 @dynamic wantLook;
 @dynamic show;
+@dynamic introduce;
+@dynamic name;
+@dynamic prices;
 
 @end

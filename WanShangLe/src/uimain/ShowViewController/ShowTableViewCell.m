@@ -28,9 +28,6 @@
 - (void)awakeFromNib{
     ABLoggerMethod();
     [super awakeFromNib];
-    
-    [self setSelectionStyle:UITableViewCellSelectionStyleGray];
-    [self setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

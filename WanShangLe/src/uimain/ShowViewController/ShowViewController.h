@@ -37,9 +37,9 @@ typedef NS_ENUM(NSInteger, NSFilterShowListType) {
 @property(nonatomic,retain) IBOutlet UIImageView* orderArrowImg;
 
 @property(nonatomic,retain) IBOutlet UITableView *mTableView;
+@property(nonatomic,retain) IBOutlet UIView *noGPSView;
 @property(nonatomic,retain) NSMutableArray *mArray;
 @property(nonatomic,retain) NSMutableArray *mCacheArray;
-@property(nonatomic,retain) NSArray *showsArray;
 
 @property(nonatomic,retain) ApiCmdShow_getAllShows *apiCmdShow_getAllShows;
 @property(nonatomic,retain)EGORefreshTableHeaderView *refreshHeaderView;
@@ -50,6 +50,10 @@ typedef NS_ENUM(NSInteger, NSFilterShowListType) {
 @property(nonatomic,readwrite)int selectedTime;
 @property(nonatomic,readwrite)int selectedOrder;
 
+@property(nonatomic,readwrite)int oldSelectedType;
+@property(nonatomic,readwrite)int oldSelectedTime;
+@property(nonatomic,readwrite)int oldSelectedOrder;
+
 - (IBAction)clickTypeButton:(id)sender;
 - (IBAction)clickTimeButton:(id)sender;
 - (IBAction)clickOrderButton:(id)sender;
@@ -59,4 +63,7 @@ typedef NS_ENUM(NSInteger, NSFilterShowListType) {
 - (IBAction)clickOrderSubButtonDown:(id)sender;
 
 - (IBAction)clickMarkView:(id)sender;
+
+- (void)loadMoreData;
+- (void)loadNewData;
 @end

@@ -7,13 +7,13 @@
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "src/uimain/BarViewController/BarListViewController/bar-nearby/BarNearByViewController.m"
-         timestampString = "395593476.804894"
+         filePath = "src/uimain/ShowViewController/ShowDetailViewController.m"
+         timestampString = "395664977.564463"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "201"
-         endingLineNumber = "201"
-         landmarkName = "-updateData:withData:"
+         startingLineNumber = "105"
+         endingLineNumber = "105"
+         landmarkName = "-initData"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
