@@ -8,23 +8,26 @@
 
 #import <UIKit/UIKit.h>
 @class MMovie;
-@interface MovieDetailViewController : UIViewController<UIActionSheetDelegate,
-UIAlertViewDelegate>
+@interface MovieDetailViewController : UIViewController<UIActionSheetDelegate,UIAlertViewDelegate>
 @property(nonatomic,retain) MMovie *mMovie;
 
-@property(nonatomic,retain) IBOutlet UIScrollView *mScrollView;
-@property(nonatomic,retain) IBOutlet UIImageView *imgView;
-@property(nonatomic,retain) IBOutlet UILabel *directorLabel;
-@property(nonatomic,retain) IBOutlet UILabel *actorLabel;
-@property(nonatomic,retain) IBOutlet UILabel *typeLabel;
-@property(nonatomic,retain) IBOutlet UILabel *durationLabel;
-@property(nonatomic,retain) IBOutlet UILabel *startdayLabel;
-@property(nonatomic,retain) IBOutlet UILabel *recommendLabel;
-@property(nonatomic,retain) IBOutlet UILabel *wantLookLabel;
-@property(nonatomic,retain) IBOutlet UIImageView *movieInfoImgView;
-@property(nonatomic,retain) IBOutlet UILabel *movieInfoLabel;
-@property(nonatomic,retain) IBOutlet UIButton *recommendButton;
-@property(nonatomic,retain) IBOutlet UIButton *wantLookButton;
--(IBAction)clickRecommendButton:(id)sender;
--(IBAction)clickWantLookButton:(id)sender;
+@property(nonatomic,retain)IBOutlet UIScrollView *mScrollView;
+@property(nonatomic,retain)IBOutlet UILabel *movie_director;
+@property(nonatomic,retain)IBOutlet UILabel *movie_actor;
+@property(nonatomic,retain)IBOutlet UILabel *movie_type;
+@property(nonatomic,retain)IBOutlet UILabel *movie_district;
+@property(nonatomic,retain)IBOutlet UILabel *movie_timeLong;
+@property(nonatomic,retain)IBOutlet UILabel *movie_uptime;
+@property(nonatomic,retain)IBOutlet UILabel *movie_introduce;
+@property(nonatomic,retain)IBOutlet UILabel *movie_rating;
+@property(nonatomic,retain)IBOutlet UIImageView *movie_introBgImgView;
+
+@property(nonatomic,retain)IBOutlet UILabel *movie_yes;
+@property(nonatomic,retain)IBOutlet UILabel *movie_wantLook;
+@property(nonatomic,retain)IBOutlet UIButton *movie_yesButton;
+@property(nonatomic,retain)IBOutlet UIButton *movie_wantLookButton;
+@property(nonatomic,retain) UIImageView *movie_portImgView;
+
+- (IBAction)clickYesButton:(id)sender;
+- (IBAction)clickWantLookButton:(id)sender;
 @end

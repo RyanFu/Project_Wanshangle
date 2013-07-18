@@ -92,7 +92,7 @@
     [_mScrollView addSubview:_barDetailImg];
     [_barDetailImg release];
     
-    if ([[DataBaseManager sharedInstance] isSelectedLike:_mBar.uid withType:BBar_Type]) {
+    if ([[DataBaseManager sharedInstance] isSelectedLike:_mBar.uid withType:API_RecommendOrLookBarType]) {
         [_bar_yesButton setBackgroundImage:[UIImage imageNamed:@"bar_btn_yes_blue_n@2x"] forState:UIControlStateNormal];
     }
 
@@ -186,7 +186,7 @@
                 [[DataBaseManager sharedInstance] insertBarDetailIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
             }
                 break;
-            case API_MMovieRecOrLookCmd:
+            case API_RecommendOrLookCmd:
             {
             }
                 break;

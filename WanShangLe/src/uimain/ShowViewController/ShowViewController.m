@@ -74,10 +74,9 @@
 #pragma mark UIView Cycle
 - (void)viewWillAppear:(BOOL)animated{
     
-    if ([self checkGPS] && _selectedOrder==API_SShow_Oreder_Distance_Cmd) {
-        if (_mArray==nil || [_mArray count]<=0) {
+    if (_selectedOrder==API_SShow_Oreder_Distance_Cmd) {
+        if([self checkGPS] && (_mArray==nil || [_mArray count]<=0))
             [self loadNewData];//初始化加载
-        }
     }
 }
 
@@ -486,8 +485,10 @@
     isLoadMoreAll = YES;
     [self setTableViewDelegate];
     
-    if (![self checkGPS] && _selectedOrder==API_SShow_Oreder_Distance_Cmd) {
-        return;
+    if (_selectedOrder==API_SShow_Oreder_Distance_Cmd) {
+        if(![self checkGPS]){
+            return;
+        }
     }
     
     [self updateData:0 withData:[self getCacheData]];
@@ -499,19 +500,19 @@
     [_mCacheArray removeAllObjects];
     [_mArray removeAllObjects];
     
-    if (![self checkGPS] && _selectedOrder==API_SShow_Oreder_Distance_Cmd) {
-        return;
+    if (_selectedOrder==API_SShow_Oreder_Distance_Cmd) {
+        if(![self checkGPS]){
+            return;
+        }
     }
     
     [self updateData:0 withData:[self getCacheData]];
 }
 
 - (BOOL)checkGPS{
+
     BOOL b = [[LocationManager defaultLocationManager] checkGPSEnable];
-    if (!b) {
-        [self displayNOGPS:YES];
-    }
-    
+    [self displayNOGPS:!b];
     return b;
 }
 

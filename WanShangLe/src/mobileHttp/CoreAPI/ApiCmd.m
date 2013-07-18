@@ -219,12 +219,13 @@
         error = [NSError errorWithDomain:@"api error" code:statusCode userInfo:nil];
     }
     
+    if (delegate!=nil)
     if (delegate && [delegate respondsToSelector:@selector(apiNotifyResult:error:)]) {
         // call delegate
         [delegate apiNotifyResult:self error:error];
     }
     
-    if (self!=nil && error!=nil)
+    if ((self!=nil && error!=nil) || delegate==nil)
         [self apiNotifyResult:self error:error];
 }
 
@@ -238,12 +239,13 @@
     ABLoggerWarn(@"请求失败 ========= %@",[error description]);
     ABLoggerWarn(@"apiCmd tag ========= %d",[self.httpRequest tag]);
     
+    if (delegate!=nil)
     if (delegate && [delegate respondsToSelector:@selector(apiNotifyResult:error:)]) {
         // call delegate
         [delegate apiNotifyResult:self error:error];
     }
     
-    if (self!=nil)
+    if ((self!=nil) || delegate==nil)
     [self apiNotifyResult:self error:error];
 }
 

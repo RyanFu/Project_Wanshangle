@@ -45,10 +45,16 @@
 #define DataLimit 20
 
 //API HTTPRequest TAG
+
+//-------------推荐和想看----------------/
+#define API_RecommendOrLookCmd 99 //推荐和想看
+#define API_RecommendOrLookMovieType    @"MovieType" //推荐和想看
+#define API_RecommendOrLookShowType     @"ShowType" //推荐和想看
+#define API_RecommendOrLookKTVType      @"KTVType" //推荐和想看
+#define API_RecommendOrLookBarType      @"BarType" //推荐和想看
 //-------------MMovie----------------/
 #define API_MMovieCmd           100 //电影 全部
 #define API_MMovieDetailCmd     101 //电影 详情
-#define API_MMovieRecOrLookCmd  102 //电影 推荐想看
 #define API_MCinemaCmd          103 //影院 全部
 #define API_MCinemaSearchCmd    104 //影院 搜索
 #define API_MCinemaNearByCmd    105 //影院 附近
@@ -63,8 +69,8 @@
 #define API_BBarRecOrLookCmd    5 //酒吧 详情
 
 //-------------SShow----------------/
-#define API_SShowCmd                      100 //演出
-#define API_SShowDetailCmd                      101 //演出
+#define API_SShowCmd                       100 //演出
+#define API_SShowDetailCmd                 101 //演出
 #define API_SShow_Type_All_Cmd              1 //演出 类型 全部
 #define API_SShow_Type_VocalConcert_Cmd     2 //演出 类型 演唱会
 #define API_SShow_Type_Music_Cmd            3 //演出 类型 音乐会
@@ -86,8 +92,6 @@
 #define API_SShow_Oreder_Distance_Cmd       4 //演出 排序 距离近到远
 #define API_SShow_Oreder_Rating_Cmd         5 //演出 排序 评分高到低
 
-#define API_SShowDetailCmd                  302 //演出 详情
-
 //-------------KKTV----------------/
 #define API_KKTVCmd             401 //KTV 全部
 #define API_KKTVSearchCmd       402 //KTV 搜索
@@ -104,12 +108,6 @@
 //数据升级
 #import "SystemDataUpdater.h"
 #import "SystemDataUpdater1_0.h"  // updator for version 1.0
-
-/*******赞和想看*********/
-#define MMovie_Type @"MMovie_Type"
-#define BBar_Type   @"BBar_Type"
-#define SShow_Type  @"SShow_Type"
-#define KKTV_Type   @"KKTV_Type"
 
 //用户偏好设置
 #define MMovie_CinemaFilterType @"MMovie_CinemaFilterType"

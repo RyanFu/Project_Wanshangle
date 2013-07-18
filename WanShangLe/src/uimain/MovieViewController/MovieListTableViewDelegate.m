@@ -69,13 +69,14 @@
     [cell.movie_imageView setFrame:CGRectMake(5, 1, 65, 87)];//解决图片显示尺寸不正常的Bug
     
     int ratingPeople = [movie.ratingpeople intValue];
-    NSString *scopeStr = @"人";
     if (ratingPeople >10000) {
-        ratingPeople = ratingPeople/10000;
-        scopeStr = @"万人";
+        float tratingPeople = ratingPeople/10000.0f;
+         cell.movie_rating.text = [NSString stringWithFormat:@"%@评分: %@ (%0.1f万人)",movie.ratingFrom,movie.rating,tratingPeople];
+    }else{
+         cell.movie_rating.text = [NSString stringWithFormat:@"%@评分: %@ (%d人)",movie.ratingFrom,movie.rating,ratingPeople];
     }
     
-    cell.movie_rating.text = [NSString stringWithFormat:@"%@评分: %@ (%d%@)",movie.ratingFrom,movie.rating,ratingPeople,scopeStr];
+   
     cell.movie_word.text = movie.aword;
     
      NSMutableArray *array = [NSMutableArray arrayWithCapacity:4];

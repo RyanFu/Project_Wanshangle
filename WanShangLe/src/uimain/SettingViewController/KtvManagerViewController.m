@@ -232,9 +232,11 @@
     NSArray *dataArray = [[DataBaseManager sharedInstance] insertKTVsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
     
     if (dataArray==nil || [dataArray count]<=0) {
+//        _refreshTailerView.hidden = YES;
         [self reloadPullRefreshData];
         return;
     }
+//    _refreshTailerView.hidden = NO;
     int tag = [[apiCmd httpRequest] tag];
     [self addDataIntoCacheData:dataArray];
     [self updateData:tag withData:[self getCacheData]];

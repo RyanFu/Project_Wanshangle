@@ -8,6 +8,7 @@
 
 #import "ShowDetailViewController.h"
 #import "ApiCmdShow_getShowDetail.h"
+#import "ApiCmd_recommendOrLook.h"
 #import <ShareSDK/ShareSDK.h>
 #import "UIImageView+WebCache.h"
 #import "AppDelegate.h"
@@ -17,6 +18,8 @@
 #import "SShowDetail.h"
 
 @interface ShowDetailViewController()<ApiNotify>{
+    BOOL isRecommended;
+    BOOL isLooked;
     
 }
 @property(nonatomic,retain)SShowDetail *mShowDetail;
@@ -29,7 +32,8 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        isRecommended = NO;
+        isLooked = NO;
     }
     return self;
 }
@@ -50,7 +54,7 @@
 #pragma mark -
 #pragma mark UIView Cycle
 - (void)viewWillAppear:(BOOL)animated{
-     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -60,7 +64,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     [self initBarItem];
     [self initData];
 }
@@ -91,28 +95,33 @@
     _show_portImgView = [[UIImageView alloc] initWithFrame:CGRectMake(9, 10, 89, 119)];
     _show_portImgView.image = [UIImage imageNamed:@"show_placeholder_L@2x"];
     [_mScrollView addSubview:_show_portImgView];
-
-    if ([[DataBaseManager sharedInstance] isSelectedLike:_mShow.uid withType:SShow_Type]) {
-        [_show_yesButton setBackgroundImage:[UIImage imageNamed:@"bar_btn_yes_blue_n@2x"] forState:UIControlStateNormal];
+    
+    if ([[DataBaseManager sharedInstance] isSelectedLike:_mShow.uid withType:API_RecommendOrLookShowType]) {
+        [_show_yesButton setBackgroundImage:[UIImage imageNamed:@"btn_good_s_f@2x"] forState:UIControlStateNormal];
+        isRecommended = YES;
     }
-    if ([[DataBaseManager sharedInstance] isSelectedWantLook:_mShow.uid withType:SShow_Type]) {
-        [_show_wantLookButton setBackgroundImage:[UIImage imageNamed:@"bar_btn_yes_blue_n@2x"] forState:UIControlStateNormal];
+    if ([[DataBaseManager sharedInstance] isSelectedWantLook:_mShow.uid withType:API_RecommendOrLookShowType]) {
+        [_show_wantLookButton setBackgroundImage:[UIImage imageNamed:@"btn_look_s_f@2x"] forState:UIControlStateNormal];
+        isLooked = YES;
     }
     
-     self.mShowDetail = [[DataBaseManager sharedInstance] getShowDetailFromCoreDataWithId:_mShow.uid];
-
+    self.mShowDetail = [[DataBaseManager sharedInstance] getShowDetailFromCoreDataWithId:_mShow.uid];
+    
     if (_mShowDetail==nil) {//演出详情为空
-
         self.apiCmdShow_getShowDetail = (ApiCmdShow_getShowDetail *)[[DataBaseManager sharedInstance] getShowDetailFromWeb:self showId:_mShow.uid];
-
+        
     }else{
         [self initShowDetailData];
+        [self requestRecommendAndWantLookCount];
+        
+        _show_yes.text = _mShowDetail.recommendation;
+        _show_wantLook.text = _mShowDetail.wantLook;
     }
     
     [_show_portImgView setImageWithURL:[NSURL URLWithString:_mShow.webImg]
-             placeholderImage:[UIImage imageNamed:@"show_placeholder_L@2x"]
-                      options:SDWebImageRetryFailed];
-
+                      placeholderImage:[UIImage imageNamed:@"show_placeholder_L@2x"]
+                               options:SDWebImageRetryFailed];
+    
     
     _show_name.text = _mShow.name;
     
@@ -125,8 +134,7 @@
     _show_rating.text = [NSString stringWithFormat:@"%@评分: %@ (%d%@)",_mShow.ratingfrom,_mShow.rating,ratingPeople,scopeStr];
     _show_address.text = _mShow.address;
     _show_time.text = _mShow.beginTime;
-    _show_yes.text = [NSString stringWithFormat:@"%d",[_mShow.recommend intValue]];
-    _show_wantLook.text = [NSString stringWithFormat:@"%d",[_mShow.wantLook intValue]];
+
 }
 
 - (void)initShowDetailData{
@@ -136,12 +144,12 @@
     
     if (misize.height>_show_introduce.bounds.size.height) {
         
-         float extendHeight = misize.height - _show_introduce.frame.size.height;
+        float extendHeight = misize.height - _show_introduce.frame.size.height;
         
         CGRect introFrame = _show_introduce.frame;
         introFrame.size.height = misize.height;
         _show_introduce.frame = introFrame;
-
+        
         [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height+extendHeight)];
         
         CGRect bgImgFrame = _show_introBgImgView.frame;
@@ -156,8 +164,19 @@
     _show_prices.frame = newPricesFrame;
     _show_priceScrollView.contentSize = pricesSize;
     
+    _show_yes.text = _mShowDetail.recommendation;
+    _show_wantLook.text = _mShowDetail.wantLook;
 }
 
+- (void)requestRecommendAndWantLookCount{
+    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mShow.uid APIType:WSLRecommendAPITypePerformInteract cType:WSLRecommendLookTypeLook delegate:self];
+}
+
+- (void)updateRecommendAndWantLookCount{
+    _show_yes.text = _mShowDetail.recommendation;
+    _show_wantLook.text = _mShowDetail.wantLook;
+
+}
 #pragma mark -
 #pragma mark 点击按钮 Event
 
@@ -168,13 +187,71 @@
 - (IBAction)clickBuyButton:(id)sender{
     
 }
+
 - (IBAction)clickYesButton:(id)sender{
-    
-}
-- (IBAction)clickWantLookButton:(id)sender{
-    
+    if (isRecommended || _mShowDetail==nil) {
+        return;
+    }
+
+    [_show_yesButton setBackgroundImage:[UIImage imageNamed:@"btn_good_s_f@2x"] forState:UIControlStateNormal];
+    isRecommended = YES;
+    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mShow.uid APIType:WSLRecommendAPITypePerformInteract cType:WSLRecommendLookTypeRecommend delegate:self];
+
+    NSMutableDictionary *tDic = [NSMutableDictionary dictionaryWithCapacity:5];
+    [tDic setObject:_mShow.uid forKey:@"uid"];
+    [tDic setObject:API_RecommendOrLookShowType forKey:@"type"];
+    [tDic setObject:_mShow.beginTime forKey:@"beginTime"];
+    [tDic setObject:_mShow.endTime forKey:@"endTime"];
+    [tDic setObject:[NSNumber numberWithBool:YES] forKey:@"recommend"];
+    [[DataBaseManager sharedInstance] addActionState:tDic];
+
+    _show_yes.text = [NSString stringWithFormat:@"%d",[_show_yes.text intValue]+1];
+    [self startAddOneAnimation:(UIButton *)sender];
 }
 
+- (IBAction)clickWantLookButton:(id)sender{
+    if (isLooked || _mShowDetail==nil) {
+        return;
+    }
+    
+    [_show_wantLookButton setBackgroundImage:[UIImage imageNamed:@"btn_look_s_f@2x"] forState:UIControlStateNormal];
+    isLooked = YES;
+    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mShow.uid APIType:WSLRecommendAPITypePerformInteract cType:WSLRecommendLookTypeLook delegate:self];
+    
+    NSMutableDictionary *tDic = [NSMutableDictionary dictionaryWithCapacity:5];
+    [tDic setObject:_mShow.uid forKey:@"uid"];
+    [tDic setObject:API_RecommendOrLookShowType forKey:@"type"];
+    [tDic setObject:_mShow.beginTime forKey:@"beginTime"];
+    [tDic setObject:_mShow.endTime forKey:@"endTime"];
+    [tDic setObject:[NSNumber numberWithBool:YES] forKey:@"wantLook"];
+    [[DataBaseManager sharedInstance] addActionState:tDic];
+    
+    _show_wantLook.text = [NSString stringWithFormat:@"%d",[_show_wantLook.text intValue]+1];
+    [self startAddOneAnimation:(UIButton *)sender];
+}
+
+- (void)startAddOneAnimation:(UIButton *)sender{
+    sender.enabled = NO;
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(sender.center.x-5, sender.center.y-10, 20, 20)];
+    [label setBackgroundColor:[UIColor clearColor]];
+    label.text = @"+1";
+    label.textColor = [UIColor colorWithRed:1.000 green:0.430 blue:0.540 alpha:1.000];
+    label.alpha = 1.0;
+    [self.view addSubview:label];
+    [label release];
+    
+    [UIView animateWithDuration:1 animations:^{
+        
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
+        label.frame = CGRectMake(sender.center.x-5, sender.center.y-30, 20, 20);
+        label.textColor = [UIColor colorWithRed:1.000 green:0.181 blue:0.373 alpha:1.000];
+        label.alpha = 0.4;
+        
+    } completion:^(BOOL finished) {
+        [label removeFromSuperview];
+        sender.enabled = YES;
+    }];
+}
 
 #pragma mark -
 #pragma mark apiNotiry
@@ -184,12 +261,30 @@
         return;
     }
     
+    int tag = [[apiCmd httpRequest] tag];
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        switch (tag) {
+            case 0:
+            case API_SShowDetailCmd:
+            {
+               self.mShowDetail = [[DataBaseManager sharedInstance] insertShowDetailIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+            }
+                break;
+            case API_RecommendOrLookCmd:
+            {
+                self.mShowDetail = [[DataBaseManager sharedInstance] insertShowDetailRecommendOrLookCountIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+            }
+                break;
+                
+            default:
+            {
+                NSAssert(0, @"没有从网络抓取到数据");
+            }
+                break;
+        }
         
-       self.mShowDetail = [[DataBaseManager sharedInstance] insertShowDetailIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
-
-        [self updateData:0];
-        
+        [self updateData:tag];
     });
 }
 
@@ -215,9 +310,9 @@
                 [self initShowDetailData];
             }
                 break;
-            case 12:
+            case API_RecommendOrLookCmd:
             {
-            
+                [self updateRecommendAndWantLookCount];
             }
                 break;
                 

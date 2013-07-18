@@ -32,7 +32,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         
-        self.title = @"KTV";
+        self.title = @"酒吧";
     }
     return self;
 }

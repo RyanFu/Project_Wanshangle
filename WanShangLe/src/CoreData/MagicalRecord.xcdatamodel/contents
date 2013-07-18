@@ -134,12 +134,11 @@
         <relationship name="schedule" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MSchedule" inverseName="movie_cinema" inverseEntity="MSchedule" syncable="YES"/>
     </entity>
     <entity name="MMovieDetail" representedClassName="MMovieDetail" syncable="YES">
-        <attribute name="doneLook" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <attribute name="doneRec" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="info" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
         <attribute name="locationDate" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="recommendadded" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="wantedadded" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="recommendation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wantlook" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="movie" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovie" inverseName="movieDetail" inverseEntity="MMovie" syncable="YES"/>
     </entity>
     <entity name="MSchedule" representedClassName="MSchedule" syncable="YES">
@@ -201,7 +200,7 @@
         <element name="MCinema" positionX="99" positionY="-306" width="128" height="330"/>
         <element name="MMovie" positionX="-443" positionY="-351" width="128" height="270"/>
         <element name="MMovie_Cinema" positionX="-173" positionY="-313" width="128" height="120"/>
-        <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="150"/>
+        <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="135"/>
         <element name="MSchedule" positionX="-189" positionY="-67" width="128" height="180"/>
         <element name="SShow" positionX="-137" positionY="-1204" width="128" height="330"/>
         <element name="SShowDetail" positionX="-335" positionY="-1044" width="128" height="165"/>

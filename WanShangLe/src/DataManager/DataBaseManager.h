@@ -39,14 +39,17 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
  */
 - (unsigned long long int)folderSize:(NSString *)folderPath;
 - (unsigned long long int)CoreDataSize;
+//清除数据缓存
+- (BOOL)cleanUpDataBaseCache;
 
 //database uid key
 - (NSString*)md5PathForKey:(NSString *) key;
 
+/************ 时间处理 ***************/
 //日期-时间
 - (BOOL)isToday:(NSString *)date;
 - (BOOL)isTomorrow:(NSString *)date;
-
+//获取时间戳
 - (NSString *)getTodayTimeStamp;
 - (NSString *)getTodayZeroTimeStamp;
 //获取星期几
@@ -57,6 +60,8 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 //获取时间
 - (NSString *)getTimeFromDate:(NSString *)dateStr;
 - (NSString *)timeByAddingTimeInterval:(int)time fromDate:(NSString *)dateStr;
+//几天后的时间
+- (NSString *)dateWithTimeIntervalSinceNow:(NSTimeInterval)timeInterval fromDate:(NSString *)beginDate;
 
 //清除
 - (void)cleanUp;
@@ -93,8 +98,8 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 
 //获取电影详情
 - (ApiCmd *)getMovieDetailFromWeb:(id<ApiNotify>)delegate movieId:(NSString *)movieId;
-- (BOOL)insertMovieDetailIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
-- (BOOL)insertMovieRecommendIntoCoreDataFromObject:(NSString *)movieId data:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (MMovieDetail *)insertMovieDetailIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (MMovieDetail *)insertMovieRecommendIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importMovieDetail:(MMovieDetail *)aMovieDetail ValuesForKeysWithObject:(NSDictionary *)amovieDetailData;
 - (MMovieDetail *)getMovieDetailWithId:(NSString *)movieId;
 
@@ -172,6 +177,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 //获取 演出详情
 - (ApiCmd *)getShowDetailFromWeb:(id<ApiNotify>)delegate showId:(NSString *)showId;
 - (SShowDetail *)insertShowDetailIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (SShowDetail *)insertShowDetailRecommendOrLookCountIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (SShowDetail *)getShowDetailFromCoreDataWithId:(NSString *)showId;
 /************************ 酒吧 *********************************/
 /***************************************************************/
@@ -280,13 +286,13 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
  @param cType 是推荐还是想看
  @param delegate 代理
  */
-- (BOOL)getRecommendOrLookForWeb:(NSString *)movieId
+- (BOOL)getRecommendOrLookForWeb:(NSString *)objectID
                          APIType:(WSLRecommendAPIType)apiType
                            cType:(WSLRecommendLookType)cType
                         delegate:(id<ApiNotify>)delegate;
 
 - (BOOL)isSelectedLike:(NSString *)uid withType:(NSString *)type; //判断是否赞
 - (BOOL)isSelectedWantLook:(NSString *)uid withType:(NSString *)type; //判断是否想看
-- (BOOL)addSelectLike:(NSDictionary *)dataDic; //添加赞和想看数据
+- (BOOL)addActionState:(NSDictionary *)dataDic; //添加赞和想看数据
 /*****************************************/
 @end
