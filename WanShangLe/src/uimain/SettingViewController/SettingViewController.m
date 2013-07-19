@@ -11,7 +11,7 @@
 #import "SuggestionViewController.h"
 #import "TKLoadingView.h"
 
-#define DisplayTime 5
+#define DisplayTime 3
 
 @interface SettingViewController (){
     
@@ -73,8 +73,7 @@
     int index = [[userDefault objectForKey:DistanceFilter] intValue];
     [(UIButton *)[_distanceFilterBtns objectAtIndex:index] setSelected:YES];
     
-    float cacheSize = [[DataBaseManager sharedInstance] CoreDataSize]/1024.0/1024.0;
-    _cacheLabel.text = [NSString stringWithFormat:@"%0.2fM",cacheSize];
+    [self updateCacheSize];
 }
 #pragma mark -
 #pragma mark xib Button event
@@ -138,8 +137,14 @@
         }
         dispatch_async(dispatch_get_main_queue(), ^{
                 [self stopTKLoadingView];
+                [self updateCacheSize];
         });
     });
+}
+
+- (void)updateCacheSize{
+    float cacheSize = [[DataBaseManager sharedInstance] CoreDataSize]/1024.0/1024.0;
+    _cacheLabel.text = [NSString stringWithFormat:@"%0.2fM",cacheSize];
 }
 
 -(IBAction)clickRecommendFriends:(id)sender{
