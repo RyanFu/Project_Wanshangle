@@ -2,7 +2,7 @@
 //  MSchedule.m
 //  WanShangLe
 //
-//  Created by stephenliu on 13-7-15.
+//  Created by stephenliu on 13-7-19.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -12,13 +12,10 @@
 
 @implementation MSchedule
 
-@dynamic date;
 @dynamic isToday;
 @dynamic locationDate;
 @dynamic lowPrice;
-@dynamic movieCount;
 @dynamic scheduleInfo;
-@dynamic seatPrice;
 @dynamic uid;
 @dynamic movie_cinema;
 

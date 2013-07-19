@@ -23,12 +23,12 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     ABLoggerMethod();
     static NSString *CellIdentifier = @"mScheduleCell";
-    static BOOL nibsRegistered = NO;
-    if (!nibsRegistered) {
-        UINib *nib = [UINib nibWithNibName:@"ScheduleTableViewCell" bundle:nil];
-        [tableView registerNib:nib forCellReuseIdentifier:CellIdentifier];
-        nibsRegistered = YES;
-    }
+//    static BOOL nibsRegistered = NO;
+//    if (!nibsRegistered) {
+//        UINib *nib = [UINib nibWithNibName:@"ScheduleTableViewCell" bundle:nil];
+//        [tableView registerNib:nib forCellReuseIdentifier:CellIdentifier];
+//        nibsRegistered = YES;
+//    }
     
     ScheduleTableViewCell * cell = (ScheduleTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -47,7 +47,7 @@
     cell.schedule_time.text = [[DataBaseManager sharedInstance] getTimeFromDate:[tDic objectForKey:@"time"]];
     cell.schedule_price.text = [NSString stringWithFormat:@"%@元起",[[tDic objectForKey:@"lowestprice"] stringValue]];
     cell.schedule_timeLong.text = [NSString stringWithFormat:@"预计%@结束",
-                                   [[DataBaseManager sharedInstance] timeByAddingTimeInterval:[_parentViewController.mMovie.duration intValue]*60 fromDate:[tDic objectForKey:@"time"]]];
+                                   [[DataBaseManager sharedInstance] timeByAddingTimeInterval:[_parentViewController.mMovie.duration intValue] fromDate:[tDic objectForKey:@"time"]]];
     
     NSString *viewType = @"2D";
     NSArray *tarray = [tDic objectForKey:@"viewtypes"];

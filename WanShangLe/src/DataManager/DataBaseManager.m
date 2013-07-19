@@ -234,7 +234,7 @@ static DataBaseManager *_sharedInstance = nil;
     aDate = [aDate dateByAddingTimeInterval:interval];
     
     _timeFormatter.dateFormat = @"HH:mm";
-    
+    ABLoggerDebug(@"%@",[_timeFormatter stringFromDate:aDate]);
     return [_timeFormatter stringFromDate:aDate];
 }
 
@@ -292,7 +292,7 @@ static DataBaseManager *_sharedInstance = nil;
         return movie_cinema;
     }
     
-    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%d%@",aCinema.cityId,aCinema.cityName,[aCinema.uid intValue],aMovie.uid];
+    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%@%@",aCinema.cityId,aCinema.cityName,aCinema.uid,aMovie.uid];
     movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     if (movie_cinema == nil) {
         movie_cinema = [MMovie_Cinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
@@ -300,6 +300,7 @@ static DataBaseManager *_sharedInstance = nil;
     movie_cinema.uid = movie_cinema_uid;
     movie_cinema.movie = aMovie;
     movie_cinema.cinema = aCinema;
+    movie_cinema.locationDate = [self getTodayTimeStamp];
     [movie_cinema_uid release];
     
     return movie_cinema;
@@ -540,6 +541,7 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdMovie_getAllMovies* apiCmdMovie_getAllMovies = [[ApiCmdMovie_getAllMovies alloc] init];
     apiCmdMovie_getAllMovies.delegate = delegate;
     apiCmdMovie_getAllMovies.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdMovie_getAllMovies.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     [apiClient executeApiCmdAsync:apiCmdMovie_getAllMovies];
     [apiCmdMovie_getAllMovies.httpRequest setTag:API_MMovieCmd];
     
@@ -917,6 +919,7 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdMovie_getSchedule* apiCmdMovie_getSchedule = [[ApiCmdMovie_getSchedule alloc] init];
     apiCmdMovie_getSchedule.delegate = delegate;
     apiCmdMovie_getSchedule.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdMovie_getSchedule.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     apiCmdMovie_getSchedule.movie_id = aMovie.uid;
     apiCmdMovie_getSchedule.cinema_id = aCinema.uid;
     [apiClient executeApiCmdAsync:apiCmdMovie_getSchedule];
@@ -928,8 +931,10 @@ static DataBaseManager *_sharedInstance = nil;
 - (MSchedule *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema{
     
     MMovie_Cinema *movie_cinema = nil;
-    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%d%@",aCinema.cityId,aCinema.cityName,[aCinema.uid intValue],aMovie.uid];
-    movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%@%@",aCinema.cityId,aCinema.cityName,aCinema.uid,aMovie.uid];
+    NSString *todayTimeStamp = [self getTodayZeroTimeStamp];
+//    movie_cinema = [MMovie_Cinema MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and locationDate >= %@ and isToday = YES",movie_cinema_uid,todayTimeStamp] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        movie_cinema = [MMovie_Cinema MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and locationDate >= %@",movie_cinema_uid,todayTimeStamp] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     [movie_cinema_uid release];
     return movie_cinema.schedule;
 }
@@ -998,7 +1003,7 @@ static DataBaseManager *_sharedInstance = nil;
     
     NSDictionary *dataDic = [objectData objectForKey:@"data"];
     
-    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%d%@",aCinema.cityId,aCinema.cityName,[aCinema.uid intValue],aMovie.uid];
+    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%@%@",aCinema.cityId,aCinema.cityName,aCinema.uid,aMovie.uid];
     MMovie_Cinema *movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     if (movie_cinema == nil) {
         MMovie *tMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:aMovie.uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
@@ -1011,6 +1016,8 @@ static DataBaseManager *_sharedInstance = nil;
     }
     
     movie_cinema.schedule.scheduleInfo = dataDic;
+    movie_cinema.schedule.uid = movie_cinema_uid;
+    movie_cinema.schedule.locationDate = [self getTodayTimeStamp];
     
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         ABLoggerDebug(@"排期 保存是否成功 ========= %d",success);
@@ -1051,6 +1058,7 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdMovie_getBuyInfo* apiCmdMovie_getBuyInfo = [[ApiCmdMovie_getBuyInfo alloc] init];
     apiCmdMovie_getBuyInfo.delegate = delegate;
     apiCmdMovie_getBuyInfo.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdMovie_getBuyInfo.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     [apiClient executeApiCmdAsync:apiCmdMovie_getBuyInfo];
     [apiCmdMovie_getBuyInfo.httpRequest setTag:API_MBuyInfoCmd];
     
@@ -1127,6 +1135,7 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdMovie_getAllCinemas* apiCmdMovie_getAllCinemas = [[ApiCmdMovie_getAllCinemas alloc] init];
     apiCmdMovie_getAllCinemas.delegate = delegate;
     apiCmdMovie_getAllCinemas.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdMovie_getAllCinemas.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     
     [apiClient executeApiCmdAsync:apiCmdMovie_getAllCinemas];
     [apiCmdMovie_getAllCinemas.httpRequest setTag:API_MCinemaCmd];
@@ -1231,7 +1240,9 @@ static DataBaseManager *_sharedInstance = nil;
             }
             //            [cinemas addObject:mCinema];
             mCinema.district = districtName;
-            mCinema.cityId = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName].uid;
+            mCinema.cityId = apiCmd.cityId;
+            mCinema.cityName = apiCmd.cityName;
+            mCinema.locationDate = [self getTodayTimeStamp];
             [self importCinema:mCinema ValuesForKeysWithObject:cinema_dic];
         }
     }
@@ -1355,6 +1366,7 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdShow_getAllShows* apiCmdShow_getAllShows = [[ApiCmdShow_getAllShows alloc] init];
     apiCmdShow_getAllShows.delegate = delegate;
     apiCmdShow_getAllShows.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdShow_getAllShows.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     [apiClient executeApiCmdAsync:apiCmdShow_getAllShows];
     [apiCmdShow_getAllShows.httpRequest setTag:API_SShow_Type_All_Cmd];
     
@@ -1448,6 +1460,7 @@ static DataBaseManager *_sharedInstance = nil;
     }
     
     apiCmdShow_getAllShows.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdShow_getAllShows.cityName = [[LocationManager defaultLocationManager] getUserCity];
     apiCmdShow_getAllShows.dataType = dataType;
     [apiClient executeApiCmdAsync:apiCmdShow_getAllShows];
     [apiCmdShow_getAllShows.httpRequest setTag:API_SShowCmd];
@@ -1474,10 +1487,9 @@ static DataBaseManager *_sharedInstance = nil;
         }
         [self importShow:sShow ValuesForKeysWithObject:[array objectAtIndex:i]];
         
-        City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
         sShow.dataType = apiCmd.dataType; //数据类型
         sShow.locationDate = [self getTodayTimeStamp];
-        sShow.cityId = city.uid;
+        sShow.cityId = apiCmd.cityId;
         [returnArray addObject:sShow];
     }
     
@@ -1631,6 +1643,7 @@ static DataBaseManager *_sharedInstance = nil;
     apiCmdShow_getShowDetail.delegate = delegate;
     apiCmdShow_getShowDetail.showId = showId;
     apiCmdShow_getShowDetail.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdShow_getShowDetail.cityName = [[LocationManager defaultLocationManager] getUserCity];
     [apiClient executeApiCmdAsync:apiCmdShow_getShowDetail];
     [apiCmdShow_getShowDetail.httpRequest setTag:API_SShowDetailCmd];
     
@@ -1766,6 +1779,7 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdBar_getAllBars* apiCmdBar_getAllBars = [[ApiCmdBar_getAllBars alloc] init];
     apiCmdBar_getAllBars.delegate = delegate;
     apiCmdBar_getAllBars.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdBar_getAllBars.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     [apiClient executeApiCmdAsync:apiCmdBar_getAllBars];
     [apiCmdBar_getAllBars.httpRequest setTag:API_BBarTimeCmd];
     
@@ -1858,6 +1872,7 @@ static DataBaseManager *_sharedInstance = nil;
     }
     
     apiCmdBar_getAllBars.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdBar_getAllBars.cityName = [[LocationManager defaultLocationManager] getUserCity];
     apiCmdBar_getAllBars.dataType = dataType;
     [apiClient executeApiCmdAsync:apiCmdBar_getAllBars];
     [apiCmdBar_getAllBars.httpRequest setTag:API_BBarTimeCmd];
@@ -1897,6 +1912,7 @@ static DataBaseManager *_sharedInstance = nil;
     }
     
     apiCmdBar_getAllBars.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdBar_getAllBars.cityName = [[LocationManager defaultLocationManager] getUserCity];
     apiCmdBar_getAllBars.dataType = dataType;
     apiCmdBar_getAllBars.latitude = latitude;
     apiCmdBar_getAllBars.longitude = longitude;
@@ -1961,9 +1977,8 @@ static DataBaseManager *_sharedInstance = nil;
             bBar = [BBar MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
         }
         [self importBar:bBar ValuesForKeysWithObject:[array objectAtIndex:i]];
-        
-        City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
-        bBar.cityId = city.uid;
+        bBar.cityId = apiCmd.cityId;
+        bBar.locationDate = [self getTodayTimeStamp];
         bBar.dataType = apiCmd.dataType; //数据类型，1是时间过滤，2是人气过滤，3是附近
         [returnArray addObject:bBar];
     }
@@ -2071,6 +2086,7 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdKTV_getAllKTVs* apiCmdKTV_getAllKTVs = [[ApiCmdKTV_getAllKTVs alloc] init];
     apiCmdKTV_getAllKTVs.delegate = delegate;
     apiCmdKTV_getAllKTVs.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdKTV_getAllKTVs.cityName = [[LocationManager defaultLocationManager] getUserCity];
     [apiClient executeApiCmdAsync:apiCmdKTV_getAllKTVs];
     [apiCmdKTV_getAllKTVs.httpRequest setTag:API_KKTVCmd];
     
@@ -2121,6 +2137,7 @@ static DataBaseManager *_sharedInstance = nil;
     }
     
     apiCmdKTV_getAllKTVs.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdKTV_getAllKTVs.cityName = [[LocationManager defaultLocationManager] getUserCity];
     [apiClient executeApiCmdAsync:apiCmdKTV_getAllKTVs];
     [apiCmdKTV_getAllKTVs.httpRequest setTag:API_KKTVCmd];
     

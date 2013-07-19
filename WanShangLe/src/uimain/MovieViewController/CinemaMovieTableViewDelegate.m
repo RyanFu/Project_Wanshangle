@@ -54,7 +54,7 @@
     cell.schedule_time.text = [[DataBaseManager sharedInstance] getTimeFromDate:[tDic objectForKey:@"time"]];
     cell.schedule_price.text = [NSString stringWithFormat:@"%@元起",[[tDic objectForKey:@"lowestprice"] stringValue]];
     cell.schedule_timeLong.text = [NSString stringWithFormat:@"预计%@结束",
-                              [[DataBaseManager sharedInstance] timeByAddingTimeInterval:[_parentViewController.mMovie.duration intValue]*60 fromDate:[tDic objectForKey:@"time"]]];
+                              [[DataBaseManager sharedInstance] timeByAddingTimeInterval:[_parentViewController.mMovie.duration intValue] fromDate:[tDic objectForKey:@"time"]]];
     
     NSString *viewType = @"2D";
     NSArray *tarray = [tDic objectForKey:@"viewtypes"];
