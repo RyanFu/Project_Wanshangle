@@ -9,12 +9,20 @@
 #import "SettingViewController.h"
 #import "KtvManagerViewController.h"
 #import "SuggestionViewController.h"
+#import "TKLoadingView.h"
 
-@interface SettingViewController ()
+#define DisplayTime 3
 
+@interface SettingViewController (){
+    
+}
+@property(assign,nonatomic)TKLoadingView *tkLoadingView;
+@property(assign,nonatomic)UIView *markView;
+-(void)genTKLoadingView:(NSString *)title;
 @end
 
 @implementation SettingViewController
+@synthesize tkLoadingView = _tkLoadingView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -23,6 +31,11 @@
         self.title = @"设置";
     }
     return self;
+}
+
+- (void)dealloc{
+    self.tkLoadingView = nil;
+    [super dealloc];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -52,16 +65,15 @@
 }
 
 - (void)initData{
+     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     
     [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, 505)];
     
-    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     [self cleanDistanceFilterButtonState];
     int index = [[userDefault objectForKey:DistanceFilter] intValue];
     [(UIButton *)[_distanceFilterBtns objectAtIndex:index] setSelected:YES];
     
-    float cacheSize = [[DataBaseManager sharedInstance] CoreDataSize]/1024.0/1024.0;
-    _cacheLabel.text = [NSString stringWithFormat:@"%0.2fM",cacheSize];
+    [self updateCacheSize];
 }
 #pragma mark -
 #pragma mark xib Button event
@@ -87,8 +99,9 @@
     
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     int index = [(UIButton *)sender tag];
-    [(UIButton *)[_distanceFilterBtns objectAtIndex:index-1] setSelected:YES];
-    [userDefault setObject:[NSString stringWithFormat:@"%d",index-1] forKey:DistanceFilter];
+    [(UIButton *)[_distanceFilterBtns objectAtIndex:index] setSelected:YES];
+    [userDefault setObject:[NSString stringWithFormat:@"%d",index] forKey:DistanceFilter];
+    [userDefault synchronize];
 
 }
 
@@ -109,7 +122,29 @@
 }
 
 -(IBAction)clickCleanDataBaseCache:(id)sender{
-    
+    [self genTKLoadingView:@"正在清理缓存"];
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        CFTimeInterval time1 = Elapsed_Time;
+        [[DataBaseManager sharedInstance] cleanUpDataBaseCache];
+        
+        CFTimeInterval time2 = Elapsed_Time;
+         ElapsedTime(time2, time1);
+        CFTimeInterval escapeTime = time2 - time1;
+        if (escapeTime<DisplayTime) {
+            NSTimeInterval sleeptimee = DisplayTime-escapeTime;
+            [NSThread sleepForTimeInterval:sleeptimee];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+                [self stopTKLoadingView];
+                [self updateCacheSize];
+        });
+    });
+}
+
+- (void)updateCacheSize{
+    float cacheSize = [[DataBaseManager sharedInstance] CoreDataSize]/1024.0/1024.0;
+    _cacheLabel.text = [NSString stringWithFormat:@"%0.2fM",cacheSize];
 }
 
 -(IBAction)clickRecommendFriends:(id)sender{
@@ -134,8 +169,30 @@
     
 }
 
+#pragma mark -
+#pragma mark 提示框
+
+-(void)genTKLoadingView:(NSString *)title{
+
+    self.tkLoadingView = [[[TKLoadingView alloc] initWithTitle:title message:@"请稍等..."] autorelease];
+    _tkLoadingView.center = self.view.center;
+    [self.view addSubview:_tkLoadingView];
+    [_tkLoadingView setTitle:title];
+    [self.view bringSubviewToFront:_tkLoadingView];
+    [self.tkLoadingView startAnimating];
+    
+    self.markView = [[[UIView alloc] initWithFrame:self.view.bounds] autorelease];
+}
+
+- (void)stopTKLoadingView{
+    [_tkLoadingView stopAnimating];
+    [_tkLoadingView removeFromSuperview];
+    self.tkLoadingView = nil;
+
+}
 - (void)didReceiveMemoryWarning
 {
+     ABLoggerWarn(@"接收到内存警告了");
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

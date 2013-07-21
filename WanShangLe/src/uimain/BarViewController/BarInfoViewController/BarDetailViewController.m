@@ -13,6 +13,7 @@
 #import "AppDelegate.h"
 #import "BarDetailViewController.h"
 #import "ApiCmdBar_getBarDetail.h"
+#import "ActionState.h"
 
 
 @interface BarDetailViewController ()<ApiNotify>{
@@ -42,6 +43,9 @@
     [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdBar_getBarDetail];
     self.apiCmdBar_getBarDetail = nil;
     
+    self.barDetailImg = nil;
+    self.mBar = nil;
+    
     [super dealloc];
 }
 
@@ -52,8 +56,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [self initBarItem];
+    [self initData];
 }
 
 - (void)initBarItem{
@@ -76,8 +80,48 @@
     [shareItem release];
 }
 
-- (void)initMovieDetailData{
+- (void)initData{
+    _appDelegate = [AppDelegate appDelegateInstance];
     
+    UIImage *img = [UIImage imageNamed:@"bg_movie_detail_info@2x"];
+    _barDetailImg = [[UIImageView alloc] initWithFrame:CGRectMake(9, 176,302, 270)];
+    [_barDetailImg setBackgroundColor:[UIColor clearColor]];
+    UIEdgeInsets insets = UIEdgeInsetsMake(80, 20, 18, 20);
+    _barDetailImg.image = [img resizableImageWithCapInsets:insets resizingMode:UIImageResizingModeStretch];
+    [_barDetailImg setContentScaleFactor:2.0f];
+    [_mScrollView addSubview:_barDetailImg];
+    [_barDetailImg release];
+    
+    if ([[DataBaseManager sharedInstance] isSelectedLike:_mBar.uid withType:API_RecommendOrLookBarType]) {
+        [_bar_yesButton setBackgroundImage:[UIImage imageNamed:@"bar_btn_yes_blue_n@2x"] forState:UIControlStateNormal];
+    }
+
+    if (_mBar.barDetail==nil) {//酒吧详情为空
+       
+    }else{
+        [self initBarDetailData];
+    }
+
+}
+
+- (void)initBarDetailData{
+    
+    UILabel *barInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 50, 282, 220)];
+    [barInfoLabel setBackgroundColor:[UIColor clearColor]];
+    [barInfoLabel setNumberOfLines:0];
+    barInfoLabel.font = [UIFont systemFontOfSize:15];
+    barInfoLabel.text = _mBar.description;
+    CGSize misize = [barInfoLabel.text sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(barInfoLabel.bounds.size.width, MAXFLOAT)];
+    
+    if (misize.height>barInfoLabel.bounds.size.height) {
+        barInfoLabel.frame = CGRectMake(10, 50, 282, misize.height);
+        float extendHeight = misize.height - 220;
+        [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height+extendHeight)];
+        [_barDetailImg setFrame:CGRectMake(9, 176,302, 270+extendHeight)];
+    }
+    
+    [_barDetailImg addSubview:barInfoLabel];
+    [barInfoLabel release];
 }
 
 - (void)updateRecOrLookData{
@@ -89,6 +133,176 @@
 
 - (void)clickBackButton:(id)sender{
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+-(IBAction)clickYESButton:(id)sender{
+    
+}
+
+-(IBAction)clickPhoneButton:(id)sender{
+    
+}
+
+- (void)startAddOneAnimation:(UIButton *)sender{
+    sender.enabled = NO;
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(sender.center.x-5, sender.center.y-10, 20, 20)];
+    [label setBackgroundColor:[UIColor clearColor]];
+    label.text = @"+1";
+    label.textColor = [UIColor colorWithRed:1.000 green:0.430 blue:0.540 alpha:1.000];
+    label.alpha = 1.0;
+    [self.view addSubview:label];
+    [label release];
+    
+    [UIView animateWithDuration:1 animations:^{
+        
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
+        label.frame = CGRectMake(sender.center.x-5, sender.center.y-30, 20, 20);
+        label.textColor = [UIColor colorWithRed:1.000 green:0.181 blue:0.373 alpha:1.000];
+        label.alpha = 0.4;
+        
+    } completion:^(BOOL finished) {
+        [label removeFromSuperview];
+        sender.enabled = YES;
+    }];
+}
+
+#pragma mark -
+#pragma mark apiNotiry
+-(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
+    
+    if (error) {
+        return;
+    }
+    
+    int tag = [[apiCmd httpRequest] tag];
+    ABLogger_int(tag);
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        switch (tag) {
+            case API_MMovieDetailCmd:
+            {
+                
+                [[DataBaseManager sharedInstance] insertBarDetailIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+            }
+                break;
+            case API_RecommendOrLookCmd:
+            {
+            }
+                break;
+                
+            default:
+            {
+                NSAssert(0, @"没有从网络抓取到数据");
+            }
+                break;
+        }
+        [self updateData:tag];
+    });
+}
+
+- (void) apiNotifyLocationResult:(id) apiCmd  error:(NSError*) error{
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        ABLoggerMethod();
+        int tag = [[apiCmd httpRequest] tag];
+        
+        CFTimeInterval time1 = Elapsed_Time;
+        [self updateData:tag];
+        CFTimeInterval time2 = Elapsed_Time;
+        ElapsedTime(time2, time1);
+        
+    });
+}
+
+- (ApiCmd *)apiGetDelegateApiCmd{
+    return _apiCmdBar_getBarDetail;
+}
+
+- (void)updateData:(int)tag
+{
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        ABLogger_int(tag);
+        switch (tag) {
+            case 0:
+            case API_BBarDetailCmd:
+            {
+                [self initBarDetailData];
+            }
+                break;
+            case API_BBarRecOrLookCmd:
+            {
+                
+                [self updateRecOrLookData];
+            }
+                break;
+                
+            default:
+            {
+                NSAssert(0, @"没有从网络抓取到数据");
+            }
+                break;
+        }
+    });
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    ABLoggerWarn(@"接收到内存警告了");
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1)
+    {
+        id<ISSAuthOptions> authOptions = [ShareSDK authOptionsWithAutoAuth:YES
+                                                             allowCallback:YES
+                                                             authViewStyle:SSAuthViewStyleFullScreenPopup
+                                                              viewDelegate:nil
+                                                   authManagerViewDelegate:_appDelegate.viewDelegate];
+        
+        //在授权页面中添加关注官方微博
+        [authOptions setFollowAccounts:[NSDictionary dictionaryWithObjectsAndKeys:
+                                        [ShareSDK userFieldWithType:SSUserFieldTypeName value:@"ShareSDK"],
+                                        SHARE_TYPE_NUMBER(ShareTypeSinaWeibo),
+                                        [ShareSDK userFieldWithType:SSUserFieldTypeName value:@"ShareSDK"],
+                                        SHARE_TYPE_NUMBER(ShareTypeTencentWeibo),
+                                        nil]];
+        
+        //关注用户
+        [ShareSDK followUserWithType:_followType
+                               field:@"ShareSDK"
+                           fieldType:SSUserFieldTypeName
+                         authOptions:authOptions
+                        viewDelegate:_appDelegate.viewDelegate
+                              result:^(SSResponseState state, id<ISSUserInfo> userInfo, id<ICMErrorInfo> error) {
+                                  NSString *msg = nil;
+                                  if (state == SSResponseStateSuccess)
+                                  {
+                                      msg = @"关注成功";
+                                  }
+                                  else if (state == SSResponseStateFail)
+                                  {
+                                      msg = [NSString stringWithFormat:@"关注失败:%@", error.errorDescription];
+                                  }
+                                  
+                                  if (msg)
+                                  {
+                                      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                                                          message:msg
+                                                                                         delegate:nil
+                                                                                cancelButtonTitle:@"知道了"
+                                                                                otherButtonTitles:nil];
+                                      [alertView show];
+                                      [alertView release];
+                                  }
+                              }];
+    }
 }
 
 - (void)shareButtonClick:(id)sender{
@@ -172,176 +386,4 @@
                                 }
                             }];
 }
-
--(IBAction)clickRecommendButton:(id)sender{
-
-}
-
--(IBAction)clickWantLookButton:(id)sender{
-
-}
-
-- (void)startAddOneAnimation:(UIButton *)sender{
-    sender.enabled = NO;
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(sender.center.x-5, sender.center.y-10, 20, 20)];
-    [label setBackgroundColor:[UIColor clearColor]];
-    label.text = @"+1";
-    label.textColor = [UIColor colorWithRed:1.000 green:0.430 blue:0.540 alpha:1.000];
-    label.alpha = 1.0;
-    [self.view addSubview:label];
-    [label release];
-    
-    [UIView animateWithDuration:1 animations:^{
-        
-        [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
-        label.frame = CGRectMake(sender.center.x-5, sender.center.y-30, 20, 20);
-        label.textColor = [UIColor colorWithRed:1.000 green:0.181 blue:0.373 alpha:1.000];
-        label.alpha = 0.4;
-        
-    } completion:^(BOOL finished) {
-        [label removeFromSuperview];
-        sender.enabled = YES;
-    }];
-}
-
-#pragma mark -
-#pragma mark apiNotiry
--(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
-    
-    if (error) {
-        return;
-    }
-    
-    int tag = [[apiCmd httpRequest] tag];
-    ABLogger_int(tag);
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        switch (tag) {
-            case API_MMovieDetailCmd:
-            {
-                
-                [[DataBaseManager sharedInstance] insertMovieDetailIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
-            }
-                break;
-            case API_MMovieRecOrLookCmd:
-            {
-            }
-                break;
-                
-            default:
-            {
-                NSAssert(0, @"没有从网络抓取到数据");
-            }
-                break;
-        }
-        [self updateData:tag];
-    });
-}
-
-- (void) apiNotifyLocationResult:(id) apiCmd  error:(NSError*) error{
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        ABLoggerMethod();
-        int tag = [[apiCmd httpRequest] tag];
-        
-        CFTimeInterval time1 = Elapsed_Time;
-        [self updateData:tag];
-        CFTimeInterval time2 = Elapsed_Time;
-        ElapsedTime(time2, time1);
-        
-    });
-}
-
-- (ApiCmd *)apiGetDelegateApiCmd{
-    return _apiCmdBar_getBarDetail;
-}
-
-- (void)updateData:(int)tag
-{
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        ABLogger_int(tag);
-        switch (tag) {
-            case 0:
-            case API_MMovieDetailCmd:
-            {
-                [self initMovieDetailData];
-            }
-                break;
-            case API_MMovieRecOrLookCmd:
-            {
-                
-                [self updateRecOrLookData];
-            }
-                break;
-                
-            default:
-            {
-                NSAssert(0, @"没有从网络抓取到数据");
-            }
-                break;
-        }
-    });
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    ABLoggerWarn(@"接收到内存警告了");
-    // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - UIAlertViewDelegate
-
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 1)
-    {
-        id<ISSAuthOptions> authOptions = [ShareSDK authOptionsWithAutoAuth:YES
-                                                             allowCallback:YES
-                                                             authViewStyle:SSAuthViewStyleFullScreenPopup
-                                                              viewDelegate:nil
-                                                   authManagerViewDelegate:_appDelegate.viewDelegate];
-        
-        //在授权页面中添加关注官方微博
-        [authOptions setFollowAccounts:[NSDictionary dictionaryWithObjectsAndKeys:
-                                        [ShareSDK userFieldWithType:SSUserFieldTypeName value:@"ShareSDK"],
-                                        SHARE_TYPE_NUMBER(ShareTypeSinaWeibo),
-                                        [ShareSDK userFieldWithType:SSUserFieldTypeName value:@"ShareSDK"],
-                                        SHARE_TYPE_NUMBER(ShareTypeTencentWeibo),
-                                        nil]];
-        
-        //关注用户
-        [ShareSDK followUserWithType:_followType
-                               field:@"ShareSDK"
-                           fieldType:SSUserFieldTypeName
-                         authOptions:authOptions
-                        viewDelegate:_appDelegate.viewDelegate
-                              result:^(SSResponseState state, id<ISSUserInfo> userInfo, id<ICMErrorInfo> error) {
-                                  NSString *msg = nil;
-                                  if (state == SSResponseStateSuccess)
-                                  {
-                                      msg = @"关注成功";
-                                  }
-                                  else if (state == SSResponseStateFail)
-                                  {
-                                      msg = [NSString stringWithFormat:@"关注失败:%@", error.errorDescription];
-                                  }
-                                  
-                                  if (msg)
-                                  {
-                                      UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                                                          message:msg
-                                                                                         delegate:nil
-                                                                                cancelButtonTitle:@"知道了"
-                                                                                otherButtonTitles:nil];
-                                      [alertView show];
-                                      [alertView release];
-                                  }
-                              }];
-    }
-}
-
-
 @end

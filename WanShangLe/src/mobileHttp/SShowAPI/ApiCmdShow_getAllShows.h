@@ -8,11 +8,10 @@
 
 #import "ApiCmd.h"
 
-@interface ApiCmdShow_getAllShows : ApiCmd
-{
-@private
+@interface ApiCmdShow_getAllShows : ApiCmd{
     
 }
+@property(nonatomic,retain)NSString *dataType;
 - (NSMutableDictionary*) getParamDict;
 - (void) parseResultData:(NSDictionary*) dictionary;
 

@@ -8,11 +8,9 @@
 
 #import "ApiCmd.h"
 
-@interface ApiCmdBar_getBarDetail : ApiCmd
-{
-@private
-    
+@interface ApiCmdBar_getBarDetail : ApiCmd{  
 }
+@property(nonatomic,retain) NSString *barId;
 - (NSMutableDictionary*) getParamDict;
 - (void) parseResultData:(NSDictionary*) dictionary;
 

@@ -11,12 +11,15 @@
 typedef NS_ENUM(NSInteger, WSLRecommendAPIType) {
     WSLRecommendAPITypeNone = 0,
     WSLRecommendAPITypeMovieInteract,
+    WSLRecommendAPITypePerformInteract,
+    WSLRecommendAPITypeKTVInteract,
+    WSLRecommendAPITypeBarInteract
 };
 
 typedef NS_ENUM(NSInteger, WSLRecommendLookType) {
     WSLRecommendLookTypeNone = 0,
     WSLRecommendLookTypeRecommend,
-    WSLRecommendLookTypeLook,
+    WSLRecommendLookTypeLook
 };
 
 @interface ApiCmd_recommendOrLook : ApiCmd
@@ -25,7 +28,7 @@ typedef NS_ENUM(NSInteger, WSLRecommendLookType) {
 }
 @property(nonatomic,assign)WSLRecommendLookType mType;
 @property(nonatomic,assign)WSLRecommendAPIType mAPIType;
-@property(nonatomic,retain)NSString *movie_id;
+@property(nonatomic,retain)NSString *object_id;
 - (NSMutableDictionary*) getParamDict;
 - (void) parseResultData:(NSDictionary*) dictionary;
 

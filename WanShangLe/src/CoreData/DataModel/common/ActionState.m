@@ -2,7 +2,7 @@
 //  ActionState.m
 //  WanShangLe
 //
-//  Created by stephenliu on 13-7-15.
+//  Created by stephenliu on 13-7-16.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -18,5 +18,7 @@
 @dynamic uid;
 @dynamic vote;
 @dynamic wantLook;
+@dynamic beginTime;
+@dynamic endTime;
 
 @end

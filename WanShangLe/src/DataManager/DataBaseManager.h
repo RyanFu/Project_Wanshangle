@@ -39,14 +39,17 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
  */
 - (unsigned long long int)folderSize:(NSString *)folderPath;
 - (unsigned long long int)CoreDataSize;
+//清除数据缓存
+- (BOOL)cleanUpDataBaseCache;
 
 //database uid key
 - (NSString*)md5PathForKey:(NSString *) key;
 
+/************ 时间处理 ***************/
 //日期-时间
 - (BOOL)isToday:(NSString *)date;
 - (BOOL)isTomorrow:(NSString *)date;
-
+//获取时间戳
 - (NSString *)getTodayTimeStamp;
 - (NSString *)getTodayZeroTimeStamp;
 //获取星期几
@@ -57,6 +60,8 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 //获取时间
 - (NSString *)getTimeFromDate:(NSString *)dateStr;
 - (NSString *)timeByAddingTimeInterval:(int)time fromDate:(NSString *)dateStr;
+//几天后的时间
+- (NSString *)dateWithTimeIntervalSinceNow:(NSTimeInterval)timeInterval fromDate:(NSString *)beginDate;
 
 //清除
 - (void)cleanUp;
@@ -73,17 +78,6 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 
 //测试 城市筛选
 - (NSArray *)getUnCurrentCity;
-
-/**
- 推荐和想看接口
- @param apiType api 类型
- @param cType 是推荐还是想看
- @param delegate 代理
- */
-- (BOOL)getRecommendOrLookForWeb:(NSString *)movieId
-                         APIType:(WSLRecommendAPIType)apiType
-                           cType:(WSLRecommendLookType)cType
-                        delegate:(id<ApiNotify>)delegate;
 
 /************ 关联表 ***************/
 - (MMovie_City *)getFirstMMovie_CityFromCoreData:(NSString *)u_id;
@@ -104,8 +98,8 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 
 //获取电影详情
 - (ApiCmd *)getMovieDetailFromWeb:(id<ApiNotify>)delegate movieId:(NSString *)movieId;
-- (BOOL)insertMovieDetailIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
-- (BOOL)insertMovieRecommendIntoCoreDataFromObject:(NSString *)movieId data:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (MMovieDetail *)insertMovieDetailIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (MMovieDetail *)insertMovieRecommendIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importMovieDetail:(MMovieDetail *)aMovieDetail ValuesForKeysWithObject:(NSDictionary *)amovieDetailData;
 - (MMovieDetail *)getMovieDetailWithId:(NSString *)movieId;
 
@@ -149,9 +143,42 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (NSArray *)getAllShowsListFromCoreDataWithCityName:(NSString *)cityName;
 - (NSUInteger)getCountOfShowsListFromCoreData;
 - (NSUInteger)getCountOfShowsListFromCoreDataWithCityName:(NSString *)cityName;
-- (void)insertShowsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+
+
+//分页 演出
+- (ApiCmd *)getShowsListFromWeb:(id<ApiNotify>)delegate
+                        offset:(int)offset
+                         limit:(int)limit
+                      Latitude:(CLLocationDegrees)latitude
+                     longitude:(CLLocationDegrees)longitude
+                      dataType:(NSString *)dataType
+                     isNewData:(BOOL)isNewData;
+
+//插入数据
+- (NSArray *)insertShowsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importShow:(SShow *)sShow ValuesForKeysWithObject:(NSDictionary *)ashowDic;
 
+//读数据
+- (NSArray *)getShowsListFromCoreDataOffset:(int)offset
+                                     limit:(int)limit
+                                  Latitude:(CLLocationDegrees)latitude
+                                 longitude:(CLLocationDegrees)longitude
+                                  dataType:(NSString *)dataType
+                                 validDate:(NSString *)validDate;
+//读数据
+- (NSArray *)getShowsListFromCoreDataWithCityName:(NSString *)cityId
+                                          offset:(int)offset
+                                           limit:(int)limit
+                                        Latitude:(CLLocationDegrees)latitude
+                                       longitude:(CLLocationDegrees)longitude
+                                        dataType:(NSString *)dataType
+                                       validDate:(NSString *)validDate;
+
+//获取 演出详情
+- (ApiCmd *)getShowDetailFromWeb:(id<ApiNotify>)delegate showId:(NSString *)showId;
+- (SShowDetail *)insertShowDetailIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (SShowDetail *)insertShowDetailRecommendOrLookCountIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (SShowDetail *)getShowDetailFromCoreDataWithId:(NSString *)showId;
 /************************ 酒吧 *********************************/
 /***************************************************************/
 //分页 时间和人气 酒吧 
@@ -191,6 +218,9 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 //向数据库里插入数据
 - (NSArray *)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importBar:(BBar *)bBar ValuesForKeysWithObject:(NSDictionary *)aBarDic;
+
+- (void)insertBarDetailIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (void)importBarDetail:(BBar *)bBar ValuesForKeysWithObject:(NSDictionary *)aBarDic;
 
 - (ApiCmd *)getAllBarsListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllBarsListFromCoreData;
@@ -245,4 +275,24 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (void)insertKTVPriceListIntoCoreDataFromObject:(NSDictionary *)objectData
                                     withApiCmd:(ApiCmd*)apiCmd
                                       withaKTV:(KKTV *)aKTV;
+
+
+
+/******************************** 喜欢和想看 *************************************/
+/*******************************************************************************/
+/**
+ 推荐和想看接口
+ @param apiType api 类型
+ @param cType 是推荐还是想看
+ @param delegate 代理
+ */
+- (BOOL)getRecommendOrLookForWeb:(NSString *)objectID
+                         APIType:(WSLRecommendAPIType)apiType
+                           cType:(WSLRecommendLookType)cType
+                        delegate:(id<ApiNotify>)delegate;
+
+- (BOOL)isSelectedLike:(NSString *)uid withType:(NSString *)type; //判断是否赞
+- (BOOL)isSelectedWantLook:(NSString *)uid withType:(NSString *)type; //判断是否想看
+- (BOOL)addActionState:(NSDictionary *)dataDic; //添加赞和想看数据
+/*****************************************/
 @end

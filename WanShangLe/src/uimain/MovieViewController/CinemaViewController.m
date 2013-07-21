@@ -17,6 +17,7 @@
 #import "ScheduleViewController.h"
 #import "AppDelegate.h"
 #import "ASIHTTPRequest.h"
+#import "UILabel+AFNetworking.h"
 #import "MCinema.h"
 #import "MMovie.h"
 #import "ApiCmd.h"
@@ -271,6 +272,13 @@
     movieDetailController.mMovie = self.mMovie;
     [_mparentController.navigationController pushViewController:movieDetailController animated:YES];
     [movieDetailController release];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    [label setJSONWithWithMovie:_mMovie cinema:[[[_cinemasArray objectAtIndex:0] objectForKey:@"list"] objectAtIndex:0] placeholder:@"你好" success:^(NSURLRequest *request, NSHTTPURLResponse *response, NSString *resultString) {
+        
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+        
+    }];
 }
 
 - (void)clickSearchBar:(id)sender{

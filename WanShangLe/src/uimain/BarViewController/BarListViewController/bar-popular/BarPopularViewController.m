@@ -252,7 +252,6 @@
     isLoadMoreAll = NO;
     [_mCacheArray removeAllObjects];
     [_mArray removeAllObjects];
-    
     [self updateData:0 withData:[self getCacheData]];
 }
 

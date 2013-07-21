@@ -13,26 +13,37 @@
 #import "SShow.h"
 
 @implementation ShowTableViewDelegate
+@synthesize mTableView = _mTableView;
 
 #pragma mark -
 #pragma mark UITableViewDataSource
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return [_parentViewController.showsArray count];
+    
+    if ([_mArray count]<=0 || _mArray==nil) {//每次刷新表的时候检测是否有数据
+        _refreshTailerView.hidden = YES;
+    }else{
+        _refreshTailerView.hidden = NO;
+    }
+    
+    
+    return [_mArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     ABLoggerMethod();
     static NSString *CellIdentifier = @"mShowCell";
-    static BOOL nibsRegistered = NO;
-    if (!nibsRegistered) {
-        UINib *nib = [UINib nibWithNibName:@"ShowTableViewCell" bundle:nil];
-        [tableView registerNib:nib forCellReuseIdentifier:CellIdentifier];
-        nibsRegistered = YES;
-    }
     
     ShowTableViewCell * cell = (ShowTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [self createNewMocieCell];
+    }
+    
+    if ([_mArray count]<=0 || _mArray==nil) {
+        return cell;
     }
     
     [self configureCell:cell atIndexPath:indexPath];
@@ -42,12 +53,22 @@
 
 - (void)configureCell:(ShowTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     
-    SShow *show = [_parentViewController.showsArray objectAtIndex:indexPath.row];
+    SShow *show = [_mArray objectAtIndex:indexPath.row];
     [cell.show_imageView setImageWithURL:[NSURL URLWithString:[show webImg]]
-                         placeholderImage:[UIImage imageNamed:@"movie_placeholder@2x"] options:SDWebImageRetryFailed];
+                         placeholderImage:[UIImage imageNamed:@"show_placeholder_S@2x"] options:SDWebImageRetryFailed];
     cell.show_name.text = show.name;
-    cell.show_rating.text = [NSString stringWithFormat:@"%@ : %0.1f (%d 万人)",show.ratingfrom,[show.rating floatValue],[show.ratingpeople intValue]/10000];
-    cell.show_price.text =  [NSString stringWithFormat:@"%@  %@   %@元起",show.date,show.where,[[show.price objectAtIndex:0] stringValue]];
+    
+    int ratingPeople = [show.ratingpeople intValue];
+    NSString *scopeStr = @"人";
+    if (ratingPeople >10000) {
+        ratingPeople = ratingPeople/10000;
+        scopeStr = @"万人";
+    }
+    
+    cell.show_rating.text = [NSString stringWithFormat:@"%@评分: %@ (%d%@)",show.ratingfrom,show.rating,ratingPeople,scopeStr];
+    cell.show_price.text =  [NSString stringWithFormat:@"%@元",show.price];
+    cell.show_address.text = show.address;
+    cell.show_time.text = show.beginTime;
     
 }
 
@@ -55,53 +76,57 @@
     ABLoggerMethod();
      ShowTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"ShowTableViewCell" owner:self options:nil] objectAtIndex:0];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    //    cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"history_menu_cell_background"]] autorelease];
+    cell.accessoryType = UITableViewCellAccessoryNone;
+    
+    cell.show_imageView = [[[UIImageView alloc] initWithFrame:CGRectMake(4, 6, 65, 87)] autorelease];
+    [cell.contentView addSubview:cell.show_imageView];
+    
     return cell;
 }
 
 #pragma mark -
 #pragma mark UITableViewDelegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 80.0f;
+    return 100.0f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    SShow *aShow = [_mArray objectAtIndex:indexPath.row];
     ShowDetailViewController *showDetailController = [[ShowDetailViewController alloc] initWithNibName:(iPhone5?@"ShowDetailViewController_5":@"ShowDetailViewController") bundle:nil];
+    showDetailController.mShow = aShow;
     [_parentViewController.navigationController pushViewController:showDetailController animated:YES];
     [showDetailController release];
 }
 
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods
-
+/*加载新数据*/
 - (void)reloadTableViewDataSource{
-    
-    //    [_model reload];
 	_reloading = YES;
-	
+    [_parentViewController loadNewData];
 }
 
+/*加载更多*/
 - (void)loadMoreTableViewDataSource {
-    //    [_model loadMore];
     _reloading = YES;
+    [_parentViewController loadMoreData];
 }
 
 - (void)doneReLoadingTableViewData
 {
 	//  model should call this when its done loading
 	_reloading = NO;
-//    ABLoggerWarn(@"========== %@",_refreshHeaderView);
-    if (_refreshHeaderView!=nil)
-	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_mTableView];
+    [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_mTableView];
+    [_mTableView reloadData];
 }
 
 - (void)doneLoadingTableViewData
 {
+    [_refreshTailerView egoRefreshScrollViewDataSourceDidFinishedLoading:_mTableView];
+    [_mTableView reloadData];
+    _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
     _reloading = NO;
-    [_refreshTailerView egoRefreshScrollViewDataSourceDidFinishedLoading:mTableView];
-    [mTableView reloadData];
-    _refreshTailerView.frame = CGRectMake(0.0f, mTableView.contentSize.height, mTableView.frame.size.width, mTableView.bounds.size.height);
 }
 
 #pragma mark -
@@ -125,12 +150,10 @@
     
     if (view.tag == EGOHeaderView) {
         [self reloadTableViewDataSource];
-        [self doneReLoadingTableViewData];
     } else {
         [self loadMoreTableViewDataSource];
-        [self doneLoadingTableViewData];
     }
-
+    
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
@@ -140,7 +163,6 @@
 - (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
 	
 	return [NSDate date]; // should return date data source was last changed
-	
 }
 
 - (void)dealloc{

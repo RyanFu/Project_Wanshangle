@@ -11,6 +11,7 @@
 #import "City.h"
 #import "ApiCmd.h"
 #import "TimeStamp.h"
+#import "ActionState.h"
 
 //电影
 #import "MMovie_Cinema.h"
@@ -34,7 +35,9 @@
 #import "ApiCmdKTV_getSearchKTVs.h"
 //演出
 #import "SShow.h"
+#import "SShowDetail.h"
 #import "ApiCmdShow_getAllShows.h"
+#import "ApiCmdShow_getShowDetail.h"
 
 //酒吧
 #import "BBar.h"

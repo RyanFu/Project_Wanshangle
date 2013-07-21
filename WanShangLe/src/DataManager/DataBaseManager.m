@@ -61,6 +61,7 @@ static DataBaseManager *_sharedInstance = nil;
     [[CacheManager sharedInstance] cleanUp];
 }
 
+#pragma mark 缓存大小
 - (unsigned long long int)folderSize:(NSString *)folderPath {
     NSArray *filesArray = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:folderPath error:nil];
     NSEnumerator *filesEnumerator = [filesArray objectEnumerator];
@@ -87,6 +88,19 @@ static DataBaseManager *_sharedInstance = nil;
     ABLoggerDebug(@"cachePath = %@",cachePath);
     
     return [self folderSize:coreDataPath]+[self folderSize:cachePath];
+}
+
+#pragma mark 清除数据缓存
+- (BOOL)cleanUpDataBaseCache{
+    
+    //清除缓存的图片
+    NSString *cachePath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"com.hackemist.SDWebImageCache.default"];
+    ABLoggerDebug(@"cachePath = %@",cachePath);
+   [[NSFileManager defaultManager] removeItemAtPath:cachePath error:nil];
+    
+    //清除缓存的CoreData
+    
+    return YES;
 }
 
 - (NSString*)md5PathForKey:(NSString *) key{
@@ -220,7 +234,7 @@ static DataBaseManager *_sharedInstance = nil;
     aDate = [aDate dateByAddingTimeInterval:interval];
     
     _timeFormatter.dateFormat = @"HH:mm";
-    
+    ABLoggerDebug(@"%@",[_timeFormatter stringFromDate:aDate]);
     return [_timeFormatter stringFromDate:aDate];
 }
 
@@ -237,54 +251,14 @@ static DataBaseManager *_sharedInstance = nil;
     return localeDate;
 }
 
-#pragma mark -
-#pragma mark 推荐和想看
-- (BOOL)getRecommendOrLookForWeb:(NSString *)movieId
-                         APIType:(WSLRecommendAPIType)apiType
-                           cType:(WSLRecommendLookType)cType
-                        delegate:(id<ApiNotify>)delegate{
-    
-    //    if (!isEmpty(movieId)) {
-    //
-    //        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    //        MMovie *aMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:movieId inContext:context];
-    //        if (aMovie==nil) {
-    //            return NO;
-    //        }
-    //
-    //        BOOL canRequest = YES;
-    //        switch (cType) {
-    //            case WSLRecommendLookTypeRecommend:
-    //                canRequest = ![aMovie.movieDetail.doneRec boolValue];
-    //                break;
-    //            case WSLRecommendLookTypeLook:
-    //                canRequest = ![aMovie.movieDetail.doneLook boolValue];
-    //                break;
-    //
-    //            default:
-    //                break;
-    //        }
-    //
-    //        if (!canRequest) {
-    //            return NO;
-    //        }
-    //    }else{
-    //        return NO;
-    //    }
-    
-    ApiClient* apiClient = [ApiClient defaultClient];
-    
-    ApiCmd_recommendOrLook* apiCmd_recommendOrLook = [[ApiCmd_recommendOrLook alloc] init];
-    apiCmd_recommendOrLook.delegate = delegate;
-    apiCmd_recommendOrLook.movie_id = movieId;
-    apiCmd_recommendOrLook.mAPIType = apiType;
-    apiCmd_recommendOrLook.mType = cType;
-    [apiClient executeApiCmdAsync:apiCmd_recommendOrLook];
-    [apiCmd_recommendOrLook.httpRequest setTag:API_MMovieRecOrLookCmd];
-    
-    return YES;
-}
+//几天后的时间
+- (NSString *)dateWithTimeIntervalSinceNow:(NSTimeInterval)timeInterval fromDate:(NSString *)beginDate{
+    _timeFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    NSDate *afterDate = [_timeFormatter dateFromString:beginDate];
+    afterDate = [NSDate dateWithTimeIntervalSinceNow:timeInterval];//(2*30*24 * 60 * 60)两个月
 
+    return [_timeFormatter stringFromDate:afterDate];
+}
 #pragma mark -
 #pragma mark 关联表
 /************ 关联表 ***************/
@@ -318,7 +292,7 @@ static DataBaseManager *_sharedInstance = nil;
         return movie_cinema;
     }
     
-    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%d%@",aCinema.cityId,aCinema.cityName,[aCinema.uid intValue],aMovie.uid];
+    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%@%@",aCinema.cityId,aCinema.cityName,aCinema.uid,aMovie.uid];
     movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     if (movie_cinema == nil) {
         movie_cinema = [MMovie_Cinema MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
@@ -326,6 +300,7 @@ static DataBaseManager *_sharedInstance = nil;
     movie_cinema.uid = movie_cinema_uid;
     movie_cinema.movie = aMovie;
     movie_cinema.cinema = aCinema;
+    movie_cinema.locationDate = [self getTodayTimeStamp];
     [movie_cinema_uid release];
     
     return movie_cinema;
@@ -566,6 +541,7 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdMovie_getAllMovies* apiCmdMovie_getAllMovies = [[ApiCmdMovie_getAllMovies alloc] init];
     apiCmdMovie_getAllMovies.delegate = delegate;
     apiCmdMovie_getAllMovies.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdMovie_getAllMovies.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     [apiClient executeApiCmdAsync:apiCmdMovie_getAllMovies];
     [apiCmdMovie_getAllMovies.httpRequest setTag:API_MMovieCmd];
     
@@ -663,38 +639,42 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 /**
- movies: [
  {
- id: "35",
- uniquekey: "3a35241f73cb36a91fb90d4339272798",
- name: "不二神探",
- url: "http://movie.douban.com/subject/10604486/",
- rating: "5.3",
- ratingcount: "531",
- director: "王子鸣",
- star: "文章,李连杰,刘诗诗,陈妍希,柳岩,马伊琍,黄晓明,佟大为,冯德伦,吴京,邹兆龙,郑嘉颖,梁小龙,谢天华,张梓琳,邓丽欣,田亮,方力申,梁家仁,林雪,何超仪",
- type: "喜剧,动作,犯罪",
- hotstarttime: null,
- tag: "0",
- startday: "2013-06-21",
- description: "短短数日内，三起“微笑杀人案”震动全城。调查过程中，青年警探、警局“活宝”王不二（文章饰）语出惊人：这是一起连环谋杀案！遂与搭档黄非红（李连杰饰）开始了一段惊悚刺激，同时又状况不断的“缉凶”之旅。黄非红在旁边看似总是乌龙，但其实是真正的功夫高手，每到关键时刻，他总能帮助王不二化险为夷。案件侦办过程中，王不二先是将怀疑对像锁定为女明星刘金水（刘诗诗饰），随着案情的深入，刘金水的嫌疑被逐渐撇清，她的姐姐戴依依（柳岩饰）等人又成了王不二的怀疑对象。最后，王不二决定假扮刘金水的男友来引诱凶手现身。与此同时，危险也慢慢向王不二靠近，真相即将大白于天下，王不二与凶手的终极对决，也就此展开……",
- duration: "98",
- coverurl: "http://em.wanshangle.com:8888/attachments/image/movie/78332_1373265685.gif",
- imagesurl: "http://img3.douban.com/img/trailer/medium/1994465296.jpg,http://img3.douban.com/view/photo/albumicon/public/p1989440172.jpg,http://img3.douban.com/view/photo/albumicon/public/p1958082672.jpg,http://img3.douban.com/view/photo/albumicon/public/p1994516377.jpg,http://img3.douban.com/view/photo/albumicon/public/p1979919731.jpg",
- trailersurl: "http://movie.douban.com/trailer/135868/#content",
- status: "0",
- coverimg: "",
- createtime: "2013-06-28 13:56:47",
- createdbysuid: "9",
- lastmodifiedtime: "2013-07-08 14:41:37",
- lastmodifiedbysuid: "12",
- currentstatus: "3",
- votecountadded: "0",
- ratingadded: "0",
- ratingcountadded: "0",
- recommendadded: "0",
- wantedadded: "0"
- },
+ httpCode: 200,
+ errors: [ ],
+ data: {
+ movies: [
+         {
+         id: "19",
+         uniquekey: "3a35241f73cb36a91fb90d4339272798",
+         name: "不二神探",
+         url: "http://movie.douban.com/subject/10604486/",
+         rating: "4.9",
+         ratingcount: "36877",
+         director: "王子鸣",
+         star: "文章,李连杰,刘诗诗,陈妍希,柳岩,马伊琍,黄晓明,佟大为,冯德伦,吴京,邹兆龙,郑嘉颖,梁小龙,谢天华,张梓琳,邓丽欣,田亮,方力申,梁家仁,林雪,何超仪",
+         type: "喜剧,动作,犯罪",
+         hotstarttime: null,
+         tag: "0",
+         startday: "2013-06-21",
+         description: "　　短短几天内，电影明星、舞蹈演员、跳水冠军，三个没有任何关联的知名人士面带微笑意外死亡，在社会上引起不小的轰动。与此同时，擅长搞怪耍宝的热血青年警察王不二（文章 饰）与深藏不露的警队老油条黄飞红（李连杰 饰）搭档破案，惹出不少的乱子，令他们的上司Ａｎｇｅｌａ（陈妍希 饰）郁闷不已。某天，地产项目经理王峰（佟大为 饰）微笑死亡，案子交到Ａｎｇｅｌａ一组手中。为了尽快扭转警局中的不利局面，Ａｎｇｅｌａ、王不二和黄飞红展开全力追查，他们率先从与几名死者都有过交往的女演员刘金水（刘诗诗 饰）入手。而在这一过程中，妖艳鬼魅的戴依依（柳岩 饰）出现，无疑令案情朝向更为扑朔迷离的方向发展。 　　最终真相如何，王不二能否立下奇功？",
+         duration: "98",
+         coverurl: "http://em.wanshangle.com:8888/attachments/image/movie/c8/rq/80290_1373878359.jpg",
+         imagesurl: "http://img3.douban.com/img/trailer/medium/2011511021.jpg,http://img3.douban.com/view/photo/albumicon/public/p1997525540.jpg,http://img3.douban.com/view/photo/albumicon/public/p1958078286.jpg,http://img3.douban.com/view/photo/albumicon/public/p1958082672.jpg,http://img3.douban.com/view/photo/albumicon/public/p1997525534.jpg",
+         trailersurl: "http://movie.douban.com/trailer/136839/#content",
+         status: "0",
+         coverimg: "",
+         createtime: "2013-07-15 16:54:05",
+         createdbysuid: "12",
+         lastmodifiedtime: "2013-07-17 15:33:56",
+         lastmodifiedbysuid: "12",
+         currentstatus: "3",
+         votecountadded: "0",
+         ratingadded: "0",
+         ratingcountadded: "0",
+         recommendadded: "66",
+         wantedadded: "39"
+         },
  
  dynamic: [
  {
@@ -716,15 +696,18 @@ static DataBaseManager *_sharedInstance = nil;
     mMovie.webImg = [amovieData objectForKey:@"coverurl"];
     mMovie.aword = [amovieData objectForKey:@"description"];
     mMovie.duration = [amovieData objectForKey:@"duration"];
+    
+    mMovie.rating =[amovieData objectForKey:@"rating"];
+    mMovie.ratingpeople = [amovieData objectForKey:@"ratingcount"];
+    
+    mMovie.locationDate = [self getTodayTimeStamp];
 }
 
 - (void)importDynamicMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData
 {
-    ABLoggerInfo(@"amovieData == %@",amovieData);
-    mMovie.rating = [NSString stringWithFormat:@"%d",[[amovieData objectForKey:@"rating"] intValue]];
-    mMovie.ratingFrom = [amovieData objectForKey:@"ratingFrom"];
-    mMovie.ratingpeople = [amovieData objectForKey:@"ratingcount"];
+//    ABLoggerInfo(@"amovieData == %@",amovieData);
     mMovie.newMovie = [amovieData objectForKey:@"newMovie"];
+    mMovie.ratingFrom = [amovieData objectForKey:@"ratingFrom"];
     mMovie.twoD = [NSNumber numberWithInt:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:0] intValue]];
     mMovie.threeD = [NSNumber numberWithInt:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:1] intValue]];
     mMovie.iMaxD = [NSNumber numberWithInt:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:2] intValue]];
@@ -806,7 +789,9 @@ static DataBaseManager *_sharedInstance = nil;
     return [apiCmdMovie_getAllMovieDetail autorelease];
 }
 
-- (BOOL)insertMovieDetailIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+- (MMovieDetail *)insertMovieDetailIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+
+    MMovieDetail *tMovieDetail = nil;
     
     if (objectData) {
         
@@ -815,7 +800,7 @@ static DataBaseManager *_sharedInstance = nil;
         NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
         NSString *movie_id = [tDic objectForKey:@"id"];
         
-        MMovieDetail *tMovieDetail = nil;
+        
         MMovie *tMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:movie_id inContext:context];
         
         if (tMovie==nil) {
@@ -832,17 +817,20 @@ static DataBaseManager *_sharedInstance = nil;
         [self importMovieDetail:tMovie.movieDetail ValuesForKeysWithObject:tDic];
         
         [self saveInManagedObjectContext:context];
-        
-        return YES;
     }
     
-    return NO;
+    [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    
+    return tMovieDetail;
 }
 
 - (void)importMovieDetail:(MMovieDetail *)aMovieDetail ValuesForKeysWithObject:(NSDictionary *)amovieDetailData{
-    aMovieDetail.wantedadded = [amovieDetailData objectForKey:@"wantedadded"];
-    aMovieDetail.recommendadded = [amovieDetailData objectForKey:@"recommendadded"];
+    aMovieDetail.wantlook = [amovieDetailData objectForKey:@"wantedadded"];
+    aMovieDetail.recommendation = [amovieDetailData objectForKey:@"recommendadded"];
     aMovieDetail.info = amovieDetailData;
+    aMovieDetail.uid = [amovieDetailData objectForKey:@"id"];
+    aMovieDetail.locationDate = [self getTodayTimeStamp];
 }
 
 /*
@@ -850,36 +838,63 @@ static DataBaseManager *_sharedInstance = nil;
  httpCode: 200,
  errors: [ ],
  data: {
- interact: {
- movieid: "1",
- recommend: "13",
- look: "2"
+         info: {
+         id: "1",
+         uniquekey: "8241d9ad7f3858e73038a37b05083d0d",
+         name: "早见，晚爱",
+         url: "http://www.gewara.com//movie/124755671",
+         rating: "0.0",
+         ratingcount: "0",
+         director: "刘国昌",
+         star: "周渝民,童瑶,曹云金,白羽,叶倩云,陈维涵,刘鑫,姜寒,海波",
+         type: "剧情, 爱情",
+         hotstarttime: "2013-07-15 19:07:09",
+         tag: "0",
+         startday: "2013-07-19",
+         description: "　　年轻创业美女老板周挺带领三姐妹与腹黑男展开一场斗智斗勇的收购反击战。曾经的校园初恋为了各自立场不得不近场搏杀，不可退让——然而旧情难消，余情未了，新欢作祟，恶棍搅局，更有屌丝财主阳奉阴违，暗度陈仓，白富美强爱上位，骑虎难下……在这部充斥阳谋与初恋的商战危情中，且看美女老板究竟是以身抵债，名利双煞，还以情破局、重归原点？一切悬念尽在一天的9小时中悉数道来……",
+         duration: "100",
+         coverurl: "http://em.wanshangle.com:8888/attachments/image/movie/5i/rv/22750_1373853172.jpg",
+         imagesurl: "",
+         trailersurl: "",
+         status: "0",
+         coverimg: "",
+         createtime: "2013-07-15 09:53:59",
+         createdbysuid: "12",
+         lastmodifiedtime: "2013-07-15 19:07:09",
+         lastmodifiedbysuid: "9",
+         currentstatus: "3",
+         votecountadded: "0",
+         ratingadded: "0",
+         ratingcountadded: "0",
+         recommendadded: "59",
+         wantedadded: "25"
  }
  },
  token: null,
- timestamp: "1372236865"
+ timestamp: "1374138625"
  }
  */
-- (BOOL)insertMovieRecommendIntoCoreDataFromObject:(NSString *)movieId data:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+
+- (MMovieDetail *)insertMovieRecommendIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
     
-    if (!isEmpty(movieId)) {
-        
-        NSDictionary *tDic = [[objectData objectForKey:@"data"] objectForKey:@"interact"];
-        
-        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-        MMovie *aMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:movieId inContext:context];
-        if (aMovie==nil) {
-            return NO;
-        }
-        
-        aMovie.movieDetail.recommendadded = [tDic objectForKey:@"recommend"];
-        aMovie.movieDetail.wantedadded = [tDic objectForKey:@"look"];
-        
-        [self saveInManagedObjectContext:context];
-        return YES;
+    NSDictionary *infoDic = [[objectData objectForKey:@"data"] objectForKey:@"interact"];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    MMovieDetail *movieDetail = [MMovieDetail MR_findFirstByAttribute:@"uid" withValue:[infoDic objectForKey:@"movieid"] inContext:context];
+    
+    if (movieDetail==nil) {
+        movieDetail = [MMovieDetail MR_createInContext:context];
+        movieDetail.uid = [infoDic objectForKey:@"movieid"];
     }
+    movieDetail.recommendation = [infoDic objectForKey:@"recommend"];
+    movieDetail.wantlook = [infoDic objectForKey:@"look"];
     
-    return NO;
+    [self saveInManagedObjectContext:context];
+    
+    [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    
+    return movieDetail;
+
 }
 
 - (MMovieDetail *)getMovieDetailWithId:(NSString *)movieId{
@@ -904,8 +919,9 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdMovie_getSchedule* apiCmdMovie_getSchedule = [[ApiCmdMovie_getSchedule alloc] init];
     apiCmdMovie_getSchedule.delegate = delegate;
     apiCmdMovie_getSchedule.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdMovie_getSchedule.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     apiCmdMovie_getSchedule.movie_id = aMovie.uid;
-    apiCmdMovie_getSchedule.cinema_id = [aCinema.uid stringValue];
+    apiCmdMovie_getSchedule.cinema_id = aCinema.uid;
     [apiClient executeApiCmdAsync:apiCmdMovie_getSchedule];
     [apiCmdMovie_getSchedule.httpRequest setTag:API_MScheduleCmd];
     
@@ -915,8 +931,10 @@ static DataBaseManager *_sharedInstance = nil;
 - (MSchedule *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema{
     
     MMovie_Cinema *movie_cinema = nil;
-    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%d%@",aCinema.cityId,aCinema.cityName,[aCinema.uid intValue],aMovie.uid];
-    movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%@%@",aCinema.cityId,aCinema.cityName,aCinema.uid,aMovie.uid];
+    NSString *todayTimeStamp = [self getTodayZeroTimeStamp];
+//    movie_cinema = [MMovie_Cinema MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and locationDate >= %@ and isToday = YES",movie_cinema_uid,todayTimeStamp] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        movie_cinema = [MMovie_Cinema MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and locationDate >= %@",movie_cinema_uid,todayTimeStamp] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     [movie_cinema_uid release];
     return movie_cinema.schedule;
 }
@@ -985,7 +1003,7 @@ static DataBaseManager *_sharedInstance = nil;
     
     NSDictionary *dataDic = [objectData objectForKey:@"data"];
     
-    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%d%@",aCinema.cityId,aCinema.cityName,[aCinema.uid intValue],aMovie.uid];
+    NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%@%@",aCinema.cityId,aCinema.cityName,aCinema.uid,aMovie.uid];
     MMovie_Cinema *movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     if (movie_cinema == nil) {
         MMovie *tMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:aMovie.uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
@@ -998,6 +1016,8 @@ static DataBaseManager *_sharedInstance = nil;
     }
     
     movie_cinema.schedule.scheduleInfo = dataDic;
+    movie_cinema.schedule.uid = movie_cinema_uid;
+    movie_cinema.schedule.locationDate = [self getTodayTimeStamp];
     
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         ABLoggerDebug(@"排期 保存是否成功 ========= %d",success);
@@ -1005,6 +1025,9 @@ static DataBaseManager *_sharedInstance = nil;
     }];
     
     [movie_cinema_uid release];
+    
+    [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
 }
 
 //去除过期的电影排期
@@ -1035,6 +1058,7 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdMovie_getBuyInfo* apiCmdMovie_getBuyInfo = [[ApiCmdMovie_getBuyInfo alloc] init];
     apiCmdMovie_getBuyInfo.delegate = delegate;
     apiCmdMovie_getBuyInfo.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdMovie_getBuyInfo.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     [apiClient executeApiCmdAsync:apiCmdMovie_getBuyInfo];
     [apiCmdMovie_getBuyInfo.httpRequest setTag:API_MBuyInfoCmd];
     
@@ -1082,6 +1106,9 @@ static DataBaseManager *_sharedInstance = nil;
         ABLoggerDebug(@"排期 保存是否成功 ========= %d",success);
         ABLoggerDebug(@"错误信息 ========= %@",[error description]);
     }];
+    
+    [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
 }
 //========================================= 电影 =========================================/
 
@@ -1108,6 +1135,7 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdMovie_getAllCinemas* apiCmdMovie_getAllCinemas = [[ApiCmdMovie_getAllCinemas alloc] init];
     apiCmdMovie_getAllCinemas.delegate = delegate;
     apiCmdMovie_getAllCinemas.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdMovie_getAllCinemas.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     
     [apiClient executeApiCmdAsync:apiCmdMovie_getAllCinemas];
     [apiCmdMovie_getAllCinemas.httpRequest setTag:API_MCinemaCmd];
@@ -1212,7 +1240,9 @@ static DataBaseManager *_sharedInstance = nil;
             }
             //            [cinemas addObject:mCinema];
             mCinema.district = districtName;
-            mCinema.cityId = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName].uid;
+            mCinema.cityId = apiCmd.cityId;
+            mCinema.cityName = apiCmd.cityName;
+            mCinema.locationDate = [self getTodayTimeStamp];
             [self importCinema:mCinema ValuesForKeysWithObject:cinema_dic];
         }
     }
@@ -1336,6 +1366,7 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdShow_getAllShows* apiCmdShow_getAllShows = [[ApiCmdShow_getAllShows alloc] init];
     apiCmdShow_getAllShows.delegate = delegate;
     apiCmdShow_getAllShows.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdShow_getAllShows.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     [apiClient executeApiCmdAsync:apiCmdShow_getAllShows];
     [apiCmdShow_getAllShows.httpRequest setTag:API_SShow_Type_All_Cmd];
     
@@ -1368,37 +1399,87 @@ static DataBaseManager *_sharedInstance = nil;
     return count;
 }
 
-/*
- {
- "errors":[],
- "data":{
- "count":10,
- "performances":[
- {
- "id":30010,
- "name":"赖声川话剧1",
- "type":2,
- "prices":[220,230,420,520],
- "date":"2013-06-30",
- "rating":8.0,
- "ratingFrom":"豆瓣",
- "ratingBy":120304,
- "intro":"内容介绍",
- "address":"地质礼堂话剧院",
- "poster":"https://raw.github.com/zyallday/HelloWorld/master/mobileapidemo/poster.png",
- "longitude":34.2343,
- "latitude":57.3445
- },
- */
-- (void)insertShowsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+#pragma mark 分页 演出
+- (ApiCmd *)getShowsListFromWeb:(id<ApiNotify>)delegate
+                         offset:(int)offset
+                          limit:(int)limit
+                       Latitude:(CLLocationDegrees)latitude
+                      longitude:(CLLocationDegrees)longitude
+                       dataType:(NSString *)dataType
+                      isNewData:(BOOL)isNewData
+{
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    
+    offset = (offset<0)?0:offset;
+    
+    NSString *validDate = [self getTodayZeroTimeStamp];;
+    NSString *uid = [ApiCmdShow_getAllShows getTimeStampUid:dataType];
+    TimeStamp *timeStamp = [TimeStamp MR_findFirstByAttribute:@"uid" withValue:uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    //判断是否刷新数据
+    if (isNewData) {
+        if (timeStamp == nil)
+        {
+            ABLoggerInfo(@"插入 演出 TimeStamp 新数据 ======= %@",uid);
+            timeStamp = [TimeStamp MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        }
+        timeStamp.uid = uid;
+        timeStamp.locationDate = [self getTodayTimeStamp];
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
+        validDate = timeStamp.locationDate;
+    }else{
+        if (timeStamp!=nil) {
+            if (([validDate compare:timeStamp.locationDate options:NSNumericSearch] != NSOrderedDescending)) {
+                validDate = timeStamp.locationDate;
+            }
+        }
+    }
+    
+    //先从数据库里面读取数据
+    NSArray *coreData_array = [self getShowsListFromCoreDataOffset:offset limit:limit Latitude:latitude longitude:longitude dataType:dataType validDate:validDate];
+    
+    if ([coreData_array count]>0 && delegate && [delegate respondsToSelector:@selector(apiNotifyLocationResult:cacheData:)]) {
+        [delegate apiNotifyLocationResult:nil cacheData:coreData_array];
+        return tapiCmd;
+    }
+    
+    //因为数据库里没有数据或是数据过期，所以向服务器请求数据
+    if (tapiCmd!=nil)
+        if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
+            ABLoggerWarn(@"不能请求 演出 列表数据，因为已经请求了");
+            return tapiCmd;
+        }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmdShow_getAllShows* apiCmdShow_getAllShows = [[ApiCmdShow_getAllShows alloc] init];
+    apiCmdShow_getAllShows.delegate = delegate;
+    apiCmdShow_getAllShows.offset = offset;
+    apiCmdShow_getAllShows.limit = limit;
+    if (limit==0) {
+        apiCmdShow_getAllShows.limit = DataLimit;
+    }
+    
+    apiCmdShow_getAllShows.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdShow_getAllShows.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdShow_getAllShows.dataType = dataType;
+    [apiClient executeApiCmdAsync:apiCmdShow_getAllShows];
+    [apiCmdShow_getAllShows.httpRequest setTag:API_SShowCmd];
+    
+    return [apiCmdShow_getAllShows autorelease];
+
+}
+
+#pragma mark -
+#pragma mark 演出 插入数据
+- (NSArray *)insertShowsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
     CFTimeInterval time1 = Elapsed_Time;
     
     NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"performances"];
+    NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:20];
     
     SShow *sShow = nil;
     for (int i=0; i<[array count]; i++) {
-        
-        sShow = [SShow MR_findFirstByAttribute:@"uid" withValue:[[array objectAtIndex:i] objectForKey:@"id"] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        sShow = [SShow MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and dataType = %@",[[array objectAtIndex:i] objectForKey:@"id"],apiCmd.dataType] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
         if (sShow == nil)
         {
             ABLoggerInfo(@"插入 一条演出 新数据 ======= %@",[[array objectAtIndex:i] objectForKey:@"name"]);
@@ -1406,8 +1487,10 @@ static DataBaseManager *_sharedInstance = nil;
         }
         [self importShow:sShow ValuesForKeysWithObject:[array objectAtIndex:i]];
         
-        City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
-        sShow.cityId = city.uid;
+        sShow.dataType = apiCmd.dataType; //数据类型
+        sShow.locationDate = [self getTodayTimeStamp];
+        sShow.cityId = apiCmd.cityId;
+        [returnArray addObject:sShow];
     }
     
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
@@ -1421,24 +1504,262 @@ static DataBaseManager *_sharedInstance = nil;
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
     ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
+    return [returnArray autorelease];
+}
+
+
+/*
+ {
+ httpCode: 200,
+ errors: [ ],
+ data: {
+ count: 18,
+ performances: [
+ {
+ id: "22",
+ uniquekey: "7718405e9dbe6100a38f42b61be7bdad",
+ name: "上海芭蕾舞团经典芭蕾舞《天鹅湖》",
+ url: "http://www.damai.cn/ticket_52009.html",
+ dayrange: "2013.09.30",
+ starttime: "2013-09-30 00:00:00",
+ endtime: "2099-12-31 00:00:00",
+ type: "舞蹈芭蕾",
+ description: "　　演出团体：上海芭蕾舞团 　　主演：吴虎生、范晓枫、陈艳 　　编导：德里克·迪恩 　　作曲：柴科夫斯基 　　舞美、服装设计：彼得·法莫尔 　　演出介绍： 　　《天鹅湖》创作背景 　　十九世纪末叶，柴可夫斯基的《天鹅湖》、《睡美人》和《胡桃夹子》把芭蕾音乐提高到交响音乐的水平。在他的舞剧中，音乐是和作品内容与舞台动作紧密联系的重要组成部分。柴可夫斯基提高了舞剧音乐的表现力，通过交响性的展开和对人物性格的刻划，加深了作品的戏剧性。他在《天鹅湖》中，以富于浪漫色彩的抒情笔触，表现了诗一般的意境，刻划了主人公优美纯洁的性格和忠贞不渝的爱情；并以磅礴的戏剧力量描绘了敌对势力的矛盾冲突。因此，柴可夫斯基的《天鹅湖》，至今还是芭蕾音乐的典范作品。《天鹅湖》取材于神话故事，描述被妖人洛特巴尔特用魔法变为天鹅的公主奥杰塔和王子齐格弗里德相爱。最后，爱情的力量战胜了魔法，奥杰塔得以恢复为人身。 　　剧情介绍 　　序幕 　　可爱的奥杰塔公主被邪恶的魔王罗特巴尔特抓走。在湖边魔王用魔法将公主变成了白天鹅。 　　第一幕 　　庆祝王子齐格弗里德生日的准备工作正在进行。王子的老教师吩咐手下在宫殿的花园里布置花环。他宣布王子的到来，庆祝活动紧接着开始。 　　皇后前来庆祝王子的生日，并送给他一个精致的弓箭。她把王子拉到一边，对他说你已经成年，应该考虑婚姻的问题。皇后离开后，庆祝活动继续进行。 　　黄昏来临，朋友们散去，王子独自沉思，他看见一群天鹅从头顶飞过，于是带上弓箭出发去打猎。 　　第三幕 　　王子的生日庆祝活动正在进行，各国嘉宾前来庆贺。皇后让儿子在六位公主中挑选一位作为未婚妻，但他却显得很冷淡，因为他心中只有奥杰塔。在母亲的要求下他和公主们跳了舞，但最后还是拒绝从中挑选未婚妻。 　　魔王罗特巴尔特带着装扮成天鹅女王的女儿奥吉莉亚来到城堡。王子以为是奥杰塔，奥吉莉亚紧随王子离开大厅。在一段舞蹈后，奥吉莉亚和王子回到大厅一起跳舞。 　　在邪恶的奥吉莉亚的欺骗下，王子轻信了她就是他的真爱，王子向奥吉莉亚发誓对她永恒的爱情。恶魔胜利了，誓言已被破坏，奥杰塔和她的女友们将会永远毁灭。恶魔指向出现在窗后的奥杰塔的形象，与奥吉莉亚得意地离开了大厅。 　　快绝望的王子跑出大厅寻找奥杰塔并请求她的宽恕，留下失望的皇后，大厅一片混乱。 　　第四幕 　　痛苦的奥杰塔回到湖边。王子紧追并请求她的宽恕，她终于答应了。 　　魔王罗特巴尔特又出现了，提醒王子他先前对奥吉莉亚的誓言。 　　奥杰塔觉得不可忍受，伤心至极，便跳进了湖中。王子随后也跳进了湖中，两人都被淹死了。邪恶的咒语破解了，魔王罗特巴尔特被王子和奥杰塔之间忠诚的爱情力量摧毁了。 　　新的一天黎明又开始了，王子和奥杰塔在永恒的爱中团聚了。 　　温馨提示 　　1.2米以下儿童谢绝入场（儿童项目除外），1.2米以上儿童需持票入场。",
+ coverurl: "http://pimg.damai.cn/perform/project/520/52009_n.jpg",
+ coverimg: "",
+ status: "0",
+ supplierid: "11",
+ extid: "52009",
+ extshopid: "1127",
+ cityid: "2",
+ districtid: "12",
+ extpayurl: "http://m.damai.cn/#52009_",
+ paytype: "2",
+ votecountadded: "0",
+ currentstatus: "3",
+ createtime: "2013-07-15 16:33:56",
+ createdbysuid: "13",
+ lastmodifiedtime: "2013-07-15 16:34:16",
+ lastmodifiedbysuid: "13",
+ recommendadded: "80",
+ wantedadded: "87",
+ prices: [
+ 80,
+ 120,
+ 180,
+ 280
+ ]
+ },
+ {},
+ */
+- (void)importShow:(SShow *)sShow ValuesForKeysWithObject:(NSDictionary *)ashowDic{
+    sShow.uid = [ashowDic objectForKey:@"id"];
+    sShow.name = [ashowDic objectForKey:@"name"];
+    if ([[ashowDic objectForKey:@"prices"] count]>0) {   
+        sShow.price = [[ashowDic objectForKey:@"prices"] objectAtIndex:0];
+    }
+    sShow.beginTime = [ashowDic objectForKey:@"starttime"];
+    sShow.endTime = [ashowDic objectForKey:@"endtime"];
+    sShow.rating = [NSNumber numberWithInt:[[ashowDic objectForKey:@"extshopid"] intValue]];
+    sShow.webImg = [ashowDic objectForKey:@"coverurl"];
+    sShow.recommend = [NSNumber numberWithInt:[[ashowDic objectForKey:@"recommendadded"] intValue]];
+    sShow.wantLook = [NSNumber numberWithInt:[[ashowDic objectForKey:@"wantedadded"] intValue]];
     
 }
 
-- (void)importShow:(SShow *)sShow ValuesForKeysWithObject:(NSDictionary *)ashowDic{
-    sShow.uid = [[ashowDic objectForKey:@"id"] stringValue];
-    sShow.name = [ashowDic objectForKey:@"name"];
-    sShow.where = @"体育中心";
-    sShow.type = [ashowDic objectForKey:@"type"];
-    sShow.price = [ashowDic objectForKey:@"prices"];
-    sShow.date = [ashowDic objectForKey:@"date"];
-    sShow.rating = [ashowDic objectForKey:@"rating"];
-    sShow.ratingfrom = [ashowDic objectForKey:@"ratingFrom"];
-    sShow.ratingpeople = [ashowDic objectForKey:@"ratingBy"];
-    sShow.address = [ashowDic objectForKey:@"address"];
-    sShow.webImg = [ashowDic objectForKey:@"poster"];
-    sShow.longitude = [ashowDic objectForKey:@"longitude"];
-    sShow.latitude = [ashowDic objectForKey:@"latitude"];
+//读数据
+- (NSArray *)getShowsListFromCoreDataOffset:(int)offset
+                                      limit:(int)limit
+                                   Latitude:(CLLocationDegrees)latitude
+                                  longitude:(CLLocationDegrees)longitude
+                                   dataType:(NSString *)dataType
+                                  validDate:(NSString *)validDate{
+    return [self getShowsListFromCoreDataWithCityName:nil offset:offset limit:limit Latitude:latitude longitude:longitude dataType:dataType validDate:validDate];
+}
+//读数据
+- (NSArray *)getShowsListFromCoreDataWithCityName:(NSString *)cityId
+                                           offset:(int)offset
+                                            limit:(int)limit
+                                         Latitude:(CLLocationDegrees)latitude
+                                        longitude:(CLLocationDegrees)longitude
+                                         dataType:(NSString *)dataType
+                                        validDate:(NSString *)validDate{
     
+    NSArray *typeArray = [dataType componentsSeparatedByString:@"#"];
+    NSString *sortedBy = @"recommend";
+    BOOL isAscending = NO;
+    switch ([[typeArray lastObject] intValue]) {
+        case API_SShow_Oreder_Recommend_Cmd://推荐
+            sortedBy = @"recommend";
+            break;
+        case API_SShow_Oreder_Time_Cmd://时间
+            sortedBy = @"beginTime";
+            isAscending = YES;
+            break;
+        case API_SShow_Oreder_PriceL_Cmd://价格低到高
+            sortedBy = @"price";
+            isAscending = YES;
+            break;
+        case API_SShow_Oreder_PriceH_Cmd://价格高到低
+            sortedBy = @"price";
+            break;
+        case API_SShow_Oreder_Distance_Cmd://距离近到远
+            sortedBy = @"distance";
+            isAscending = YES;
+            break;
+        case API_SShow_Oreder_Rating_Cmd:
+        default://评分高到底
+            sortedBy = @"recommend";
+            break;
+    }
+
+    if (isEmpty(cityId)) {
+        cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    }
+    
+    return [SShow MR_findAllSortedBy:sortedBy
+                          ascending:isAscending
+                      withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and locationDate >= %@ and dataType = %@",cityId,validDate,dataType]
+                             offset:offset
+                              limit:limit
+                          inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+}
+
+//获取 演出详情
+- (ApiCmd *)getShowDetailFromWeb:(id<ApiNotify>)delegate showId:(NSString *)showId{
+    
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    
+    //因为数据库里没有数据或是数据过期，所以向服务器请求数据
+    if (tapiCmd!=nil)
+        if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
+            ABLoggerWarn(@"不能请求 酒吧 列表数据，因为已经请求了");
+            return tapiCmd;
+        }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmdShow_getShowDetail* apiCmdShow_getShowDetail = [[ApiCmdShow_getShowDetail alloc] init];
+    apiCmdShow_getShowDetail.delegate = delegate;
+    apiCmdShow_getShowDetail.showId = showId;
+    apiCmdShow_getShowDetail.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdShow_getShowDetail.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    [apiClient executeApiCmdAsync:apiCmdShow_getShowDetail];
+    [apiCmdShow_getShowDetail.httpRequest setTag:API_SShowDetailCmd];
+    
+    return [apiCmdShow_getShowDetail autorelease];
+}
+
+/*
+ {
+ httpCode: 200,
+ errors: [ ],
+ data: {
+ info: {
+ id: "22",
+ uniquekey: "7718405e9dbe6100a38f42b61be7bdad",
+ name: "上海芭蕾舞团经典芭蕾舞《天鹅湖》",
+ url: "http://www.damai.cn/ticket_52009.html",
+ dayrange: "2013.09.30",
+ starttime: "2013-09-30 00:00:00",
+ endtime: "2099-12-31 00:00:00",
+ type: "舞蹈芭蕾",
+ description: "　　演出团体：上海芭蕾舞团 　　主演：吴虎生、范晓枫、陈艳 　　编导：德里克·迪恩 　　作曲：柴科夫斯基 　　舞美、服装设计：彼得·法莫尔 　　演出介绍： 　　《天鹅湖》创作背景 　　十九世纪末叶，柴可夫斯基的《天鹅湖》、《睡美人》和《胡桃夹子》把芭蕾音乐提高到交响音乐的水平。在他的舞剧中，音乐是和作品内容与舞台动作紧密联系的重要组成部分。柴可夫斯基提高了舞剧音乐的表现力，通过交响性的展开和对人物性格的刻划，加深了作品的戏剧性。他在《天鹅湖》中，以富于浪漫色彩的抒情笔触，表现了诗一般的意境，刻划了主人公优美纯洁的性格和忠贞不渝的爱情；并以磅礴的戏剧力量描绘了敌对势力的矛盾冲突。因此，柴可夫斯基的《天鹅湖》，至今还是芭蕾音乐的典范作品。《天鹅湖》取材于神话故事，描述被妖人洛特巴尔特用魔法变为天鹅的公主奥杰塔和王子齐格弗里德相爱。最后，爱情的力量战胜了魔法，奥杰塔得以恢复为人身。 　　剧情介绍 　　序幕 　　可爱的奥杰塔公主被邪恶的魔王罗特巴尔特抓走。在湖边魔王用魔法将公主变成了白天鹅。 　　第一幕 　　庆祝王子齐格弗里德生日的准备工作正在进行。王子的老教师吩咐手下在宫殿的花园里布置花环。他宣布王子的到来，庆祝活动紧接着开始。 　　皇后前来庆祝王子的生日，并送给他一个精致的弓箭。她把王子拉到一边，对他说你已经成年，应该考虑婚姻的问题。皇后离开后，庆祝活动继续进行。 　　黄昏来临，朋友们散去，王子独自沉思，他看见一群天鹅从头顶飞过，于是带上弓箭出发去打猎。 　　第三幕 　　王子的生日庆祝活动正在进行，各国嘉宾前来庆贺。皇后让儿子在六位公主中挑选一位作为未婚妻，但他却显得很冷淡，因为他心中只有奥杰塔。在母亲的要求下他和公主们跳了舞，但最后还是拒绝从中挑选未婚妻。 　　魔王罗特巴尔特带着装扮成天鹅女王的女儿奥吉莉亚来到城堡。王子以为是奥杰塔，奥吉莉亚紧随王子离开大厅。在一段舞蹈后，奥吉莉亚和王子回到大厅一起跳舞。 　　在邪恶的奥吉莉亚的欺骗下，王子轻信了她就是他的真爱，王子向奥吉莉亚发誓对她永恒的爱情。恶魔胜利了，誓言已被破坏，奥杰塔和她的女友们将会永远毁灭。恶魔指向出现在窗后的奥杰塔的形象，与奥吉莉亚得意地离开了大厅。 　　快绝望的王子跑出大厅寻找奥杰塔并请求她的宽恕，留下失望的皇后，大厅一片混乱。 　　第四幕 　　痛苦的奥杰塔回到湖边。王子紧追并请求她的宽恕，她终于答应了。 　　魔王罗特巴尔特又出现了，提醒王子他先前对奥吉莉亚的誓言。 　　奥杰塔觉得不可忍受，伤心至极，便跳进了湖中。王子随后也跳进了湖中，两人都被淹死了。邪恶的咒语破解了，魔王罗特巴尔特被王子和奥杰塔之间忠诚的爱情力量摧毁了。 　　新的一天黎明又开始了，王子和奥杰塔在永恒的爱中团聚了。 　　温馨提示 　　1.2米以下儿童谢绝入场（儿童项目除外），1.2米以上儿童需持票入场。",
+ coverurl: "http://pimg.damai.cn/perform/project/520/52009_n.jpg",
+ coverimg: "",
+ status: "0",
+ supplierid: "11",
+ extid: "52009",
+ extshopid: "1127",
+ cityid: "2",
+ districtid: "12",
+ extpayurl: "http://m.damai.cn/#52009_",
+ paytype: "2",
+ votecountadded: "0",
+ currentstatus: "3",
+ createtime: "2013-07-15 16:33:56",
+ createdbysuid: "13",
+ lastmodifiedtime: "2013-07-15 16:34:16",
+ lastmodifiedbysuid: "13",
+ recommendadded: "80",
+ wantedadded: "87",
+ recommend: "0",
+ like: "0",
+ prices: [
+ 80,
+ 120,
+ 180,
+ 280
+ ]
+ }
+ },
+ token: null,
+ timestamp: "1373963379"
+ }
+ */
+- (SShowDetail *)insertShowDetailIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+    
+    NSDictionary *infoDic = [[objectData objectForKey:@"data"] objectForKey:@"info"];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    SShowDetail *showDetail = [SShowDetail MR_findFirstByAttribute:@"uid" withValue:[infoDic objectForKey:@"id"] inContext:context];
+    
+    if (showDetail==nil) {
+        showDetail = [SShowDetail MR_createInContext:context];
+    }
+    showDetail.introduce = [infoDic objectForKey:@"description"];
+    showDetail.locationDate = [self getTodayTimeStamp];
+    showDetail.uid = [infoDic objectForKey:@"id"];
+    showDetail.recommendation = [infoDic objectForKey:@"recommend"];
+    showDetail.wantLook = [infoDic objectForKey:@"like"];
+    showDetail.name = [infoDic objectForKey:@"name"];
+    NSString *prices = [[infoDic objectForKey:@"prices"] componentsJoinedByString:@","];
+    showDetail.prices = prices;
+    
+    [self saveInManagedObjectContext:context];
+    [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    
+    return showDetail;
+}
+
+/*
+ {
+ httpCode: 200,
+ errors: [ ],
+ data: {
+     interact: {
+     performid: "12",
+     recommend: "21",
+     look: "3"
+ }
+ },
+ token: null,
+ timestamp: "1374115032"
+ }
+ */
+- (SShowDetail *)insertShowDetailRecommendOrLookCountIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+    
+    NSDictionary *infoDic = [[objectData objectForKey:@"data"] objectForKey:@"interact"];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    SShowDetail *showDetail = [SShowDetail MR_findFirstByAttribute:@"uid" withValue:[infoDic objectForKey:@"performid"] inContext:context];
+    
+    if (showDetail==nil) {
+        showDetail = [SShowDetail MR_createInContext:context];
+        showDetail.uid = [infoDic objectForKey:@"performid"];
+    }
+    showDetail.recommendation = [infoDic objectForKey:@"recommend"];
+    showDetail.wantLook = [infoDic objectForKey:@"look"];
+    
+    [self saveInManagedObjectContext:context];
+    
+    [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    
+    return showDetail;
+}
+
+- (SShowDetail *)getShowDetailFromCoreDataWithId:(NSString *)showId{
+    return [SShowDetail MR_findFirstByAttribute:@"uid" withValue:showId inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 //========================================= 演出 =========================================/
 
@@ -1458,6 +1779,7 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdBar_getAllBars* apiCmdBar_getAllBars = [[ApiCmdBar_getAllBars alloc] init];
     apiCmdBar_getAllBars.delegate = delegate;
     apiCmdBar_getAllBars.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdBar_getAllBars.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     [apiClient executeApiCmdAsync:apiCmdBar_getAllBars];
     [apiCmdBar_getAllBars.httpRequest setTag:API_BBarTimeCmd];
     
@@ -1550,6 +1872,7 @@ static DataBaseManager *_sharedInstance = nil;
     }
     
     apiCmdBar_getAllBars.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdBar_getAllBars.cityName = [[LocationManager defaultLocationManager] getUserCity];
     apiCmdBar_getAllBars.dataType = dataType;
     [apiClient executeApiCmdAsync:apiCmdBar_getAllBars];
     [apiCmdBar_getAllBars.httpRequest setTag:API_BBarTimeCmd];
@@ -1589,6 +1912,7 @@ static DataBaseManager *_sharedInstance = nil;
     }
     
     apiCmdBar_getAllBars.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdBar_getAllBars.cityName = [[LocationManager defaultLocationManager] getUserCity];
     apiCmdBar_getAllBars.dataType = dataType;
     apiCmdBar_getAllBars.latitude = latitude;
     apiCmdBar_getAllBars.longitude = longitude;
@@ -1635,7 +1959,7 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 
-
+#pragma mark 酒吧 插入数据
 - (NSArray *)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
     CFTimeInterval time1 = Elapsed_Time;
     
@@ -1653,9 +1977,8 @@ static DataBaseManager *_sharedInstance = nil;
             bBar = [BBar MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
         }
         [self importBar:bBar ValuesForKeysWithObject:[array objectAtIndex:i]];
-        
-        City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
-        bBar.cityId = city.uid;
+        bBar.cityId = apiCmd.cityId;
+        bBar.locationDate = [self getTodayTimeStamp];
         bBar.dataType = apiCmd.dataType; //数据类型，1是时间过滤，2是人气过滤，3是附近
         [returnArray addObject:bBar];
     }
@@ -1732,6 +2055,18 @@ static DataBaseManager *_sharedInstance = nil;
 //    bBar.latitude = [aBarDic objectForKey:@"latitude"];
     bBar.locationDate = [self getTodayTimeStamp];
 }
+
+//插入 酒吧 详情
+- (void)insertBarDetailIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+    
+    [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+}
+
+- (void)importBarDetail:(BBar *)bBar ValuesForKeysWithObject:(NSDictionary *)aBarDic{
+    
+}
+
 //========================================= 酒吧 =========================================/
 
 #pragma mark -
@@ -1751,6 +2086,7 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdKTV_getAllKTVs* apiCmdKTV_getAllKTVs = [[ApiCmdKTV_getAllKTVs alloc] init];
     apiCmdKTV_getAllKTVs.delegate = delegate;
     apiCmdKTV_getAllKTVs.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdKTV_getAllKTVs.cityName = [[LocationManager defaultLocationManager] getUserCity];
     [apiClient executeApiCmdAsync:apiCmdKTV_getAllKTVs];
     [apiCmdKTV_getAllKTVs.httpRequest setTag:API_KKTVCmd];
     
@@ -1801,6 +2137,7 @@ static DataBaseManager *_sharedInstance = nil;
     }
     
     apiCmdKTV_getAllKTVs.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdKTV_getAllKTVs.cityName = [[LocationManager defaultLocationManager] getUserCity];
     [apiClient executeApiCmdAsync:apiCmdKTV_getAllKTVs];
     [apiCmdKTV_getAllKTVs.httpRequest setTag:API_KKTVCmd];
     
@@ -2072,10 +2409,12 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
     
 }
+
 - (void)insertKTVTuanGouListIntoCoreDataFromObject:(NSDictionary *)objectData
                                         withApiCmd:(ApiCmd*)apiCmd
                                           withaKTV:(KKTV *)aKTV{
-    
+    [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
 }
 
 //获得KTV 价格列表 Info
@@ -2104,7 +2443,104 @@ static DataBaseManager *_sharedInstance = nil;
 - (void)insertKTVPriceListIntoCoreDataFromObject:(NSDictionary *)objectData
                                       withApiCmd:(ApiCmd*)apiCmd
                                         withaKTV:(KKTV *)aKTV{
-    
+    [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
 }
 //========================================= KTV =========================================/
+
+//========================================= 喜欢和想看 =========================================/
+#pragma mark -
+#pragma mark 推荐和想看
+- (BOOL)getRecommendOrLookForWeb:(NSString *)objectID
+                         APIType:(WSLRecommendAPIType)apiType
+                           cType:(WSLRecommendLookType)cType
+                        delegate:(id<ApiNotify>)delegate{
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    
+    ApiCmd_recommendOrLook* apiCmd_recommendOrLook = [[[ApiCmd_recommendOrLook alloc] init] autorelease];
+    apiCmd_recommendOrLook.delegate = delegate;
+    apiCmd_recommendOrLook.object_id= objectID;
+    apiCmd_recommendOrLook.mAPIType = apiType;
+    apiCmd_recommendOrLook.mType = cType;
+    [apiClient executeApiCmdAsync:apiCmd_recommendOrLook];
+    [apiCmd_recommendOrLook.httpRequest setTag:API_RecommendOrLookCmd];
+    
+    return YES;
+}
+
+- (BOOL)isSelectedLike:(NSString *)uid withType:(NSString *)type{
+    
+     NSManagedObjectContext* threadContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    ActionState *actionState = [ActionState MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and type = %@", uid,type] inContext:threadContext];
+
+    BOOL b = NO;
+    
+    if (actionState!=nil) {
+        return [actionState.recommend boolValue];
+    }
+    
+    return b;
+}
+
+- (BOOL)isSelectedWantLook:(NSString *)uid  withType:(NSString *)type{
+    
+    NSManagedObjectContext* threadContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    
+    ActionState *actionState = [ActionState MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and type = %@", uid,type] inContext:threadContext];
+
+    
+    BOOL b = NO;
+    
+    if (actionState!=nil) {
+        return [actionState.wantLook boolValue];
+    }
+    
+    return b;
+}
+
+/*
+ beginTime
+ endTime
+ like
+ locationDate
+ recommend
+ type
+ uid
+ vote
+ wantLook
+ recommendCount
+ wantlookCount
+ */
+- (BOOL)addActionState:(NSDictionary *)dataDic{
+    
+    
+    NSManagedObjectContext* threadContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    
+    ActionState *actionState = [ActionState MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and type = %@", [dataDic objectForKey:@"uid"],[dataDic objectForKey:@"type"]] inContext:threadContext];
+
+    if (actionState==nil) {
+        actionState = [ActionState MR_createInContext:threadContext];
+        actionState.locationDate = [self getTodayTimeStamp];
+        actionState.uid = [dataDic objectForKey:@"uid"];
+        actionState.beginTime = [dataDic objectForKey:@"beginTime"];
+        actionState.endTime = [dataDic objectForKey:@"endTime"];
+        actionState.type = [dataDic objectForKey:@"type"];
+    }
+    
+     
+    if ([dataDic objectForKey:@"wantLook"]!=nil) {
+        actionState.wantLook = [dataDic objectForKey:@"wantLook"];  //想看
+    }
+    
+    if ([dataDic objectForKey:@"recommend"]!=nil) {
+        actionState.recommend = [dataDic objectForKey:@"recommend"];//赞和推荐
+    }
+    
+    actionState.vote = [dataDic objectForKey:@"vote"];
+    actionState.like = [dataDic objectForKey:@"like"];
+    
+    return YES;
+}
+
 @end

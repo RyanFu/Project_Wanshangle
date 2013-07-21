@@ -2,7 +2,7 @@
 //  BBarDetail.m
 //  WanShangLe
 //
-//  Created by stephenliu on 13-7-15.
+//  Created by stephenliu on 13-7-16.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -12,11 +12,11 @@
 
 @implementation BBarDetail
 
-@dynamic introduce;
+@dynamic detailInfo;
 @dynamic locationDate;
-@dynamic recommendation;
 @dynamic uid;
-@dynamic wantLook;
+@dynamic like;
+@dynamic phone;
 @dynamic bar;
 
 @end

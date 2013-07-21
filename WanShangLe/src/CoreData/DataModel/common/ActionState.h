@@ -2,7 +2,7 @@
 //  ActionState.h
 //  WanShangLe
 //
-//  Created by stephenliu on 13-7-15.
+//  Created by stephenliu on 13-7-16.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -19,5 +19,7 @@
 @property (nonatomic, retain) NSString * uid;
 @property (nonatomic, retain) NSNumber * vote;
 @property (nonatomic, retain) NSNumber * wantLook;
+@property (nonatomic, retain) NSString * beginTime;
+@property (nonatomic, retain) NSString * endTime;
 
 @end
