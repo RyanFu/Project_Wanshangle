@@ -25,6 +25,8 @@
 #import "ApiCmdMovie_getAllCinemas.h"
 #import "ApiCmdMovie_getSchedule.h"
 #import "ApiCmdMovie_getBuyInfo.h"
+#import "ApiCmdMovie_getNearByCinemas.h"
+#import "ApiCmdMovie_getSearchCinemas.h"
 //KTV
 #import "KKTV.h"
 #import "KKTVBuyInfo.h"

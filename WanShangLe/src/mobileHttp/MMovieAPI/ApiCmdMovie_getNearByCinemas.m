@@ -6,10 +6,10 @@
 //
 //
 
-#import "ApiCmdMovie_getAllCinemas.h"
+#import "ApiCmdMovie_getNearByCinemas.h"
 #import "common.h"
 
-@implementation ApiCmdMovie_getAllCinemas
+@implementation ApiCmdMovie_getNearByCinemas
 
 - (id)init
 {
@@ -44,12 +44,15 @@
     NSString *city_id = [[LocationManager defaultLocationManager] getUserCityId];
     [paramDict setObject:city_id forKey:@"cityid"];
     
+    [paramDict setObject:[NSString stringWithFormat:@"%f",_latitude] forKey:@"lat"];
+    [paramDict setObject:[NSString stringWithFormat:@"%f",_longitude] forKey:@"lng"];
+    
     return paramDict;
 }
 
 +(NSString *)getTimeStampUid:(NSString *)type{
     NSString *cityId = [[LocationManager defaultLocationManager] getUserCityId];
-    NSString *key = [NSString stringWithFormat:@"api=cinema.list&cityid=%@&order=All",cityId];
+    NSString *key = [NSString stringWithFormat:@"api=cinema.list&cityid=%@&order=NearBy",cityId];
     //   return md5(key);
     return key;
 }

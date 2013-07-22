@@ -125,15 +125,34 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (NSArray *)getAllCinemasListFromCoreData;
 - (NSArray *)getAllCinemasListFromCoreDataWithCityName:(NSString *)cityName;
 - (BOOL)getNearbyCinemasListFromCoreDataWithCallBack:(GetCinemaNearbyList)callback;
+
+//获取 分页 影院数据
+- (ApiCmd *)getCinemasListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit;
+- (NSArray *)getCinemasListFromCoreDataOffset:(int)offset limit:(int)limit;
+- (NSArray *)getCinemasListFromCoreDataWithCityName:(NSString *)cityId offset:(int)offset limit:(int)limit;
+
+//获取 搜索 影院列表
+- (ApiCmd *)getCinemasSearchListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit searchString:(NSString *)searchString;
+
+//影院附近分页
+- (ApiCmd *)getNearbyCinemaListFromCoreDataDelegate:(id<ApiNotify>)delegate
+                                            Latitude:(CLLocationDegrees)latitude
+                                           longitude:(CLLocationDegrees)longitude
+                                              offset:(int)offset
+                                               limit:(int)limit
+                                          isNewData:(BOOL)isNewData;
+//影院收藏分页
 - (NSArray *)getFavoriteCinemasListFromCoreData;
 - (NSArray *)getFavoriteCinemasListFromCoreDataWithCityName:(NSString *)cityName;
+
 - (NSUInteger)getCountOfCinemasListFromCoreData;
 - (NSUInteger)getCountOfCinemasListFromCoreDataWithCityName:(NSString *)cityName;
-- (void)insertCinemasIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (NSArray *)insertCinemasIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importCinema:(MCinema *)mCinema ValuesForKeysWithObject:(NSDictionary *)aCinemaData;
 - (void)importDynamicMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData;
-- (BOOL)addFavoriteCinemaWithId:(NSNumber *)uid;
-- (BOOL)deleteFavoriteCinemaWithId:(NSNumber *)uid;
+
+- (BOOL)addFavoriteCinemaWithId:(NSString *)uid;
+- (BOOL)deleteFavoriteCinemaWithId:(NSString *)uid;
 - (NSArray *)getRegionOrder;
 
 /************************ 演出 *********************************/

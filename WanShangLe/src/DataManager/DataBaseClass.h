@@ -22,6 +22,8 @@
 @class MSchedule;
 @class ApiCmdMovie_getAllMovies;
 @class ApiCmdMovie_getAllCinemas;
+@class ApiCmdMovie_getNearByCinemas;
+@class ApiCmdMovie_getSearchCinemas;
 @class ApiCmdMovie_getSchedule;
 @class ApiCmdMovie_getBuyInfo;
 //-------------KTV----------------/
