@@ -6,22 +6,21 @@
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
-#import "BarNearByViewController.h"
-#import "ApiCmdBar_getAllBars.h"
+#import "CinemaNearByViewController.h"
+#import "ApiCmdMovie_getNearByCinemas.h"
 #import "EGORefreshTableHeaderView.h"
 #import "ASIHTTPRequest.h"
-#import "BBar.h"
+#import "MCinema.h"
 #import "ApiCmd.h"
-#import "BarViewController.h"
-#import "BarNearByListTableViewDelegate.h"
+#import "CinemaNearByListTableViewDelegate.h"
 
-@interface BarNearByViewController()<ApiNotify>{
+@interface CinemaNearByViewController()<ApiNotify>{
     BOOL isLoadMore;
 }
-@property(nonatomic,retain)BarNearByListTableViewDelegate *nearByListDelegate;
+@property(nonatomic,retain)CinemaNearByListTableViewDelegate *nearByListDelegate;
 @end
 
-@implementation BarNearByViewController
+@implementation CinemaNearByViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -34,10 +33,10 @@
 
 - (void)dealloc{
     
-    [_apiCmdBar_getAllBars.httpRequest clearDelegatesAndCancel];
-    _apiCmdBar_getAllBars.delegate = nil;
-    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdBar_getAllBars];
-    self.apiCmdBar_getAllBars = nil;
+    [_apiCmdMovie_getNearByCinemas.httpRequest clearDelegatesAndCancel];
+    _apiCmdMovie_getNearByCinemas.delegate = nil;
+    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdMovie_getNearByCinemas];
+    self.apiCmdMovie_getNearByCinemas = nil;
     
     self.refreshNearByHeaderView = nil;
     self.refreshNearByTailerView = nil;
@@ -64,9 +63,6 @@
 
 - (void)updatData{
     for (int i=0; i<10; i++) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            //            self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
-        });
     }
 }
 
@@ -118,7 +114,7 @@
 #pragma mark 设置 TableView Delegate
 - (void)setTableViewDelegate{
     if (_nearByListDelegate==nil) {
-        _nearByListDelegate = [[BarNearByListTableViewDelegate alloc] init];
+        _nearByListDelegate = [[CinemaNearByListTableViewDelegate alloc] init];
     }
     _nearByListDelegate.parentViewController = self;
     _mTableView.dataSource = _nearByListDelegate;
@@ -169,7 +165,7 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        NSArray *dataArray = [[DataBaseManager sharedInstance] insertBarsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+        NSArray *dataArray = [[DataBaseManager sharedInstance] insertCinemasIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
         
         if (dataArray==nil || [dataArray count]<=0) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -188,12 +184,12 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self addDataIntoCacheData:cacheData];
-        [self updateData:API_BBarNearByCmd withData:[self getCacheData]];
+        [self updateData:API_MCinemaNearByCmd withData:[self getCacheData]];
     });
 }
 
 - (ApiCmd *)apiGetDelegateApiCmd{
-    return _apiCmdBar_getAllBars;
+    return _apiCmdMovie_getNearByCinemas;
 }
 
 - (void)updateData:(int)tag withData:(NSArray*)dataArray
@@ -205,7 +201,7 @@
     ABLogger_int(tag);
     switch (tag) {
         case 0:
-        case API_BBarNearByCmd:
+        case API_KKTVCmd:
         {
             [self formatKTVData:dataArray];
         }
@@ -226,9 +222,9 @@
 }
 
 - (void)formatKTVDataFilterNearby:(NSArray *)dataArray{
-    ABLoggerWarn(@" 附近 酒吧");
+    ABLoggerWarn(@" 附近 影院");
     
-    ABLoggerInfo(@"附近 酒吧 count=== %d",[dataArray count]);
+    ABLoggerInfo(@"附近 KTV count=== %d",[dataArray count]);
     
     [self.mArray addObjectsFromArray:dataArray];
     
@@ -310,7 +306,7 @@
     if ([_mCacheArray count]<=0) {
         
         int number = (_mArray==nil)?0:[_mArray count];
-        ABLoggerDebug(@"酒吧 数组 number ==  %d",number);
+        ABLoggerDebug(@" 数组 number ==  %d",number);
         
         LocationManager *lm = [LocationManager defaultLocationManager];
         double latitude = lm.userLocation.coordinate.latitude;
@@ -321,28 +317,26 @@
             number = 0;
             [lm getUserGPSLocationWithCallBack:^(BOOL isEnableGPS,BOOL isSuccess) {
                 if (isSuccess) {
-                    self.apiCmdBar_getAllBars = (ApiCmdBar_getAllBars *)[[DataBaseManager sharedInstance]
-                                                                         getBarsNearByListFromWeb:self
-                                                                         offset:number
-                                                                         limit:DataLimit
-                                                                         Latitude:latitude
-                                                                         longitude:longitude
-                                                                         dataType:OrderNearBy
-                                                                         isNewData:!isLoadMore];
+                    self.apiCmdMovie_getNearByCinemas = (ApiCmdMovie_getNearByCinemas *)[[DataBaseManager sharedInstance]
+                                                                                         getNearbyCinemaListFromCoreDataDelegate:self
+                                                                                         Latitude:latitude
+                                                                                         longitude:longitude
+                                                                                         offset:number
+                                                                                         limit:DataLimit
+                                                                                         isNewData:!isLoadMore];
                 }else{
                     [self displayNOGPS:YES];
                 }
             }];
             
         }else{//加载更多KTV附近
-            self.apiCmdBar_getAllBars = (ApiCmdBar_getAllBars *)[[DataBaseManager sharedInstance]
-                                                                 getBarsNearByListFromWeb:self
-                                                                 offset:number
-                                                                 limit:DataLimit
-                                                                 Latitude:latitude
-                                                                 longitude:longitude
-                                                                 dataType:OrderNearBy
-                                                                 isNewData:!isLoadMore];
+            self.apiCmdMovie_getNearByCinemas = (ApiCmdMovie_getNearByCinemas *)[[DataBaseManager sharedInstance]
+                                                                                 getNearbyCinemaListFromCoreDataDelegate:self
+                                                                                 Latitude:latitude
+                                                                                 longitude:longitude
+                                                                                 offset:number
+                                                                                 limit:DataLimit
+                                                                                 isNewData:!isLoadMore];
         }
         
         return  nil;
@@ -356,7 +350,7 @@
     
     NSMutableArray *aPageData = [NSMutableArray arrayWithCapacity:count];
     for (int i=0; i<count; i++) {
-        KKTV *object = [_mCacheArray objectAtIndex:i];
+        MCinema *object = [_mCacheArray objectAtIndex:i];
         [aPageData addObject:object];
     }
     
@@ -368,6 +362,7 @@
     ABLoggerInfo(@"aPageData count == %d",[aPageData count]);
     
     return aPageData;
+    
 }
 
 #pragma mark -
