@@ -79,6 +79,9 @@
     
     self.apiCmdMovie_getAllMovies =  (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
     
+    if (_cinemaViewController.view.frame.origin.x == 0) {//当界面处在影院列表的时候才考虑 viewWillAppear
+        [_cinemaViewController viewWillAppear:animated];
+    }
 #ifdef TestCode
     [self updatData];//测试代码
 #endif
@@ -90,7 +93,7 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
-   
+    [_cinemaViewController viewWillDisappear:animated];
 }
 
 - (void)updatData{

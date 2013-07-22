@@ -63,6 +63,8 @@
 - (void)viewWillDisappear:(BOOL)animated{
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:_filterCinemaListType] forKey:MMovie_CinemaFilterType];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    [_mSelectedController viewWillDisappear:animated];
 }
 
 - (void)viewDidLoad
@@ -151,6 +153,7 @@
 - (void)switchToNearByTableView{
     if (_nearByController==nil) {
         _nearByController = [[CinemaNearByViewController alloc] initWithNibName:@"CinemaNearByViewController" bundle:nil];
+        _nearByController.mParentController = self;
     }
     self.mSelectedController = _nearByController;
     UIView *currentActiveView = [self.view viewWithTag:CinemaVIEW];
@@ -166,6 +169,7 @@
 - (void)switchToFavoriteTableView {
     if (_favoriteController==nil) {
         _favoriteController = [[CinemaFavoriteViewController alloc] initWithNibName:@"CinemaFavoriteViewController" bundle:nil];
+        _favoriteController.mParentController = self;
     }
     self.mSelectedController = _favoriteController;
     UIView *currentActiveView = [self.view viewWithTag:CinemaVIEW];
@@ -173,6 +177,7 @@
     
     _favoriteController.view.frame = CGRectMake(0, CinemaVIEW_Y, self.view.bounds.size.width, self.view.bounds.size.height-CinemaVIEW_Y);
     _favoriteController.view.tag = CinemaVIEW;
+    
     
     [self.view addSubview:_favoriteController.view];
     [self.view bringSubviewToFront:_favoriteController.view];

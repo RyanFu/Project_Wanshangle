@@ -12,11 +12,11 @@
 
 @implementation MSchedule
 
-@dynamic isToday;
 @dynamic locationDate;
 @dynamic lowPrice;
 @dynamic scheduleInfo;
 @dynamic uid;
 @dynamic movie_cinema;
+@dynamic timedistance;
 
 @end

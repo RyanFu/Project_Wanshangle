@@ -12,6 +12,7 @@
 }
 @property(nonatomic,retain)NSString *movie_id;
 @property(nonatomic,retain)NSString *cinema_id;
+@property(nonatomic,retain)NSString *timedistance;
 - (NSMutableDictionary*) getParamDict;
 - (void) parseResultData:(NSDictionary*) dictionary;
 

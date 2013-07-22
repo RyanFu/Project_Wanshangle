@@ -38,10 +38,7 @@
 
 - (void)dealloc{
     
-    [_apiCmdMovie_getAllCinemas.httpRequest clearDelegatesAndCancel];
-    _apiCmdMovie_getAllCinemas.delegate = nil;
-    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdMovie_getAllCinemas];
-    self.apiCmdMovie_getAllCinemas = nil;
+    [self cancelApiCmd];
     
     _refreshHeaderView.delegate = nil;
     _refreshTailerView.delegate = nil;
@@ -62,6 +59,13 @@
     self.mCacheArray = nil;
     
     [super dealloc];
+}
+
+-(void)cancelApiCmd{
+    [_apiCmdMovie_getAllCinemas.httpRequest clearDelegatesAndCancel];
+    _apiCmdMovie_getAllCinemas.delegate = nil;
+    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdMovie_getAllCinemas];
+    self.apiCmdMovie_getAllCinemas = nil;
 }
 
 #pragma mark -

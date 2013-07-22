@@ -84,7 +84,7 @@
 -(ScheduleTableViewCell *)createNewMocieCell{
     ABLoggerMethod();
     ScheduleTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"ScheduleTableViewCell" owner:self options:nil] objectAtIndex:0];
-    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+    [cell setAccessoryType:UITableViewCellAccessoryNone];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     //    cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"history_menu_cell_background"]] autorelease];
     return cell;

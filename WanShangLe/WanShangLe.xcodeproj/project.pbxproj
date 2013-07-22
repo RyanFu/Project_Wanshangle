@@ -3241,15 +3241,15 @@
 		5ADD8E47179C05B60026239A /* schedule */ = {
 			isa = PBXGroup;
 			children = (
+				5ADD8E4D179C05B60026239A /* ScheduleViewController.h */,
+				5ADD8E4E179C05B60026239A /* ScheduleViewController.m */,
+				5ADD8E4F179C05B60026239A /* ScheduleViewController.xib */,
+				5ADD8E50179C05B60026239A /* ScheduleViewController_5.xib */,
 				5ADD8E48179C05B60026239A /* ScheduleTableViewCell.h */,
 				5ADD8E49179C05B60026239A /* ScheduleTableViewCell.m */,
 				5ADD8E4A179C05B60026239A /* ScheduleTableViewCell.xib */,
 				5ADD8E4B179C05B60026239A /* ScheduleTableViewDelegate.h */,
 				5ADD8E4C179C05B60026239A /* ScheduleTableViewDelegate.m */,
-				5ADD8E4D179C05B60026239A /* ScheduleViewController.h */,
-				5ADD8E4E179C05B60026239A /* ScheduleViewController.m */,
-				5ADD8E4F179C05B60026239A /* ScheduleViewController.xib */,
-				5ADD8E50179C05B60026239A /* ScheduleViewController_5.xib */,
 			);
 			path = schedule;
 			sourceTree = "<group>";

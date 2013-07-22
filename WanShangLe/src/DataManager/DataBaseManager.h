@@ -104,9 +104,16 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (MMovieDetail *)getMovieDetailWithId:(NSString *)movieId;
 
 //获得排期
-- (ApiCmd *)getScheduleFromWebWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema delegate:(id<ApiNotify>)delegate;
-- (MSchedule *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema;
-- (void)insertScheduleIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd withaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema;
+- (ApiCmd *)getScheduleFromWebWithaMovie:(MMovie *)aMovie
+                                               andaCinema:(MCinema *)aCinema
+                                             timedistance:(NSString *)timedistance
+                                                 delegate:(id<ApiNotify>)delegate;
+//从数据库里获取排期
+- (MSchedule *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie
+                                      andaCinema:(MCinema *)aCinema
+                                    timedistance:(NSString *)timedistance;
+
+- (MSchedule *)insertScheduleIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd withaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema;
 - (NSArray *)deleteUnavailableSchedules:(NSArray *)aArray;
 
 //购买信息
@@ -127,7 +134,10 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (BOOL)getNearbyCinemasListFromCoreDataWithCallBack:(GetCinemaNearbyList)callback;
 
 //获取 分页 影院数据
-- (ApiCmd *)getCinemasListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit isNewData:(BOOL)isNewData;
+- (ApiCmd *)getCinemasListFromWeb:(id<ApiNotify>)delegate
+                           offset:(int)offset
+                            limit:(int)limit
+                        isNewData:(BOOL)isNewData;
 - (NSArray *)getCinemasListFromCoreDataOffset:(int)offset limit:(int)limit validDate:(NSString *)validDate;
 - (NSArray *)getCinemasListFromCoreDataWithCityName:(NSString *)cityId offset:(int)offset limit:(int)limit validDate:(NSString *)validDate;
 

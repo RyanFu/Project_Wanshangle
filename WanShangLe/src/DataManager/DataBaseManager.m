@@ -903,34 +903,52 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 #pragma mark 获得排期
-- (ApiCmdMovie_getSchedule *)getScheduleFromWebWithaMovie:(MMovie *)aMovie
+- (ApiCmd *)getScheduleFromWebWithaMovie:(MMovie *)aMovie
                                                andaCinema:(MCinema *)aCinema
+                                             timedistance:(NSString *)timedistance
                                                  delegate:(id<ApiNotify>)delegate
 {
+     ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    
+    MSchedule *tSchedule = [self getScheduleFromCoreDataWithaMovie:aMovie andaCinema:aCinema timedistance:timedistance];
+    if (tSchedule!=nil) {
+        ApiCmdMovie_getSchedule* apiCmdSchedule = (ApiCmdMovie_getSchedule *)tapiCmd;
+        apiCmdSchedule.timedistance = timedistance;
+//        NSDictionary *tDic = [NSDictionary dictionaryWithObjectsAndKeys:tSchedule,@"schedule",
+//                              timedistance,@"timedistance",nil];
+        [delegate apiNotifyLocationResult:tapiCmd cacheOneData:(id)tSchedule];
+        return apiCmdSchedule;
+    }
+    
+    //因为数据库里没有数据或是数据过期，所以向服务器请求数据
+    if (tapiCmd!=nil)
+        if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
+            ABLoggerWarn(@"不能请求 排期了 列表数据，因为已经请求了");
+            return tapiCmd;
+        }
     
     ApiClient* apiClient = [ApiClient defaultClient];
-    
     ApiCmdMovie_getSchedule* apiCmdMovie_getSchedule = [[ApiCmdMovie_getSchedule alloc] init];
     apiCmdMovie_getSchedule.delegate = delegate;
     apiCmdMovie_getSchedule.cityName = [[LocationManager defaultLocationManager] getUserCity];
     apiCmdMovie_getSchedule.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     apiCmdMovie_getSchedule.movie_id = aMovie.uid;
     apiCmdMovie_getSchedule.cinema_id = aCinema.uid;
+    apiCmdMovie_getSchedule.timedistance = timedistance;
     [apiClient executeApiCmdAsync:apiCmdMovie_getSchedule];
     [apiCmdMovie_getSchedule.httpRequest setTag:API_MScheduleCmd];
     
     return [apiCmdMovie_getSchedule autorelease];
 }
 
-- (MSchedule *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema{
-    
-    MMovie_Cinema *movie_cinema = nil;
+- (MSchedule *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema timedistance:(NSString *)timedistance{
+    //isToday
+    MSchedule *schedule = nil;
     NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%@%@",aCinema.cityId,aCinema.cityName,aCinema.uid,aMovie.uid];
     NSString *todayTimeStamp = [self getTodayZeroTimeStamp];
-//    movie_cinema = [MMovie_Cinema MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and locationDate >= %@ and isToday = YES",movie_cinema_uid,todayTimeStamp] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-        movie_cinema = [MMovie_Cinema MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and locationDate >= %@",movie_cinema_uid,todayTimeStamp] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    schedule = [MSchedule MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and locationDate >= %@ and timedistance = %@",movie_cinema_uid,todayTimeStamp,timedistance] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     [movie_cinema_uid release];
-    return movie_cinema.schedule;
+    return schedule;
 }
 
 /*
@@ -990,38 +1008,46 @@ static DataBaseManager *_sharedInstance = nil;
  }[;
  */
 
-- (void)insertScheduleIntoCoreDataFromObject:(NSDictionary *)objectData
+- (MSchedule *)insertScheduleIntoCoreDataFromObject:(NSDictionary *)objectData
                                   withApiCmd:(ApiCmd*)apiCmd
                                   withaMovie:(MMovie *)aMovie
                                   andaCinema:(MCinema *)aCinema{
+    NSManagedObjectContext* context = [NSManagedObjectContext MR_contextForCurrentThread];
     
     NSDictionary *dataDic = [objectData objectForKey:@"data"];
     
     NSString *movie_cinema_uid = [[NSString alloc] initWithFormat:@"%@%@%@%@",aCinema.cityId,aCinema.cityName,aCinema.uid,aMovie.uid];
-    MMovie_Cinema *movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    MMovie_Cinema *movie_cinema = [MMovie_Cinema MR_findFirstByAttribute:@"uid" withValue:movie_cinema_uid inContext:context];
     if (movie_cinema == nil) {
-        MMovie *tMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:aMovie.uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-        MCinema *tCinema = [MCinema MR_findFirstByAttribute:@"uid" withValue:aCinema.uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        MMovie *tMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:aMovie.uid inContext:context];
+        MCinema *tCinema = [MCinema MR_findFirstByAttribute:@"uid" withValue:aCinema.uid inContext:context];
         movie_cinema = [self insertMMovie_CinemaWithaMovie:tMovie andaCinema:tCinema];
     }
     
-    if (!movie_cinema.schedule) {
-        movie_cinema.schedule = [MSchedule MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    NSString *todayTimeStamp = [self getTodayZeroTimeStamp];
+    NSString *timedistance = [(ApiCmdMovie_getSchedule *)apiCmd timedistance];
+    MSchedule *tSchedule = [MSchedule MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and locationDate >= %@ and timedistance = %@",movie_cinema_uid,todayTimeStamp,timedistance] inContext:context];
+    if (tSchedule==nil) {
+        tSchedule = [MSchedule MR_createInContext:context];
     }
     
-    movie_cinema.schedule.scheduleInfo = dataDic;
-    movie_cinema.schedule.uid = movie_cinema_uid;
-    movie_cinema.schedule.locationDate = [self getTodayTimeStamp];
+    tSchedule.scheduleInfo = dataDic;
+    tSchedule.uid = movie_cinema_uid;
+    tSchedule.locationDate = [self getTodayTimeStamp];
+    tSchedule.timedistance = timedistance;
     
-    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        ABLoggerDebug(@"排期 保存是否成功 ========= %d",success);
-        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
-    }];
+//    [context MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+//        ABLoggerDebug(@"排期 保存是否成功 ========= %d",success);
+//        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+//    }];
+    
+    [self saveInManagedObjectContext:context];
     
     [movie_cinema_uid release];
-    
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
     ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    
+    return movie_cinema.schedule;
 }
 
 //去除过期的电影排期
@@ -1251,8 +1277,11 @@ static DataBaseManager *_sharedInstance = nil;
     if (isEmpty(cityId)) {
         cityId = [[LocationManager defaultLocationManager] getUserCityId];
     }
+//    NSArray *returnArray = [MCinema MR_findAllSortedBy:@"districtId" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and locationDate >= %@ ", cityId,validDate] offset:offset limit:limit inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     
-    return [MCinema MR_findAllSortedBy:@"districtId" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and locationDate >= %@ ", cityId,validDate] offset:offset limit:limit inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    NSArray *returnArray = [MCinema MR_findAllSortedBy:@"districtId" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and locationDate >= %@ ",cityId,validDate] offset:offset limit:limit inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    ABLoggerDebug(@"cinema count === %d",[returnArray count]);
+    return returnArray;
 }
 
 #pragma mark 获取 搜索 影院列表

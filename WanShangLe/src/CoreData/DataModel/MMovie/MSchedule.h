@@ -13,11 +13,11 @@
 
 @interface MSchedule : NSManagedObject
 
-@property (nonatomic, retain) NSNumber * isToday;
 @property (nonatomic, retain) NSString * locationDate;
 @property (nonatomic, retain) NSNumber * lowPrice;
 @property (nonatomic, retain) id scheduleInfo;
 @property (nonatomic, retain) NSString * uid;
 @property (nonatomic, retain) MMovie_Cinema *movie_cinema;
+@property (nonatomic, retain) NSString * timedistance;
 
 @end

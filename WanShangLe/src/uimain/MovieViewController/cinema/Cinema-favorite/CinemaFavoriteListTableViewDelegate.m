@@ -140,9 +140,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
         
-    NSDictionary *dic = [_mArray objectAtIndex:indexPath.section];
-    NSArray *list = [dic objectForKey:@"list"];
-    MCinema *mCinema = [list objectAtIndex:indexPath.row];
+    MCinema *mCinema = [_mArray objectAtIndex:indexPath.row];
     MMovie *mMovie = [_parentViewController.mParentController mMovie];
 
     BOOL isMoviePanel = [CacheManager sharedInstance].isMoviePanel;
