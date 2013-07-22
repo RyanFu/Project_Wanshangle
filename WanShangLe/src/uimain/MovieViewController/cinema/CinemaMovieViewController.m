@@ -286,7 +286,7 @@
     }
     _movieRating.text = [NSString stringWithFormat:@"%@ : %0.1f (%d%@)",aMovie.ratingFrom,[aMovie.rating floatValue],ratingCount,countLevel];
     
-    self.apiCmdMovie_getSchedule = (ApiCmdMovie_getSchedule *)[[DataBaseManager sharedInstance] getScheduleFromWebWithaMovie:_mMovie andaCinema:_mCinema delegate:self];
+    self.apiCmdMovie_getSchedule = (ApiCmdMovie_getSchedule *)[[DataBaseManager sharedInstance] getScheduleFromWebWithaMovie:_mMovie andaCinema:_mCinema timedistance:ScheduleToday delegate:self ];
     
     [self changeMovieDisplayData:aMovie];
     

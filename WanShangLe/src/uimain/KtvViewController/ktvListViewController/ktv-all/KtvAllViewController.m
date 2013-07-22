@@ -17,9 +17,7 @@
 
 #import "KTVAllListTableViewDelegate.h"
 
-#define TableView_Y 74
-#define MArray @"MArray"
-#define CacheArray @"CacheArray"
+#define TableView_Y 44
 
 @interface KtvAllViewController()<ApiNotify>{
     BOOL isLoadMoreAll;
@@ -70,7 +68,8 @@
 #pragma mark -
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
-    
+
+    [self hiddenSearchBar];
 #ifdef TestCode
     [self updatData];//测试代码
 #endif
@@ -116,6 +115,7 @@
         _mTableView.tableHeaderView = self.searchBar;
     }
     
+    [self hiddenSearchBar];
     [self initRefreshHeaderView];
     
     if (_mArray==nil) {
@@ -146,6 +146,9 @@
     _allListDelegate.mArray = _mArray;
 }
 
+-(void)hiddenSearchBar{
+    [_mTableView setContentOffset:CGPointMake(0, TableView_Y)];
+}
 #pragma mark -
 #pragma mark 初始化UISearchBar and PullRefresh
 - (void)initSearchBarDisplay{

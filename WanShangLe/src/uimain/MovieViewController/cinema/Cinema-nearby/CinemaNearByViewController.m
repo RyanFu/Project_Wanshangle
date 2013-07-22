@@ -32,12 +32,7 @@
 }
 
 - (void)dealloc{
-    
-    [_apiCmdMovie_getNearByCinemas.httpRequest clearDelegatesAndCancel];
-    _apiCmdMovie_getNearByCinemas.delegate = nil;
-    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdMovie_getNearByCinemas];
-    self.apiCmdMovie_getNearByCinemas = nil;
-    
+    [self cancelApiCmd];
     self.refreshNearByHeaderView = nil;
     self.refreshNearByTailerView = nil;
     
@@ -48,6 +43,13 @@
     self.mCacheArray = nil;
     
     [super dealloc];
+}
+
+-(void)cancelApiCmd{
+    [_apiCmdMovie_getNearByCinemas.httpRequest clearDelegatesAndCancel];
+    _apiCmdMovie_getNearByCinemas.delegate = nil;
+    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdMovie_getNearByCinemas];
+    self.apiCmdMovie_getNearByCinemas = nil;
 }
 
 #pragma mark -

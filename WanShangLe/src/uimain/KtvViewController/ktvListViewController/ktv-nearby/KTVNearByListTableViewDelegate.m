@@ -67,7 +67,7 @@
 -(KTVTableViewCell *)createNewMocieCell{
     ABLoggerMethod();
     KTVTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"KTVTableViewCell" owner:self options:nil] objectAtIndex:0];
-    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+    [cell setAccessoryType:UITableViewCellAccessoryNone];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }

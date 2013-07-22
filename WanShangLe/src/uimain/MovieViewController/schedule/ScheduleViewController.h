@@ -15,6 +15,10 @@
 }
 @property(nonatomic,retain) MMovie *mMovie;
 @property(nonatomic,retain) MCinema *mCinema;
+
+@property(nonatomic,retain) IBOutlet UIButton *addFavoriteButton;
+@property(nonatomic,retain) IBOutlet UIView *addFavoriteFooterView;
+
 @property(nonatomic,retain) IBOutlet UIControl *cinemaButton;
 @property(nonatomic,retain) IBOutlet UIButton *todayButton;
 @property(nonatomic,retain) IBOutlet UIButton *tomorrowButton;

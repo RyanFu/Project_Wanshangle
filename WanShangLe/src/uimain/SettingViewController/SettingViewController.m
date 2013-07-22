@@ -8,6 +8,7 @@
 
 #import "SettingViewController.h"
 #import "KtvManagerViewController.h"
+#import "CinemaManagerViewController.h"
 #import "SuggestionViewController.h"
 #import "TKLoadingView.h"
 
@@ -84,7 +85,9 @@
 }
 
 -(IBAction)clickCinemaManager:(id)sender{
-    
+    CinemaManagerViewController *cinemaController = [[CinemaManagerViewController alloc] initWithNibName:@"CinemaManagerViewController" bundle:nil];
+    [self.navigationController pushViewController:cinemaController animated:YES];
+    [cinemaController release];
 }
 
 -(IBAction)clickKTVManager:(id)sender{

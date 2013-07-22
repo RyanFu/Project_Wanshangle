@@ -3158,28 +3158,28 @@
 		5ADD8E0E179C05B60026239A /* cinema */ = {
 			isa = PBXGroup;
 			children = (
-				5ADD8E0F179C05B60026239A /* Cinema-all */,
-				5ADD8E15179C05B60026239A /* Cinema-favorite */,
-				5ADD8E1B179C05B60026239A /* Cinema-nearby */,
+				5ADD8E38179C05B60026239A /* CinemaViewController.h */,
+				5ADD8E39179C05B60026239A /* CinemaViewController.m */,
+				5ADD8E36179C05B60026239A /* CinemaViewController.xib */,
+				5ADD8E37179C05B60026239A /* CinemaViewController_5.xib */,
+				5ADD8E2E179C05B60026239A /* CinemaTableViewCell.h */,
+				5ADD8E2F179C05B60026239A /* CinemaTableViewCell.m */,
+				5ADD8E30179C05B60026239A /* CinemaTableViewCell.xib */,
 				5ADD8E25179C05B60026239A /* CinemaMovieTableViewDelegate.h */,
 				5ADD8E26179C05B60026239A /* CinemaMovieTableViewDelegate.m */,
 				5ADD8E27179C05B60026239A /* CinemaMovieViewController.h */,
 				5ADD8E28179C05B60026239A /* CinemaMovieViewController.m */,
 				5ADD8E29179C05B60026239A /* CinemaMovieViewController.xib */,
 				5ADD8E2A179C05B60026239A /* CinemaMovieViewController_5.xib */,
+				5ADD8E0F179C05B60026239A /* Cinema-all */,
+				5ADD8E15179C05B60026239A /* Cinema-favorite */,
+				5ADD8E1B179C05B60026239A /* Cinema-nearby */,
 				5ADD8E2B179C05B60026239A /* CinemaSearchViewController.h */,
 				5ADD8E2C179C05B60026239A /* CinemaSearchViewController.m */,
 				5ADD8E2D179C05B60026239A /* CinemaSearchViewController.xib */,
-				5ADD8E2E179C05B60026239A /* CinemaTableViewCell.h */,
-				5ADD8E2F179C05B60026239A /* CinemaTableViewCell.m */,
-				5ADD8E30179C05B60026239A /* CinemaTableViewCell.xib */,
 				5ADD8E31179C05B60026239A /* CinemaTableViewCellSection.h */,
 				5ADD8E32179C05B60026239A /* CinemaTableViewCellSection.m */,
 				5ADD8E33179C05B60026239A /* CinemaTableViewCellSection.xib */,
-				5ADD8E38179C05B60026239A /* CinemaViewController.h */,
-				5ADD8E39179C05B60026239A /* CinemaViewController.m */,
-				5ADD8E36179C05B60026239A /* CinemaViewController.xib */,
-				5ADD8E37179C05B60026239A /* CinemaViewController_5.xib */,
 			);
 			path = cinema;
 			sourceTree = "<group>";
@@ -3187,11 +3187,11 @@
 		5ADD8E0F179C05B60026239A /* Cinema-all */ = {
 			isa = PBXGroup;
 			children = (
-				5ADD8E10179C05B60026239A /* CinemaAllListTableViewDelegate.h */,
-				5ADD8E11179C05B60026239A /* CinemaAllListTableViewDelegate.m */,
 				5ADD8E12179C05B60026239A /* CinemaAllViewController.h */,
 				5ADD8E13179C05B60026239A /* CinemaAllViewController.m */,
 				5ADD8E14179C05B60026239A /* CinemaAllViewController.xib */,
+				5ADD8E10179C05B60026239A /* CinemaAllListTableViewDelegate.h */,
+				5ADD8E11179C05B60026239A /* CinemaAllListTableViewDelegate.m */,
 			);
 			path = "Cinema-all";
 			sourceTree = "<group>";
@@ -3199,11 +3199,11 @@
 		5ADD8E15179C05B60026239A /* Cinema-favorite */ = {
 			isa = PBXGroup;
 			children = (
-				5ADD8E16179C05B60026239A /* CinemaFavoriteListTableViewDelegate.h */,
-				5ADD8E17179C05B60026239A /* CinemaFavoriteListTableViewDelegate.m */,
 				5ADD8E18179C05B60026239A /* CinemaFavoriteViewController.h */,
 				5ADD8E19179C05B60026239A /* CinemaFavoriteViewController.m */,
 				5ADD8E1A179C05B60026239A /* CinemaFavoriteViewController.xib */,
+				5ADD8E16179C05B60026239A /* CinemaFavoriteListTableViewDelegate.h */,
+				5ADD8E17179C05B60026239A /* CinemaFavoriteListTableViewDelegate.m */,
 			);
 			path = "Cinema-favorite";
 			sourceTree = "<group>";
@@ -3211,11 +3211,11 @@
 		5ADD8E1B179C05B60026239A /* Cinema-nearby */ = {
 			isa = PBXGroup;
 			children = (
-				5ADD8E1C179C05B60026239A /* CinemaNearByListTableViewDelegate.h */,
-				5ADD8E1D179C05B60026239A /* CinemaNearByListTableViewDelegate.m */,
 				5ADD8E1E179C05B60026239A /* CinemaNearByViewController.h */,
 				5ADD8E1F179C05B60026239A /* CinemaNearByViewController.m */,
 				5ADD8E20179C05B60026239A /* CinemaNearByViewController.xib */,
+				5ADD8E1C179C05B60026239A /* CinemaNearByListTableViewDelegate.h */,
+				5ADD8E1D179C05B60026239A /* CinemaNearByListTableViewDelegate.m */,
 			);
 			path = "Cinema-nearby";
 			sourceTree = "<group>";
@@ -3223,17 +3223,17 @@
 		5ADD8E3B179C05B60026239A /* movie */ = {
 			isa = PBXGroup;
 			children = (
-				5ADD8E3C179C05B60026239A /* MovieDetailViewController.h */,
-				5ADD8E3D179C05B60026239A /* MovieDetailViewController.m */,
-				5ADD8E3E179C05B60026239A /* MovieDetailViewController.xib */,
-				5ADD8E3F179C05B60026239A /* MovieListTableViewDelegate.h */,
-				5ADD8E40179C05B60026239A /* MovieListTableViewDelegate.m */,
-				5ADD8E41179C05B60026239A /* MovieTableViewCell.h */,
-				5ADD8E42179C05B60026239A /* MovieTableViewCell.m */,
-				5ADD8E43179C05B60026239A /* MovieTableViewCell.xib */,
 				5ADD8E44179C05B60026239A /* MovieViewController.h */,
 				5ADD8E45179C05B60026239A /* MovieViewController.m */,
 				5ADD8E46179C05B60026239A /* MovieViewController.xib */,
+				5ADD8E41179C05B60026239A /* MovieTableViewCell.h */,
+				5ADD8E42179C05B60026239A /* MovieTableViewCell.m */,
+				5ADD8E43179C05B60026239A /* MovieTableViewCell.xib */,
+				5ADD8E3F179C05B60026239A /* MovieListTableViewDelegate.h */,
+				5ADD8E40179C05B60026239A /* MovieListTableViewDelegate.m */,
+				5ADD8E3C179C05B60026239A /* MovieDetailViewController.h */,
+				5ADD8E3D179C05B60026239A /* MovieDetailViewController.m */,
+				5ADD8E3E179C05B60026239A /* MovieDetailViewController.xib */,
 			);
 			path = movie;
 			sourceTree = "<group>";
@@ -3241,15 +3241,15 @@
 		5ADD8E47179C05B60026239A /* schedule */ = {
 			isa = PBXGroup;
 			children = (
+				5ADD8E4D179C05B60026239A /* ScheduleViewController.h */,
+				5ADD8E4E179C05B60026239A /* ScheduleViewController.m */,
+				5ADD8E4F179C05B60026239A /* ScheduleViewController.xib */,
+				5ADD8E50179C05B60026239A /* ScheduleViewController_5.xib */,
 				5ADD8E48179C05B60026239A /* ScheduleTableViewCell.h */,
 				5ADD8E49179C05B60026239A /* ScheduleTableViewCell.m */,
 				5ADD8E4A179C05B60026239A /* ScheduleTableViewCell.xib */,
 				5ADD8E4B179C05B60026239A /* ScheduleTableViewDelegate.h */,
 				5ADD8E4C179C05B60026239A /* ScheduleTableViewDelegate.m */,
-				5ADD8E4D179C05B60026239A /* ScheduleViewController.h */,
-				5ADD8E4E179C05B60026239A /* ScheduleViewController.m */,
-				5ADD8E4F179C05B60026239A /* ScheduleViewController.xib */,
-				5ADD8E50179C05B60026239A /* ScheduleViewController_5.xib */,
 			);
 			path = schedule;
 			sourceTree = "<group>";
@@ -3257,6 +3257,9 @@
 		5ADD8E81179C20C20026239A /* CinemaManagerList */ = {
 			isa = PBXGroup;
 			children = (
+				5ADD8E89179C20C20026239A /* CinemaManagerViewController.h */,
+				5ADD8E8A179C20C20026239A /* CinemaManagerViewController.m */,
+				5ADD8E8B179C20C20026239A /* CinemaManagerViewController.xib */,
 				5ADD8E82179C20C20026239A /* CinemaAllListManagerDelegate.h */,
 				5ADD8E83179C20C20026239A /* CinemaAllListManagerDelegate.m */,
 				5ADD8E84179C20C20026239A /* CinemaManagerCell.h */,
@@ -3264,9 +3267,6 @@
 				5ADD8E86179C20C20026239A /* CinemaManagerCell.xib */,
 				5ADD8E87179C20C20026239A /* CinemaManagerSearchController.h */,
 				5ADD8E88179C20C20026239A /* CinemaManagerSearchController.m */,
-				5ADD8E89179C20C20026239A /* CinemaManagerViewController.h */,
-				5ADD8E8A179C20C20026239A /* CinemaManagerViewController.m */,
-				5ADD8E8B179C20C20026239A /* CinemaManagerViewController.xib */,
 			);
 			path = CinemaManagerList;
 			sourceTree = "<group>";

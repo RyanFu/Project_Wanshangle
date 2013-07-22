@@ -167,7 +167,7 @@ static char kAFJSONRequestOperationObjectKey;
 - (NSString *)getCachedJsonForCoreDataWithMovie:(MMovie *)aMovie
                                          cinema:(MCinema *)aCinema
 {
-    MSchedule *tSchedule = [[DataBaseManager sharedInstance] getScheduleFromCoreDataWithaMovie:aMovie andaCinema:aCinema];
+    MSchedule *tSchedule = [[DataBaseManager sharedInstance] getScheduleFromCoreDataWithaMovie:aMovie andaCinema:aCinema timedistance:ScheduleToday];
     if (tSchedule==nil) {
         return nil;
     }

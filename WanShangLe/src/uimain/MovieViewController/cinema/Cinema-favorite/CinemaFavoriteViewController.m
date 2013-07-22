@@ -10,6 +10,8 @@
 #import "CinemaFavoriteViewController.h"
 #import "CinemaFavoriteListTableViewDelegate.h"
 #import "ScheduleViewController.h"
+#import "CinemaViewController.h"
+#import "CinemaManagerViewController.h"
 
 @interface CinemaFavoriteViewController(){
 }
@@ -42,7 +44,11 @@
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
     
-   [self formatKTVDataFilterFavorite];//判断是否是一条数据
+   [self formatCinemaDataFilterFavorite];//判断是否是一条数据
+    
+    if (_scheduleViewController!=nil){
+        [_scheduleViewController viewWillAppear:NO];
+    }
 }
 
 - (void)viewDidLoad
@@ -52,7 +58,7 @@
     [self.view addSubview:self.mTableView];
     
     //第一次调用
-//    [self formatKTVDataFilterFavorite];
+//    [self formatCinemaDataFilterFavorite];
 }
 
 
@@ -104,47 +110,52 @@
 #pragma mark -
 #pragma mark UIButton Event
 - (IBAction)clickAddFavoriteButton:(id)sender{
-//    KtvManagerViewController *ktvManager = [[KtvManagerViewController alloc] initWithNibName:@"KtvManagerViewController" bundle:nil];
-//    [[CacheManager sharedInstance].rootNavController pushViewController:ktvManager animated:YES];
-//    [ktvManager release];
+    CinemaManagerViewController *CinemaManager = [[CinemaManagerViewController alloc] initWithNibName:@"CinemaManagerViewController" bundle:nil];
+    [[CacheManager sharedInstance].rootNavController pushViewController:CinemaManager animated:YES];
+    [CinemaManager release];
 }
 
 #pragma mark -
 #pragma mark 格式化数据
-- (void)formatKTVDataFilterFavorite{
+- (void)formatCinemaDataFilterFavorite{
     NSArray *array_coreData = [[DataBaseManager sharedInstance] getFavoriteCinemasListFromCoreData];
     ABLoggerDebug(@"收藏 电影院count ==== %d",[array_coreData count]);
     
-//    if (_mparentController.isMoviePanel && [array_coreData count]==1) {
-//        self.cinemasArray = nil;
-//        
-//        if (_scheduleViewController==nil) {
-//            _scheduleViewController = [[ScheduleViewController alloc]
-//                                       initWithNibName:(iPhone5?@"ScheduleViewController_5":@"ScheduleViewController")
-//                                       bundle:nil];
-//            
-//        }
-//        _scheduleViewController.mCinema = [array_coreData lastObject];
-//        _scheduleViewController.mMovie = _mMovie;
-//        _scheduleViewController.view.frame = _filterTableView.frame;
-//        [self.view addSubview:_scheduleViewController.view];
-//        
-//    }else{
-//        self.cinemasArray = array_coreData;
-//    }
-//    
-//    if ([array_coreData count]>0) {
-//        _filterTableView.tableFooterView = _addFavoriteFooterView;
-//    }else{
-//        _filterTableView.tableFooterView = _noFavoriteFooterView;
-//    }
-//    
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [_filterTableView reloadData];
-//    });
+    [self.mArray removeAllObjects];
+    [self.mArray addObjectsFromArray:array_coreData];
+    
+    BOOL isMoviePanel = [CacheManager sharedInstance].isMoviePanel;
+    
+    if ([array_coreData count]==1 && isMoviePanel) {
+        
+        if (_scheduleViewController==nil) {
+            _scheduleViewController = [[ScheduleViewController alloc]
+                                     initWithNibName:(iPhone5?@"ScheduleViewController_5":@"ScheduleViewController")
+                                     bundle:nil];
+        }
+        _scheduleViewController.mCinema = [array_coreData lastObject];
+        _scheduleViewController.mMovie = [_mParentController mMovie];
+        _scheduleViewController.view.frame = _mTableView.frame;
+        [self.view addSubview:_scheduleViewController.view];
+        _scheduleViewController.mTableView.tableFooterView=_scheduleViewController.addFavoriteFooterView;
+        [_scheduleViewController.addFavoriteButton addTarget:self action:@selector(clickAddFavoriteButton:) forControlEvents:UIControlEventTouchUpInside];
+    }else{
+        [self cleanFavoriteCinemaBuyViewController];
+    }
+    
+    if ([array_coreData count]>0) {
+        _mTableView.tableFooterView = _addFavoriteFooterView;
+    }else{
+        _mTableView.tableFooterView = _noFavoriteFooterView;
+    }
+    
+    [self setTableViewDelegate];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_mTableView reloadData];
+    });
 }
 
-- (void)cleanFavoriteKTVBuyViewController{
+- (void)cleanFavoriteCinemaBuyViewController{
     if (_scheduleViewController) {
         [_scheduleViewController.view removeFromSuperview];
         self.scheduleViewController = nil;

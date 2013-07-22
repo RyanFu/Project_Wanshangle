@@ -142,10 +142,10 @@
         <relationship name="movie" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovie" inverseName="movieDetail" inverseEntity="MMovie" syncable="YES"/>
     </entity>
     <entity name="MSchedule" representedClassName="MSchedule" syncable="YES">
-        <attribute name="isToday" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="locationDate" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lowPrice" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="scheduleInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
+        <attribute name="timedistance" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="movie_cinema" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovie_Cinema" inverseName="schedule" inverseEntity="MMovie_Cinema" syncable="YES"/>
     </entity>
