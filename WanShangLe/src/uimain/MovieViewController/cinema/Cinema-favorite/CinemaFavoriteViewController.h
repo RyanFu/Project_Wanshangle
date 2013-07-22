@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+@class CinemaViewController;
 @interface CinemaFavoriteViewController : UIViewController{
     
 }
+@property(nonatomic,assign) CinemaViewController *mParentController;
 @property(nonatomic,retain) IBOutlet UIView *addFavoriteFooterView;
 @property(nonatomic,retain) IBOutlet UIButton *addFavoriteButton;
 @property(nonatomic,retain) IBOutlet UIView *noFavoriteFooterView;

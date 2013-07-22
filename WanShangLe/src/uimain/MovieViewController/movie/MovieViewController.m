@@ -48,8 +48,7 @@
         [self newCinemaController];
         
         isMoviePanel = YES;
-        
-        //self.navigationItem.hidesBackButton= YES;
+        [CacheManager sharedInstance].isMoviePanel = isMoviePanel;//判断电影列表显示数据类型，从电影-》影院-》排期；从影院-》影院电影排期
     }
     return self;
 }
@@ -88,6 +87,10 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+   
 }
 
 - (void)updatData{
@@ -332,6 +335,8 @@
     if (isMoviePanel) {
         _movieContentView.hidden = NO;
     }
+    
+    [CacheManager sharedInstance].isMoviePanel = isMoviePanel;//判断电影列表显示数据类型，从电影-》影院-》排期；从影院-》影院电影排期
     
     ABLoggerInfo(@"_cinemaViewController.view.frame.origin.x == %f",_cinemaViewController.view.frame.origin.x);
     [UIView animateWithDuration:0.4 animations:^{

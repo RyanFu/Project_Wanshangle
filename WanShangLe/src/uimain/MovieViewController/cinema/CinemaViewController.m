@@ -50,7 +50,7 @@
     self.allController = nil;
     
     self.mMovie = nil;
-        self.movieDetailButton = nil;
+    self.movieDetailButton = nil;
     [super dealloc];
 }
 
@@ -76,14 +76,14 @@
 #pragma mark -
 #pragma mark 初始化数据
 - (void)initBarButtonItem{
-//    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [backButton setFrame:CGRectMake(0, 0, 45, 30)];
-//    [backButton addTarget:self action:@selector(clickBackButton:) forControlEvents:UIControlEventTouchUpInside];
-//    [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_n@2x"] forState:UIControlStateNormal];
-//    [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_f@2x"] forState:UIControlStateHighlighted];
-//    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-//    self.navigationItem.leftBarButtonItem = backItem;
-//    [backItem release];
+    //    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    //    [backButton setFrame:CGRectMake(0, 0, 45, 30)];
+    //    [backButton addTarget:self action:@selector(clickBackButton:) forControlEvents:UIControlEventTouchUpInside];
+    //    [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_n@2x"] forState:UIControlStateNormal];
+    //    [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_f@2x"] forState:UIControlStateHighlighted];
+    //    UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    //    self.navigationItem.leftBarButtonItem = backItem;
+    //    [backItem release];
     
     self.movieDetailButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _movieDetailButton.frame = CGRectMake(0, 0, 50, 30);
@@ -116,7 +116,7 @@
     [_filterHeaderView addSubview:bt1];
     [_filterHeaderView addSubview:bt2];
     [_filterHeaderView addSubview:bt3];
-    [_filterHeaderView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"Cinema_btn_filter_bts"]]];
+    [_filterHeaderView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"btn_filter_bts"]]];
     favoriteButton = bt1;
     nearbyButton = bt2;
     allButton = bt3;
@@ -170,12 +170,12 @@
     self.mSelectedController = _favoriteController;
     UIView *currentActiveView = [self.view viewWithTag:CinemaVIEW];
     [currentActiveView removeFromSuperview];
-
+    
     _favoriteController.view.frame = CGRectMake(0, CinemaVIEW_Y, self.view.bounds.size.width, self.view.bounds.size.height-CinemaVIEW_Y);
     _favoriteController.view.tag = CinemaVIEW;
     
     [self.view addSubview:_favoriteController.view];
-     [self.view bringSubviewToFront:_favoriteController.view];
+    [self.view bringSubviewToFront:_favoriteController.view];
 }
 
 #pragma mark-
@@ -275,23 +275,23 @@
     [super didReceiveMemoryWarning];
     ABLoggerWarn(@"接收到内存警告了");
     [self cleanUpMemory];
-//    switch (_filterCinemaListType) {
-//        case NSFilterCinemaListTypeFavorite:{
-//            self.allController = nil;
-//            self.nearByController = nil;
-//        }
-//            break;
-//        case NSFilterCinemaListTypeNearby:{
-//            self.allController = nil;
-//            self.favoriteController = nil;
-//        }
-//            break;
-//        default:{
-//            self.favoriteController = nil;
-//            self.nearByController = nil;
-//        }
-//            break;
-//    }
+    //    switch (_filterCinemaListType) {
+    //        case NSFilterCinemaListTypeFavorite:{
+    //            self.allController = nil;
+    //            self.nearByController = nil;
+    //        }
+    //            break;
+    //        case NSFilterCinemaListTypeNearby:{
+    //            self.allController = nil;
+    //            self.favoriteController = nil;
+    //        }
+    //            break;
+    //        default:{
+    //            self.favoriteController = nil;
+    //            self.nearByController = nil;
+    //        }
+    //            break;
+    //    }
 }
 
 - (void)cleanUpMemory{

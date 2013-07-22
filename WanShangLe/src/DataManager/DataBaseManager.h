@@ -127,9 +127,9 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (BOOL)getNearbyCinemasListFromCoreDataWithCallBack:(GetCinemaNearbyList)callback;
 
 //获取 分页 影院数据
-- (ApiCmd *)getCinemasListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit;
-- (NSArray *)getCinemasListFromCoreDataOffset:(int)offset limit:(int)limit;
-- (NSArray *)getCinemasListFromCoreDataWithCityName:(NSString *)cityId offset:(int)offset limit:(int)limit;
+- (ApiCmd *)getCinemasListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit isNewData:(BOOL)isNewData;
+- (NSArray *)getCinemasListFromCoreDataOffset:(int)offset limit:(int)limit validDate:(NSString *)validDate;
+- (NSArray *)getCinemasListFromCoreDataWithCityName:(NSString *)cityId offset:(int)offset limit:(int)limit validDate:(NSString *)validDate;
 
 //获取 搜索 影院列表
 - (ApiCmd *)getCinemasSearchListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit searchString:(NSString *)searchString;
@@ -145,8 +145,11 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (NSArray *)getFavoriteCinemasListFromCoreData;
 - (NSArray *)getFavoriteCinemasListFromCoreDataWithCityName:(NSString *)cityName;
 
+//影院数量
 - (NSUInteger)getCountOfCinemasListFromCoreData;
 - (NSUInteger)getCountOfCinemasListFromCoreDataWithCityName:(NSString *)cityName;
+
+//插入数据库
 - (NSArray *)insertCinemasIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importCinema:(MCinema *)mCinema ValuesForKeysWithObject:(NSDictionary *)aCinemaData;
 - (void)importDynamicMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData;

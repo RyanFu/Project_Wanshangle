@@ -10,13 +10,14 @@
 
 @class ApiCmdMovie_getNearByCinemas;
 @class EGORefreshTableHeaderView;
+@class CinemaViewController;
 @interface CinemaNearByViewController : UIViewController{
     
 }
+@property(nonatomic,assign) CinemaViewController *mParentController;
 @property(nonatomic,retain) ApiCmdMovie_getNearByCinemas *apiCmdMovie_getNearByCinemas;
-
-@property(nonatomic,retain)EGORefreshTableHeaderView *refreshNearByHeaderView;
-@property(nonatomic,retain)EGORefreshTableHeaderView *refreshNearByTailerView;
+@property(nonatomic,retain) EGORefreshTableHeaderView *refreshNearByHeaderView;
+@property(nonatomic,retain) EGORefreshTableHeaderView *refreshNearByTailerView;
 
 @property(nonatomic,retain) IBOutlet UIView *noGPSView;
 @property(nonatomic,retain) UITableView *mTableView;

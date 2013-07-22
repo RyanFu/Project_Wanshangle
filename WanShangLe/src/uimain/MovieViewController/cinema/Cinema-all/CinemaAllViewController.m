@@ -16,9 +16,7 @@
 
 #import "CinemaAllListTableViewDelegate.h"
 
-#define TableView_Y 74
-#define MArray @"MArray"
-#define CacheArray @"CacheArray"
+#define TableView_Y 44
 
 @interface CinemaAllViewController()<ApiNotify>{
     BOOL isLoadMoreAll;
@@ -70,17 +68,14 @@
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
     
+    [self hiddenSearchBar];
+    
 #ifdef TestCode
     [self updatData];//测试代码
 #endif
     
 }
 - (void)updatData{
-    for (int i=0; i<10; i++) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            self.apiCmdMovie_getAllCinemas = (ApiCmdMovie_getAllCinemas *)[[DataBaseManager sharedInstance] getAllCinemasListFromWeb:self];
-        });
-    }
 }
 
 - (void)viewDidLoad
@@ -93,7 +88,6 @@
 }
 #pragma mark -
 #pragma mark 初始化TableView
-
 - (UITableView *)mTableView
 {
     if (_mTableView != nil) {
@@ -115,6 +109,7 @@
         _mTableView.tableHeaderView = self.searchBar;
     }
     
+    [self hiddenSearchBar];
     [self initRefreshHeaderView];
     
     if (_mArray==nil) {
@@ -145,6 +140,9 @@
     _allListDelegate.mArray = _mArray;
 }
 
+-(void)hiddenSearchBar{
+    [_mTableView setContentOffset:CGPointMake(0, TableView_Y)];
+}
 #pragma mark -
 #pragma mark 初始化UISearchBar and PullRefresh
 - (void)initSearchBarDisplay{
@@ -174,10 +172,11 @@
         [self setTableViewDelegate];
         
         self.searchBar.delegate = _allListDelegate;
-        self.strongSearchDisplayController = [[[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:_mParentController] autorelease];
-        _mParentController.searchDisplayController.searchResultsDataSource = _allListDelegate;
-        _mParentController.searchDisplayController.searchResultsDelegate = _allListDelegate;
-        _mParentController.searchDisplayController.delegate = _allListDelegate;
+        UIViewController *contentsController = (UIViewController *)(_mParentController.mparentController);
+        self.strongSearchDisplayController = [[[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:contentsController] autorelease];
+        contentsController.searchDisplayController.searchResultsDataSource = _allListDelegate;
+        contentsController.searchDisplayController.searchResultsDelegate = _allListDelegate;
+        contentsController.searchDisplayController.delegate = _allListDelegate;
     }
     
 }
@@ -246,9 +245,7 @@
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
     if (error!=nil) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self reloadPullRefreshData];
-        });
+        [self reloadPullRefreshData];
         return;
     }
     
@@ -284,6 +281,7 @@
 - (void)updateData:(int)tag withData:(NSArray*)dataArray
 {
     if (dataArray==nil || [dataArray count]<=0) {
+        [self reloadPullRefreshData];
         return;
     }
     
@@ -292,7 +290,7 @@
         case 0:
         case API_MCinemaCmd:
         {
-            [self formatKTVData:dataArray];
+            [self formatCinemaData:dataArray];
         }
             break;
         default:
@@ -305,14 +303,14 @@
 
 #pragma mark -
 #pragma mark FormateData
-- (void)formatKTVData:(NSArray*)dataArray{
+- (void)formatCinemaData:(NSArray*)dataArray{
     
-    [self formatKTVDataFilterAll:dataArray];
+    [self formatCinemaDataFilterAll:dataArray];
 }
 
 #pragma mark -
 #pragma mark FilterCinema FormatData
-- (void)formatKTVDataFilterAll:(NSArray*)pageArray{
+- (void)formatCinemaDataFilterAll:(NSArray*)pageArray{
     NSArray *array_coreData = pageArray;
     ABLoggerDebug(@"影院 count ==== %d",[array_coreData count]);
     
@@ -435,7 +433,10 @@
             number = 0;
         }
         
-        self.apiCmdMovie_getAllCinemas = (ApiCmdMovie_getAllCinemas *)[[DataBaseManager sharedInstance] getCinemasListFromWeb:self offset:number limit:DataLimit];
+        self.apiCmdMovie_getAllCinemas = (ApiCmdMovie_getAllCinemas *)[[DataBaseManager sharedInstance] getCinemasListFromWeb:self
+                                                                                                                       offset:number
+                                                                                                                        limit:DataLimit
+                                                                                                                    isNewData:!isLoadMoreAll];
         return  nil;
     }
     

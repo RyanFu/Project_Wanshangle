@@ -53,7 +53,7 @@
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<string key="IBUIText">影院</string>
+								<string key="IBUIText">KTV</string>
 								<object class="NSColor" key="IBUITextColor">
 									<int key="NSColorSpace">1</int>
 									<bytes key="NSRGB">MCAwIDAAA</bytes>
@@ -112,6 +112,7 @@
 								<string key="NSFrame">{{10, 41}, {297, 23}}</string>
 								<reference key="NSSuperview" ref="150492404"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -256,17 +257,6 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">KTVManagerCell</string>
 					<string key="superclassName">UITableViewCell</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">panGestureRecognizerTouchEvent:</string>
-						<string key="NS.object.0">UITapGestureRecognizer</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">panGestureRecognizerTouchEvent:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">panGestureRecognizerTouchEvent:</string>
-							<string key="candidateClassName">UITapGestureRecognizer</string>
-						</object>
-					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="ktvFavoriteButton">UIButton</string>
 						<string key="ktv_address">UILabel</string>

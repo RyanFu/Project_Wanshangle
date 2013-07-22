@@ -380,8 +380,8 @@
 
 - (void)formatKTVDataFilterFavorite{
     
-    NSArray *array_coreData = [[DataBaseManager sharedInstance] getFavoriteKTVListFromCoreData];
-    ABLoggerDebug(@"常去 KTV count ==== %d",[array_coreData count]);
+    NSArray *array_coreData = [[DataBaseManager sharedInstance] getFavoriteCinemasListFromCoreData];
+    ABLoggerDebug(@"常去 影院 count ==== %d",[array_coreData count]);
     [_mFavoriteArray removeAllObjects];
     [_mFavoriteArray addObjectsFromArray:array_coreData];
 }
@@ -420,7 +420,7 @@
         }
         ABLoggerDebug(@"ktv 数组 number ==  %d",number);
         
-        self.apiCmdMovie_getAllCinemas = (ApiCmdMovie_getAllCinemas *)[[DataBaseManager sharedInstance] getCinemasListFromWeb:self offset:number limit:DataLimit];
+        self.apiCmdMovie_getAllCinemas = (ApiCmdMovie_getAllCinemas *)[[DataBaseManager sharedInstance] getCinemasListFromWeb:self offset:number limit:DataLimit isNewData:NO];
         return  nil;
     }
     

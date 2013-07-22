@@ -10,6 +10,10 @@
 #import "CinemaTableViewCell.h"
 #import "MCinema.h"
 
+#import "ScheduleViewController.h"
+#import "CinemaMovieViewController.h"
+#import "CinemaViewController.h"
+
 #define TagTuan 500
 
 @interface CinemaAllListTableViewDelegate(){
@@ -190,7 +194,39 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-
+    if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
+        
+        NSDictionary *dic = [_mArray objectAtIndex:indexPath.section];
+        NSArray *list = [dic objectForKey:@"list"];
+        MCinema *mCinema = [list objectAtIndex:indexPath.row];
+        MMovie *mMovie = [_parentViewController.mParentController mMovie];
+        
+        BOOL isMoviePanel = [CacheManager sharedInstance].isMoviePanel;
+        UINavigationController *rootNavigationController = [CacheManager sharedInstance].rootNavController;
+        
+        if (isMoviePanel) {
+            ScheduleViewController *scheduleViewController = [[ScheduleViewController alloc]
+                                                              initWithNibName:(iPhone5?@"ScheduleViewController_5":@"ScheduleViewController")
+                                                              bundle:nil];
+            scheduleViewController.mCinema = mCinema;
+            scheduleViewController.mMovie = mMovie;
+            [rootNavigationController pushViewController:scheduleViewController animated:YES];
+            [scheduleViewController release];
+        }else{
+            CinemaMovieViewController *cinemaMovieController = [[CinemaMovieViewController alloc]
+                                                                initWithNibName:(iPhone5?@"CinemaMovieViewController_5":@"CinemaMovieViewController")
+                                                                bundle:nil];
+            cinemaMovieController.mCinema = mCinema;
+            cinemaMovieController.mMovie = mMovie;
+            [rootNavigationController pushViewController:cinemaMovieController animated:YES];
+            [cinemaMovieController release];
+        }
+        
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        
+    } else {//搜索模式
+        
+    }
 }
 
 #pragma mark -

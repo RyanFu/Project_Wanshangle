@@ -1183,22 +1183,46 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 #pragma mark 获取 分页 影院数据
-- (ApiCmd *)getCinemasListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit
+- (ApiCmd *)getCinemasListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit isNewData:(BOOL)isNewData
 {
     ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
     
-    offset = (offset<=0)?0:offset;
+    offset = (offset<0)?0:offset;
+    
+    NSString *validDate = [self getTodayZeroTimeStamp];;
+    NSString *uid = [ApiCmdMovie_getAllCinemas getTimeStampUid:nil];
+    TimeStamp *timeStamp = [TimeStamp MR_findFirstByAttribute:@"uid" withValue:uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    //判断是否刷新数据
+    if (isNewData) {
+        if (timeStamp == nil)
+        {
+            ABLoggerInfo(@"插入 影院 TimeStamp 新数据 ======= %@",uid);
+            timeStamp = [TimeStamp MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        }
+        timeStamp.uid = uid;
+        timeStamp.locationDate = [self getTodayTimeStamp];
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
+        validDate = timeStamp.locationDate;
+    }else{
+        if (timeStamp!=nil) {
+            if (([validDate compare:timeStamp.locationDate options:NSNumericSearch] != NSOrderedDescending)) {
+                validDate = timeStamp.locationDate;
+            }
+        }
+    }
+    
     //先从数据库里面读取数据
-    NSArray *coreData_array = [self getCinemasListFromCoreDataWithCityName:nil offset:offset limit:limit];
+    NSArray *coreData_array = [self getCinemasListFromCoreDataWithCityName:nil offset:offset limit:limit validDate:validDate];
     
     if ([coreData_array count]>0 && delegate && [delegate respondsToSelector:@selector(apiNotifyLocationResult:cacheData:)]) {
         [delegate apiNotifyLocationResult:nil cacheData:coreData_array];
         return tapiCmd;
     }
     
+    //因为数据库里没有数据或是数据过期，所以向服务器请求数据
     if (tapiCmd!=nil)
         if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
-            ABLoggerWarn(@"不能请求 Cinema 列表数据，因为已经请求了");
+            ABLoggerWarn(@"不能请求 影院 列表数据，因为已经请求了");
             return tapiCmd;
         }
     
@@ -1207,7 +1231,6 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmdMovie_getAllCinemas* apiCmdMovie_getAllCinemas = [[ApiCmdMovie_getAllCinemas alloc] init];
     apiCmdMovie_getAllCinemas.delegate = delegate;
     apiCmdMovie_getAllCinemas.offset = offset;
-    
     apiCmdMovie_getAllCinemas.limit = limit;
     if (limit==0) {
         apiCmdMovie_getAllCinemas.limit = DataLimit;
@@ -1217,16 +1240,19 @@ static DataBaseManager *_sharedInstance = nil;
     apiCmdMovie_getAllCinemas.cityName = [[LocationManager defaultLocationManager] getUserCity];
     [apiClient executeApiCmdAsync:apiCmdMovie_getAllCinemas];
     [apiCmdMovie_getAllCinemas.httpRequest setTag:API_MCinemaCmd];
+    [apiCmdMovie_getAllCinemas.httpRequest setNumberOfTimesToRetryOnTimeout:2];
+    [apiCmdMovie_getAllCinemas.httpRequest setTimeOutSeconds:60*5];
     
     return [apiCmdMovie_getAllCinemas autorelease];
+
 }
 
-- (NSArray *)getCinemasListFromCoreDataWithCityName:(NSString *)cityId offset:(int)offset limit:(int)limit{
+- (NSArray *)getCinemasListFromCoreDataWithCityName:(NSString *)cityId offset:(int)offset limit:(int)limit validDate:(NSString *)validDate{
     if (isEmpty(cityId)) {
         cityId = [[LocationManager defaultLocationManager] getUserCityId];
     }
     
-    return [MCinema MR_findAllSortedBy:@"districtid" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityId] offset:offset limit:limit inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [MCinema MR_findAllSortedBy:@"districtId" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and locationDate >= %@ ", cityId,validDate] offset:offset limit:limit inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
 #pragma mark 获取 搜索 影院列表
