@@ -8,10 +8,7 @@
 
 #import "ApiCmd.h"
 
-@interface ApiCmdMovie_getAllCinemas : ApiCmd
-{
-@private
-    
+@interface ApiCmdMovie_getAllCinemas : ApiCmd{
 }
 - (NSMutableDictionary*) getParamDict;
 - (void) parseResultData:(NSDictionary*) dictionary;

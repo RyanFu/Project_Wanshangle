@@ -41,6 +41,7 @@
 @class ApiCmdShow_getShowDetail;
 //-------------酒吧----------------/
 @class BBar;
+@class BBarDetail;
 @class ApiCmdBar_getAllBars;
 @class ApiCmdBar_getBarDetail;
 //分页数据
@@ -55,13 +56,14 @@
 #define API_RecommendOrLookKTVType      @"KTVType" //推荐和想看
 #define API_RecommendOrLookBarType      @"BarType" //推荐和想看
 //-------------MMovie----------------/
-#define API_MMovieCmd           100 //电影 全部
-#define API_MMovieDetailCmd     101 //电影 详情
-#define API_MCinemaCmd          103 //影院 全部
-#define API_MCinemaSearchCmd    104 //影院 搜索
-#define API_MCinemaNearByCmd    105 //影院 附近
-#define API_MScheduleCmd        106 //电影 排期
-#define API_MBuyInfoCmd         107 //电影 购买信息
+#define API_MMovieCmd           0 //电影 全部
+#define API_MMovieDetailCmd     1 //电影 详情
+#define API_MScheduleCmd        2 //电影 排期
+#define API_MBuyInfoCmd         3 //电影 购买信息
+
+#define API_MCinemaCmd          10 //影院 全部
+#define API_MCinemaSearchCmd    11 //影院 搜索
+#define API_MCinemaNearByCmd    12 //影院 附近
 
 //-------------BBar----------------/
 #define API_BBarTimeCmd         1 //酒吧 时间

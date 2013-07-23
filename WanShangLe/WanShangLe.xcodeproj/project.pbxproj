@@ -551,8 +551,6 @@
 		5ADD8E63179C05B60026239A /* CinemaMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E28179C05B60026239A /* CinemaMovieViewController.m */; };
 		5ADD8E64179C05B60026239A /* CinemaMovieViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADD8E29179C05B60026239A /* CinemaMovieViewController.xib */; };
 		5ADD8E65179C05B60026239A /* CinemaMovieViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADD8E2A179C05B60026239A /* CinemaMovieViewController_5.xib */; };
-		5ADD8E66179C05B60026239A /* CinemaSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E2C179C05B60026239A /* CinemaSearchViewController.m */; };
-		5ADD8E67179C05B60026239A /* CinemaSearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADD8E2D179C05B60026239A /* CinemaSearchViewController.xib */; };
 		5ADD8E68179C05B60026239A /* CinemaTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E2F179C05B60026239A /* CinemaTableViewCell.m */; };
 		5ADD8E69179C05B60026239A /* CinemaTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADD8E30179C05B60026239A /* CinemaTableViewCell.xib */; };
 		5ADD8E6A179C05B60026239A /* CinemaTableViewCellSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E32179C05B60026239A /* CinemaTableViewCellSection.m */; };
@@ -1407,9 +1405,6 @@
 		5ADD8E28179C05B60026239A /* CinemaMovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaMovieViewController.m; sourceTree = "<group>"; };
 		5ADD8E29179C05B60026239A /* CinemaMovieViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaMovieViewController.xib; sourceTree = "<group>"; };
 		5ADD8E2A179C05B60026239A /* CinemaMovieViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaMovieViewController_5.xib; sourceTree = "<group>"; };
-		5ADD8E2B179C05B60026239A /* CinemaSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaSearchViewController.h; sourceTree = "<group>"; };
-		5ADD8E2C179C05B60026239A /* CinemaSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaSearchViewController.m; sourceTree = "<group>"; };
-		5ADD8E2D179C05B60026239A /* CinemaSearchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaSearchViewController.xib; sourceTree = "<group>"; };
 		5ADD8E2E179C05B60026239A /* CinemaTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaTableViewCell.h; sourceTree = "<group>"; };
 		5ADD8E2F179C05B60026239A /* CinemaTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaTableViewCell.m; sourceTree = "<group>"; };
 		5ADD8E30179C05B60026239A /* CinemaTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaTableViewCell.xib; sourceTree = "<group>"; };
@@ -3165,18 +3160,15 @@
 				5ADD8E2E179C05B60026239A /* CinemaTableViewCell.h */,
 				5ADD8E2F179C05B60026239A /* CinemaTableViewCell.m */,
 				5ADD8E30179C05B60026239A /* CinemaTableViewCell.xib */,
-				5ADD8E25179C05B60026239A /* CinemaMovieTableViewDelegate.h */,
-				5ADD8E26179C05B60026239A /* CinemaMovieTableViewDelegate.m */,
 				5ADD8E27179C05B60026239A /* CinemaMovieViewController.h */,
 				5ADD8E28179C05B60026239A /* CinemaMovieViewController.m */,
 				5ADD8E29179C05B60026239A /* CinemaMovieViewController.xib */,
 				5ADD8E2A179C05B60026239A /* CinemaMovieViewController_5.xib */,
+				5ADD8E25179C05B60026239A /* CinemaMovieTableViewDelegate.h */,
+				5ADD8E26179C05B60026239A /* CinemaMovieTableViewDelegate.m */,
 				5ADD8E0F179C05B60026239A /* Cinema-all */,
 				5ADD8E15179C05B60026239A /* Cinema-favorite */,
 				5ADD8E1B179C05B60026239A /* Cinema-nearby */,
-				5ADD8E2B179C05B60026239A /* CinemaSearchViewController.h */,
-				5ADD8E2C179C05B60026239A /* CinemaSearchViewController.m */,
-				5ADD8E2D179C05B60026239A /* CinemaSearchViewController.xib */,
 				5ADD8E31179C05B60026239A /* CinemaTableViewCellSection.h */,
 				5ADD8E32179C05B60026239A /* CinemaTableViewCellSection.m */,
 				5ADD8E33179C05B60026239A /* CinemaTableViewCellSection.xib */,
@@ -3717,7 +3709,6 @@
 				5ADD8E5F179C05B60026239A /* CinemaNearByViewController.xib in Resources */,
 				5ADD8E64179C05B60026239A /* CinemaMovieViewController.xib in Resources */,
 				5ADD8E65179C05B60026239A /* CinemaMovieViewController_5.xib in Resources */,
-				5ADD8E67179C05B60026239A /* CinemaSearchViewController.xib in Resources */,
 				5ADD8E69179C05B60026239A /* CinemaTableViewCell.xib in Resources */,
 				5ADD8E6B179C05B60026239A /* CinemaTableViewCellSection.xib in Resources */,
 				5ADD8E6D179C05B60026239A /* CinemaViewController.xib in Resources */,
@@ -4004,7 +3995,6 @@
 				5ADD8E5E179C05B60026239A /* CinemaNearByViewController.m in Sources */,
 				5ADD8E62179C05B60026239A /* CinemaMovieTableViewDelegate.m in Sources */,
 				5ADD8E63179C05B60026239A /* CinemaMovieViewController.m in Sources */,
-				5ADD8E66179C05B60026239A /* CinemaSearchViewController.m in Sources */,
 				5ADD8E68179C05B60026239A /* CinemaTableViewCell.m in Sources */,
 				5ADD8E6A179C05B60026239A /* CinemaTableViewCellSection.m in Sources */,
 				5ADD8E6F179C05B60026239A /* CinemaViewController.m in Sources */,

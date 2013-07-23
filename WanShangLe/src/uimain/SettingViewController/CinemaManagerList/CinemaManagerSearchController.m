@@ -41,7 +41,7 @@
     
     self.mArray = nil;
     self.mCacheArray = nil;
-
+    
     self.searchString = nil;
     self.searchCallBack = nil;
     
@@ -61,7 +61,7 @@
         return;
     }
     
-    NSArray *dataArray = [[DataBaseManager sharedInstance] insertCinemasIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+    NSArray *dataArray = [[DataBaseManager sharedInstance] insertTemporaryCinemasIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
     if (dataArray==nil || [dataArray count]<=0) {
         if (self.searchCallBack) {
             _searchCallBack(_mArray,NO);
@@ -69,7 +69,7 @@
         isLoading = NO;
         return;
     }
-
+    
     int tag = [[apiCmd httpRequest] tag];
     [self addDataIntoCacheData:dataArray];
     [self updateData:tag withData:[self getCacheData]];
@@ -92,7 +92,21 @@
         isLoading = NO;
         return;
     }
-    [self formatCinemaData:dataArray];
+    
+    switch (tag) {
+        case 0:
+        case API_MCinemaSearchCmd:{
+            [self formatCinemaData:dataArray];
+        }
+            break;
+            
+        default:
+        {
+            NSAssert(0, @"没有从网络抓取到数据");
+        }
+            break;
+    }
+    
 }
 
 #pragma mark -
@@ -107,7 +121,7 @@
     
     NSArray *array_coreData = pageArray;
     ABLoggerDebug(@"搜索 影院店 count ==== %d",[array_coreData count]);
-
+    
     if (isLoadMore) {//加载更多
         [_mArray addObjectsFromArray:array_coreData];
     }else{//更新数据
@@ -115,8 +129,8 @@
         [_mArray addObjectsFromArray:array_coreData];
         [_mArray removeObjectsInArray:removeArray];
     }
-
-
+    
+    
     if (self.searchCallBack) {
         _searchCallBack(_mArray,YES);
     }
@@ -165,8 +179,13 @@
         if (!isLoadMore) {
             number = 0;
         }
-         
-        self.apiCmdMovie_getSearchCinemas = (ApiCmdMovie_getSearchCinemas *)[[DataBaseManager sharedInstance] getCinemasSearchListFromWeb:self offset:number limit:DataLimit searchString:_searchString];
+        
+        NSString *dataType = [NSString stringWithFormat:@"%d",API_MCinemaSearchCmd];
+        self.apiCmdMovie_getSearchCinemas = (ApiCmdMovie_getSearchCinemas *)[[DataBaseManager sharedInstance] getCinemasSearchListFromWeb:self
+                                                                                                                                   offset:number
+                                                                                                                                    limit:DataLimit
+                                                                                                                                 dataType:dataType
+                                                                                                                             searchString:_searchString];
         return  nil;
     }
     

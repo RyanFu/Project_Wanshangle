@@ -22,7 +22,7 @@
 }
 
 - (void) dealloc {
-    self.barId = nil;
+    self.eventid = nil;
 	[super dealloc];
 }
 
@@ -36,13 +36,13 @@
     
     return self.httpRequest;
 }
-
+// bar.eventinfo， 参数传eventid
 //http://api.wanshangle.com:10000/api? appId=000001&sign=sign&time=1371988912&v=1.0&api=bar.events&barid=12
 - (NSMutableDictionary*) getParamDict {
     NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
     
-    [paramDict setObject:@"bar.events" forKey:@"api"];
-    [paramDict setObject:self.barId forKey:@"barid"];
+    [paramDict setObject:@"bar.eventinfo" forKey:@"api"];
+    [paramDict setObject:self.eventid forKey:@"eventid"];
     
     return paramDict;
 }

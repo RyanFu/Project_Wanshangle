@@ -277,10 +277,7 @@
 - (NSArray *)getCacheData{
     
     if ([_mCacheArray count]<=0) {
-        int number = 0;
-        for (NSDictionary *dic in self.mArray) {
-            number += [[dic objectForKey:@"list"] count];
-        }
+        int number = (_mArray==nil)?0:[_mArray count];
         ABLoggerDebug(@"酒吧 数组 number ==  %d",number);
         
         if (!isLoadMoreAll) {

@@ -24,6 +24,7 @@ NSString* extractFileNameFromPath(NSString* path);
 /* NSString to url */
 NSString* encodeURL( NSString *string);
 
+NSString* encodeURLByAddingPercentEscapes( NSString *string);
 /**
  *  get the Tmp path of download file
  *

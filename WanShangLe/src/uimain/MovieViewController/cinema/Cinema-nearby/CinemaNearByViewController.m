@@ -198,12 +198,13 @@
 {
     if (dataArray==nil || [dataArray count]<=0) {
         return;
+        [self reloadPullRefreshData];
     }
     
     ABLogger_int(tag);
     switch (tag) {
         case 0:
-        case API_KKTVCmd:
+        case API_MCinemaNearByCmd:
         {
             [self formatKTVData:dataArray];
         }

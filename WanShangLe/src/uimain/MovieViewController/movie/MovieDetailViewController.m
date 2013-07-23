@@ -108,7 +108,7 @@
     
     self.mMovieDetail = [[DataBaseManager sharedInstance] getMovieDetailWithId:_mMovie.uid];
     
-    if (_mMovieDetail==nil) {//演出详情为空
+    if (_mMovieDetail==nil) {//电影详情为空
         self.apiCmdMovie_getAllMovieDetail = (ApiCmdMovie_getAllMovieDetail *)[[DataBaseManager sharedInstance] getMovieDetailFromWeb:self movieId:_mMovie.uid];
         
     }else{
@@ -153,7 +153,6 @@
             bgImgFrame.size.height += extendHeight;
             _movie_introBgImgView.frame = bgImgFrame;
         }
-       
     }
     
     [self updateRecommendAndWantLookCount];

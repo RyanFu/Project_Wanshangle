@@ -17,6 +17,8 @@
 #import "SShow.h"
 #import "SShowDetail.h"
 
+#define IntroduceLabelHeight 108
+
 @interface ShowDetailViewController()<ApiNotify>{
     BOOL isRecommended;
     BOOL isLooked;
@@ -143,18 +145,18 @@
     CGSize misize = [_show_introduce.text sizeWithFont:_show_introduce.font constrainedToSize:CGSizeMake(_show_introduce.bounds.size.width, MAXFLOAT)];
     
     if (misize.height>_show_introduce.bounds.size.height) {
-        
-        float extendHeight = misize.height - _show_introduce.frame.size.height;
-        
+
         CGRect introFrame = _show_introduce.frame;
         introFrame.size.height = misize.height;
         _show_introduce.frame = introFrame;
         
-        [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height+extendHeight)];
-        
-        CGRect bgImgFrame = _show_introBgImgView.frame;
-        bgImgFrame.size.height += extendHeight;
-        _show_introBgImgView.frame = bgImgFrame;
+        if (misize.height>IntroduceLabelHeight) {
+            float extendHeight = misize.height - IntroduceLabelHeight;
+            [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height+extendHeight)];
+            CGRect bgImgFrame = _show_introBgImgView.frame;
+            bgImgFrame.size.height += extendHeight;
+            _show_introBgImgView.frame = bgImgFrame;
+        }
     }
     
     self.show_prices.text = _mShowDetail.prices;

@@ -154,7 +154,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    BarDetailViewController *barBuyController = [[BarDetailViewController alloc] initWithNibName:@"BarDetailViewController" bundle:nil];
+    BBar *tBar = [_mArray objectAtIndex:indexPath.row];
+    BarDetailViewController *barDetailController = [[BarDetailViewController alloc] initWithNibName:@"BarDetailViewController" bundle:nil];
+    barDetailController.mBar = tBar;
+    [[[CacheManager sharedInstance] rootNavController] pushViewController:barDetailController animated:YES];
+    [barDetailController release];
 }
 
 #pragma mark -

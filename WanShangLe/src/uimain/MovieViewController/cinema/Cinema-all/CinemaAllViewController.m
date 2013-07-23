@@ -146,6 +146,14 @@
 
 -(void)hiddenSearchBar{
     [_mTableView setContentOffset:CGPointMake(0, TableView_Y)];
+    
+    [self hiddenRefreshTailerView];
+}
+
+- (void)hiddenRefreshTailerView{
+    if (_mArray==nil || [_mArray count]<=0) {
+        _refreshTailerView.hidden = YES;
+    }
 }
 #pragma mark -
 #pragma mark 初始化UISearchBar and PullRefresh
@@ -234,7 +242,7 @@
         CGRect frame1 = self.mParentController.filterHeaderView.frame;
         frame1.origin.y = 0;
         self.mParentController.filterHeaderView.frame = frame1;
-
+        
         CGRect frame2 = self.view.frame;
         frame2.origin.y = self.mParentController.filterHeaderView.bounds.size.height;
         self.view.frame = frame2;
@@ -375,10 +383,7 @@
     [districtDic release];
     
     _refreshTailerView.hidden = NO;
-    if ([_mArray count]<=0 || _mArray==nil) {
-        _refreshTailerView.hidden = YES;
-        
-    }
+    [self hiddenRefreshTailerView];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self reloadPullRefreshData];
@@ -436,10 +441,11 @@
         if (!isLoadMoreAll) {
             number = 0;
         }
-        
+        NSString *dataType = [NSString stringWithFormat:@"%d",API_MCinemaCmd];
         self.apiCmdMovie_getAllCinemas = (ApiCmdMovie_getAllCinemas *)[[DataBaseManager sharedInstance] getCinemasListFromWeb:self
                                                                                                                        offset:number
                                                                                                                         limit:DataLimit
+                                                                                                                     dataType:dataType
                                                                                                                     isNewData:!isLoadMoreAll];
         return  nil;
     }
@@ -453,7 +459,7 @@
     for (int i=0;i<[_mCacheArray count] ;i++ ) {
         MCinema *tCinema = [_mCacheArray objectAtIndex:i];
         ABLoggerInfo(@"1111_cacheArray count == %d",[_mCacheArray count]);
-        ABLoggerDebug(@"2222  coredata district id === %@",tCinema.districtId);
+        ABLoggerDebug(@"2222  coredata district id === %d",[tCinema.districtId intValue]);
     }
     
     NSMutableArray *aPageData = [NSMutableArray arrayWithCapacity:count];
@@ -468,12 +474,12 @@
     
     for (int i = 0;i<[aPageData count];i++) {
         MCinema *object = [aPageData objectAtIndex:i];
-        ABLoggerInfo(@"111district id ===== %@",object.districtId);
+        ABLoggerInfo(@"111district id ===== %d",[object.districtId intValue]);
     }
     
     for (int i = 0;i<[_mCacheArray count];i++) {
         MCinema *object = [_mCacheArray objectAtIndex:i];
-        ABLoggerInfo(@"222 ============== district id ===== %@",object.districtId);
+        ABLoggerInfo(@"222 ============== district id ===== %d",[object.districtId intValue]);
     }
     
     ABLoggerInfo(@"_cacheArray count == %d",[_mCacheArray count]);

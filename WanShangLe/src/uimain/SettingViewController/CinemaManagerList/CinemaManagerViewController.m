@@ -256,13 +256,26 @@
     if (dataArray==nil || [dataArray count]<=0) {
         return;
     }
-    [self formatCinemaData:dataArray];
+    
+    switch (tag) {
+        case 0:
+        case API_MCinemaCmd:{
+            [self formatCinemaData:dataArray];
+        }
+            break;
+            
+        default:
+        {
+            NSAssert(0, @"没有从网络抓取到数据");
+        }
+            break;
+    }
 }
 
 #pragma mark -
 #pragma mark FormateData
 - (void)formatCinemaData:(NSArray*)dataArray{
-    [self formatKTVDataFilterAll:dataArray];
+    [self formatCinemaDataFilterAll:dataArray];
 }
 
 - (void)clickCityButton:(id)sender{
@@ -270,10 +283,10 @@
 }
 #pragma mark -
 #pragma mark FilterCinema FormatData
-- (void)formatKTVDataFilterAll:(NSArray*)pageArray{
+- (void)formatCinemaDataFilterAll:(NSArray*)pageArray{
     
     NSArray *array_coreData = pageArray;
-    ABLoggerDebug(@"KTV店 count ==== %d",[array_coreData count]);
+    ABLoggerDebug(@"影院 count ==== %d",[array_coreData count]);
     
     NSArray *regionOrder = [[DataBaseManager sharedInstance] getRegionOrder];
     
@@ -282,11 +295,11 @@
     
     for (MCinema *tCinema in array_coreData) {
         NSString *key = tCinema.district;
-        NSString *districtId = tCinema.districtId;
+        NSNumber *districtId = tCinema.districtId;
         
         if (![districtDic objectForKey:key]) {
             ABLoggerInfo(@"key === %@",key);
-            ABLoggerInfo(@"districtId === %@",districtId);
+            ABLoggerInfo(@"districtId === %d",[districtId intValue]);
             NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:10];
             [districtDic setObject:tarray forKey:key];
             [districtDic setObject:key forKey:@"districtId"];
@@ -311,26 +324,26 @@
             if ([[tDic objectForKey:@"name"] isEqualToString:key]) {
                 dic = tDic;
                 NSMutableArray *tarray = [tDic objectForKey:@"list"];
-//                [tarray addObjectsFromArray:[districtDic objectForKey:key]];
+                [tarray addObjectsFromArray:[districtDic objectForKey:key]];
                 
                 /*===============防止数组tarray加入重复的KTV，根据KTV.uid 来筛选判断===================*/
-                NSMutableArray *addedArray = [districtDic objectForKey:key];
-                for (int i=0;i<[addedArray count];i++) {
-                    MCinema *cinema1 = [addedArray objectAtIndex:i];
-                    
-                    BOOL isadd = YES;
-                    for (int j=0;j<[tarray count];j++) {
-                        MCinema *cinema2 = [tarray objectAtIndex:j];
-                        if ([cinema1.uid intValue]==[cinema2.uid intValue]) {
-                            isadd = NO;
-                            break;
-                        }
-                    }
-                    
-                    if (isadd) {
-                        [tarray addObject:cinema1];
-                    }
-                }
+//                NSMutableArray *addedArray = [districtDic objectForKey:key];
+//                for (int i=0;i<[addedArray count];i++) {
+//                    MCinema *cinema1 = [addedArray objectAtIndex:i];
+//                    
+//                    BOOL isadd = YES;
+//                    for (int j=0;j<[tarray count];j++) {
+//                        MCinema *cinema2 = [tarray objectAtIndex:j];
+//                        if ([cinema1.uid intValue]==[cinema2.uid intValue]) {
+//                            isadd = NO;
+//                            break;
+//                        }
+//                    }
+//                    
+//                    if (isadd) {
+//                        [tarray addObject:cinema1];
+//                    }
+//                }
                 /*========================================================*/
                 
 //                returnArray = (NSMutableArray *)[returnArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
@@ -389,7 +402,7 @@
 #pragma mark -
 #pragma mark 刷新和加载更多
 - (void)loadMoreData{
-    [self updateData:0 withData:[self getCacheData]];
+    [self updateData:API_MCinemaCmd withData:[self getCacheData]];
 }
 
 - (void)loadNewData{
@@ -420,7 +433,12 @@
         }
         ABLoggerDebug(@"ktv 数组 number ==  %d",number);
         
-        self.apiCmdMovie_getAllCinemas = (ApiCmdMovie_getAllCinemas *)[[DataBaseManager sharedInstance] getCinemasListFromWeb:self offset:number limit:DataLimit isNewData:NO];
+        NSString *dataType = [NSString stringWithFormat:@"%d",API_MCinemaCmd];
+        self.apiCmdMovie_getAllCinemas = (ApiCmdMovie_getAllCinemas *)[[DataBaseManager sharedInstance] getCinemasListFromWeb:self
+                                                                                                                       offset:number
+                                                                                                                        limit:DataLimit
+                                                                                                                     dataType:dataType
+                                                                                                                    isNewData:NO];
         return  nil;
     }
     

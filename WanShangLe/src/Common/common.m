@@ -53,6 +53,11 @@ NSString* encodeURL( NSString *string)
     return @"";
 }
 
+NSString* encodeURLByAddingPercentEscapes( NSString *string)
+{
+    return [string stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+}
+
 NSString* extractFileNameFromPath(NSString* path){
     return [path lastPathComponent];
 }
@@ -283,6 +288,8 @@ BOOL checkIsURL(NSString* str){
     
     return NO;
 }
+
+
 
 NSString* doParseURL(NSString *url){
     

@@ -138,8 +138,8 @@
 - (void)setTableViewDelegate{
     if (_allListDelegate==nil) {
         _allListDelegate = [[BarTimeListTableViewDelegate alloc] init];
-        _allListDelegate.parentViewController = self;
     }
+    _allListDelegate.parentViewController = self;
     _mTableView.dataSource = _allListDelegate;
     _mTableView.delegate = _allListDelegate;
     _allListDelegate.mTableView = _mTableView;

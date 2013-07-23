@@ -22,23 +22,29 @@
 
 #pragma mark -
 #pragma mark UITableViewDataSource
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    ABLoggerMethod();
+    return 1;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    ABLoggerMethod();
     return [_parentViewController.schedulesArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+    ABLoggerMethod();
     static NSString *CellIdentifier = @"mScheduleCell";
-    static BOOL nibsRegistered = NO;
-    if (!nibsRegistered) {
-        UINib *nib = [UINib nibWithNibName:@"ScheduleTableViewCell" bundle:nil];
-        [tableView registerNib:nib forCellReuseIdentifier:CellIdentifier];
-        nibsRegistered = YES;
-    }
+//    static BOOL nibsRegistered = NO;
+//    if (!nibsRegistered) {
+//        UINib *nib = [UINib nibWithNibName:@"ScheduleTableViewCell" bundle:nil];
+//        [tableView registerNib:nib forCellReuseIdentifier:CellIdentifier];
+//        nibsRegistered = YES;
+//    }
     
     ScheduleTableViewCell * cell = (ScheduleTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        ABLoggerMethod();
+        
         cell = [self createNewMocieCell];
     }
     

@@ -10,7 +10,7 @@
 
 @interface ApiCmdBar_getBarDetail : ApiCmd{  
 }
-@property(nonatomic,retain) NSString *barId;
+@property(nonatomic,retain) NSString *eventid;
 - (NSMutableDictionary*) getParamDict;
 - (void) parseResultData:(NSDictionary*) dictionary;
 

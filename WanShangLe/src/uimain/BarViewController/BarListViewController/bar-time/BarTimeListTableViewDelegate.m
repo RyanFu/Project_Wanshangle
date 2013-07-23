@@ -180,10 +180,16 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     //iPhone5?@"barBuyViewController_5":@"barBuyViewController"
-    BarDetailViewController *barBuyController = [[BarDetailViewController alloc] initWithNibName:@"BarDetailViewController" bundle:nil];
+    NSArray *tArray = [[_mArray objectAtIndex:indexPath.section] objectForKey:@"list"];
+    BBar *tBar = [tArray objectAtIndex:indexPath.row];
+    BarDetailViewController *barDetailController = [[BarDetailViewController alloc] initWithNibName:@"BarDetailViewController" bundle:nil];
+    barDetailController.mBar = tBar;
+    [[[CacheManager sharedInstance] rootNavController] pushViewController:barDetailController animated:YES];
+    [barDetailController release];
 }
 
 #pragma mark -

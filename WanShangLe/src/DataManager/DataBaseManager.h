@@ -105,9 +105,9 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 
 //获得排期
 - (ApiCmd *)getScheduleFromWebWithaMovie:(MMovie *)aMovie
-                                               andaCinema:(MCinema *)aCinema
-                                             timedistance:(NSString *)timedistance
-                                                 delegate:(id<ApiNotify>)delegate;
+                              andaCinema:(MCinema *)aCinema
+                            timedistance:(NSString *)timedistance
+                                delegate:(id<ApiNotify>)delegate;
 //从数据库里获取排期
 - (MSchedule *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie
                                       andaCinema:(MCinema *)aCinema
@@ -127,7 +127,8 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
                                  andaCinema:(MCinema *)aCinema
                                   aSchedule:(NSString *)aSchedule;
 
-/************ 影院 ***************/
+/************************ 影院 ***************************************/
+/********************************************************************/
 - (ApiCmd *)getAllCinemasListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllCinemasListFromCoreData;
 - (NSArray *)getAllCinemasListFromCoreDataWithCityName:(NSString *)cityName;
@@ -137,19 +138,31 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (ApiCmd *)getCinemasListFromWeb:(id<ApiNotify>)delegate
                            offset:(int)offset
                             limit:(int)limit
+                         dataType:(NSString *)dataType
                         isNewData:(BOOL)isNewData;
-- (NSArray *)getCinemasListFromCoreDataOffset:(int)offset limit:(int)limit validDate:(NSString *)validDate;
-- (NSArray *)getCinemasListFromCoreDataWithCityName:(NSString *)cityId offset:(int)offset limit:(int)limit validDate:(NSString *)validDate;
+- (NSArray *)getCinemasListFromCoreDataOffset:(int)offset
+                                        limit:(int)limit
+                                     dataType:(NSString *)dataType
+                                    validDate:(NSString *)validDate;
+- (NSArray *)getCinemasListFromCoreDataWithCityName:(NSString *)cityId
+                                             offset:(int)offset
+                                              limit:(int)limit
+                                           dataType:(NSString *)dataType
+                                          validDate:(NSString *)validDate;
 
 //获取 搜索 影院列表
-- (ApiCmd *)getCinemasSearchListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit searchString:(NSString *)searchString;
+- (ApiCmd *)getCinemasSearchListFromWeb:(id<ApiNotify>)delegate offset:(int)offset
+                                  limit:(int)limit
+                      dataType:(NSString *)dataType
+                           searchString:(NSString *)searchString;
 
 //影院附近分页
 - (ApiCmd *)getNearbyCinemaListFromCoreDataDelegate:(id<ApiNotify>)delegate
-                                            Latitude:(CLLocationDegrees)latitude
-                                           longitude:(CLLocationDegrees)longitude
-                                              offset:(int)offset
-                                               limit:(int)limit
+                                           Latitude:(CLLocationDegrees)latitude
+                                          longitude:(CLLocationDegrees)longitude
+                                             offset:(int)offset
+                                              limit:(int)limit
+                      dataType:(NSString *)dataType
                                           isNewData:(BOOL)isNewData;
 //影院收藏分页
 - (NSArray *)getFavoriteCinemasListFromCoreData;
@@ -161,6 +174,9 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 
 //插入数据库
 - (NSArray *)insertCinemasIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+//将搜索和附近的数据插入到数据库里
+- (NSArray *)insertTemporaryCinemasIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+
 - (void)importCinema:(MCinema *)mCinema ValuesForKeysWithObject:(NSDictionary *)aCinemaData;
 - (void)importDynamicMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData;
 
@@ -179,12 +195,12 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 
 //分页 演出
 - (ApiCmd *)getShowsListFromWeb:(id<ApiNotify>)delegate
-                        offset:(int)offset
-                         limit:(int)limit
-                      Latitude:(CLLocationDegrees)latitude
-                     longitude:(CLLocationDegrees)longitude
-                      dataType:(NSString *)dataType
-                     isNewData:(BOOL)isNewData;
+                         offset:(int)offset
+                          limit:(int)limit
+                       Latitude:(CLLocationDegrees)latitude
+                      longitude:(CLLocationDegrees)longitude
+                       dataType:(NSString *)dataType
+                      isNewData:(BOOL)isNewData;
 
 //插入数据
 - (NSArray *)insertShowsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
@@ -192,19 +208,19 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 
 //读数据
 - (NSArray *)getShowsListFromCoreDataOffset:(int)offset
-                                     limit:(int)limit
-                                  Latitude:(CLLocationDegrees)latitude
-                                 longitude:(CLLocationDegrees)longitude
-                                  dataType:(NSString *)dataType
-                                 validDate:(NSString *)validDate;
+                                      limit:(int)limit
+                                   Latitude:(CLLocationDegrees)latitude
+                                  longitude:(CLLocationDegrees)longitude
+                                   dataType:(NSString *)dataType
+                                  validDate:(NSString *)validDate;
 //读数据
 - (NSArray *)getShowsListFromCoreDataWithCityName:(NSString *)cityId
-                                          offset:(int)offset
-                                           limit:(int)limit
-                                        Latitude:(CLLocationDegrees)latitude
-                                       longitude:(CLLocationDegrees)longitude
-                                        dataType:(NSString *)dataType
-                                       validDate:(NSString *)validDate;
+                                           offset:(int)offset
+                                            limit:(int)limit
+                                         Latitude:(CLLocationDegrees)latitude
+                                        longitude:(CLLocationDegrees)longitude
+                                         dataType:(NSString *)dataType
+                                        validDate:(NSString *)validDate;
 
 //获取 演出详情
 - (ApiCmd *)getShowDetailFromWeb:(id<ApiNotify>)delegate showId:(NSString *)showId;
@@ -213,7 +229,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (SShowDetail *)getShowDetailFromCoreDataWithId:(NSString *)showId;
 /************************ 酒吧 *********************************/
 /***************************************************************/
-//分页 时间和人气 酒吧 
+//分页 时间和人气 酒吧
 - (ApiCmd *)getBarsListFromWeb:(id<ApiNotify>)delegate
                         offset:(int)offset
                          limit:(int)limit
@@ -224,21 +240,21 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 
 //附近 酒吧
 - (ApiCmd *)getBarsNearByListFromWeb:(id<ApiNotify>)delegate
-                        offset:(int)offset
-                         limit:(int)limit
-                      Latitude:(CLLocationDegrees)latitude
-                     longitude:(CLLocationDegrees)longitude
-                      dataType:(NSString *)dataType
-                     isNewData:(BOOL)isNewData;
+                              offset:(int)offset
+                               limit:(int)limit
+                            Latitude:(CLLocationDegrees)latitude
+                           longitude:(CLLocationDegrees)longitude
+                            dataType:(NSString *)dataType
+                           isNewData:(BOOL)isNewData;
 
-//从数据库里读数据
+//从数据库里获取酒吧数据
 - (NSArray *)getBarsListFromCoreDataOffset:(int)offset
                                      limit:(int)limit
                                   Latitude:(CLLocationDegrees)latitude
                                  longitude:(CLLocationDegrees)longitude
                                   dataType:(NSString *)dataType
                                  validDate:(NSString *)validDate;
-//从数据库里读数据
+//从数据库里获取酒吧数据
 - (NSArray *)getBarsListFromCoreDataWithCityName:(NSString *)cityId
                                           offset:(int)offset
                                            limit:(int)limit
@@ -250,13 +266,20 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 //向数据库里插入数据
 - (NSArray *)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importBar:(BBar *)bBar ValuesForKeysWithObject:(NSDictionary *)aBarDic;
+//插入推荐
+- (BBarDetail *)insertBarRecommendIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 
-- (void)insertBarDetailIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
-- (void)importBarDetail:(BBar *)bBar ValuesForKeysWithObject:(NSDictionary *)aBarDic;
+//获取酒吧详情
+- (ApiCmd *)getBarDetailFromWeb:(id<ApiNotify>)delegate barId:(NSString *)eventid;
+- (BBarDetail *)getBarDetailWithId:(NSString *)barId;
+
+- (BBarDetail *)insertBarDetailIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (void)importBarDetail:(BBarDetail *)bBar ValuesForKeysWithObject:(NSDictionary *)aBarDic;
 
 - (ApiCmd *)getAllBarsListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllBarsListFromCoreData;
 - (NSArray *)getAllBarsListFromCoreDataWithCityName:(NSString *)cityName;
+
 - (NSUInteger)getCountOfBarsListFromCoreData;
 - (NSUInteger)getCountOfBarsListFromCoreDataWithCityName:(NSString *)cityName;
 
@@ -296,17 +319,17 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 
 //获得KTV 团购列表 KTV Info
 - (ApiCmd *)getKTVTuanGouListFromWebWithaKTV:(KKTV *)aKTV
-                                  delegate:(id<ApiNotify>)delegate;
+                                    delegate:(id<ApiNotify>)delegate;
 - (void)insertKTVTuanGouListIntoCoreDataFromObject:(NSDictionary *)objectData
-                                      withApiCmd:(ApiCmd*)apiCmd
-                                        withaKTV:(KKTV *)aKTV;
+                                        withApiCmd:(ApiCmd*)apiCmd
+                                          withaKTV:(KKTV *)aKTV;
 
 //获得KTV 价格列表 Info
 - (ApiCmd *)getKTVPriceListFromWebWithaKTV:(KKTV *)aKTV
-                                delegate:(id<ApiNotify>)delegate;
+                                  delegate:(id<ApiNotify>)delegate;
 - (void)insertKTVPriceListIntoCoreDataFromObject:(NSDictionary *)objectData
-                                    withApiCmd:(ApiCmd*)apiCmd
-                                      withaKTV:(KKTV *)aKTV;
+                                      withApiCmd:(ApiCmd*)apiCmd
+                                        withaKTV:(KKTV *)aKTV;
 
 
 

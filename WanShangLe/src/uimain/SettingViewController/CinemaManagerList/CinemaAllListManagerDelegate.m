@@ -375,10 +375,16 @@
 #pragma mark UIScrollViewDelegate Methods
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    if (_refreshTailerView.hidden)return;
+    
     [_refreshTailerView egoRefreshScrollViewDidScroll:scrollView];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    
+    if (_refreshTailerView.hidden)return;
+    
     [_refreshTailerView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
@@ -388,13 +394,17 @@
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
     
-    if (view.tag == EGOBottomView)
+    if (view.tag == EGOBottomView && !view.hidden)
     {
         [self loadMoreTableViewDataSource];
     }
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+    
+    if (view.hidden) {
+        return NO;
+    }
     return _reloading; // should return if data source model is reloading
 }
 

@@ -151,9 +151,10 @@ static NSString* valuePhoneType = @"iPhone";
         [urlStr appendFormat:@"&%@=%@",key,[postDict objectForKey:key]];
     }
 
+    NSString *encodeURLStr = encodeURLByAddingPercentEscapes(urlStr);
     // prepare http request
-    NSURL *url = [NSURL URLWithString:urlStr];
-    ABLoggerInfo(@"request url ===== %@",urlStr);
+    NSURL *url = [NSURL URLWithString:encodeURLStr];
+    ABLoggerInfo(@"请求的URL request url ===== %@",encodeURLStr);
     [urlStr release];
     
      ASIHTTPRequest *tASIHTTPRequest = [ASIHTTPRequest requestWithURL:url];

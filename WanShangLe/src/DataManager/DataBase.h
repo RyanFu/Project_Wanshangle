@@ -43,6 +43,7 @@
 
 //酒吧
 #import "BBar.h"
+#import "BBarDetail.h"
 #import "ApiCmdBar_getAllBars.h"
 #import "ApiCmdBar_getBarDetail.h"
 

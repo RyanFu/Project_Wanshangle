@@ -15,11 +15,12 @@
 #import "ApiCmdBar_getBarDetail.h"
 #import "ActionState.h"
 
-
+#define IntroduceLabelHeight 213
 @interface BarDetailViewController ()<ApiNotify>{
-     ShareType _followType;
-    
+    ShareType _followType;
+    BOOL isRecommended;
 }
+@property(nonatomic,assign) BBarDetail *mBarDetail;
 @property(nonatomic,assign) AppDelegate *appDelegate;
 @property(nonatomic,retain) ApiCmdBar_getBarDetail *apiCmdBar_getBarDetail;
 @end
@@ -37,6 +38,7 @@
 
 - (void)dealloc{
     self.mBar = nil;
+    self.mBarDetail = nil;
     
     [_apiCmdBar_getBarDetail.httpRequest clearDelegatesAndCancel];
     _apiCmdBar_getBarDetail.delegate = nil;
@@ -56,7 +58,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     [self initBarItem];
+    
     [self initData];
 }
 
@@ -83,51 +87,61 @@
 - (void)initData{
     _appDelegate = [AppDelegate appDelegateInstance];
     
-    UIImage *img = [UIImage imageNamed:@"bg_movie_detail_info@2x"];
-    _barDetailImg = [[UIImageView alloc] initWithFrame:CGRectMake(9, 176,302, 270)];
-    [_barDetailImg setBackgroundColor:[UIColor clearColor]];
-    UIEdgeInsets insets = UIEdgeInsetsMake(80, 20, 18, 20);
-    _barDetailImg.image = [img resizableImageWithCapInsets:insets resizingMode:UIImageResizingModeStretch];
-    [_barDetailImg setContentScaleFactor:2.0f];
-    [_mScrollView addSubview:_barDetailImg];
-    [_barDetailImg release];
-    
     if ([[DataBaseManager sharedInstance] isSelectedLike:_mBar.uid withType:API_RecommendOrLookBarType]) {
         [_bar_yesButton setBackgroundImage:[UIImage imageNamed:@"bar_btn_yes_blue_n@2x"] forState:UIControlStateNormal];
+        isRecommended = YES;
     }
+    
+    self.mBarDetail = [[DataBaseManager sharedInstance] getBarDetailWithId:_mBar.uid];
 
-    if (_mBar.barDetail==nil) {//酒吧详情为空
-       
+    if (_mBarDetail==nil) {//酒吧详情为空
+        self.apiCmdBar_getBarDetail = (ApiCmdBar_getBarDetail *)[[DataBaseManager sharedInstance] getBarDetailFromWeb:self barId:_mBar.uid];
+        
     }else{
         [self initBarDetailData];
-    }
+        [self requestRecommendAndWantLookCount];
 
+        self.mBarDetail = _mBar.barDetail;
+    }
 }
 
 - (void)initBarDetailData{
+    ABLoggerDebug(@"_mBarDetail.detailInfo == %@",_mBarDetail.detailInfo);
+    _bar_event.text = [_mBarDetail.detailInfo objectForKey:@"eventname"];
+    _bar_name.text = @"NULL";
+    _bar_address.text = @"NULL";
+    NSString *introduceInfo = [_mBarDetail.detailInfo objectForKey:@"description"];
+    _bar_introduce.text =  (isEmpty(introduceInfo)?@"该活动暂时没有介绍信息":introduceInfo);
     
-    UILabel *barInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 50, 282, 220)];
-    [barInfoLabel setBackgroundColor:[UIColor clearColor]];
-    [barInfoLabel setNumberOfLines:0];
-    barInfoLabel.font = [UIFont systemFontOfSize:15];
-    barInfoLabel.text = _mBar.description;
-    CGSize misize = [barInfoLabel.text sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(barInfoLabel.bounds.size.width, MAXFLOAT)];
+    CGSize misize = [_bar_introduce.text sizeWithFont:_bar_introduce.font constrainedToSize:CGSizeMake(_bar_introduce.bounds.size.width, MAXFLOAT)];
     
-    if (misize.height>barInfoLabel.bounds.size.height) {
-        barInfoLabel.frame = CGRectMake(10, 50, 282, misize.height);
-        float extendHeight = misize.height - 220;
-        [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height+extendHeight)];
-        [_barDetailImg setFrame:CGRectMake(9, 176,302, 270+extendHeight)];
+    if (misize.height>_bar_introduce.bounds.size.height) {
+        
+        CGRect introFrame = _bar_introduce.frame;
+        introFrame.size.height = misize.height;
+        _bar_introduce.frame = introFrame;
+        
+        if (misize.height>IntroduceLabelHeight) {
+            float extendHeight = misize.height - IntroduceLabelHeight;
+            [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height+extendHeight)];
+            CGRect bgImgFrame = _barDetailImg.frame;
+            bgImgFrame.size.height += extendHeight;
+            _barDetailImg.frame = bgImgFrame;
+        }
+        
     }
     
-    [_barDetailImg addSubview:barInfoLabel];
-    [barInfoLabel release];
+    [self updateRecommendAndWantLookCount];
 }
 
-- (void)updateRecOrLookData{
-
+- (void)requestRecommendAndWantLookCount{
+    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mBar.uid APIType:WSLRecommendAPITypeBarInteract cType:WSLRecommendLookTypeRecommend delegate:self];
 }
 
+- (void)updateRecommendAndWantLookCount{
+    NSString *value = _mBarDetail.recommendation;
+    [self.bar_yes setText:value];
+}
 #pragma mark -
 #pragma mark 点击按钮 Event
 
@@ -136,7 +150,26 @@
 }
 
 -(IBAction)clickYESButton:(id)sender{
+    if (isRecommended || _mBarDetail.detailInfo==nil) {
+        return;
+    }
+     ABLoggerDebug(@"_mBarDetail.detailInfo 2222== %@",_mBarDetail.detailInfo);
+    [_bar_yesButton setBackgroundImage:[UIImage imageNamed:@"bar_btn_yes_blue_n@2x"] forState:UIControlStateNormal];
+    isRecommended = YES;
+    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mBar.uid APIType:WSLRecommendAPITypeMovieInteract cType:WSLRecommendLookTypeRecommend delegate:self];
     
+    NSMutableDictionary *tDic = [NSMutableDictionary dictionaryWithCapacity:5];
+    [tDic setObject:_mBar.uid forKey:@"uid"];
+    [tDic setObject:API_RecommendOrLookBarType forKey:@"type"];
+    [tDic setObject:[_mBarDetail.detailInfo objectForKey:@"begintime"] forKey:@"beginTime"];
+    [tDic setObject:[_mBarDetail.detailInfo objectForKey:@"endtime"] forKey:@"endTime"];
+    [tDic setObject:[NSNumber numberWithBool:YES] forKey:@"recommend"];
+    [[DataBaseManager sharedInstance] addActionState:tDic];
+    
+    NSString *value = [NSString stringWithFormat:@"%d",[_bar_yes.text intValue]+1];
+    [self.bar_yes setText:value];
+    [self startAddOneAnimation:(UIButton *)sender];
+
 }
 
 -(IBAction)clickPhoneButton:(id)sender{
@@ -180,14 +213,18 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         switch (tag) {
-            case API_MMovieDetailCmd:
+            case API_BBarDetailCmd:
             {
                 
-                [[DataBaseManager sharedInstance] insertBarDetailIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+                self.mBarDetail = [[DataBaseManager sharedInstance] insertBarDetailIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
             }
                 break;
             case API_RecommendOrLookCmd:
             {
+               BBarDetail *tBarDetail = [[DataBaseManager sharedInstance] insertBarRecommendIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+                if (tBarDetail) {
+                    self.mBarDetail = tBarDetail;
+                }
             }
                 break;
                 
@@ -205,13 +242,7 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        ABLoggerMethod();
-        int tag = [[apiCmd httpRequest] tag];
-        
-        CFTimeInterval time1 = Elapsed_Time;
-        [self updateData:tag];
-        CFTimeInterval time2 = Elapsed_Time;
-        ElapsedTime(time2, time1);
+     [self updateData:0];
         
     });
 }
@@ -231,10 +262,10 @@
                 [self initBarDetailData];
             }
                 break;
-            case API_BBarRecOrLookCmd:
+            case API_RecommendOrLookCmd:
             {
                 
-                [self updateRecOrLookData];
+                [self updateRecommendAndWantLookCount];
             }
                 break;
                 

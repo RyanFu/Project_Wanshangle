@@ -36,10 +36,11 @@
     </entity>
     <entity name="BBarDetail" representedClassName="BBarDetail" syncable="YES">
         <attribute name="detailInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
-        <attribute name="like" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="locationDate" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="recommendation" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="wantlook" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="bar" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="BBar" inverseName="barDetail" inverseEntity="BBar" syncable="YES"/>
     </entity>
     <entity name="City" representedClassName="City" syncable="YES">
@@ -94,7 +95,7 @@
         <attribute name="cityName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dataType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="district" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="districtId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="districtId" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="favorite" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="juan" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
@@ -131,7 +132,6 @@
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="cinema" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MCinema" inverseName="movie_cinemas" inverseEntity="MCinema" syncable="YES"/>
         <relationship name="movie" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MMovie" inverseName="movie_cinemas" inverseEntity="MMovie" syncable="YES"/>
-        <relationship name="schedule" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MSchedule" inverseName="movie_cinema" inverseEntity="MSchedule" syncable="YES"/>
     </entity>
     <entity name="MMovieDetail" representedClassName="MMovieDetail" syncable="YES">
         <attribute name="info" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
@@ -147,7 +147,6 @@
         <attribute name="scheduleInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
         <attribute name="timedistance" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="movie_cinema" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovie_Cinema" inverseName="schedule" inverseEntity="MMovie_Cinema" syncable="YES"/>
     </entity>
     <entity name="SShow" representedClassName="SShow" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
@@ -188,17 +187,17 @@
     <elements>
         <element name="ActionState" positionX="160" positionY="192" width="128" height="209"/>
         <element name="BBar" positionX="-522" positionY="-805" width="128" height="315"/>
-        <element name="BBarDetail" positionX="-711" positionY="-757" width="128" height="135"/>
+        <element name="BBarDetail" positionX="-711" positionY="-757" width="128" height="148"/>
         <element name="City" positionX="-171" positionY="-730" width="128" height="90"/>
         <element name="KKTV" positionX="142" positionY="-838" width="128" height="375"/>
         <element name="KKTVBuyInfo" positionX="430" positionY="-909" width="128" height="105"/>
         <element name="KKTVPriceInfo" positionX="439" positionY="-567" width="128" height="105"/>
         <element name="MBuyTicketInfo" positionX="-27" positionY="-63" width="128" height="90"/>
-        <element name="MCinema" positionX="205" positionY="-420" width="128" height="330"/>
+        <element name="MCinema" positionX="205" positionY="-420" width="128" height="328"/>
         <element name="MMovie" positionX="-443" positionY="-351" width="128" height="270"/>
-        <element name="MMovie_Cinema" positionX="-173" positionY="-313" width="128" height="120"/>
+        <element name="MMovie_Cinema" positionX="-173" positionY="-313" width="128" height="105"/>
         <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="135"/>
-        <element name="MSchedule" positionX="-189" positionY="-67" width="128" height="135"/>
+        <element name="MSchedule" positionX="-189" positionY="-67" width="128" height="120"/>
         <element name="SShow" positionX="-137" positionY="-1204" width="128" height="330"/>
         <element name="SShowDetail" positionX="-335" positionY="-1044" width="128" height="165"/>
         <element name="TimeStamp" positionX="-164" positionY="-612" width="128" height="90"/>

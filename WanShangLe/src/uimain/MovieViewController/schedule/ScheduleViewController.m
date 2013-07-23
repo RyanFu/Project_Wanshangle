@@ -86,6 +86,9 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
+    [_todayButton setTitle:[NSString stringWithFormat:@"今天(%@)",_todayWeek] forState:UIControlStateNormal];
+    [_tomorrowButton setTitle:[NSString stringWithFormat:@"明天(%@)",_tomorrowWeek] forState:UIControlStateNormal];
+    
     [_todayButton setSelected:NO];
     [self clickTodayButton:nil];
 }
@@ -130,9 +133,6 @@
     if (isEmpty(_tomorrowWeek)) {
         self.tomorrowWeek = [dbManager getTomorrowWeek];
     }
-    
-    [_todayButton setTitle:[NSString stringWithFormat:@"今天(%@)",_todayWeek] forState:UIControlStateNormal];
-    [_tomorrowButton setTitle:[NSString stringWithFormat:@"明天(%@)",_tomorrowWeek] forState:UIControlStateNormal];
     
     _todayButton.selected = YES;
     [_mTableView setTableFooterView:[[[UIView alloc] initWithFrame:CGRectZero] autorelease]];
@@ -245,8 +245,6 @@
     [_todayButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
     
     self.apiCmdMovie_getSchedule =  (ApiCmdMovie_getSchedule *)[[DataBaseManager sharedInstance] getScheduleFromWebWithaMovie:_mMovie andaCinema:_mCinema timedistance:ScheduleToday delegate:self];//每次视图加载刷新排期数据
-    
-    [self refreshTodaySchedule];
 }
 
 - (void)refreshTodaySchedule{
@@ -260,6 +258,7 @@
     }
     
     [_todayButton setTitle:[NSString stringWithFormat:@"今天(%@)%d场",_todayWeek,[_schedulesArray count]] forState:UIControlStateNormal];
+    [_todayButton setTitle:[NSString stringWithFormat:@"今天(%@)%d场",_todayWeek,[_schedulesArray count]] forState:UIControlStateSelected];
     [_mTableView reloadData];
 }
 
@@ -274,8 +273,6 @@
     [_tomorrowButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
     
     self.apiCmdMovie_getSchedule =  (ApiCmdMovie_getSchedule *)[[DataBaseManager sharedInstance] getScheduleFromWebWithaMovie:_mMovie andaCinema:_mCinema timedistance:ScheduleTomorrow delegate:self];//每次视图加载刷新排期数据
-    
-    [self refreshTomorrowSchedule];
 }
 
 - (void)refreshTomorrowSchedule{
@@ -287,6 +284,7 @@
         [self setTableViewFooterViewHaveData:YES];
     }
     
+    [_tomorrowButton setTitle:[NSString stringWithFormat:@"明天(%@)%d场",_tomorrowWeek,[_schedulesArray count]] forState:UIControlStateSelected];
     [_tomorrowButton setTitle:[NSString stringWithFormat:@"明天(%@)%d场",_tomorrowWeek,[_schedulesArray count]] forState:UIControlStateNormal];
     [_mTableView reloadData];
 }
@@ -296,7 +294,7 @@
     UIView *tableViewFooter = nil;
     if (_mTableView.tableFooterView.tag==100) {
         tableViewFooter = [[[UIView alloc] init] autorelease];
-        [tableViewFooter setBackgroundColor:[UIColor redColor]];
+//        [tableViewFooter setBackgroundColor:[UIColor redColor]];
         tableViewFooter.tag = EmBedFooterView;
         _mTableView.tableFooterView = nil;
         if (!haveData) {
@@ -354,12 +352,12 @@
     return _apiCmdMovie_getSchedule;
 }
 
-- (void)apiNotifyLocationResult:(id)apiCmd cacheOneData:(id)cacheData{
+- (void)apiNotifyLocationResult:(id)apiCmd cacheDictionaryData:(NSDictionary *)cacheData{
     
 //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         int tag = [[apiCmd httpRequest] tag];
-        self.mSchedule = (MSchedule *)cacheData;
-        NSString *timedistance = [[[(ApiCmdMovie_getSchedule *)apiCmd timedistance] retain] autorelease];
+        self.mSchedule = [cacheData objectForKey:@"schedule"];
+        NSString *timedistance = [cacheData objectForKey:@"timedistance"];
         [self updateData:tag timeDistance:timedistance];
 //    });
 }
@@ -371,6 +369,7 @@
         case 0:
         case API_MScheduleCmd:
         {
+            ABLoggerDebug(@"_mSchedule.scheduleInfo === %@",_mSchedule.scheduleInfo);
             NSDictionary *responseDic = _mSchedule.scheduleInfo;
             [self formatCinemaData:responseDic timeDistance:timedistance];
         }

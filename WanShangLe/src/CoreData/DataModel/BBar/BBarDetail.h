@@ -2,7 +2,7 @@
 //  BBarDetail.h
 //  WanShangLe
 //
-//  Created by stephenliu on 13-7-16.
+//  Created by stephenliu on 13-7-23.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -15,9 +15,10 @@
 
 @property (nonatomic, retain) id detailInfo;
 @property (nonatomic, retain) NSString * locationDate;
-@property (nonatomic, retain) NSString * uid;
-@property (nonatomic, retain) NSNumber * like;
 @property (nonatomic, retain) NSString * phone;
+@property (nonatomic, retain) NSString * uid;
+@property (nonatomic, retain) NSString * recommendation;
+@property (nonatomic, retain) NSString * wantlook;
 @property (nonatomic, retain) BBar *bar;
 
 @end

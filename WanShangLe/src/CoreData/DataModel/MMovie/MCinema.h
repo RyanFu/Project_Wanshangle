@@ -18,7 +18,6 @@
 @property (nonatomic, retain) NSString * cityName;
 @property (nonatomic, retain) NSString * dataType;
 @property (nonatomic, retain) NSString * district;
-@property (nonatomic, retain) NSString * districtId;
 @property (nonatomic, retain) NSNumber * favorite;
 @property (nonatomic, retain) NSNumber * juan;
 @property (nonatomic, retain) NSNumber * latitude;
@@ -32,6 +31,8 @@
 @property (nonatomic, retain) NSString * uid;
 @property (nonatomic, retain) NSNumber * zhekou;
 @property (nonatomic, retain) NSSet *movie_cinemas;
+@property (nonatomic, retain) NSNumber * districtId;
+
 @end
 
 @interface MCinema (CoreDataGeneratedAccessors)
