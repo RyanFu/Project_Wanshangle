@@ -113,10 +113,7 @@
     [self setTableViewDelegate];
     
     [_todayButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
-    
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-//        [self updateData:0];
-//    });
+
 }
 
 - (void)initData{
@@ -339,8 +336,8 @@
         return;
     }
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    
         self.mSchedule = [[DataBaseManager sharedInstance] insertScheduleIntoCoreDataFromObject:[apiCmd responseJSONObject]
                                                                     withApiCmd:apiCmd
                                                                     withaMovie:_mMovie
@@ -349,7 +346,7 @@
          NSString *timedistance = [[[(ApiCmdMovie_getSchedule *)apiCmd timedistance] retain] autorelease];
         [self updateData:tag timeDistance:timedistance];
         
-    });
+//    });
     
 }
 
@@ -359,12 +356,12 @@
 
 - (void)apiNotifyLocationResult:(id)apiCmd cacheOneData:(id)cacheData{
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         int tag = [[apiCmd httpRequest] tag];
         self.mSchedule = (MSchedule *)cacheData;
         NSString *timedistance = [[[(ApiCmdMovie_getSchedule *)apiCmd timedistance] retain] autorelease];
         [self updateData:tag timeDistance:timedistance];
-    });
+//    });
 }
 
 - (void)updateData:(int)tag timeDistance:(NSString *)timedistance
@@ -399,13 +396,13 @@
     
     [self setTableViewDelegate];
     
-    dispatch_sync(dispatch_get_main_queue(), ^{
+//    dispatch_sync(dispatch_get_main_queue(), ^{
         if (_todayButton.selected) {
             [self refreshTodaySchedule];
         }else if(_tomorrowButton.selected){
             [self refreshTomorrowSchedule];
         }
-    });
+//    });
 }
 
 - (void)shareButtonClick:(id)sender{

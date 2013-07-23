@@ -8,7 +8,20 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/uimain/MovieViewController/schedule/ScheduleViewController.m"
-         timestampString = "396187386.059029"
+         timestampString = "396194932.951339"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "400"
+         endingLineNumber = "400"
+         landmarkName = "-formatCinemaData:timeDistance:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "src/uimain/MovieViewController/schedule/ScheduleViewController.m"
+         timestampString = "396194932.951339"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "403"
@@ -21,11 +34,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/uimain/MovieViewController/schedule/ScheduleViewController.m"
-         timestampString = "396187386.059029"
+         timestampString = "396194932.951339"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "406"
-         endingLineNumber = "406"
+         startingLineNumber = "387"
+         endingLineNumber = "387"
          landmarkName = "-formatCinemaData:timeDistance:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -34,24 +47,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/uimain/MovieViewController/schedule/ScheduleViewController.m"
-         timestampString = "396187386.059029"
+         timestampString = "396194932.951339"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "390"
-         endingLineNumber = "390"
-         landmarkName = "-formatCinemaData:timeDistance:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "src/uimain/MovieViewController/schedule/ScheduleViewController.m"
-         timestampString = "396187386.059029"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "363"
-         endingLineNumber = "363"
+         startingLineNumber = "360"
+         endingLineNumber = "360"
          landmarkName = "-apiNotifyLocationResult:cacheOneData:"
          landmarkType = "5">
       </FileBreakpoint>
