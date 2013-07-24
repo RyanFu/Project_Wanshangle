@@ -144,11 +144,10 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     KTVBuyViewController *ktvBuyController = [[KTVBuyViewController alloc] initWithNibName:iPhone5?@"KTVBuyViewController_5":@"KTVBuyViewController" bundle:nil];
-    
     int row = indexPath.row;
     KKTV *aKTV = [_mArray objectAtIndex:row];
     ktvBuyController.mKTV = aKTV;
-    [_parentViewController.navigationController pushViewController:ktvBuyController animated:YES];
+    [[CacheManager sharedInstance].rootNavController pushViewController:ktvBuyController animated:YES];
     [ktvBuyController release];
 }
 

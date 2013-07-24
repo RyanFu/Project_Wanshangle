@@ -1266,7 +1266,7 @@ static DataBaseManager *_sharedInstance = nil;
     [apiClient executeApiCmdAsync:apiCmdMovie_getAllCinemas];
     [apiCmdMovie_getAllCinemas.httpRequest setTag:API_MCinemaCmd];
     [apiCmdMovie_getAllCinemas.httpRequest setNumberOfTimesToRetryOnTimeout:2];
-    [apiCmdMovie_getAllCinemas.httpRequest setTimeOutSeconds:60*5];
+    [apiCmdMovie_getAllCinemas.httpRequest setTimeOutSeconds:60*2];
     
     return [apiCmdMovie_getAllCinemas autorelease];
     
@@ -1338,15 +1338,15 @@ static DataBaseManager *_sharedInstance = nil;
     ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
 
     offset = (offset<0)?0:offset;
-//
+
 //    NSString *validDate = [self getTodayZeroTimeStamp];;
-//    NSString *uid = [ApiCmdShow_getAllShows getTimeStampUid:nil];
+//    NSString *uid = [ApiCmdMovie_getNearByCinemas getTimeStampUid:nil];
 //    TimeStamp *timeStamp = [TimeStamp MR_findFirstByAttribute:@"uid" withValue:uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 //    //判断是否刷新数据
 //    if (isNewData) {
 //        if (timeStamp == nil)
 //        {
-//            ABLoggerInfo(@"插入 影院 TimeStamp 新数据 ======= %@",uid);
+//            ABLoggerInfo(@"插入 附近影院 TimeStamp 新数据 ======= %@",uid);
 //            timeStamp = [TimeStamp MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 //        }
 //        timeStamp.uid = uid;
@@ -1359,14 +1359,6 @@ static DataBaseManager *_sharedInstance = nil;
 //                validDate = timeStamp.locationDate;
 //            }
 //        }
-//    }
-//    
-//    //先从数据库里面读取数据
-//    NSArray *coreData_array = [self getCinemasListFromCoreDataWithCityName:nil offset:offset limit:limit validDate:validDate];
-//    
-//    if ([coreData_array count]>0 && delegate && [delegate respondsToSelector:@selector(apiNotifyLocationResult:cacheData:)]) {
-//        [delegate apiNotifyLocationResult:nil cacheData:coreData_array];
-//        return tapiCmd;
 //    }
     
     //因为数据库里没有数据或是数据过期，所以向服务器请求数据
@@ -1391,6 +1383,8 @@ static DataBaseManager *_sharedInstance = nil;
     apiCmdMovie_getNearByCinemas.dataType = dataType;
     [apiClient executeApiCmdAsync:apiCmdMovie_getNearByCinemas];
     [apiCmdMovie_getNearByCinemas.httpRequest setTag:API_MCinemaNearByCmd];
+    [apiCmdMovie_getNearByCinemas.httpRequest setNumberOfTimesToRetryOnTimeout:2];
+    [apiCmdMovie_getNearByCinemas.httpRequest setTimeOutSeconds:60*2];
     
     return [apiCmdMovie_getNearByCinemas autorelease];
     
@@ -2500,13 +2494,40 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 #pragma mark 获取 分页 KTV数据
-- (ApiCmd *)getKTVsListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit{
+- (ApiCmd *)getKTVsListFromWeb:(id<ApiNotify>)delegate
+                        offset:(int)offset
+                         limit:(int)limit
+                      dataType:(NSString *)dataType
+                     isNewData:(BOOL)isNewData
+{
     ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
     
     offset = (offset<=0)?0:offset;
-    //先从数据库里面读取数据
-    NSArray *coreData_array = [self getKTVsListFromCoreDataOffset:offset limit:limit];
     
+    NSString *validDate = [self getTodayZeroTimeStamp];;
+    NSString *uid = [ApiCmdKTV_getAllKTVs getTimeStampUid:nil];
+    TimeStamp *timeStamp = [TimeStamp MR_findFirstByAttribute:@"uid" withValue:uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    //判断是否刷新数据
+    if (isNewData) {
+        if (timeStamp == nil)
+        {
+            ABLoggerInfo(@"插入 KTV TimeStamp 新数据 ======= %@",uid);
+            timeStamp = [TimeStamp MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        }
+        timeStamp.uid = uid;
+        timeStamp.locationDate = [self getTodayTimeStamp];
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
+        validDate = timeStamp.locationDate;
+    }else{
+        if (timeStamp!=nil) {
+            if (([validDate compare:timeStamp.locationDate options:NSNumericSearch] != NSOrderedDescending)) {
+                validDate = timeStamp.locationDate;
+            }
+        }
+    }
+    
+    //先从数据库里面读取数据
+    NSArray *coreData_array = [self getKTVsListFromCoreDataWithCityName:nil offset:offset limit:limit dataType:dataType validDate:validDate];
     if ([coreData_array count]>0 && delegate && [delegate respondsToSelector:@selector(apiNotifyLocationResult:cacheData:)]) {
         [delegate apiNotifyLocationResult:nil cacheData:coreData_array];
         return tapiCmd;
@@ -2531,14 +2552,22 @@ static DataBaseManager *_sharedInstance = nil;
     
     apiCmdKTV_getAllKTVs.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     apiCmdKTV_getAllKTVs.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdKTV_getAllKTVs.dataType = dataType;
     [apiClient executeApiCmdAsync:apiCmdKTV_getAllKTVs];
     [apiCmdKTV_getAllKTVs.httpRequest setTag:API_KKTVCmd];
+    [apiCmdKTV_getAllKTVs.httpRequest setNumberOfTimesToRetryOnTimeout:2];
+    [apiCmdKTV_getAllKTVs.httpRequest setTimeOutSeconds:60*2];
     
     return [apiCmdKTV_getAllKTVs autorelease];
 }
 
 #pragma mark 搜索 KTV数据
-- (ApiCmd *)getKTVsSearchListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit searchString:(NSString *)searchString{
+- (ApiCmd *)getKTVsSearchListFromWeb:(id<ApiNotify>)delegate
+                              offset:(int)offset
+                               limit:(int)limit
+                            dataType:(NSString *)dataType
+                        searchString:(NSString *)searchString
+{
     ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
     
     offset = (offset<=0)?0:offset;
@@ -2561,22 +2590,37 @@ static DataBaseManager *_sharedInstance = nil;
     }
     apiCmdKTV_getSearchKTVs.searchString = searchString;
     apiCmdKTV_getSearchKTVs.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdKTV_getSearchKTVs.dataType = dataType;
     [apiClient executeApiCmdAsync:apiCmdKTV_getSearchKTVs];
-    [apiCmdKTV_getSearchKTVs.httpRequest setTag:API_KKTVCmd];
+    [apiCmdKTV_getSearchKTVs.httpRequest setTag:API_KKTVSearchCmd];
     
     return [apiCmdKTV_getSearchKTVs autorelease];
 }
 
-- (NSArray *)getKTVsListFromCoreDataOffset:(int)offset limit:(int)limit{
-    return [self getKTVsListFromCoreDataWithCityName:nil offset:offset limit:limit];
+- (NSArray *)getKTVsListFromCoreDataOffset:(int)offset
+                                     limit:(int)limit
+                                  dataType:(NSString *)dataType
+                                 validDate:(NSString *)validDate{
+    return [self getKTVsListFromCoreDataWithCityName:nil offset:offset limit:limit dataType:dataType validDate:validDate];
 }
 
-- (NSArray *)getKTVsListFromCoreDataWithCityName:(NSString *)cityId offset:(int)offset limit:(int)limit{
+- (NSArray *)getKTVsListFromCoreDataWithCityName:(NSString *)cityId
+                                          offset:(int)offset
+                                           limit:(int)limit
+                                        dataType:(NSString *)dataType
+                                       validDate:(NSString *)validDate{
     if (isEmpty(cityId)) {
         cityId = [[LocationManager defaultLocationManager] getUserCityId];
     }
-    
-    return [KKTV MR_findAllSortedBy:@"districtid" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityId] offset:offset limit:limit inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    NSArray *returnArray = [KKTV MR_findAllSortedBy:@"districtid"
+                                             ascending:YES
+                                         withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and locationDate >= %@ and dataType = %@",cityId,validDate,dataType]
+                                                offset:offset
+                                                 limit:limit
+                                             inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    ABLoggerDebug(@"ktv count === %d",[returnArray count]);
+
+    return returnArray;
 }
 
 #pragma mark 附近 KTV数据
@@ -2615,6 +2659,8 @@ static DataBaseManager *_sharedInstance = nil;
                                            longitude:(CLLocationDegrees)longitude
                                               offset:(int)offset
                                                limit:(int)limit
+                                            dataType:(NSString *)dataType
+                                           isNewData:(BOOL)isNewData
 {
     offset = (offset<=0)?0:offset;
     
@@ -2638,8 +2684,9 @@ static DataBaseManager *_sharedInstance = nil;
     }
     
     apiCmdKTV_getAllKTVs.cityId = [[LocationManager defaultLocationManager] getUserCityId];
-    [apiCmdKTV_getAllKTVs.httpRequest setTag:API_KKTVCmd];
+    apiCmdKTV_getAllKTVs.dataType = dataType;
     [apiClient executeApiCmdAsync:apiCmdKTV_getAllKTVs];
+    [apiCmdKTV_getAllKTVs.httpRequest setTag:API_KKTVNearByCmd];
     
     return [apiCmdKTV_getAllKTVs autorelease];
     
@@ -2676,41 +2723,45 @@ static DataBaseManager *_sharedInstance = nil;
  httpCode: 200,
  errors: [ ],
  data: {
- count: "2",
- list: [
+ count: "20",
+ infos: [
  {
- districtName: "罗湖区",
- list: [
- {
- id: "4",
- uniquekey: "4e102c824e1953e791027ea00e54234b",
- name: "镭射卡拉OK",
- description: "",
- address: "丹沙路沙湾花园",
- contactphone: "0755-28749649",
- latitude: "22.61036",
- longitude: "114.16132",
- cityid: "4",
- districtid: "2",
- logourl: "logourl",
- coverurl: "http://i2.dpfile.com/pc/000c14f9d31465a8820b18e3f42ed45d(700x700)/thumb.jpg",
- specialoffers: "",
- trafficroutes: "655路",
- exturl: "http://dpurl.cn/p/Cs9r4Ka-A4",
- createtime: "2013-07-03 16:37:37",
- createdbysuid: "11",
- lastmodifiedtime: "2013-07-05 15:59:05",
- lastmodifiedbysuid: "1",
- source: "1",
- currentstatus: "3"
- }
- ]
+     districtName: "长宁区",
+     list: [
+     {
+     id: "519",
+     uniquekey: "b11f330d5a81c3fbc85cf7c826615938",
+     name: "新罗马假期KTV",
+     description: null,
+     address: "长宁路547号",
+     contactphone: null,
+     contactphonex: "021-52380679",
+     contactphonetypex: "1",
+     contactphoney: "",
+     contactphonetypey: "1",
+     contactphonez: "",
+     contactphonetypez: "1",
+     latitude: "35.281521",
+     longitude: "107.950447",
+     cityid: "2",
+     districtid: "3",
+     logourl: "logourl",
+     coverurl: "http://i1.dpfile.com/2009-12-11/3319992_b.jpg(700x700)/thumb.jpg",
+     specialoffers: "",
+     trafficroutes: "",
+     exturl: "http://dpurl.cn/p/NcycBI9eR0",
+     createtime: "2013-07-16 18:23:11",
+     createdbysuid: "11",
+     lastmodifiedtime: "2013-07-23 15:21:17",
+     lastmodifiedbysuid: "11",
+     source: "1",
+     currentstatus: "3"
  },
  */
 - (NSArray *)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
     CFTimeInterval time1 = Elapsed_Time;
     NSManagedObjectContext *dataBaseContext = [NSManagedObjectContext MR_contextForCurrentThread];
-    NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"list"];
+    NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"infos"];
     
     KKTV *kKTV = nil;
     NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:20];
@@ -2732,11 +2783,51 @@ static DataBaseManager *_sharedInstance = nil;
         }
     }
     
-    //    [dataBaseContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-    //        ABLoggerDebug(@"KTV 保存是否成功 ========= %d",success);
-    //        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
-    //    }];
-    [dataBaseContext MR_saveToPersistentStoreAndWait];
+    [dataBaseContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"KTV 保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
+    
+    CFTimeInterval time2 = Elapsed_Time;
+    ElapsedTime(time2, time1);
+    
+    [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+    ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    
+    return [returnArray autorelease];
+}
+//        
+//KTV 搜索和附近 结果数据 插入 数据库
+- (NSArray *)insertTemporaryKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+    CFTimeInterval time1 = Elapsed_Time;
+    NSManagedObjectContext *dataBaseContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"infos"];
+    
+    KKTV *kKTV = nil;
+    NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:20];
+    for (int i=0; i<[array count]; i++) {
+        
+        NSString *districtStr = [[array objectAtIndex:i] objectForKey:@"districtName"];
+        NSArray *arrayktvs = [[array objectAtIndex:i] objectForKey:@"list"];
+        for (int j=0; j<[arrayktvs count]; j++) {
+            NSString *uid = [[arrayktvs objectAtIndex:j] objectForKey:@"id"];
+            kKTV = [KKTV MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and dataType = %@",uid,apiCmd.dataType] inContext:dataBaseContext];
+            if (kKTV == nil)
+            {
+                ABLoggerInfo(@"插入 一条 KTV 新数据 ======= %@",[[arrayktvs objectAtIndex:j] objectForKey:@"name"]);
+                kKTV = [KKTV MR_createInContext:dataBaseContext];
+            }
+            kKTV.district = districtStr;
+            kKTV.cityId = apiCmd.cityId;
+            [self importKTV:kKTV ValuesForKeysWithObject:[arrayktvs objectAtIndex:j]];
+            [returnArray addObject:kKTV];
+        }
+    }
+    
+    [dataBaseContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"KTV 保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
     
     CFTimeInterval time2 = Elapsed_Time;
     ElapsedTime(time2, time1);
@@ -2750,9 +2841,9 @@ static DataBaseManager *_sharedInstance = nil;
 - (void)importKTV:(KKTV *)kKTV ValuesForKeysWithObject:(NSDictionary *)aKTVDic{
     kKTV.name = [aKTVDic objectForKey:@"name"];
     kKTV.uid = [aKTVDic objectForKey:@"id"];
-    kKTV.districtid = [aKTVDic objectForKey:@"districtid"];
+    kKTV.districtid = [NSNumber numberWithInt:[[aKTVDic objectForKey:@"districtid"] intValue]];
     kKTV.address = [aKTVDic objectForKey:@"address"];
-    kKTV.phoneNumber = [aKTVDic objectForKey:@"contactphone"];
+    kKTV.phoneNumber = [aKTVDic objectForKey:@"contactphonex"];
     kKTV.longitude = [NSNumber numberWithFloat:[[aKTVDic objectForKey:@"longitude"] floatValue]];
     kKTV.latitude = [NSNumber numberWithFloat:[[aKTVDic objectForKey:@"latitude"] floatValue]];
 }
@@ -2833,11 +2924,33 @@ static DataBaseManager *_sharedInstance = nil;
     return [apiCmdKTV_getPriceList autorelease];
 }
 
-- (void)insertKTVPriceListIntoCoreDataFromObject:(NSDictionary *)objectData
+- (KKTVPriceInfo *)insertKTVPriceListIntoCoreDataFromObject:(NSDictionary *)objectData
                                       withApiCmd:(ApiCmd*)apiCmd
                                         withaKTV:(KKTV *)aKTV{
+    
+    NSManagedObjectContext* threadContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    
+    KKTVPriceInfo *tKtvPriceInfo = [KKTVPriceInfo MR_findFirstByAttribute:@"uid" withValue:aKTV.uid inContext:threadContext];
+    
+    if (tKtvPriceInfo==nil) {
+        tKtvPriceInfo = [KKTVPriceInfo MR_createInContext:threadContext];
+    }
+    tKtvPriceInfo.locationDate = [self getTodayTimeStamp];
+    tKtvPriceInfo.uid = aKTV.uid;
+    tKtvPriceInfo.priceInfoDic = [objectData objectForKey:@"data"];
+    
+    [threadContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"保存 KTV 价格信息 成功 == %d",success);
+    }];
+    
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
     ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    
+    return tKtvPriceInfo;
+}
+
+- (KKTVPriceInfo *)getKTVPriceInfoFromCoreDataWithId:(NSString *)ktvId{
+    return [KKTVPriceInfo MR_findFirstByAttribute:@"uid" withValue:ktvId inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 //========================================= KTV =========================================/
 

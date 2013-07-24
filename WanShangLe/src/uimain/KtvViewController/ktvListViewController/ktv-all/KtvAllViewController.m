@@ -148,6 +148,13 @@
 
 -(void)hiddenSearchBar{
     [_mTableView setContentOffset:CGPointMake(0, TableView_Y)];
+    [self hiddenRefreshTailerView];
+}
+
+- (void)hiddenRefreshTailerView{
+    if (_mArray==nil || [_mArray count]<=0) {
+        _refreshTailerView.hidden = YES;
+    }
 }
 #pragma mark -
 #pragma mark 初始化UISearchBar and PullRefresh
@@ -377,10 +384,10 @@
     
     [districtDic release];
     
-    _refreshTailerView.hidden = NO;
     if ([_mArray count]<=0 || _mArray==nil) {
         _refreshTailerView.hidden = YES;
-        
+    }else{
+        _refreshTailerView.hidden = NO;
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -440,8 +447,12 @@
         if (!isLoadMoreAll) {
             number = 0;
         }
-        
-        self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getKTVsListFromWeb:self offset:number limit:DataLimit];
+        NSString *dataType = [NSString stringWithFormat:@"%d",API_KKTVCmd];
+        self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getKTVsListFromWeb:self
+                                                                                                          offset:number
+                                                                                                           limit:DataLimit
+                                                                                                        dataType:dataType
+                                                                                                       isNewData:!isLoadMoreAll];
         return  nil;
     }
     
@@ -454,7 +465,7 @@
     for (int i=0;i<[_mCacheArray count] ;i++ ) {
         KKTV *ttktv = [_mCacheArray objectAtIndex:i];
         ABLoggerInfo(@"1111_cacheArray count == %d",[_mCacheArray count]);
-        ABLoggerDebug(@"2222  coredata district id === %@",ttktv.districtid);
+        ABLoggerDebug(@"2222  coredata district id === %d",[ttktv.districtid intValue]);
     }
     
     NSMutableArray *aPageData = [NSMutableArray arrayWithCapacity:count];
@@ -469,12 +480,12 @@
     
     for (int i = 0;i<[aPageData count];i++) {
         KKTV *object = [aPageData objectAtIndex:i];
-        ABLoggerInfo(@"111district id ===== %@",object.districtid);
+        ABLoggerInfo(@"111district id ===== %d",[object.districtid intValue]);
     }
     
     for (int i = 0;i<[_mCacheArray count];i++) {
         KKTV *object = [_mCacheArray objectAtIndex:i];
-        ABLoggerInfo(@"222 ============== district id ===== %@",object.districtid);
+        ABLoggerInfo(@"222 ============== district id ===== %d",[object.districtid intValue]);
     }
     
     ABLoggerInfo(@"_cacheArray count == %d",[_mCacheArray count]);

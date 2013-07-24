@@ -56,14 +56,14 @@
 #define API_RecommendOrLookKTVType      @"KTVType" //推荐和想看
 #define API_RecommendOrLookBarType      @"BarType" //推荐和想看
 //-------------MMovie----------------/
-#define API_MMovieCmd           0 //电影 全部
-#define API_MMovieDetailCmd     1 //电影 详情
-#define API_MScheduleCmd        2 //电影 排期
-#define API_MBuyInfoCmd         3 //电影 购买信息
+#define API_MMovieCmd           10 //电影 全部
+#define API_MMovieDetailCmd     11 //电影 详情
+#define API_MScheduleCmd        12 //电影 排期
+#define API_MBuyInfoCmd         13 //电影 购买信息
 
-#define API_MCinemaCmd          10 //影院 全部
-#define API_MCinemaSearchCmd    11 //影院 搜索
-#define API_MCinemaNearByCmd    12 //影院 附近
+#define API_MCinemaCmd          1 //影院 全部
+#define API_MCinemaSearchCmd    2 //影院 搜索
+#define API_MCinemaNearByCmd    3 //影院 附近
 
 //-------------BBar----------------/
 #define API_BBarTimeCmd         1 //酒吧 时间

@@ -19,7 +19,7 @@
 @property (nonatomic, retain) NSString * dataType;
 @property (nonatomic, retain) NSNumber * discounts;
 @property (nonatomic, retain) NSString * district;
-@property (nonatomic, retain) NSString * districtid;
+@property (nonatomic, retain) NSNumber * districtid;
 @property (nonatomic, retain) NSNumber * favorite;
 @property (nonatomic, retain) NSNumber * juan;
 @property (nonatomic, retain) NSNumber * latitude;

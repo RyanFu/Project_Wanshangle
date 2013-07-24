@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@interface KTVPriceTableViewDelegate : NSObject
-
+@class KTVPriceListViewController;
+@interface KTVPriceTableViewDelegate : NSObject<UITableViewDataSource,UITableViewDelegate>{
+    
+}
+@property (assign)BOOL isOpen;
+@property (nonatomic,retain)NSIndexPath *selectIndex;
+@property(nonatomic,assign) NSMutableArray *mArray;
+@property(nonatomic,assign) IBOutlet UITableView *mTableView;
+@property(nonatomic,assign) KTVPriceListViewController *parentViewController;
 @end

@@ -282,11 +282,11 @@
     
     for (KKTV *tKTV in array_coreData) {
         NSString *key = tKTV.district;
-        NSString *districtId = tKTV.districtid;
+        NSNumber *districtId = tKTV.districtid;
         
         if (![districtDic objectForKey:key]) {
             ABLoggerInfo(@"key === %@",key);
-            ABLoggerInfo(@"districtId === %@",districtId);
+            ABLoggerInfo(@"districtId === %d",[districtId intValue]);
             NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:10];
             [districtDic setObject:tarray forKey:key];
             [districtDic setObject:key forKey:@"districtId"];
@@ -389,6 +389,7 @@
 #pragma mark -
 #pragma mark 刷新和加载更多
 - (void)loadMoreData{
+    
     [self updateData:0 withData:[self getCacheData]];
 }
 
@@ -420,7 +421,12 @@
         }
         ABLoggerDebug(@"ktv 数组 number ==  %d",number);
         
-        self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getKTVsListFromWeb:self offset:number limit:DataLimit];
+        NSString *dataType = [NSString stringWithFormat:@"%d",API_KKTVCmd];
+        self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getKTVsListFromWeb:self
+                                                                                                          offset:number
+                                                                                                           limit:DataLimit
+                                                                                                        dataType:dataType
+                                                                                                       isNewData:NO];
         return  nil;
     }
     

@@ -55,7 +55,7 @@
         <attribute name="dataType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="discounts" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="district" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="districtid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="districtid" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="favorite" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="juan" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
@@ -73,14 +73,14 @@
         <relationship name="ktvPriceInfo" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="KKTVPriceInfo" inverseName="ktv" inverseEntity="KKTVPriceInfo" syncable="YES"/>
     </entity>
     <entity name="KKTVBuyInfo" representedClassName="KKTVBuyInfo" syncable="YES">
-        <attribute name="discountInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
+        <attribute name="buyInfoDic" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
         <attribute name="locationDate" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="ktv" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="KKTV" inverseName="ktvBuyInfo" inverseEntity="KKTV" syncable="YES"/>
     </entity>
     <entity name="KKTVPriceInfo" representedClassName="KKTVPriceInfo" syncable="YES">
         <attribute name="locationDate" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="schedule" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
+        <attribute name="priceInfoDic" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="ktv" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="KKTV" inverseName="ktvPriceInfo" inverseEntity="KKTV" syncable="YES"/>
     </entity>
@@ -190,8 +190,8 @@
         <element name="BBarDetail" positionX="-711" positionY="-757" width="128" height="148"/>
         <element name="City" positionX="-171" positionY="-730" width="128" height="90"/>
         <element name="KKTV" positionX="142" positionY="-838" width="128" height="375"/>
-        <element name="KKTVBuyInfo" positionX="430" positionY="-909" width="128" height="105"/>
-        <element name="KKTVPriceInfo" positionX="439" positionY="-567" width="128" height="105"/>
+        <element name="KKTVBuyInfo" positionX="430" positionY="-909" width="128" height="103"/>
+        <element name="KKTVPriceInfo" positionX="439" positionY="-567" width="128" height="103"/>
         <element name="MBuyTicketInfo" positionX="-27" positionY="-63" width="128" height="90"/>
         <element name="MCinema" positionX="205" positionY="-420" width="128" height="328"/>
         <element name="MMovie" positionX="-443" positionY="-351" width="128" height="270"/>

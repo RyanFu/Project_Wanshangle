@@ -37,12 +37,17 @@
     return self.httpRequest;
 }
 
+//http://api.wanshangle.com:10000/api? &api=cinema.list&time=1374226945&appId=000001&sign=sign&v=1.0&cityid=021&offset=0&limit=1
 - (NSMutableDictionary*) getParamDict {
     NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
     
     [paramDict setObject:@"cinema.list" forKey:@"api"];
     NSString *city_id = [[LocationManager defaultLocationManager] getUserCityId];
     [paramDict setObject:city_id forKey:@"cityid"];
+    [paramDict setObject:self.dataType forKey:@"order"];
+    
+    [paramDict setObject:[NSString stringWithFormat:@"%d",self.offset] forKey:@"offset"];
+    [paramDict setObject:[NSString stringWithFormat:@"%d",self.limit] forKey:@"limit"];
     
     [paramDict setObject:[NSString stringWithFormat:@"%f",_latitude] forKey:@"lat"];
     [paramDict setObject:[NSString stringWithFormat:@"%f",_longitude] forKey:@"lng"];

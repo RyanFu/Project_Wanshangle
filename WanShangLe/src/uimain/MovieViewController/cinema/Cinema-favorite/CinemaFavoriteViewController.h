@@ -16,6 +16,6 @@
 @property(nonatomic,retain) IBOutlet UIButton *addFavoriteButton;
 @property(nonatomic,retain) IBOutlet UIView *noFavoriteFooterView;
 @property(nonatomic,retain) UITableView *mTableView;
-@property(nonatomic,retain) NSMutableArray *mArray;;
+@property(nonatomic,retain) NSMutableArray *mArray;
 - (IBAction)clickAddFavoriteButton:(id)sender;
 @end

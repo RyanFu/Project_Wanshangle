@@ -153,6 +153,8 @@
 - (void)hiddenRefreshTailerView{
     if (_mArray==nil || [_mArray count]<=0) {
         _refreshTailerView.hidden = YES;
+    }else{
+        _refreshTailerView.hidden = NO;
     }
 }
 #pragma mark -
@@ -293,7 +295,6 @@
 - (void)updateData:(int)tag withData:(NSArray*)dataArray
 {
     if (dataArray==nil || [dataArray count]<=0) {
-        [self reloadPullRefreshData];
         return;
     }
     
@@ -382,7 +383,6 @@
     
     [districtDic release];
     
-    _refreshTailerView.hidden = NO;
     [self hiddenRefreshTailerView];
     
     dispatch_async(dispatch_get_main_queue(), ^{

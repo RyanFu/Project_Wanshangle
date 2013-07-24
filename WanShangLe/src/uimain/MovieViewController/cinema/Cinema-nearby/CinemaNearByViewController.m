@@ -198,7 +198,6 @@
 {
     if (dataArray==nil || [dataArray count]<=0) {
         return;
-        [self reloadPullRefreshData];
     }
     
     ABLogger_int(tag);
@@ -225,10 +224,12 @@
 }
 
 - (void)formatKTVDataFilterNearby:(NSArray *)dataArray{
-    ABLoggerWarn(@" 附近 影院");
     
-    ABLoggerInfo(@"附近 KTV count=== %d",[dataArray count]);
-    
+    ABLoggerInfo(@"附近 影院 count=== %d",[dataArray count]);
+
+    for (MCinema *tCinema in _mArray) {
+        
+    }
     [self.mArray addObjectsFromArray:dataArray];
     
     BOOL isNoGPS = ((int)[_mArray count]<=0);
@@ -314,6 +315,7 @@
         LocationManager *lm = [LocationManager defaultLocationManager];
         double latitude = lm.userLocation.coordinate.latitude;
         double longitude = lm.userLocation.coordinate.longitude;
+        NSString *dataType = [NSString stringWithFormat:@"%d",API_MCinemaNearByCmd];
         
         if (!isLoadMore || lm.userLocation==nil ||
             latitude==0.0f || longitude==0.0f) {//重新更新附近KTV列表
@@ -326,6 +328,7 @@
                                                                                          longitude:longitude
                                                                                          offset:number
                                                                                          limit:DataLimit
+                                                                                         dataType:dataType
                                                                                          isNewData:!isLoadMore];
                 }else{
                     [self displayNOGPS:YES];
@@ -339,6 +342,7 @@
                                                                                  longitude:longitude
                                                                                  offset:number
                                                                                  limit:DataLimit
+                                                                                 dataType:dataType
                                                                                  isNewData:!isLoadMore];
         }
         

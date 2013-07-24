@@ -432,6 +432,7 @@
 {
     ABLogger_int(tag);
     switch (tag) {
+        case 0:
         case API_MMovieCmd:
         {
             NSArray *array = [[DataBaseManager sharedInstance] getAllMoviesListFromCoreData];

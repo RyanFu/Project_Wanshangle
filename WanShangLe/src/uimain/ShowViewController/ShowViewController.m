@@ -203,6 +203,13 @@
     _showTableViewDelegate.refreshTailerView = self.refreshTailerView;
 }
 
+- (void)hiddenRefreshTailerView{
+    if ([_mArray count]<=0 || _mArray==nil) {//每次刷新表的时候检测是否有数据
+        _refreshTailerView.hidden = YES;
+    }else{
+        _refreshTailerView.hidden = NO;
+    }
+}
 #pragma mark -
 #pragma mark UIButton event
 
@@ -445,6 +452,7 @@
 - (void)updateData:(int)tag withData:(NSArray*)dataArray
 {
     if (dataArray==nil || [dataArray count]<=0) {
+//        [self reloadPullRefreshData];
         return;
     }
 
@@ -466,10 +474,10 @@
     ABLoggerDebug(@"演出 人气 count ==== %d",[pageArray count]);
     [_mArray addObjectsFromArray:pageArray];
     
-    _refreshTailerView.hidden = NO;
-    if ([_mArray count]<=0 || _mArray==nil) {
-        _refreshTailerView.hidden = YES;
-    }
+//    _refreshTailerView.hidden = NO;
+//    if ([_mArray count]<=0 || _mArray==nil) {
+//        _refreshTailerView.hidden = YES;
+//    }
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self reloadPullRefreshData];
@@ -520,7 +528,7 @@
     
     _mTableView.tableFooterView = noGPS?_noGPSView:[[[UIView alloc] initWithFrame:CGRectZero]autorelease];
     _refreshHeaderView.hidden = noGPS;
-    _refreshTailerView.hidden = noGPS;
+//    _refreshTailerView.hidden = noGPS;
     
     if (noGPS) {//没有GPS
         [_mCacheArray removeAllObjects];

@@ -50,6 +50,12 @@
     return paramDict;
 }
 
++(NSString *)getTimeStampUid:(NSString *)type{
+    NSString *cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    NSString *key = [NSString stringWithFormat:@"api=ktv.list&cityid=%@&order=All",cityId];
+    //   return md5(key);
+    return key;
+}
 
 - (void) parseResultData:(NSDictionary*) dictionary {
 

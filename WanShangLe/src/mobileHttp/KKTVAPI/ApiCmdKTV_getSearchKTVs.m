@@ -41,7 +41,7 @@
 - (NSMutableDictionary*)getParamDict {
     NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
     
-    [paramDict setObject:@"ktv.list" forKey:@"api"];
+    [paramDict setObject:@"ktv.search" forKey:@"api"];
     NSString *city_id = [[LocationManager defaultLocationManager] getUserCityId];
     [paramDict setObject:city_id forKey:@"cityid"];
     [paramDict setObject:[NSString stringWithFormat:@"%d",self.offset] forKey:@"offset"];

@@ -34,7 +34,14 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
+        
         _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+        if (_mArray==nil || [_mArray count]<=0) {
+            _refreshTailerView.hidden = YES;
+        }else{
+            _refreshTailerView.hidden = NO;
+        }
+        
         return [[[_mArray objectAtIndex:section] objectForKey:@"list"] count];
     }
     
@@ -213,7 +220,7 @@
     aKTV = [list objectAtIndex:row];
     
     ktvBuyController.mKTV = aKTV;
-    [_parentViewController.navigationController pushViewController:ktvBuyController animated:YES];
+    [[CacheManager sharedInstance].rootNavController pushViewController:ktvBuyController animated:YES];
     [ktvBuyController release];
 }
 
@@ -251,13 +258,22 @@
 #pragma mark UIScrollViewDelegate Methods
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
-    [_refreshTailerView egoRefreshScrollViewDidScroll:scrollView];
+    
+    if (!_refreshHeaderView.hidden) {
+        [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    }
+    if(!_refreshHeaderView.hidden){
+        [_refreshTailerView egoRefreshScrollViewDidScroll:scrollView];
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
-    [_refreshTailerView egoRefreshScrollViewDidEndDragging:scrollView];
+    if (!_refreshHeaderView.hidden) {
+        [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    }
+    if(!_refreshHeaderView.hidden){
+        [_refreshTailerView egoRefreshScrollViewDidEndDragging:scrollView];
+    }
 }
 
 
@@ -266,15 +282,19 @@
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
     
-    if (view.tag == EGOHeaderView) {
+    if (view.tag == EGOHeaderView && !view.hidden) {
         [self reloadTableViewDataSource];
-    } else {
+    } else if(view.tag == EGOBottomView && !view.hidden){
         [self loadMoreTableViewDataSource];
     }
     
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+    if (view.hidden) {
+        return NO;
+    }
+    
 	return _reloading; // should return if data source model is reloading
 }
 

@@ -153,7 +153,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 //获取 搜索 影院列表
 - (ApiCmd *)getCinemasSearchListFromWeb:(id<ApiNotify>)delegate offset:(int)offset
                                   limit:(int)limit
-                      dataType:(NSString *)dataType
+                               dataType:(NSString *)dataType
                            searchString:(NSString *)searchString;
 
 //影院附近分页
@@ -162,7 +162,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
                                           longitude:(CLLocationDegrees)longitude
                                              offset:(int)offset
                                               limit:(int)limit
-                      dataType:(NSString *)dataType
+                                           dataType:(NSString *)dataType
                                           isNewData:(BOOL)isNewData;
 //影院收藏分页
 - (NSArray *)getFavoriteCinemasListFromCoreData;
@@ -291,12 +291,31 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (NSArray *)getAllKTVsListFromCoreDataWithCityName:(NSString *)cityId;
 
 //获取 分页 KTV数据
-- (ApiCmd *)getKTVsListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit;
-- (NSArray *)getKTVsListFromCoreDataOffset:(int)offset limit:(int)limit;
-- (NSArray *)getKTVsListFromCoreDataWithCityName:(NSString *)cityId offset:(int)offset limit:(int)limit;
+- (ApiCmd *)getKTVsListFromWeb:(id<ApiNotify>)delegate
+                        offset:(int)offset
+                         limit:(int)limit
+                      dataType:(NSString *)dataType
+                     isNewData:(BOOL)isNewData;
+
+//数据库获取KTV
+- (NSArray *)getKTVsListFromCoreDataOffset:(int)offset
+                                     limit:(int)limit
+                                  dataType:(NSString *)dataType
+                                 validDate:(NSString *)validDate;
+//数据库获取KTV
+- (NSArray *)getKTVsListFromCoreDataWithCityName:(NSString *)cityId
+                                          offset:(int)offset
+                                           limit:(int)limit
+                                        dataType:(NSString *)dataType
+                                       validDate:(NSString *)validDate;
+
 
 //获取 搜索 TKV列表
-- (ApiCmd *)getKTVsSearchListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit searchString:(NSString *)searchString;
+- (ApiCmd *)getKTVsSearchListFromWeb:(id<ApiNotify>)delegate
+                              offset:(int)offset
+                               limit:(int)limit
+                            dataType:(NSString *)dataType
+                        searchString:(NSString *)searchString;
 
 //KTV附近分页
 - (BOOL)getNearbyKTVListFromCoreDataWithCallBack:(GetKTVNearbyList)callback;
@@ -304,7 +323,9 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
                                             Latitude:(CLLocationDegrees)latitude
                                            longitude:(CLLocationDegrees)longitude
                                               offset:(int)offset
-                                               limit:(int)limit;
+                                               limit:(int)limit
+                                            dataType:(NSString *)dataType
+                                           isNewData:(BOOL)isNewData;
 //KTV收藏分页
 - (NSArray *)getFavoriteKTVListFromCoreData;
 - (NSArray *)getFavoriteKTVListFromCoreDataWithCityName:(NSString *)cityName;
@@ -312,7 +333,11 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (NSUInteger)getCountOfKTVsListFromCoreData;
 - (NSUInteger)getCountOfKTVsListFromCoreDataWithCityName:(NSString *)cityName;
 
+//KTV 插入 数据库
 - (NSArray *)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+//KTV 搜索和附近 结果数据 插入 数据库
+- (NSArray *)insertTemporaryKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+
 - (void)importKTV:(KKTV *)kKTV ValuesForKeysWithObject:(NSDictionary *)aKTVDic;
 - (BOOL)addFavoriteKTVWithId:(NSString *)uid;
 - (BOOL)deleteFavoriteKTVWithId:(NSString *)uid;
@@ -320,6 +345,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 //获得KTV 团购列表 KTV Info
 - (ApiCmd *)getKTVTuanGouListFromWebWithaKTV:(KKTV *)aKTV
                                     delegate:(id<ApiNotify>)delegate;
+- (KKTVBuyInfo *)getKTVBuyInfoFromCoreDataWithId:(NSString *)ktvId;
 - (void)insertKTVTuanGouListIntoCoreDataFromObject:(NSDictionary *)objectData
                                         withApiCmd:(ApiCmd*)apiCmd
                                           withaKTV:(KKTV *)aKTV;
@@ -327,7 +353,8 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 //获得KTV 价格列表 Info
 - (ApiCmd *)getKTVPriceListFromWebWithaKTV:(KKTV *)aKTV
                                   delegate:(id<ApiNotify>)delegate;
-- (void)insertKTVPriceListIntoCoreDataFromObject:(NSDictionary *)objectData
+- (KKTVPriceInfo *)getKTVPriceInfoFromCoreDataWithId:(NSString *)ktvId;
+- (KKTVPriceInfo *)insertKTVPriceListIntoCoreDataFromObject:(NSDictionary *)objectData
                                       withApiCmd:(ApiCmd*)apiCmd
                                         withaKTV:(KKTV *)aKTV;
 

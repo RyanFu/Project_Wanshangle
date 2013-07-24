@@ -98,7 +98,7 @@
     _mTableView.backgroundColor = [UIColor clearColor];
     _mTableView.tableHeaderView = _headerView;
     UIView *view = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)] autorelease];
-    view.backgroundColor = [UIColor redColor];
+//    view.backgroundColor = [UIColor redColor];
     _mTableView.tableFooterView = view;
 }
 
@@ -125,7 +125,10 @@
 }
 
 - (IBAction)clickPriceListButton:(id)sender{
-    
+    KTVPriceListViewController *priceController = [[KTVPriceListViewController alloc] initWithNibName:@"KTVPriceListViewController" bundle:nil];
+    priceController.mKTV = _mKTV;
+    [[CacheManager sharedInstance].rootNavController pushViewController:priceController animated:YES];
+    [priceController release];
 }
 
 #pragma mark -

@@ -328,7 +328,7 @@
         ratingCount = ratingCount/10000;
         countLevel = @"万人";
     }
-    _movieRating.text = [NSString stringWithFormat:@"%@ : %0.1f (%d%@)",aMovie.ratingFrom,[aMovie.rating floatValue],ratingCount,countLevel];
+    _movieRating.text = [NSString stringWithFormat:@"%@评分:%0.1f(%d%@)",aMovie.ratingFrom,[aMovie.rating floatValue],ratingCount,countLevel];
     
     [self changeMovieDisplayData:aMovie];
     
@@ -358,7 +358,7 @@
     }
     
     int twidth = 0;
-    UIView *view = [[UIView alloc] init];
+    UIView *tuanView = [[UIView alloc] initWithFrame:CGRectZero];
     for (int i=0;i<[array count];i++) {
         
         UIView *tview = [array objectAtIndex:i];
@@ -368,29 +368,44 @@
         twidth += tframe.size.width + 5;
         
         tview.frame = tframe;
-        [view addSubview:tview];
+        [tuanView addSubview:tview];
     }
     
     CGRect tFrame = [(UIView *)[array lastObject] frame];
-    int width = tFrame.origin.x+ tFrame.size.width;
-    ABLoggerInfo(@"view frame ===== %@",NSStringFromCGRect(view.frame));
-    [_movieDetailControl addSubview:view];
-    [view release];
+    int tuanWidth = tFrame.origin.x+ tFrame.size.width;
+//    CGRect tuanFrame = tuanView.frame;
+//    tuanFrame.size.width = width;
+//    tuanView.frame = tuanFrame;
+//    ABLoggerInfo(@"view frame ===== %@",NSStringFromCGRect(tuanView.frame));
+    [_movieDetailControl addSubview:tuanView];
+//    tuanView.backgroundColor = [UIColor colorWithRed:0.502 green:0.000 blue:1.000 alpha:1.000];
+    [tuanView release];
     
-    
+    CGSize movieRatingLabel_size = [_movieRating.text sizeWithFont:_movieRating.font constrainedToSize:_movieRating.bounds.size];
+    int left_gap_of_movieRating = 15;
     CGSize nameSize = [aMovie.name sizeWithFont:[_movieName font]
-                              constrainedToSize:CGSizeMake((_movieDetailControl.bounds.size.width-width-_movieDetailControl.frame.origin.x-5),
-                                                           _movieName.bounds.size.height)];
+                              constrainedToSize:CGSizeMake(
+                              (_movieDetailControl.bounds.size.width-tuanWidth-_movieName.frame.origin.x-movieRatingLabel_size.width-left_gap_of_movieRating),
+                              MAXFLOAT)];
+    
+    ABLoggerDebug(@"nameSize == 111%@",NSStringFromCGSize(nameSize));
+    
+    int tuanGap = 0;
+    if (nameSize.height<=_movieName.bounds.size.height) {
+        tuanGap = 10;
+    }
     
     CGRect cell_newFrame = _movieName.frame;
     cell_newFrame.size.width = nameSize.width;
     _movieName.frame = cell_newFrame;
     
-    int view_x = _movieName.frame.origin.x+nameSize.width +10;
-    [view setFrame:CGRectMake(view_x, 0, width, 15)];
-    CGPoint newCenter = view.center;
+    int view_x = _movieName.frame.origin.x+nameSize.width +tuanGap;
+    int tuanHeight = 15;
+    [tuanView setFrame:CGRectMake(view_x, 0, tuanWidth, tuanHeight)];
+    ABLoggerInfo(@"view frame ===== 222%@",NSStringFromCGRect(tuanView.frame));
+    CGPoint newCenter = tuanView.center;
     newCenter.y = _movieName.center.y;
-    view.center = newCenter;
+    tuanView.center = newCenter;
 }
 
 

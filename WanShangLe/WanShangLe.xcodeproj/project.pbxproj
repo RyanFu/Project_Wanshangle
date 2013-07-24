@@ -133,6 +133,10 @@
 		5A5E19E417812E88008A6D97 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A5E19E317812E88008A6D97 /* MessageUI.framework */; };
 		5A5E19E617812EA8008A6D97 /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A5E19E517812EA8008A6D97 /* libz.1.2.5.dylib */; };
 		5A5E19EB178136F5008A6D97 /* AGViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5E19EA178136F5008A6D97 /* AGViewDelegate.m */; };
+		5A71457A179FBF67009E4905 /* KTVPriceTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A714578179FBF66009E4905 /* KTVPriceTableViewCell.m */; };
+		5A71457B179FBF67009E4905 /* KTVPriceTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A714579179FBF67009E4905 /* KTVPriceTableViewCell.xib */; };
+		5A71457F179FC266009E4905 /* KTVPriceCellSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A71457D179FC265009E4905 /* KTVPriceCellSection.m */; };
+		5A714580179FC266009E4905 /* KTVPriceCellSection.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A71457E179FC265009E4905 /* KTVPriceCellSection.xib */; };
 		5A76C4CE175DBE8B0067BC30 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A76C4CD175DBE8B0067BC30 /* UIKit.framework */; };
 		5A76C4D0175DBE8B0067BC30 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A76C4CF175DBE8B0067BC30 /* Foundation.framework */; };
 		5A76C4D2175DBE8B0067BC30 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A76C4D1175DBE8B0067BC30 /* CoreGraphics.framework */; };
@@ -814,6 +818,12 @@
 		5A5E19E517812EA8008A6D97 /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
 		5A5E19E9178136F5008A6D97 /* AGViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGViewDelegate.h; sourceTree = "<group>"; };
 		5A5E19EA178136F5008A6D97 /* AGViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGViewDelegate.m; sourceTree = "<group>"; };
+		5A714577179FBF66009E4905 /* KTVPriceTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KTVPriceTableViewCell.h; sourceTree = "<group>"; };
+		5A714578179FBF66009E4905 /* KTVPriceTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KTVPriceTableViewCell.m; sourceTree = "<group>"; };
+		5A714579179FBF67009E4905 /* KTVPriceTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KTVPriceTableViewCell.xib; sourceTree = "<group>"; };
+		5A71457C179FC264009E4905 /* KTVPriceCellSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KTVPriceCellSection.h; sourceTree = "<group>"; };
+		5A71457D179FC265009E4905 /* KTVPriceCellSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KTVPriceCellSection.m; sourceTree = "<group>"; };
+		5A71457E179FC265009E4905 /* KTVPriceCellSection.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KTVPriceCellSection.xib; sourceTree = "<group>"; };
 		5A76C4CA175DBE8B0067BC30 /* WanShangLe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WanShangLe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A76C4CD175DBE8B0067BC30 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		5A76C4CF175DBE8B0067BC30 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1879,6 +1889,12 @@
 				5A5A41F01793903D00954902 /* KTVPriceListViewController.xib */,
 				5A5A41F11793903D00954902 /* KTVPriceTableViewDelegate.h */,
 				5A5A41F21793903D00954902 /* KTVPriceTableViewDelegate.m */,
+				5A714577179FBF66009E4905 /* KTVPriceTableViewCell.h */,
+				5A714578179FBF66009E4905 /* KTVPriceTableViewCell.m */,
+				5A714579179FBF67009E4905 /* KTVPriceTableViewCell.xib */,
+				5A71457C179FC264009E4905 /* KTVPriceCellSection.h */,
+				5A71457D179FC265009E4905 /* KTVPriceCellSection.m */,
+				5A71457E179FC265009E4905 /* KTVPriceCellSection.xib */,
 			);
 			path = ktvPriceListController;
 			sourceTree = "<group>";
@@ -3723,6 +3739,8 @@
 				5ADD8E9C179C20C20026239A /* CinemaManagerViewController.xib in Resources */,
 				5ADD8E9F179C20C20026239A /* KTVManagerCell.xib in Resources */,
 				5ADD8EA2179C20C20026239A /* KtvManagerViewController.xib in Resources */,
+				5A71457B179FBF67009E4905 /* KTVPriceTableViewCell.xib in Resources */,
+				5A714580179FC266009E4905 /* KTVPriceCellSection.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4015,6 +4033,8 @@
 				5ADD8EA0179C20C20026239A /* KtvManagerSearchController.m in Sources */,
 				5ADD8EA1179C20C20026239A /* KtvManagerViewController.m in Sources */,
 				5ADD8EA5179C24760026239A /* ApiCmdMovie_getSearchCinemas.m in Sources */,
+				5A71457A179FBF67009E4905 /* KTVPriceTableViewCell.m in Sources */,
+				5A71457F179FC266009E4905 /* KTVPriceCellSection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

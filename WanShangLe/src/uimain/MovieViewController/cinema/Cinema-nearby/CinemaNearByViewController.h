@@ -21,7 +21,7 @@
 
 @property(nonatomic,retain) IBOutlet UIView *noGPSView;
 @property(nonatomic,retain) UITableView *mTableView;
-@property(nonatomic,retain) NSMutableArray *mArray;;
+@property(nonatomic,retain) NSMutableArray *mArray;
 @property(nonatomic,retain) NSMutableArray *mCacheArray;
 
 - (void)loadMoreData;
