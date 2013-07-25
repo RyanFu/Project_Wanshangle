@@ -24,7 +24,7 @@
 @dynamic locationDate;
 @dynamic longitue;
 @dynamic name;
-@dynamic nearby;
+@dynamic distance;
 @dynamic phoneNumber;
 @dynamic seat;
 @dynamic tuan;

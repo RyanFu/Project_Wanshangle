@@ -62,7 +62,7 @@
 }
 
 - (void)updatData{
-    for (int i=0; i<10; i++) {
+    for (int i=0; i<DataCount; i++) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
         });
@@ -99,10 +99,10 @@
     [self initNearByRefreshHeaderView];
     
     if (_mArray==nil) {
-        _mArray = [[NSMutableArray alloc] initWithCapacity:10];
+        _mArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
     }
     if (_mCacheArray==nil) {
-        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:10];
+        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
     }
 }
 
@@ -344,9 +344,9 @@
     }
     
     ABLoggerInfo(@"_cacheArray count == %d",[_mCacheArray count]);
-    int count = 10; //取10条数据
-    if ([_mCacheArray count]<10) {
-        count = [_mCacheArray count];//取小于10条数据
+    int count = DataCount; //取DataCount条数据
+    if ([_mCacheArray count]<DataCount) {
+        count = [_mCacheArray count];//取小于DataCount条数据
     }
     
     //    for (int i=0;i<[_mCacheArray count] ;i++ ) {

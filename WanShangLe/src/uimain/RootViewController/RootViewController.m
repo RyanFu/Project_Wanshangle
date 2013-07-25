@@ -22,19 +22,11 @@
     WSLUserClickStyle userClickStyle;
     
 }
-//@property(nonatomic,retain) MovieViewController* movieViewController;
-//@property(nonatomic,retain) KtvViewController* ktvViewController;
-//@property(nonatomic,retain) ShowViewController* showViewController;
-//@property(nonatomic,retain) BarViewController* barViewController;
 @property(nonatomic,retain) UIView *cityPanel;
 @property(nonatomic,retain) UIControl *cityPanelMask;
 @end
 
 @implementation RootViewController
-//@synthesize movieViewController = _movieViewController;
-//@synthesize ktvViewController = _ktvViewController;
-//@synthesize showViewController = _showViewController;
-//@synthesize barViewController = _barViewController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -45,9 +37,19 @@
     return self;
 }
 
+- (void)dealloc{
+    self.cityPanel = nil;
+    self.cityPanelMask = nil;
+    [super dealloc];
+}
+
+#pragma mark -
+#pragma mark UIView Cycle
 - (void)viewWillAppear:(BOOL)animated{
+    [[ApiClient defaultClient] clearHttpRequestTask];
     ABLoggerMethod();
 }
+
 - (void)viewDidAppear:(BOOL)animated{
     ABLoggerMethod();
 }
@@ -367,16 +369,6 @@
     [super didReceiveMemoryWarning];
     
     /*释放可以再生成的资源*/
-}
-
-- (void)dealloc{
-    //    self.movieViewController = nil;
-    //    self.ktvViewController = nil;
-    //    self.showViewController = nil;
-    //    self.barViewController = nil;
-    self.cityPanel = nil;
-    self.cityPanelMask = nil;
-    [super dealloc];
 }
 
 @end

@@ -59,7 +59,7 @@
 #pragma mark -
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
-    
+    [self hiddenRefreshTailerView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -125,13 +125,13 @@
 
 - (void)initArrayData{
     if (_mArray==nil) {
-        _mArray = [[NSMutableArray alloc] initWithCapacity:10];
+        _mArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
     }
     if (_mCacheArray==nil) {
-        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:10];
+        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
     }
     if (_mFavoriteArray==nil) {
-         _mFavoriteArray = [[NSMutableArray alloc] initWithCapacity:10];
+         _mFavoriteArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
     }
 }
 
@@ -214,6 +214,13 @@
     _tableViewDelegate.msearchDisplayController = _msearchDisplayController;
 }
 
+- (void)hiddenRefreshTailerView{
+    if (_mArray==nil || [_mArray count]<=0) {
+        _refreshTailerView.hidden = YES;
+    }else{
+        _refreshTailerView.hidden = NO;
+    }
+}
 #pragma mark-
 #pragma mark UIButton Event
 - (void)clickBackButton:(id)sender{
@@ -277,8 +284,8 @@
     
     NSArray *regionOrder = [[DataBaseManager sharedInstance] getRegionOrder];
     
-    NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:10];
-    NSMutableDictionary *district_id_Dic = [[NSMutableDictionary alloc] initWithCapacity:10];
+    NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
+    NSMutableDictionary *district_id_Dic = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
     
     for (KKTV *tKTV in array_coreData) {
         NSString *key = tKTV.district;
@@ -287,7 +294,7 @@
         if (![districtDic objectForKey:key]) {
             ABLoggerInfo(@"key === %@",key);
             ABLoggerInfo(@"districtId === %d",[districtId intValue]);
-            NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:10];
+            NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:DataCount];
             [districtDic setObject:tarray forKey:key];
             [districtDic setObject:key forKey:@"districtId"];
             [tarray release];
@@ -351,7 +358,7 @@
         }
         
         if (dic==nil) {
-            dic = [NSMutableDictionary dictionaryWithCapacity:10];
+            dic = [NSMutableDictionary dictionaryWithCapacity:DataCount];
         }
         
         [dic setObject:key forKey:@"name"];
@@ -431,9 +438,9 @@
     }
     
     ABLoggerInfo(@"_cacheArray count == %d",[_mCacheArray count]);
-    int count = 10; //取10条数据
-    if ([_mCacheArray count]<10) {
-        count = [_mCacheArray count];//取小于10条数据
+    int count = DataCount; //取DataCount条数据
+    if ([_mCacheArray count]<DataCount) {
+        count = [_mCacheArray count];//取小于DataCount条数据
     }
     
     NSMutableArray *aPageData = [NSMutableArray arrayWithCapacity:count];

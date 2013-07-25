@@ -29,4 +29,5 @@
 - (void)loadNewData;
 - (void)formatCinemaDataFilterFavorite;
 - (void)formatCinemaDataFilterAll:(NSArray*)pageArray;
+- (void)hiddenRefreshTailerView;
 @end

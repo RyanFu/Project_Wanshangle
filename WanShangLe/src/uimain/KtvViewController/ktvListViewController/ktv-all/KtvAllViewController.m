@@ -39,10 +39,7 @@
 
 - (void)dealloc{
     
-    [_apiCmdKTV_getAllKTVs.httpRequest clearDelegatesAndCancel];
-    _apiCmdKTV_getAllKTVs.delegate = nil;
-    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdKTV_getAllKTVs];
-    self.apiCmdKTV_getAllKTVs = nil;
+    [self cancelApiCmd];
     
     _refreshHeaderView.delegate = nil;
     _refreshTailerView.delegate = nil;
@@ -65,22 +62,22 @@
     [super dealloc];
 }
 
+- (void)cancelApiCmd{
+    [_apiCmdKTV_getAllKTVs.httpRequest clearDelegatesAndCancel];
+    _apiCmdKTV_getAllKTVs.delegate = nil;
+    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdKTV_getAllKTVs];
+    self.apiCmdKTV_getAllKTVs = nil;
+}
+
 #pragma mark -
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
 
     [self hiddenSearchBar];
-#ifdef TestCode
-    [self updatData];//测试代码
-#endif
-    
 }
-- (void)updatData{
-    for (int i=0; i<10; i++) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
-        });
-    }
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [self cancelApiCmd];
 }
 
 - (void)viewDidLoad
@@ -119,10 +116,10 @@
     [self initRefreshHeaderView];
     
     if (_mArray==nil) {
-        _mArray = [[NSMutableArray alloc] initWithCapacity:10];
+        _mArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
     }
     if (_mCacheArray==nil) {
-        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:10];
+        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
     }
 }
 
@@ -330,14 +327,14 @@
     
     NSArray *regionOrder = [[DataBaseManager sharedInstance] getRegionOrder];
     
-    NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:10];
+    NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
     
     for (KKTV *tKTV in array_coreData) {
         NSString *key = tKTV.district;
         
         if (![districtDic objectForKey:key]) {
             ABLoggerInfo(@"key === %@",key);
-            NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:10];
+            NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:DataCount];
             [districtDic setObject:tarray forKey:key];
             [tarray release];
         }
@@ -373,7 +370,7 @@
         }
         
         if (dic==nil) {
-            dic = [NSMutableDictionary dictionaryWithCapacity:10];
+            dic = [NSMutableDictionary dictionaryWithCapacity:DataCount];
         }
         
         [dic setObject:key forKey:@"name"];
@@ -457,8 +454,8 @@
     }
     
     ABLoggerInfo(@"_cacheArray count == %d",[_mCacheArray count]);
-    int count = 10; //取10条数据
-    if ([_mCacheArray count]<10) {
+    int count = DataCount; //取10条数据
+    if ([_mCacheArray count]<DataCount) {
         count = [_mCacheArray count];//取小于10条数据
     }
     

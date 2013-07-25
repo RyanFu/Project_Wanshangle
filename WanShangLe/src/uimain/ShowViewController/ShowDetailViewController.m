@@ -34,6 +34,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        self.title = @"演出详情";
         isRecommended = NO;
         isLooked = NO;
     }
@@ -428,6 +429,7 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+    ABLoggerWarn(@"接收到内存警告了");
     // Dispose of any resources that can be recreated.
 }
 

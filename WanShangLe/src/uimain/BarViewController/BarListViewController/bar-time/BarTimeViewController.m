@@ -107,7 +107,7 @@
     [self initRefreshHeaderView];
     
     if (_mArray==nil) {
-        _mArray = [[NSMutableArray alloc] initWithCapacity:10];
+        _mArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
         
         NSMutableDictionary *tDic = [[NSMutableDictionary alloc] initWithCapacity:2];
         [tDic setObject:[NSMutableArray arrayWithCapacity:1] forKey:ListKey];
@@ -122,7 +122,7 @@
         [tDic release];
     }
     if (_mCacheArray==nil) {
-        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:10];
+        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
     }
 }
 
@@ -332,8 +332,8 @@
     }
     
     ABLoggerInfo(@"_cacheArray count == %d",[_mCacheArray count]);
-    int count = 10; //取10条数据
-    if ([_mCacheArray count]<10) {
+    int count = DataCount; //取10条数据
+    if ([_mCacheArray count]<DataCount) {
         count = [_mCacheArray count];//取小于10条数据
     }
     

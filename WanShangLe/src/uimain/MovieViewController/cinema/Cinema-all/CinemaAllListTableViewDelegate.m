@@ -12,16 +12,41 @@
 
 #import "ScheduleViewController.h"
 #import "CinemaMovieViewController.h"
+#import "CinemaManagerSearchController.h"
 #import "CinemaViewController.h"
 
 #define TagTuan 500
 
 @interface CinemaAllListTableViewDelegate(){
-    
+        UIButton *loadMoreButton;
 }
+@property(nonatomic,assign) NSMutableArray *mSearchArray;
+@property(nonatomic,retain)CinemaManagerSearchController *msearchController;
 @end
 
 @implementation CinemaAllListTableViewDelegate
+
+- (void)dealloc{
+    self.msearchController = nil;
+    [super dealloc];
+}
+
+#pragma mark -
+#pragma mark initData
+- (CinemaManagerSearchController *)msearchController{
+    if (_msearchController!=nil) {
+        return _msearchController;
+    }
+    
+    [self initSearchController];
+    return _msearchController;
+}
+
+- (void)initSearchController{
+    if (_msearchController==nil) {
+        self.msearchController = [[[CinemaManagerSearchController alloc] init] autorelease];
+    }
+}
 
 #pragma mark -
 #pragma mark UITableViewDataSource
@@ -48,7 +73,7 @@
         return [[[_mArray objectAtIndex:section] objectForKey:@"list"] count];
     }
     
-    return 1;
+    return [self.mSearchArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -69,19 +94,21 @@
     
     CinemaTableViewCell * cell = (CinemaTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [self createNewMocieCell];
+        cell = [self createNewCinemaCell];
     }
     
     if ([_mArray count]<=0 || _mArray==nil) {
         return cell;
     }
-    
-    [self configCell:cell cellForRowAtIndexPath:indexPath];
+    NSArray *list = [[_mArray objectAtIndex:indexPath.section] objectForKey:@"list"];
+    MCinema *cinema = [list objectAtIndex:indexPath.row];
+
+    [self configCell:cell withCinema:cinema];
     
     return cell;
 }
 
--(CinemaTableViewCell *)createNewMocieCell{
+-(CinemaTableViewCell *)createNewCinemaCell{
     ABLoggerMethod();
     CinemaTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"CinemaTableViewCell" owner:self options:nil] objectAtIndex:0];
     [cell setAccessoryType:UITableViewCellAccessoryNone];
@@ -89,10 +116,8 @@
     return cell;
 }
 
-- (void)configCell:(CinemaTableViewCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (void)configCell:(CinemaTableViewCell *)cell withCinema:(MCinema *)cinema{
     
-    NSArray *list = [[_mArray objectAtIndex:indexPath.section] objectForKey:@"list"];
-    MCinema *cinema = [list objectAtIndex:indexPath.row];
     cell.cinema_name.text = cinema.name;
     cell.cinema_address.text = cinema.address;
     
@@ -151,17 +176,17 @@
 #pragma mark -
 #pragma mark 搜索Cell
 - (UITableViewCell *)cinemaSearchtableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    static NSString *indentifier = @"CinemaCellSearch";
+    static NSString *indentifier = @"mCinemaCell";
     
-    UITableViewCell *cell = (UITableViewCell*)[tableView dequeueReusableCellWithIdentifier:indentifier];
+    CinemaTableViewCell *cell = (CinemaTableViewCell*)[tableView dequeueReusableCellWithIdentifier:indentifier];
     
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:indentifier] autorelease];
-		cell.selectionStyle=UITableViewCellSelectionStyleNone;
+        cell = [self createNewCinemaCell];
 	}
+    MCinema *cinema = [_mSearchArray objectAtIndex:indexPath.row];
+    [self configCell:cell withCinema:cinema];
     return cell;
 }
-
 #pragma mark -
 #pragma mark UITableViewDelegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -169,7 +194,7 @@
         return 80.0f;
     }
     
-    return 44.0f;
+    return 80.0f;
 }
 
 #pragma mark -
@@ -201,39 +226,44 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    MCinema *mCinema = nil;
+    
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
         
         NSDictionary *dic = [_mArray objectAtIndex:indexPath.section];
         NSArray *list = [dic objectForKey:@"list"];
-        MCinema *mCinema = [list objectAtIndex:indexPath.row];
-        MMovie *mMovie = [_parentViewController.mParentController mMovie];
-        
-        BOOL isMoviePanel = [CacheManager sharedInstance].isMoviePanel;
-        UINavigationController *rootNavigationController = [CacheManager sharedInstance].rootNavController;
-        
-        if (isMoviePanel) {
-            ScheduleViewController *scheduleViewController = [[ScheduleViewController alloc]
-                                                              initWithNibName:(iPhone5?@"ScheduleViewController_5":@"ScheduleViewController")
-                                                              bundle:nil];
-            scheduleViewController.mCinema = mCinema;
-            scheduleViewController.mMovie = mMovie;
-            [rootNavigationController pushViewController:scheduleViewController animated:YES];
-            [scheduleViewController release];
-        }else{
-            CinemaMovieViewController *cinemaMovieController = [[CinemaMovieViewController alloc]
-                                                                initWithNibName:(iPhone5?@"CinemaMovieViewController_5":@"CinemaMovieViewController")
-                                                                bundle:nil];
-            cinemaMovieController.mCinema = mCinema;
-            cinemaMovieController.mMovie = mMovie;
-            [rootNavigationController pushViewController:cinemaMovieController animated:YES];
-            [cinemaMovieController release];
-        }
-        
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        
+        mCinema = [list objectAtIndex:indexPath.row];
+               
     } else {//搜索模式
-        
+        mCinema = [_mSearchArray objectAtIndex:indexPath.row];
     }
+    
+    MMovie *mMovie = [_parentViewController.mParentController mMovie];
+    
+    BOOL isMoviePanel = [CacheManager sharedInstance].isMoviePanel;
+    UINavigationController *rootNavigationController = [CacheManager sharedInstance].rootNavController;
+    
+    if (isMoviePanel) {
+        ScheduleViewController *scheduleViewController = [[ScheduleViewController alloc]
+                                                          initWithNibName:(iPhone5?@"ScheduleViewController_5":@"ScheduleViewController")
+                                                          bundle:nil];
+        scheduleViewController.mCinema = mCinema;
+        scheduleViewController.mMovie = mMovie;
+        [rootNavigationController pushViewController:scheduleViewController animated:YES];
+        [scheduleViewController release];
+    }else{
+        CinemaMovieViewController *cinemaMovieController = [[CinemaMovieViewController alloc]
+                                                            initWithNibName:(iPhone5?@"CinemaMovieViewController_5":@"CinemaMovieViewController")
+                                                            bundle:nil];
+        cinemaMovieController.mCinema = mCinema;
+        cinemaMovieController.mMovie = mMovie;
+        [rootNavigationController pushViewController:cinemaMovieController animated:YES];
+        [cinemaMovieController release];
+    }
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
 }
 
 #pragma mark -
@@ -315,30 +345,41 @@
 	return [NSDate date]; // should return date data source was last changed
 }
 
-#pragma mark -
 #pragma mark UISearchBarDelegate methods
 - (void)scrollTableViewToSearchBarAnimated:(BOOL)animated
 {
     [self.mTableView setContentOffset:CGPointMake(0, 44) animated:animated];
 }
 
+//点击 取消 按钮
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar{
     ABLoggerWarn(@"");
 }
 
+//点击 搜索 按钮
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-    ABLoggerWarn(@"");
-    [_mTableView resignFirstResponder];
-    [self scrollTableViewToSearchBarAnimated:YES];
+    ABLoggerInfo(@"searchBar.text ====== %@",searchBar.text);
+    
+    if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
+        return;
+    }
+    
+    [self.msearchController startCinemaSearchForSearchString:searchBar.text complete:^(NSMutableArray *searchArray, BOOL isSuccess) {
+        self.mSearchArray = searchArray;
+        [self.msearchDisplayController.searchResultsTableView reloadData];
+        //搜索模式
+        if (_msearchDisplayController.searchResultsTableView.tableFooterView==nil) {
+            [self addSearchLoadMoreButton];
+        }else if(!isSuccess){
+            [loadMoreButton setTitle:@"已全部加载" forState:UIControlStateNormal];
+        }
+    }];
 }
-
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar{
     ABLoggerWarn(@"");
     [_parentViewController beginSearch];
-    //    [self getAllSearchktvData];
-    
     _parentViewController.searchBar.showsScopeBar = YES;
     [_parentViewController.searchBar sizeToFit];
     [_parentViewController.searchBar setShowsCancelButton:YES animated:YES];
@@ -349,7 +390,6 @@
         {
             UIButton *btn = (UIButton *)cc;
             [btn setTitle:@""  forState:UIControlStateNormal];
-            //            [btn setBackgroundColor:[UIColor colorWithWhite:0.800 alpha:1.000]];
             [btn setBackgroundImage:[UIImage imageNamed:@"btn_search_cancel_n@2x"] forState:UIControlStateNormal];
             [btn setBackgroundImage:[UIImage imageNamed:@"btn_search_cancel_f@2x"] forState:UIControlStateHighlighted];
         }
@@ -368,34 +408,75 @@
     ABLoggerWarn(@"");
 }
 
+
+#pragma mark -
+#pragma mark UISearchDisplayDelegate
+- (void)searchDisplayController:(UISearchDisplayController *)controller didLoadSearchResultsTableView:(UITableView *)tableView{
+    [self initSearchController];
+}
+
 - (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller{
     ABLoggerWarn(@"");
     [self cleanUpSearchBar:_parentViewController.searchBar];
+    
+    self.msearchController = nil;
+    self.mSearchArray = nil;
+    [_mTableView reloadData];//解决退出搜索后，新添加的TKV收藏列表没有刷新的Bug
 }
 
 - (void)cleanUpSearchBar:(UISearchBar *)searchBar{
-    [[_parentViewController.searchBar viewWithTag:100] removeFromSuperview];
-    
-    [self scrollTableViewToSearchBarAnimated:YES];
     [_parentViewController endSearch];
-//    [_mTableView resignFirstResponder];
+    [[_parentViewController.searchBar viewWithTag:100] removeFromSuperview];
+    [self scrollTableViewToSearchBarAnimated:YES];
+}
+
+- (void)searchDisplayController:(UISearchDisplayController *)controller didShowSearchResultsTableView:(UITableView *)tableView{
+    
+}
+
+- (void)addSearchLoadMoreButton{
+    UIButton *bt = [UIButton buttonWithType:UIButtonTypeCustom];
+    bt.frame = CGRectMake(0, 0, 320, 40);
+    [bt setTitle:@"加载更多.." forState:UIControlStateNormal];
+    [bt setBackgroundColor:[UIColor colorWithWhite:0.800 alpha:1.000]];
+    [bt addTarget:self action:@selector(clickLoadMoreSearchButton:) forControlEvents:UIControlEventTouchUpInside];
+    loadMoreButton = bt;
+    _msearchDisplayController.searchResultsTableView.tableFooterView = bt;
+}
+
+- (void)clickLoadMoreSearchButton:(id)sender{
+    if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
+        return;
+    }
+    
+    [self.msearchController loadSearchMoreDataForSearchString:_parentViewController.searchBar.text complete:^(NSMutableArray *searchArray, BOOL isSuccess) {
+        self.mSearchArray = searchArray;
+        [self.msearchDisplayController.searchResultsTableView reloadData];
+        //搜索模式
+        if (_msearchDisplayController.searchResultsTableView.tableFooterView==nil) {
+            [self addSearchLoadMoreButton];
+        }else if(!isSuccess){
+            [loadMoreButton setTitle:@"已全部加载" forState:UIControlStateNormal];
+        }
+    }];
 }
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
-//    [[SearchCoreManager share] Search:searchString searchArray:nil nameMatch:_searchByName phoneMatch:_searchByPhone];
-//    [_mTableView reloadData];
+    ABLoggerDebug(@"要搜索的字符串 ======= %@",searchString);
+    
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 0.001);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        for (UIView* v in controller.searchResultsTableView.subviews) {
+            if ([v isKindOfClass: [UILabel class]] &&
+                [[(UILabel*)v text] isEqualToString:@"No Results"]) {
+                [(UILabel*)v setText:@""];
+                break;
+            }
+        }
+    });
     
     return YES;
 }
 
-- (void)searchDisplayController:(UISearchDisplayController *)controller didShowSearchResultsTableView:(UITableView *)tableView{
-    ABLoggerDebug(@"subViews = %d",[controller.searchResultsTableView.subviews count]);
-    for(UIView *subview in controller.searchResultsTableView.subviews) {
-        
-        if([subview isKindOfClass:[UILabel class]]) {
-            [(UILabel*)subview setText:@"无结果"];
-        }
-    }
-}
 @end

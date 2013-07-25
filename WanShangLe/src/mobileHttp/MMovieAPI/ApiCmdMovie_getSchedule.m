@@ -40,7 +40,7 @@
     
     return self.httpRequest;
 }
-//http://api.wanshangle.com:10000/api? appId=000001&sign=sign&time=1371988912&v=1.0&api=movie.scheduling&movieid=3&cinemaid=9&timedistance=1
+//http://api.wanshangle.com:10000/api? appId=000001&sign=sign&time=1371988912&v=1.0&api=movie.scheduling&movieid=10&cinemaid=100&timedistance=1
 - (NSMutableDictionary*) getParamDict {
     
     NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];

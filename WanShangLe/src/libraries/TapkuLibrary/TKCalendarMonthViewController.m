@@ -49,6 +49,7 @@
 }
 - (void) didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+    ABLoggerWarn(@"接收到内存警告了");
 }
 - (void) viewDidUnload {
 	self.monthView.delegate = nil;

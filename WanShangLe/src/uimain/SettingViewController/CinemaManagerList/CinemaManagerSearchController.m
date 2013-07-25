@@ -26,8 +26,8 @@
 {
     self = [super init];
     if (self) {
-        _mArray = [[NSMutableArray alloc] initWithCapacity:10];
-        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:10];
+        _mArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
+        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
     }
     return self;
 }
@@ -190,8 +190,8 @@
     }
     
     ABLoggerInfo(@"_cacheArray count == %d",[_mCacheArray count]);
-    int count = 10; //取10条数据
-    if ([_mCacheArray count]<10) {
+    int count = DataCount; //取10条数据
+    if ([_mCacheArray count]<DataCount) {
         count = [_mCacheArray count];//取小于10条数据
     }
     

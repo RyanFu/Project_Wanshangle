@@ -71,15 +71,15 @@
 #pragma mark -
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
-    
     [self hiddenSearchBar];
     
-#ifdef TestCode
-    [self updatData];//测试代码
-#endif
-    
+    if ([_mArray count]<=0) {
+        [self loadMoreData];
+    }
 }
-- (void)updatData{
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [self cancelApiCmd];
 }
 
 - (void)viewDidLoad
@@ -88,7 +88,7 @@
     
     [self.view addSubview:self.mTableView];
     
-    [self loadMoreData];//初始化加载
+//    [self loadMoreData];//初始化加载
 }
 #pragma mark -
 #pragma mark 初始化TableView
@@ -117,10 +117,10 @@
     [self initRefreshHeaderView];
     
     if (_mArray==nil) {
-        _mArray = [[NSMutableArray alloc] initWithCapacity:10];
+        _mArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
     }
     if (_mCacheArray==nil) {
-        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:10];
+        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
     }
 }
 
@@ -142,6 +142,7 @@
     _mTableView.delegate = _allListDelegate;
     _allListDelegate.mTableView = _mTableView;
     _allListDelegate.mArray = _mArray;
+    _allListDelegate.msearchDisplayController = self.strongSearchDisplayController;
 }
 
 -(void)hiddenSearchBar{
@@ -329,14 +330,14 @@
     
     NSArray *regionOrder = [[DataBaseManager sharedInstance] getRegionOrder];
     
-    NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:10];
+    NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
     
     for (MCinema *tMcine in array_coreData) {
         NSString *key = tMcine.district;
         
         if (![districtDic objectForKey:key]) {
             ABLoggerInfo(@"key === %@",key);
-            NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:10];
+            NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:DataCount];
             [districtDic setObject:tarray forKey:key];
             [tarray release];
         }
@@ -372,7 +373,7 @@
         }
         
         if (dic==nil) {
-            dic = [NSMutableDictionary dictionaryWithCapacity:10];
+            dic = [NSMutableDictionary dictionaryWithCapacity:DataCount];
         }
         
         [dic setObject:key forKey:@"name"];
@@ -451,8 +452,8 @@
     }
     
     ABLoggerInfo(@"_cacheArray count == %d",[_mCacheArray count]);
-    int count = 10; //取10条数据
-    if ([_mCacheArray count]<10) {
+    int count = DataCount; //取10条数据
+    if ([_mCacheArray count]<DataCount) {
         count = [_mCacheArray count];//取小于10条数据
     }
     

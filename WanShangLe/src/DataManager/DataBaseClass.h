@@ -45,7 +45,8 @@
 @class ApiCmdBar_getAllBars;
 @class ApiCmdBar_getBarDetail;
 //分页数据
-#define DataLimit 20
+#define DataLimit 40
+#define DataCount 20
 
 //API HTTPRequest TAG
 

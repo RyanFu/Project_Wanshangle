@@ -228,4 +228,9 @@ static NSString* valuePhoneType = @"iPhone";
     
     return [tmpDict objectForKey:errorString];
 }
+
+- (void)clearHttpRequestTask{
+    [_networkQueue cancelAllOperations];
+    [_requestArray removeAllObjects];
+}
 @end

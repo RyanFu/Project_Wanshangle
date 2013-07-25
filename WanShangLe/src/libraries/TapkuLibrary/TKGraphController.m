@@ -91,6 +91,7 @@
 - (void) didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
+    ABLoggerWarn(@"接收到内存警告了");
 	
 	// Release any cached data, images, etc that aren't in use.
 }

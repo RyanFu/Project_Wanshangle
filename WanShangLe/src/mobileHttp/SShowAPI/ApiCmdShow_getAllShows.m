@@ -67,7 +67,7 @@
 - (void) parseResultData:(NSDictionary*) dictionary {
 
     // get the data
-    ABLoggerDebug(@"1111 responseJSONObject ======== %@",self.responseJSONObject);
+    ABLoggerDebug(@"获取演出 列表数据 responseJSONObject ======== %@",self.responseJSONObject);
 }
 
 -(void) notifyDelegate:(NSDictionary*) dictionary{

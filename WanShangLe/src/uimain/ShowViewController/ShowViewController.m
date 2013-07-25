@@ -117,10 +117,10 @@
 
 - (void)initData{
     if (_mArray==nil) {
-        _mArray = [[NSMutableArray alloc] initWithCapacity:10];
+        _mArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
     }
     if (_mCacheArray==nil) {
-        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:10];
+        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
     }
     
     _maskView = [[UIControl alloc] initWithFrame:CGRectMake(0, 40, self.view.frame.size.width, self.view.frame.size.height)];
@@ -629,9 +629,9 @@
     
     
     ABLoggerInfo(@"_cacheArray count == %d",[_mCacheArray count]);
-    int count = 10; //取10条数据
-    if ([_mCacheArray count]<10) {
-        count = [_mCacheArray count];//取小于10条数据
+    int count = DataCount; //取DataCount条数据
+    if ([_mCacheArray count]<DataCount) {
+        count = [_mCacheArray count];//取小于DataCount条数据
     }
     
     NSMutableArray *aPageData = [NSMutableArray arrayWithCapacity:count];

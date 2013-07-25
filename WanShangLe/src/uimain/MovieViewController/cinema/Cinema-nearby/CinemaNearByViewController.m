@@ -64,7 +64,7 @@
 }
 
 - (void)updatData{
-    for (int i=0; i<10; i++) {
+    for (int i=0; i<DataCount; i++) {
     }
 }
 
@@ -98,10 +98,10 @@
     [self initNearByRefreshHeaderView];
     
     if (_mArray==nil) {
-        _mArray = [[NSMutableArray alloc] initWithCapacity:10];
+        _mArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
     }
     if (_mCacheArray==nil) {
-        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:10];
+        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
     }
 }
 
@@ -167,7 +167,7 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        NSArray *dataArray = [[DataBaseManager sharedInstance] insertCinemasIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+        NSArray *dataArray = [[DataBaseManager sharedInstance] insertTemporaryCinemasIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
         
         if (dataArray==nil || [dataArray count]<=0) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -226,11 +226,14 @@
 - (void)formatKTVDataFilterNearby:(NSArray *)dataArray{
     
     ABLoggerInfo(@"附近 影院 count=== %d",[dataArray count]);
-
-    for (MCinema *tCinema in _mArray) {
-        
-    }
     [self.mArray addObjectsFromArray:dataArray];
+    
+    for (MCinema *tCinema in _mArray) {
+        CLLocationDegrees latitude = [tCinema.latitude doubleValue];
+        CLLocationDegrees longitude = [tCinema.longitue doubleValue];
+        double distance = [[LocationManager defaultLocationManager] distanceBetweenUserToLatitude:latitude longitude:longitude];
+        tCinema.distance = [NSNumber numberWithDouble:distance];
+    }
     
     BOOL isNoGPS = ((int)[_mArray count]<=0);
     [self displayNOGPS:isNoGPS];
@@ -350,8 +353,8 @@
     }
     
     ABLoggerInfo(@"_cacheArray count == %d",[_mCacheArray count]);
-    int count = 10; //取10条数据
-    if ([_mCacheArray count]<10) {
+    int count = DataCount; //取10条数据
+    if ([_mCacheArray count]<DataCount) {
         count = [_mCacheArray count];//取小于10条数据
     }
     

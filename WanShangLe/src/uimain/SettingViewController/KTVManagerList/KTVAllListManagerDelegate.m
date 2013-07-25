@@ -14,7 +14,7 @@
 #define TagTuan 500
 
 @interface KTVAllListManagerDelegate(){
-    
+    UIButton *loadMoreButton;
 }
 @property(nonatomic,retain)KtvManagerSearchController *msearchController;
 @end
@@ -57,6 +57,7 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     if (tableView != self.msearchDisplayController.searchResultsTableView) {//正常模式
+        [_parentViewController hiddenRefreshTailerView];
         return [_mArray count]+1;
     }
     //搜索模式
@@ -427,8 +428,10 @@
         self.mSearchArray = searchArray;
         [self.msearchDisplayController.searchResultsTableView reloadData];
         //搜索模式
-        if ([_mSearchArray count]>0) {
+        if (_msearchDisplayController.searchResultsTableView.tableFooterView==nil) {
             [self addSearchLoadMoreButton];
+        }else if(!isSuccess){
+            [loadMoreButton setTitle:@"已全部加载" forState:UIControlStateNormal];
         }
     }];
 }
@@ -495,6 +498,7 @@
     [bt setTitle:@"加载更多.." forState:UIControlStateNormal];
     [bt setBackgroundColor:[UIColor colorWithWhite:0.800 alpha:1.000]];
     [bt addTarget:self action:@selector(clickLoadMoreSearchButton:) forControlEvents:UIControlEventTouchUpInside];
+    loadMoreButton = bt;
     _msearchDisplayController.searchResultsTableView.tableFooterView = bt;
 }
 
@@ -507,8 +511,10 @@
         self.mSearchArray = searchArray;
         [self.msearchDisplayController.searchResultsTableView reloadData];
         //搜索模式
-        if ([_mSearchArray count]>0) {
+        if (_msearchDisplayController.searchResultsTableView.tableFooterView==nil) {
             [self addSearchLoadMoreButton];
+        }else if(!isSuccess){
+            [loadMoreButton setTitle:@"已全部加载" forState:UIControlStateNormal];
         }
     }];
 }

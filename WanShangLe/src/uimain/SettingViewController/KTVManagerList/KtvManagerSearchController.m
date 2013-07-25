@@ -26,8 +26,8 @@
 {
     self = [super init];
     if (self) {
-        _mArray = [[NSMutableArray alloc] initWithCapacity:10];
-        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:10];
+        _mArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
+        _mCacheArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
     }
     return self;
 }
@@ -61,7 +61,7 @@
         return;
     }
     
-    NSArray *dataArray = [[DataBaseManager sharedInstance] insertKTVsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+    NSArray *dataArray = [[DataBaseManager sharedInstance] insertTemporaryKTVsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
     if (dataArray==nil || [dataArray count]<=0) {
         if (self.searchCallBack) {
             _searchCallBack(_mArray,NO);
@@ -165,15 +165,20 @@
         if (!isLoadMore) {
             number = 0;
         }
-         
-        self.apiCmdKTV_getSearchKTVs = (ApiCmdKTV_getSearchKTVs *)[[DataBaseManager sharedInstance] getKTVsSearchListFromWeb:self offset:number limit:DataLimit searchString:_searchString];
+        
+        NSString *dataType = [NSString stringWithFormat:@"%d",API_KKTVSearchCmd];
+        self.apiCmdKTV_getSearchKTVs = (ApiCmdKTV_getSearchKTVs *)[[DataBaseManager sharedInstance] getKTVsSearchListFromWeb:self
+                                                                                                                      offset:number
+                                                                                                                       limit:DataLimit
+                                                                                                                    dataType:dataType
+                                                                                                                searchString:self.searchString];
         return  nil;
     }
     
     ABLoggerInfo(@"_cacheArray count == %d",[_mCacheArray count]);
-    int count = 10; //取10条数据
-    if ([_mCacheArray count]<10) {
-        count = [_mCacheArray count];//取小于10条数据
+    int count = DataCount; //取DataCount条数据
+    if ([_mCacheArray count]<DataCount) {
+        count = [_mCacheArray count];//取小于DataCount条数据
     }
     
     NSMutableArray *aPageData = [NSMutableArray arrayWithCapacity:count];

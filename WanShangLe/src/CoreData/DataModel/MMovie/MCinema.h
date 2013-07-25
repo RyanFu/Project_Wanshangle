@@ -24,7 +24,7 @@
 @property (nonatomic, retain) NSString * locationDate;
 @property (nonatomic, retain) NSNumber * longitue;
 @property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSNumber * nearby;
+@property (nonatomic, retain) NSNumber * distance;
 @property (nonatomic, retain) NSString * phoneNumber;
 @property (nonatomic, retain) NSNumber * seat;
 @property (nonatomic, retain) NSNumber * tuan;

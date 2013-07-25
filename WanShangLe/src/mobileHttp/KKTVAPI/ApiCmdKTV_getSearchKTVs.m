@@ -37,7 +37,7 @@
     return self.httpRequest;
 }
 
-//http://api.wanshangle.com:10000/api? appId=000001&api=ktv.list&sign=sign&time=1371988912&v=1.0&cityid=0755
+//http://api.wanshangle.com:10000/api? %20&api=ktv.search&time=1374226945&appId=000001&sign=sign&v=1.0&cityid=021&offset=0&limit=1&name=%E4%B8%8A
 - (NSMutableDictionary*)getParamDict {
     NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
     
@@ -46,7 +46,7 @@
     [paramDict setObject:city_id forKey:@"cityid"];
     [paramDict setObject:[NSString stringWithFormat:@"%d",self.offset] forKey:@"offset"];
     [paramDict setObject:[NSString stringWithFormat:@"%d",self.limit] forKey:@"limit"];
-//    [paramDict setObject:_searchString forKey:@"search"];
+    [paramDict setObject:_searchString forKey:@"name"];
     
     return paramDict;
 }

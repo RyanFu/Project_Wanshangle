@@ -25,7 +25,7 @@
     [super awakeFromNib];
     
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
-    [self.contentView setBackgroundColor:[UIColor orangeColor]];
+    [self.contentView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"UITableViewCellSection_bg"]]];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

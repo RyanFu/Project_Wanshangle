@@ -29,4 +29,5 @@
 - (void)loadNewData;
 - (void)formatKTVDataFilterFavorite;
 - (void)formatKTVDataFilterAll:(NSArray*)pageArray;
+- (void)hiddenRefreshTailerView;
 @end

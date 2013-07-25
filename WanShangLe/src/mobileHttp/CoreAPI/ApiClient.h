@@ -38,4 +38,7 @@
  **/
 -(NSError*)executeApiCmd:(ApiCmd*) cmd;
 -(NSString*)errorInfo:(NSNumber*)errorNumber;
+
+//当用户在主界面RootViewController时候，清除所有的网络请求
+- (void)clearHttpRequestTask;
 @end

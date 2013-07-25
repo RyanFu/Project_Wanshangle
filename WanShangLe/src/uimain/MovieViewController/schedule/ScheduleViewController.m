@@ -276,7 +276,7 @@
 }
 
 - (void)refreshTomorrowSchedule{
-    self.tomorrowSchedules = [[DataBaseManager sharedInstance] deleteUnavailableSchedules:_tomorrowSchedules];
+//    self.tomorrowSchedules = [[DataBaseManager sharedInstance] deleteUnavailableSchedules:_tomorrowSchedules];
     self.schedulesArray = self.tomorrowSchedules;
     if (isNull(self.schedulesArray) || [self.schedulesArray count]==0) {
         [self setTableViewFooterViewHaveData:NO];
@@ -491,6 +491,7 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+    ABLoggerWarn(@"接收到内存警告了");
     
 }
 

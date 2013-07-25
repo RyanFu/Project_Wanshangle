@@ -92,7 +92,7 @@
     cell.cinema_distance.hidden = NO;
     
     NSString *kmStr = nil;
-    int distance = [cinema.nearby intValue];
+    int distance = [cinema.distance intValue];
     if (distance>1000) {
         kmStr = [NSString stringWithFormat:@"%0.2fkm",distance/1000.0f];
     }else{
