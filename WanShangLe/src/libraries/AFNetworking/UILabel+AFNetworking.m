@@ -63,6 +63,7 @@ static char kAFJSONRequestOperationObjectKey;
     static NSOperationQueue *_af_jsonRequestOperationQueue = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+        [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
         _af_jsonRequestOperationQueue = [[NSOperationQueue alloc] init];
         [_af_jsonRequestOperationQueue setMaxConcurrentOperationCount:NSOperationQueueDefaultMaxConcurrentOperationCount];
     });
@@ -127,13 +128,25 @@ static char kAFJSONRequestOperationObjectKey;
     } else {
         self.text = placeholderString;
         NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[self getURLWithMovie:aMovie cinema:aCinema]];
+        
         AFJSONRequestOperation *requestOperation = [[AFJSONRequestOperation alloc] initWithRequest:urlRequest];
+        
         [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            
+            NSString *resultString = [self parseResponseObject:responseObject Movie:aMovie cinema:aCinema];
             if ([urlRequest isEqual:[self.af_jsonRequestOperation request]]) {
                 if (success) {
-                    success(operation.request, operation.response, responseObject);
-                } else if (responseObject) {
-                    self.text = responseObject;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        self.text = resultString;
+                         success(operation.request, operation.response, resultString);
+                    });
+                   
+                } else if (resultString) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        self.text = resultString;
+                    });
                 }
                 
                 if (self.af_jsonRequestOperation == operation) {
@@ -141,6 +154,7 @@ static char kAFJSONRequestOperationObjectKey;
                 }
             }
             
+            });
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             if ([urlRequest isEqual:[self.af_jsonRequestOperation request]]) {
                 if (failure) {
@@ -172,6 +186,23 @@ static char kAFJSONRequestOperationObjectKey;
         return nil;
     }
     
+    return [self formatScheduleData:tSchedule];
+}
+
+- (NSString *)parseResponseObject:(NSDictionary *)responseJson
+                            Movie:(MMovie *)aMovie
+                           cinema:(MCinema *)aCinema{
+    ABLoggerDebug(@"responseJson === %@",responseJson);
+    
+    MSchedule *tSchedule = [[DataBaseManager sharedInstance] insertScheduleIntoCoreDataFromObject:responseJson
+                                                                                       withApiCmd:nil
+                                                                                       withaMovie:aMovie
+                                                                                       andaCinema:aCinema];
+    
+    return [self formatScheduleData:tSchedule];
+}
+
+- (NSString *)formatScheduleData:(MSchedule *)tSchedule{
     NSDictionary *responseDic = tSchedule.scheduleInfo;
     
     NSDictionary *schedules = [responseDic objectForKey:@"scheduling"];
@@ -179,13 +210,6 @@ static char kAFJSONRequestOperationObjectKey;
     todayArray = [[DataBaseManager sharedInstance] deleteUnavailableSchedules:todayArray];
     
     return [NSString stringWithFormat:@"还剩%d场",[todayArray count]];
-}
-
-- (void)insertTodayScheduleForCoreDataWithMovie:(MMovie *)aMovie
-                                               cinema:(MCinema *)aCinema
-                                         responseJson:(NSDictionary *)responseJson
-{
-    ABLoggerDebug(@"responseJson === %@",responseJson);
 }
 
 //http://api.wanshangle.com:10000/api? appId=000001&sign=sign&time=1371988912&v=1.0&api=movie.scheduling&movieid=1&cinemaid=1&timedistance=0
@@ -196,6 +220,7 @@ static char kAFJSONRequestOperationObjectKey;
     [paramDict setObject:@"movie.scheduling" forKey:@"api"];
     [paramDict setObject:aMovie.uid forKey:@"movieid"];
     [paramDict setObject:aCinema.uid  forKey:@"cinemaid"];
+    [paramDict setObject:@"0"  forKey:@"timedistance"];
     
     // add appId & cookie & phoneType
     [paramDict setValue:[ApiConfig getApiAppId] forKey:@"appId"];

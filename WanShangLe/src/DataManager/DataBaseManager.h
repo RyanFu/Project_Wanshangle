@@ -380,4 +380,10 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (BOOL)isSelectedWantLook:(NSString *)uid withType:(NSString *)type; //判断是否想看
 - (BOOL)addActionState:(NSDictionary *)dataDic; //添加赞和想看数据
 /*****************************************/
+
+//    returnArray = (NSMutableArray *)[returnArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+//        NSString *first =  [(MMovie*)a name];
+//        NSString *second = [(MMovie*)b name];
+//        return [first compare:second];
+//    }];
 @end

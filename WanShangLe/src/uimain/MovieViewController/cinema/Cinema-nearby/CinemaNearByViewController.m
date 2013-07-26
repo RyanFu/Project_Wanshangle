@@ -169,6 +169,31 @@
         
         NSArray *dataArray = [[DataBaseManager sharedInstance] insertTemporaryCinemasIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
         
+        for (MCinema *tCinema in dataArray) {
+            CLLocationDegrees latitude = [tCinema.latitude doubleValue];
+            CLLocationDegrees longitude = [tCinema.longitude doubleValue];
+            double distance = [[LocationManager defaultLocationManager] distanceBetweenUserToLatitude:latitude longitude:longitude];
+            tCinema.distance = [NSNumber numberWithDouble:distance];
+        }
+        
+        dataArray = [dataArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+            double first =  [[(MCinema*)a distance] doubleValue];
+            double second = [[(MCinema*)b distance] doubleValue];
+            
+            if (first>second) {
+                return NSOrderedDescending;
+            }else if(first<second){
+                return NSOrderedAscending;
+            }else{
+                return NSOrderedSame;
+            }
+        }];
+        
+        ABLoggerDebug(@"距离 排序 测试");
+        for (MCinema *tcinema in dataArray) {
+            ABLoggerDebug(@"距离 === %d",[[tcinema distance] intValue]);
+        }
+        
         if (dataArray==nil || [dataArray count]<=0) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self reloadPullRefreshData];
@@ -227,13 +252,6 @@
     
     ABLoggerInfo(@"附近 影院 count=== %d",[dataArray count]);
     [self.mArray addObjectsFromArray:dataArray];
-    
-    for (MCinema *tCinema in _mArray) {
-        CLLocationDegrees latitude = [tCinema.latitude doubleValue];
-        CLLocationDegrees longitude = [tCinema.longitue doubleValue];
-        double distance = [[LocationManager defaultLocationManager] distanceBetweenUserToLatitude:latitude longitude:longitude];
-        tCinema.distance = [NSNumber numberWithDouble:distance];
-    }
     
     BOOL isNoGPS = ((int)[_mArray count]<=0);
     [self displayNOGPS:isNoGPS];
@@ -321,7 +339,7 @@
         NSString *dataType = [NSString stringWithFormat:@"%d",API_MCinemaNearByCmd];
         
         if (!isLoadMore || lm.userLocation==nil ||
-            latitude==0.0f || longitude==0.0f) {//重新更新附近KTV列表
+            latitude==0.0f || longitude==0.0f) {//重新更新附近影院列表
             number = 0;
             [lm getUserGPSLocationWithCallBack:^(BOOL isEnableGPS,BOOL isSuccess) {
                 if (isSuccess) {
@@ -332,13 +350,13 @@
                                                                                          offset:number
                                                                                          limit:DataLimit
                                                                                          dataType:dataType
-                                                                                         isNewData:!isLoadMore];
+                                                                                         isNewData:YES];
                 }else{
                     [self displayNOGPS:YES];
                 }
             }];
             
-        }else{//加载更多KTV附近
+        }else{//加载更多影院附近
             self.apiCmdMovie_getNearByCinemas = (ApiCmdMovie_getNearByCinemas *)[[DataBaseManager sharedInstance]
                                                                                  getNearbyCinemaListFromCoreDataDelegate:self
                                                                                  Latitude:latitude
@@ -346,7 +364,7 @@
                                                                                  offset:number
                                                                                  limit:DataLimit
                                                                                  dataType:dataType
-                                                                                 isNewData:!isLoadMore];
+                                                                                 isNewData:NO];
         }
         
         return  nil;

@@ -6,11 +6,12 @@
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
-#import "CinemaTableViewCellSection.h"
+#import "MovieCinemaCell.h"
 
-@implementation CinemaTableViewCellSection
+@implementation MovieCinemaCell
 
-@synthesize cinema_district;
+@synthesize cinema_name;
+@synthesize cinema_address;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -26,7 +27,8 @@
     ABLoggerMethod();
     [super awakeFromNib];
     
-    [self setSelectionStyle:UITableViewCellSelectionStyleGray];
+    [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+    [self setAccessoryType:UITableViewCellAccessoryNone];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
@@ -36,19 +38,10 @@
     // Configure the view for the selected state
 }
 
-- (void)changeArrowWithUp:(BOOL)up
-{
-    if (up) {
-        self.arrowImageView.image = [UIImage imageNamed:@"UpAccessory.png"];
-    }else
-    {
-        self.arrowImageView.image = [UIImage imageNamed:@"DownAccessory.png"];
-    }
-}
-
 -(void)dealloc{
     
-    self.cinema_district = nil;
+    self.cinema_name = nil;
+    self.cinema_address = nil;
     [super dealloc];
 }
 

@@ -168,7 +168,32 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        NSArray *dataArray = [[DataBaseManager sharedInstance] insertKTVsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+        NSArray *dataArray = [[DataBaseManager sharedInstance] insertTemporaryKTVsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+        
+        for (KKTV *tKTV in dataArray) {
+            CLLocationDegrees latitude = [tKTV.latitude doubleValue];
+            CLLocationDegrees longitude = [tKTV.longitude doubleValue];
+            double distance = [[LocationManager defaultLocationManager] distanceBetweenUserToLatitude:latitude longitude:longitude];
+            tKTV.distance = [NSNumber numberWithDouble:distance];
+        }
+        
+        dataArray = [dataArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+            double first =  [[(MCinema*)a distance] doubleValue];
+            double second = [[(MCinema*)b distance] doubleValue];
+            
+            if (first>second) {
+                return NSOrderedDescending;
+            }else if(first<second){
+                return NSOrderedAscending;
+            }else{
+                return NSOrderedSame;
+            }
+        }];
+        
+        ABLoggerDebug(@"距离 排序 测试");
+        for (MCinema *tcinema in dataArray) {
+            ABLoggerDebug(@"距离 === %d",[[tcinema distance] intValue]);
+        }
         
         if (dataArray==nil || [dataArray count]<=0) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -187,7 +212,7 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self addDataIntoCacheData:cacheData];
-        [self updateData:API_KKTVCmd withData:[self getCacheData]];
+        [self updateData:API_KKTVNearByCmd withData:[self getCacheData]];
     });
 }
 
@@ -204,7 +229,7 @@
     ABLogger_int(tag);
     switch (tag) {
         case 0:
-        case API_KKTVCmd:
+        case API_KKTVNearByCmd:
         {
             [self formatKTVData:dataArray];
         }
@@ -314,6 +339,7 @@
         LocationManager *lm = [LocationManager defaultLocationManager];
         double latitude = lm.userLocation.coordinate.latitude;
         double longitude = lm.userLocation.coordinate.longitude;
+        NSString *dataType = [NSString stringWithFormat:@"%d",API_KKTVNearByCmd];
         
         if (!isLoadMore || lm.userLocation==nil ||
             latitude==0.0f || longitude==0.0f) {//重新更新附近KTV列表
@@ -325,7 +351,9 @@
                                                                          Latitude:latitude
                                                                          longitude:longitude
                                                                          offset:number
-                                                                         limit:DataLimit];
+                                                                         limit:DataLimit
+                                                                         dataType:dataType
+                                                                         isNewData:YES];
                 }else{
                     [self displayNOGPS:YES];
                 }
@@ -337,7 +365,9 @@
                                                                  Latitude:latitude
                                                                  longitude:longitude
                                                                  offset:number
-                                                                 limit:DataLimit];
+                                                                 limit:DataLimit
+                                                                 dataType:dataType
+                                                                 isNewData:NO];
         }
         
         return  nil;
@@ -348,13 +378,7 @@
     if ([_mCacheArray count]<DataCount) {
         count = [_mCacheArray count];//取小于DataCount条数据
     }
-    
-    //    for (int i=0;i<[_mCacheArray count] ;i++ ) {
-    //        KKTV *ttktv = [_mCacheArray objectAtIndex:i];
-    //        ABLoggerInfo(@"1111_cacheArray count == %d",[_mCacheArray count]);
-    //        ABLoggerDebug(@"2222  coredata district id === %@",ttktv.districtid);
-    //    }
-    
+
     NSMutableArray *aPageData = [NSMutableArray arrayWithCapacity:count];
     for (int i=0; i<count; i++) {
         KKTV *object = [_mCacheArray objectAtIndex:i];
@@ -364,16 +388,6 @@
     if (count>0) {
         [_mCacheArray removeObjectsInRange:NSMakeRange(0, count)];
     }
-    
-    //    for (int i = 0;i<[aPageData count];i++) {
-    //        KKTV *object = [aPageData objectAtIndex:i];
-    //        ABLoggerInfo(@"111district id ===== %@",object.districtid);
-    //    }
-    
-    //    for (int i = 0;i<[_mCacheArray count];i++) {
-    //        KKTV *object = [_mCacheArray objectAtIndex:i];
-    //        ABLoggerInfo(@"222 ============== district id ===== %@",object.districtid);
-    //    }
     
     ABLoggerInfo(@"_cacheArray count == %d",[_mCacheArray count]);
     ABLoggerInfo(@"aPageData count == %d",[aPageData count]);

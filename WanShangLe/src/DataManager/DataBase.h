@@ -35,6 +35,7 @@
 #import "ApiCmdKTV_getBuyList.h"
 #import "ApiCmdKTV_getPriceList.h"
 #import "ApiCmdKTV_getSearchKTVs.h"
+#import "ApiCmdKTV_getNearByKTVs.h"
 //演出
 #import "SShow.h"
 #import "SShowDetail.h"

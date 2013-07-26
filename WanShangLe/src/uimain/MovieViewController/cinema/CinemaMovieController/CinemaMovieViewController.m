@@ -94,6 +94,14 @@
     
     self.title = _mCinema.name;
     
+    [self initData];
+    [self createBarButtonItem];
+    [self initTableView];
+    
+    [_mTableView setTableHeaderView:_headerView];
+}
+
+- (void)initData{
     self.moviesArray = [[DataBaseManager sharedInstance] getAllMoviesListFromCoreData];
     
     if (!_cinemaMovieTableViewDelegate) {
@@ -106,17 +114,13 @@
     _coverFlow.type = iCarouselTypeLinear;
     [_coverFlow reloadData];
     
-    [self initData];
-    [self createBarButtonItem];
-    [self initTableView];
-    
-    [_mTableView setTableHeaderView:_headerView];
-}
-
-- (void)initData{
     self.cinemaName.text = _mCinema.name;
     self.cinemaAddress.text = _mCinema.address;
     self.title = _mCinema.name;
+    
+    if ([_mCinema.favorite boolValue]) {
+        _favoriteButton.selected = YES;
+    }
 }
 
 - (void)createBarButtonItem{

@@ -5,41 +5,51 @@
 //  Created by stephenliu on 13-6-8.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
-#import "KTVAllListTableViewDelegate.h"
-#import "KTVBuyViewController.h"
-#import "KtvAllViewController.h"
-#import "KTVTableViewCell.h"
-#import "KKTV.h"
+#import "MovieCinemaAllListDelegate.h"
+#import "CinemaAllViewController.h"
+#import "MovieCinemaCell.h"
+#import "MCinema.h"
 
-#import "KtvManagerSearchController.h"
+#import "ScheduleViewController.h"
+#import "CinemaMovieViewController.h"
+#import "CinemaManagerSearchController.h"
+#import "CinemaViewController.h"
+
+#import "UILabel+AFNetworking.h"
+#import "MMovie.h"
+#import "MCinema.h"
 
 #define TagTuan 500
 
-@interface KTVAllListTableViewDelegate(){
+@interface MovieCinemaAllListDelegate(){
     UIButton *loadMoreButton;
 }
 @property(nonatomic,assign) NSMutableArray *mSearchArray;
-@property(nonatomic,retain)KtvManagerSearchController *msearchController;
+@property(nonatomic,retain)CinemaManagerSearchController *msearchController;
 @end
 
-@implementation KTVAllListTableViewDelegate
+@implementation MovieCinemaAllListDelegate
 
 - (id)init{
-    self = [super init];
-    if (self) {
-        
+    if (self = [super init]) {
+        _scheduleCache = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
     }
     return self;
 }
 
 - (void)dealloc{
     self.msearchController = nil;
+    self.scheduleCache = nil;
     [super dealloc];
+}
+
+- (void)clearScheduleCache{
+    [_scheduleCache removeAllObjects];
 }
 
 #pragma mark -
 #pragma mark initData
-- (KtvManagerSearchController *)msearchController{
+- (CinemaManagerSearchController *)msearchController{
     if (_msearchController!=nil) {
         return _msearchController;
     }
@@ -50,7 +60,7 @@
 
 - (void)initSearchController{
     if (_msearchController==nil) {
-        self.msearchController = [[[KtvManagerSearchController alloc] init] autorelease];
+        self.msearchController = [[[CinemaManagerSearchController alloc] init] autorelease];
     }
 }
 
@@ -79,83 +89,83 @@
         return [[[_mArray objectAtIndex:section] objectForKey:@"list"] count];
     }
     
-    return [_mSearchArray count];
+    return [self.mSearchArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
         
-        if ([_mArray count]<=0 || _mArray==nil) {
-            return nil;
-        }
-        
-        return [self ktvCelltableView:tableView cellForRowAtIndexPath:indexPath];
+        return [self cinemaCelltableView:tableView cellForRowAtIndexPath:indexPath];
     }
     
-    return [self ktvSearchtableView:tableView cellForRowAtIndexPath:indexPath];
+    return [self cinemaSearchtableView:tableView cellForRowAtIndexPath:indexPath];
 }
 
 #pragma mark -
 #pragma mark 正常模式Cell
-- (UITableViewCell *)ktvCelltableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (UITableViewCell *)cinemaCelltableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    static NSString *CellIdentifier = @"MKTVCellIdentifier";
+    static NSString *CellIdentifier = @"MovieCinemaCell";
     
-    KTVTableViewCell * cell = (KTVTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    MovieCinemaCell * cell = (MovieCinemaCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [self createNewCell];
+        cell = [self createNewCinemaCell];
     }
     
-    [self configCell:cell cellForRowAtIndexPath:indexPath];
+    if ([_mArray count]<=0 || _mArray==nil) {
+        return cell;
+    }
+    NSArray *list = [[_mArray objectAtIndex:indexPath.section] objectForKey:@"list"];
+    MCinema *cinema = [list objectAtIndex:indexPath.row];
+    
+    [self configCell:cell withCinema:cinema];
     
     return cell;
 }
 
--(KTVTableViewCell *)createNewCell{
+-(MovieCinemaCell *)createNewCinemaCell{
     ABLoggerMethod();
-    KTVTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"KTVTableViewCell" owner:self options:nil] objectAtIndex:0];
+    MovieCinemaCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"MovieCinemaCell" owner:self options:nil] objectAtIndex:0];
     [cell setAccessoryType:UITableViewCellAccessoryNone];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
-- (void)configCell:(KTVTableViewCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (void)configCell:(MovieCinemaCell *)cell withCinema:(MCinema *)cinema{
     
-    KKTV *aKTV = nil;
-    int row = indexPath.row;
+    cell.cinema_name.text = cinema.name;
+    cell.cinema_address.text = cinema.address;
     
-    cell.ktv_distance.hidden = YES;
-    cell.ktv_image_location.hidden = YES;
+    MMovie *aMovie = [_parentViewController.mParentController mMovie];
     
-    NSArray *list = [[_mArray objectAtIndex:indexPath.section] objectForKey:@"list"];
-    aKTV = [list objectAtIndex:row];
-    
-    [self configureCell:cell withObject:aKTV];
-}
-
-- (void)configureCell:(KTVTableViewCell *)cell withObject:(KKTV *)aKTV {
-    
-    cell.ktv_name.text = aKTV.name;
-    cell.ktv_address.text = aKTV.address;
+    NSString *key = [NSString stringWithFormat:@"%@%@",aMovie.uid,cinema.uid];
+    NSString *value = [_scheduleCache objectForKey:key];
+    if (value==nil){
+        [cell.cinema_scheduleCount setJSONWithWithMovie:aMovie
+                                                 cinema:cinema
+                                            placeholder:@"亲,正在加载..."
+                                                success:^(NSURLRequest *request, NSHTTPURLResponse *response, NSString *resultString) {
+                                                    [_scheduleCache setObject:resultString forKey:key];
+                                                } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                                                    ABLoggerError(@" error == %@",[error description]);
+                                                }];
+    }else{
+        [cell.cinema_scheduleCount setText:value];
+    }
     
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:4];
-    if ([aKTV.zhekou boolValue]) {
-        [array addObject:cell.ktv_image_zhekou];
+    if ([cinema.zhekou boolValue]) {
+        [array addObject:cell.cinema_image_zhekou];
     }
-    if ([aKTV.juan boolValue]) {
-        [array addObject:cell.ktv_image_juan];
+    if ([cinema.juan boolValue]) {
+        [array addObject:cell.cinema_image_juan];
     }
-    if ([aKTV.seat boolValue]) {
-        [array addObject:cell.ktv_image_seat];
+    if ([cinema.seat boolValue]) {
+        [array addObject:cell.cinema_image_seat];
     }
-    if ([aKTV.tuan boolValue]) {
-        [array addObject:cell.ktv_image_tuan];
-    }
-    
-    [[cell viewWithTag:TagTuan] removeFromSuperview];
-    if ([array count]<=0) {
-        return;
+    if ([cinema.tuan boolValue]) {
+        [array addObject:cell.cinema_image_tuan];
     }
     
     int twidth = 0;
@@ -174,46 +184,50 @@
     
     CGRect tFrame = [(UIView *)[array lastObject] frame];
     int width = (int)tFrame.origin.x+ tFrame.size.width;
+    ABLoggerInfo(@"view frame ===== %d",width);
     [cell addSubview:view];
-    view.tag = TagTuan;
     [view release];
     
-    int nameSize_width = (cell.bounds.size.width-width-cell.ktv_name.frame.origin.x);
+    int nameSize_width = (cell.bounds.size.width-width-cell.cinema_name.frame.origin.x);
+    ABLoggerDebug(@"cinema.name = %@",cinema.name);
     
-    CGSize nameSize = [aKTV.name sizeWithFont:cell.ktv_name.font
-                            constrainedToSize:CGSizeMake(nameSize_width,MAXFLOAT)];
+    CGSize nameSize = [cinema.name sizeWithFont:cell.cinema_name.font
+                              constrainedToSize:CGSizeMake(nameSize_width,MAXFLOAT)];
     
-    CGRect cell_newFrame = cell.ktv_name.frame;
+    CGRect cell_newFrame = cell.cinema_name.frame;
     cell_newFrame.size.width = nameSize.width;
-    cell.ktv_name.frame = cell_newFrame;
+    cell.cinema_name.frame = cell_newFrame;
     
-    int view_x = cell.ktv_name.frame.origin.x+cell.ktv_name.frame.size.width +10;
+    int view_x = cell.cinema_name.frame.origin.x+cell.cinema_name.frame.size.width +10;
     [view setFrame:CGRectMake(view_x, 0, width, 15)];
     CGPoint newCenter = view.center;
-    newCenter.y = cell.ktv_name.center.y;
+    newCenter.y = cell.cinema_name.center.y;
     view.center = newCenter;
+    cell.cinema_name.text = cinema.name;
 }
 
 #pragma mark -
 #pragma mark 搜索Cell
-- (UITableViewCell *)ktvSearchtableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    static NSString *indentifier = @"MKTVCellIdentifier";
-    KTVTableViewCell *cell = (KTVTableViewCell*)[tableView dequeueReusableCellWithIdentifier:indentifier];
+- (UITableViewCell *)cinemaSearchtableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    static NSString *indentifier = @"MovieCinemaCell";
+    
+    MovieCinemaCell *cell = (MovieCinemaCell*)[tableView dequeueReusableCellWithIdentifier:indentifier];
     
     if (cell == nil) {
-        cell = [self createNewCell];
+        cell = [self createNewCinemaCell];
 	}
-    
-    KKTV *ktv = [_mSearchArray objectAtIndex:indexPath.row];
-    [self configureCell:cell withObject:ktv];
-    
+    MCinema *cinema = [_mSearchArray objectAtIndex:indexPath.row];
+    [self configCell:cell withCinema:cinema];
     return cell;
 }
-
 #pragma mark -
 #pragma mark UITableViewDelegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 70.0f;
+    if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
+        return 85.0f;
+    }
+    
+    return 85.0f;
 }
 
 #pragma mark -
@@ -229,7 +243,7 @@
         headerView.text = [NSString stringWithFormat:@"%@  (共%d家)",name,[list count]];
         
         return [headerView autorelease];
-
+        
     }
     //搜索模式
     return nil;
@@ -245,19 +259,34 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    MCinema *mCinema = nil;
+    
+    if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
+        
+        NSDictionary *dic = [_mArray objectAtIndex:indexPath.section];
+        NSArray *list = [dic objectForKey:@"list"];
+        mCinema = [list objectAtIndex:indexPath.row];
+        
+    } else {//搜索模式
+        mCinema = [_mSearchArray objectAtIndex:indexPath.row];
+    }
+    
+    MMovie *mMovie = [_parentViewController.mParentController mMovie];
+    
+    //    BOOL isMoviePanel = [CacheManager sharedInstance].isMoviePanel;
+    UINavigationController *rootNavigationController = [CacheManager sharedInstance].rootNavController;
+    
+    ScheduleViewController *scheduleViewController = [[ScheduleViewController alloc]
+                                                      initWithNibName:(iPhone5?@"ScheduleViewController_5":@"ScheduleViewController")
+                                                      bundle:nil];
+    scheduleViewController.mCinema = mCinema;
+    scheduleViewController.mMovie = mMovie;
+    [rootNavigationController pushViewController:scheduleViewController animated:YES];
+    [scheduleViewController release];
+    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    KTVBuyViewController *ktvBuyController = [[KTVBuyViewController alloc] initWithNibName:iPhone5?@"KTVBuyViewController_5":@"KTVBuyViewController" bundle:nil];
-    
-    KKTV *aKTV = nil;
-    int row = indexPath.row;
-    
-    NSArray *list = [[_mArray objectAtIndex:indexPath.section] objectForKey:@"list"];
-    aKTV = [list objectAtIndex:row];
-    
-    ktvBuyController.mKTV = aKTV;
-    [[CacheManager sharedInstance].rootNavController pushViewController:ktvBuyController animated:YES];
-    [ktvBuyController release];
 }
 
 #pragma mark -
@@ -359,17 +388,13 @@
         return;
     }
     
-    [self.msearchController startKTVSearchForSearchString:searchBar.text complete:^(NSMutableArray *searchArray, BOOL isSuccess) {
+    [self.msearchController startCinemaSearchForSearchString:searchBar.text complete:^(NSMutableArray *searchArray, BOOL isSuccess) {
         self.mSearchArray = searchArray;
         [self.msearchDisplayController.searchResultsTableView reloadData];
-        
-        BOOL done = ([searchArray count]<DataCount);
         //搜索模式
         if (_msearchDisplayController.searchResultsTableView.tableFooterView==nil) {
             [self addSearchLoadMoreButton];
-        }
-        
-        if(!isSuccess || done){
+        }else if(!isSuccess){
             [loadMoreButton setTitle:@"已全部加载" forState:UIControlStateNormal];
         }
     }];
@@ -476,4 +501,5 @@
     
     return YES;
 }
+
 @end

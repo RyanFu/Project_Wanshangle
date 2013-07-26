@@ -120,9 +120,9 @@ static DataBaseManager *_sharedInstance = nil;
 //服务器时间
 -(NSDate *)date{
     NSDate *newDate = [[NSDate date] dateByAddingTimeInterval:_missTime];
-    ABLoggerDebug(@"手机时间 ======= %@",[NSDate date]);
-    ABLoggerDebug(@"服务器时间 ======= %@",newDate);
-    ABLoggerDebug(@"时间差 ======= %0.0f",_missTime);
+//    ABLoggerDebug(@"手机时间 ======= %@",[NSDate date]);
+//    ABLoggerDebug(@"服务器时间 ======= %@",newDate);
+//    ABLoggerDebug(@"时间差 ======= %0.0f",_missTime);
     return newDate;
 }
 
@@ -563,12 +563,6 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 - (NSArray *)getAllMoviesListFromCoreDataWithCityName:(NSString *)cityName{
-    
-    //    returnArray = (NSMutableArray *)[returnArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-    //        NSString *first =  [(MMovie*)a name];
-    //        NSString *second = [(MMovie*)b name];
-    //        return [first compare:second];
-    //    }];
     
     return [MMovie MR_findAllInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
@@ -1191,7 +1185,7 @@ static DataBaseManager *_sharedInstance = nil;
     LocationManager *lm = [LocationManager defaultLocationManager];
     BOOL isSuccess =  [lm getUserGPSLocationWithCallBack:^(BOOL isEnableGPS, BOOL isSuccess) {
         for (MCinema *tCinema in cinemas) {
-            double distance = [lm distanceBetweenUserToLatitude:[tCinema.latitude doubleValue] longitude:[tCinema.longitue doubleValue]];
+            double distance = [lm distanceBetweenUserToLatitude:[tCinema.latitude doubleValue] longitude:[tCinema.longitude doubleValue]];
             tCinema.distance = [NSNumber numberWithInt:distance];
         }
         
@@ -1348,27 +1342,27 @@ static DataBaseManager *_sharedInstance = nil;
 
     offset = (offset<0)?0:offset;
 
-    NSString *validDate = [self getTodayZeroTimeStamp];;
-    NSString *uid = [ApiCmdMovie_getNearByCinemas getTimeStampUid:nil];
-    TimeStamp *timeStamp = [TimeStamp MR_findFirstByAttribute:@"uid" withValue:uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-    //判断是否刷新数据
-    if (isNewData) {
-        if (timeStamp == nil)
-        {
-            ABLoggerInfo(@"插入 附近影院 TimeStamp 新数据 ======= %@",uid);
-            timeStamp = [TimeStamp MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-        }
-        timeStamp.uid = uid;
-        timeStamp.locationDate = [self getTodayTimeStamp];
-        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
-        validDate = timeStamp.locationDate;
-    }else{
-        if (timeStamp!=nil) {
-            if (([validDate compare:timeStamp.locationDate options:NSNumericSearch] != NSOrderedDescending)) {
-                validDate = timeStamp.locationDate;
-            }
-        }
-    }
+//    NSString *validDate = [self getTodayZeroTimeStamp];;
+//    NSString *uid = [ApiCmdMovie_getNearByCinemas getTimeStampUid:nil];
+//    TimeStamp *timeStamp = [TimeStamp MR_findFirstByAttribute:@"uid" withValue:uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+//    //判断是否刷新数据
+//    if (isNewData) {
+//        if (timeStamp == nil)
+//        {
+//            ABLoggerInfo(@"插入 附近影院 TimeStamp 新数据 ======= %@",uid);
+//            timeStamp = [TimeStamp MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+//        }
+//        timeStamp.uid = uid;
+//        timeStamp.locationDate = [self getTodayTimeStamp];
+//        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
+//        validDate = timeStamp.locationDate;
+//    }else{
+//        if (timeStamp!=nil) {
+//            if (([validDate compare:timeStamp.locationDate options:NSNumericSearch] != NSOrderedDescending)) {
+//                validDate = timeStamp.locationDate;
+//            }
+//        }
+//    }
     
     //附近搜索是事实的，因为位置是容易变化的，所以不从数据库里读数据，每次都从服务器那边读取数据
     if (tapiCmd!=nil)
@@ -1616,7 +1610,7 @@ static DataBaseManager *_sharedInstance = nil;
     mCinema.name = [aCinemaData objectForKey:@"name"];
     mCinema.address = [aCinemaData objectForKey:@"address"];
     mCinema.phoneNumber = [aCinemaData objectForKey:@"contactphonex"];
-    mCinema.longitue = [NSNumber numberWithDouble:[[aCinemaData objectForKey:@"longitude"] doubleValue]];
+    mCinema.longitude = [NSNumber numberWithDouble:[[aCinemaData objectForKey:@"longitude"] doubleValue]];
     mCinema.latitude = [NSNumber numberWithDouble:[[aCinemaData objectForKey:@"latitude"] doubleValue]];
 }
 //========================================= 影院 =========================================/
@@ -2686,21 +2680,25 @@ static DataBaseManager *_sharedInstance = nil;
     
     ApiClient* apiClient = [ApiClient defaultClient];
     
-    ApiCmdKTV_getAllKTVs* apiCmdKTV_getAllKTVs = [[ApiCmdKTV_getAllKTVs alloc] init];
-    apiCmdKTV_getAllKTVs.delegate = delegate;
-    apiCmdKTV_getAllKTVs.offset = offset;
+    ApiCmdKTV_getNearByKTVs* apiCmdKTV_getNearByKTVs = [[ApiCmdKTV_getNearByKTVs alloc] init];
+    apiCmdKTV_getNearByKTVs.delegate = delegate;
+    apiCmdKTV_getNearByKTVs.offset = offset;
     
-    apiCmdKTV_getAllKTVs.limit = limit;
+    apiCmdKTV_getNearByKTVs.limit = limit;
     if (limit==0) {
-        apiCmdKTV_getAllKTVs.limit = DataLimit;
+        apiCmdKTV_getNearByKTVs.limit = DataLimit;
     }
     
-    apiCmdKTV_getAllKTVs.cityId = [[LocationManager defaultLocationManager] getUserCityId];
-    apiCmdKTV_getAllKTVs.dataType = dataType;
-    [apiClient executeApiCmdAsync:apiCmdKTV_getAllKTVs];
-    [apiCmdKTV_getAllKTVs.httpRequest setTag:API_KKTVNearByCmd];
+    apiCmdKTV_getNearByKTVs.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdKTV_getNearByKTVs.dataType = dataType;
+    apiCmdKTV_getNearByKTVs.latitude = latitude;
+    apiCmdKTV_getNearByKTVs.longitude = longitude;
+    [apiClient executeApiCmdAsync:apiCmdKTV_getNearByKTVs];
+    [apiCmdKTV_getNearByKTVs.httpRequest setTag:API_KKTVNearByCmd];
+    [apiCmdKTV_getNearByKTVs.httpRequest setNumberOfTimesToRetryOnTimeout:2];
+    [apiCmdKTV_getNearByKTVs.httpRequest setTimeOutSeconds:60*2];
     
-    return [apiCmdKTV_getAllKTVs autorelease];
+    return [apiCmdKTV_getNearByKTVs autorelease];
     
 }
 
@@ -2776,7 +2774,7 @@ static DataBaseManager *_sharedInstance = nil;
 - (NSArray *)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
     CFTimeInterval time1 = Elapsed_Time;
     NSManagedObjectContext *dataBaseContext = [NSManagedObjectContext MR_contextForCurrentThread];
-    NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"infos"];
+    NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"list"];
     
     KKTV *kKTV = nil;
     NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:20];

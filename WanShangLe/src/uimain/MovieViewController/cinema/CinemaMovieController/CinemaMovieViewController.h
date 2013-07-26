@@ -12,6 +12,7 @@
 
 @interface CinemaMovieViewController : UIViewController
 
+@property(nonatomic,retain) IBOutlet UIButton *favoriteButton;
 @property(nonatomic,retain) IBOutlet UIButton *todayButton;
 @property(nonatomic,retain) IBOutlet UIButton *tomorrowButton;
 @property(nonatomic,retain) IBOutlet UIControl *movieDetailControl;

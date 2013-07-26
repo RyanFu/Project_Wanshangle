@@ -14,6 +14,7 @@
 #import "MCinema.h"
 #import "ApiCmd.h"
 
+#import "MovieCinemaAllListDelegate.h"
 #import "CinemaAllListTableViewDelegate.h"
 
 #define TableView_Y 44
@@ -21,7 +22,8 @@
 @interface CinemaAllViewController()<ApiNotify>{
     BOOL isLoadMoreAll;
 }
-@property(nonatomic,retain)CinemaAllListTableViewDelegate *allListDelegate;
+@property(nonatomic,retain)CinemaAllListTableViewDelegate *cinemaDelegate;
+@property(nonatomic,retain)MovieCinemaAllListDelegate *movieDelegate;
 @end
 
 @implementation CinemaAllViewController
@@ -53,7 +55,8 @@
     self.strongSearchDisplayController.delegate = nil;
     self.strongSearchDisplayController = nil;
     
-    self.allListDelegate = nil;
+    self.cinemaDelegate = nil;
+    self.movieDelegate = nil;
     self.mTableView = nil;
     self.mArray = nil;
     self.mCacheArray = nil;
@@ -76,10 +79,16 @@
     if ([_mArray count]<=0) {
         [self loadMoreData];
     }
+    
+    [self setTableViewDelegate];
+    [_mTableView reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
     [self cancelApiCmd];
+    
+    //清除 电影-影院 代理中的排期缓存
+    [_movieDelegate clearScheduleCache];
 }
 
 - (void)viewDidLoad
@@ -134,15 +143,62 @@
 
 #pragma mark 设置 TableView Delegate
 - (void)setTableViewDelegate{
-    if (_allListDelegate==nil) {
-        _allListDelegate = [[CinemaAllListTableViewDelegate alloc] init];
-        _allListDelegate.parentViewController = self;
+    
+    BOOL isMoviePanel = [CacheManager sharedInstance].isMoviePanel;
+    if (isMoviePanel) {
+        if (_movieDelegate==nil) {
+            _movieDelegate = [[MovieCinemaAllListDelegate alloc] init];
+        }
+        
+        _mTableView.dataSource = _movieDelegate;
+        _mTableView.delegate = _movieDelegate;
+        
+        _movieDelegate.mTableView = _mTableView;
+        _movieDelegate.mArray = _mArray;
+        
+        _movieDelegate.parentViewController = self;
+        
+        _movieDelegate.msearchDisplayController = self.strongSearchDisplayController;
+        UIViewController *contentsController = (UIViewController *)(_mParentController.mparentController);
+        contentsController.searchDisplayController.searchResultsDataSource = _movieDelegate;
+        contentsController.searchDisplayController.searchResultsDelegate = _movieDelegate;
+        contentsController.searchDisplayController.delegate = _movieDelegate;
+        
+        _refreshHeaderView.delegate = _movieDelegate;
+        _refreshTailerView.delegate = _movieDelegate;
+        
+        _movieDelegate.refreshHeaderView = self.refreshHeaderView;
+        _movieDelegate.refreshTailerView = self.refreshTailerView;
+        
+        self.searchBar.delegate = _movieDelegate;
+    }else{
+        if (_cinemaDelegate==nil) {
+            _cinemaDelegate = [[CinemaAllListTableViewDelegate alloc] init];
+
+        }
+        
+        _mTableView.dataSource = _cinemaDelegate;
+        _mTableView.delegate = _cinemaDelegate;
+        
+        _cinemaDelegate.mTableView = _mTableView;
+        _cinemaDelegate.mArray = _mArray;
+        
+        _cinemaDelegate.parentViewController = self;
+        
+        _cinemaDelegate.msearchDisplayController = self.strongSearchDisplayController;
+        UIViewController *contentsController = (UIViewController *)(_mParentController.mparentController);
+        contentsController.searchDisplayController.searchResultsDataSource = _cinemaDelegate;
+        contentsController.searchDisplayController.searchResultsDelegate = _cinemaDelegate;
+        contentsController.searchDisplayController.delegate = _cinemaDelegate;
+        
+        _refreshHeaderView.delegate = _cinemaDelegate;
+        _refreshTailerView.delegate = _cinemaDelegate;
+        
+        _cinemaDelegate.refreshHeaderView = self.refreshHeaderView;
+        _cinemaDelegate.refreshTailerView = self.refreshTailerView;
+        
+        self.searchBar.delegate = _cinemaDelegate;
     }
-    _mTableView.dataSource = _allListDelegate;
-    _mTableView.delegate = _allListDelegate;
-    _allListDelegate.mTableView = _mTableView;
-    _allListDelegate.mArray = _mArray;
-    _allListDelegate.msearchDisplayController = self.strongSearchDisplayController;
 }
 
 -(void)hiddenSearchBar{
@@ -186,12 +242,12 @@
         
         [self setTableViewDelegate];
         
-        self.searchBar.delegate = _allListDelegate;
+//        self.searchBar.delegate = _allListDelegate;
         UIViewController *contentsController = (UIViewController *)(_mParentController.mparentController);
         self.strongSearchDisplayController = [[[UISearchDisplayController alloc] initWithSearchBar:self.searchBar contentsController:contentsController] autorelease];
-        contentsController.searchDisplayController.searchResultsDataSource = _allListDelegate;
-        contentsController.searchDisplayController.searchResultsDelegate = _allListDelegate;
-        contentsController.searchDisplayController.delegate = _allListDelegate;
+//        contentsController.searchDisplayController.searchResultsDataSource = _allListDelegate;
+//        contentsController.searchDisplayController.searchResultsDelegate = _allListDelegate;
+//        contentsController.searchDisplayController.delegate = _allListDelegate;
     }
     
 }
@@ -202,7 +258,7 @@
     
     if (_refreshHeaderView == nil) {
         EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame: CGRectMake(0.0f, _mTableView.bounds.size.height, _mTableView.frame.size.width, _mTableView.bounds.size.height)];
-		view.delegate = self.allListDelegate;
+//		view.delegate = self.allListDelegate;
         view.tag = EGOBottomView;
         view.backgroundColor = [UIColor clearColor];
 		[_mTableView addSubview:view];
@@ -210,15 +266,15 @@
 		[view release];
         
         view = [[EGORefreshTableHeaderView alloc] initWithFrame: CGRectMake(0.0f, - _mTableView.bounds.size.height, _mTableView.frame.size.width, _mTableView.bounds.size.height)];
-        view.delegate = self.allListDelegate;
+//        view.delegate = self.allListDelegate;
         view.tag = EGOHeaderView;
         view.backgroundColor = [UIColor clearColor];
         [_mTableView addSubview:view];
         self.refreshHeaderView = view;
         [view release];
     }
-    _allListDelegate.refreshHeaderView = self.refreshHeaderView;
-    _allListDelegate.refreshTailerView = self.refreshTailerView;
+//    _allListDelegate.refreshHeaderView = self.refreshHeaderView;
+//    _allListDelegate.refreshTailerView = self.refreshTailerView;
     [_refreshHeaderView refreshLastUpdatedDate];
 }
 
@@ -411,14 +467,28 @@
 
 - (void)reloadPullRefreshData{
     
+    BOOL isMoviePanel = [CacheManager sharedInstance].isMoviePanel;
     [self setTableViewDelegate];
-    if (isLoadMoreAll) {
-        [_allListDelegate doneLoadingTableViewData];
-    }else{
-        [_allListDelegate doneReLoadingTableViewData];
-    }
-    _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
     
+    if (isMoviePanel) {
+        if (isLoadMoreAll) {
+            [_movieDelegate doneLoadingTableViewData];
+        }else{
+            [_movieDelegate doneReLoadingTableViewData];
+        }
+        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+        
+    }else{
+        if (isLoadMoreAll) {
+            [_cinemaDelegate doneLoadingTableViewData];
+        }else{
+            [_cinemaDelegate doneReLoadingTableViewData];
+        }
+        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+        
+    }
+
+
 }
 
 //添加缓存数据

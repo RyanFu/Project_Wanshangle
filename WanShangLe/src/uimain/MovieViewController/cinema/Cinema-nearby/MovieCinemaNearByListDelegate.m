@@ -5,20 +5,23 @@
 //  Created by stephenliu on 13-6-8.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
-#import "KTVNearByListTableViewDelegate.h"
-#import "KTVBuyViewController.h"
-#import "KtvNearByViewController.h"
-#import "KTVTableViewCell.h"
-#import "KKTV.h"
+#import "MovieCinemaNearByListDelegate.h"
+#import "CinemaNearByViewController.h"
+#import "CinemaTableViewCell.h"
+#import "MCinema.h"
+
+#import "ScheduleViewController.h"
+#import "CinemaMovieViewController.h"
+#import "CinemaViewController.h"
 
 #define TagTuan 500
 
-@interface KTVNearByListTableViewDelegate(){
+@interface MovieCinemaNearByListDelegate(){
     
 }
 @end
 
-@implementation KTVNearByListTableViewDelegate
+@implementation MovieCinemaNearByListDelegate
 
 #pragma mark -
 #pragma mark UITableViewDataSource
@@ -29,7 +32,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if ([_mArray count]<=0 || _mArray==nil) {//每次刷新表的时候检测是否有数据
+    if ([_mArray count]<=0) {//每次刷新表的时候检测是否有数据
         _refreshTailerView.hidden = YES;
     }else{
          _refreshTailerView.hidden = NO;
@@ -47,9 +50,9 @@
 #pragma mark 正常模式Cell
 - (UITableViewCell *)ktvCelltableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     ABLoggerMethod();
-    static NSString *CellIdentifier = @"MKTVCellIdentifier";
+    static NSString *CellIdentifier = @"mCinemaCell";
 
-    KTVTableViewCell * cell = (KTVTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    CinemaTableViewCell * cell = (CinemaTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [self createNewMocieCell];
     }
@@ -64,56 +67,52 @@
     return cell;
 }
 
--(KTVTableViewCell *)createNewMocieCell{
+-(CinemaTableViewCell *)createNewMocieCell{
     ABLoggerMethod();
-    KTVTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"KTVTableViewCell" owner:self options:nil] objectAtIndex:0];
+    CinemaTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"CinemaTableViewCell" owner:self options:nil] objectAtIndex:0];
     [cell setAccessoryType:UITableViewCellAccessoryNone];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
-- (void)configCell:(KTVTableViewCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (void)configCell:(CinemaTableViewCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    KKTV *aKTV = nil;
-    int row = indexPath.row;
-    cell.ktv_distance.hidden = NO;
-    cell.ktv_image_location.hidden = NO;
-    aKTV = [_mArray objectAtIndex:row];
-
-    [self configureCell:cell withObject:aKTV];
+    MCinema *aCinema = [_mArray objectAtIndex:indexPath.row];
+    
+    [self configureCell:cell withObject:aCinema];
 }
 
-- (void)configureCell:(KTVTableViewCell *)cell withObject:(KKTV *)aKTV {
+- (void)configureCell:(CinemaTableViewCell *)cell withObject:(MCinema *)cinema {
     
-    cell.ktv_name.text = aKTV.name;
-    cell.ktv_address.text = aKTV.address;
+    
+    cell.cinema_name.text = cinema.name;
+    cell.cinema_address.text = cinema.address;
+    
+    cell.cinema_image_location.hidden = NO;
+    cell.cinema_distance.hidden = NO;
     
     NSString *kmStr = nil;
-    int distance = [aKTV.distance intValue];
+    int distance = [cinema.distance intValue];
     if (distance>1000) {
         kmStr = [NSString stringWithFormat:@"%0.2fkm",distance/1000.0f];
     }else{
         kmStr = [NSString stringWithFormat:@"%dm",distance];
     }
-     cell.ktv_distance.text = kmStr;
+    
+    cell.cinema_distance.text = kmStr;
     
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:4];
-    if ([aKTV.zhekou boolValue]) {
-        [array addObject:cell.ktv_image_zhekou];
+    if ([cinema.zhekou boolValue]) {
+        [array addObject:cell.cinema_image_zhekou];
     }
-    if ([aKTV.juan boolValue]) {
-        [array addObject:cell.ktv_image_juan];
+    if ([cinema.juan boolValue]) {
+        [array addObject:cell.cinema_image_juan];
     }
-    if ([aKTV.seat boolValue]) {
-        [array addObject:cell.ktv_image_seat];
+    if ([cinema.seat boolValue]) {
+        [array addObject:cell.cinema_image_seat];
     }
-    if ([aKTV.tuan boolValue]) {
-        [array addObject:cell.ktv_image_tuan];
-    }
-    
-    [[cell viewWithTag:TagTuan] removeFromSuperview];
-    if ([array count]<=0) {
-        return;
+    if ([cinema.tuan boolValue]) {
+        [array addObject:cell.cinema_image_tuan];
     }
     
     int twidth = 0;
@@ -132,45 +131,63 @@
     
     CGRect tFrame = [(UIView *)[array lastObject] frame];
     int width = (int)tFrame.origin.x+ tFrame.size.width;
+    ABLoggerInfo(@"view frame ===== %d",width);
     [cell addSubview:view];
-    view.tag = TagTuan;
     [view release];
     
-    int nameSize_width = (cell.bounds.size.width-width-cell.ktv_name.frame.origin.x);
+    int nameSize_width = (cell.bounds.size.width-width-cell.cinema_name.frame.origin.x);
+    ABLoggerDebug(@"cinema.name = %@",cinema.name);
     
-    CGSize nameSize = [aKTV.name sizeWithFont:cell.ktv_name.font
-                            constrainedToSize:CGSizeMake(nameSize_width,MAXFLOAT)];
+    CGSize nameSize = [cinema.name sizeWithFont:cell.cinema_name.font
+                              constrainedToSize:CGSizeMake(nameSize_width,MAXFLOAT)];
     
-    CGRect cell_newFrame = cell.ktv_name.frame;
+    CGRect cell_newFrame = cell.cinema_name.frame;
     cell_newFrame.size.width = nameSize.width;
-    cell.ktv_name.frame = cell_newFrame;
+    cell.cinema_name.frame = cell_newFrame;
     
-    int view_x = cell.ktv_name.frame.origin.x+cell.ktv_name.frame.size.width +10;
+    int view_x = cell.cinema_name.frame.origin.x+cell.cinema_name.frame.size.width +10;
     [view setFrame:CGRectMake(view_x, 0, width, 15)];
     CGPoint newCenter = view.center;
-    newCenter.y = cell.ktv_name.center.y;
+    newCenter.y = cell.cinema_name.center.y;
     view.center = newCenter;
+    cell.cinema_name.text = cinema.name;
 }
 
 #pragma mark -
 #pragma mark UITableViewDelegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 70.0f;
+    return 80.0f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+//    NSDictionary *dic = [_mArray objectAtIndex:indexPath.section];
+//    NSArray *list = [dic objectForKey:@"list"];
+    MCinema *mCinema = [_mArray objectAtIndex:indexPath.row];
+    MMovie *mMovie = [_parentViewController.mParentController mMovie];
+    
+    BOOL isMoviePanel = [CacheManager sharedInstance].isMoviePanel;
+    UINavigationController *rootNavigationController = [CacheManager sharedInstance].rootNavController;
+    
+    if (isMoviePanel) {
+        ScheduleViewController *scheduleViewController = [[ScheduleViewController alloc]
+                                                          initWithNibName:(iPhone5?@"ScheduleViewController_5":@"ScheduleViewController")
+                                                          bundle:nil];
+        scheduleViewController.mCinema = mCinema;
+        scheduleViewController.mMovie = mMovie;
+        [rootNavigationController pushViewController:scheduleViewController animated:YES];
+        [scheduleViewController release];
+    }else{
+        CinemaMovieViewController *cinemaMovieController = [[CinemaMovieViewController alloc]
+                                                            initWithNibName:(iPhone5?@"CinemaMovieViewController_5":@"CinemaMovieViewController")
+                                                            bundle:nil];
+        cinemaMovieController.mCinema = mCinema;
+        cinemaMovieController.mMovie = mMovie;
+        [rootNavigationController pushViewController:cinemaMovieController animated:YES];
+        [cinemaMovieController release];
+    }
+    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
-    KTVBuyViewController *ktvBuyController = [[KTVBuyViewController alloc] initWithNibName:iPhone5?@"KTVBuyViewController_5":@"KTVBuyViewController" bundle:nil];
-    
-    KKTV *aKTV = nil;
-    int row = indexPath.row;
-
-    aKTV = [_mArray objectAtIndex:row];
-    
-    ktvBuyController.mKTV = aKTV;
-    [[CacheManager sharedInstance].rootNavController pushViewController:ktvBuyController animated:YES];
-    [ktvBuyController release];
 }
 
 #pragma mark -

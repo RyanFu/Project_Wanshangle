@@ -22,7 +22,7 @@
 @property (nonatomic, retain) NSNumber * juan;
 @property (nonatomic, retain) NSNumber * latitude;
 @property (nonatomic, retain) NSString * locationDate;
-@property (nonatomic, retain) NSNumber * longitue;
+@property (nonatomic, retain) NSNumber * longitude;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSNumber * distance;
 @property (nonatomic, retain) NSString * phoneNumber;

@@ -141,6 +141,7 @@
     _mTableView.delegate = _allListDelegate;
     _allListDelegate.mTableView = _mTableView;
     _allListDelegate.mArray = _mArray;
+    _allListDelegate.msearchDisplayController = _strongSearchDisplayController;
 }
 
 -(void)hiddenSearchBar{

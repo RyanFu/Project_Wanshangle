@@ -116,7 +116,6 @@
         [_mArray removeObjectsInArray:removeArray];
     }
 
-
     if (self.searchCallBack) {
         _searchCallBack(_mArray,YES);
     }

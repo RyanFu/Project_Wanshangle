@@ -34,6 +34,7 @@
 @class ApiCmdKTV_getBuyList;
 @class ApiCmdKTV_getPriceList;
 @class ApiCmdKTV_getSearchKTVs;
+@class ApiCmdKTV_getNearByKTVs;
 //-------------演出----------------/
 @class SShow;
 @class SShowDetail;
@@ -98,9 +99,9 @@
 #define API_SShow_Oreder_Rating_Cmd         5 //演出 排序 评分高到低
 
 //-------------KKTV----------------/
-#define API_KKTVCmd             401 //KTV 全部
-#define API_KKTVSearchCmd       402 //KTV 搜索
-#define API_KKTVNearByCmd       403 //KTV 附近
+#define API_KKTVCmd             1 //KTV 全部
+#define API_KKTVSearchCmd       2 //KTV 搜索
+#define API_KKTVNearByCmd       3 //KTV 附近
 #define API_KKTVBuyListCmd      404 //KTV 团购
 #define API_KKTVPriceListCmd    405 //KTV 价格
 

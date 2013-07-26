@@ -34,6 +34,30 @@
 		5A1BDD27176331C000D610AA /* OHASBasicMarkupParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BDD1E176331C000D610AA /* OHASBasicMarkupParser.m */; };
 		5A1BDD28176331C000D610AA /* OHASMarkupParserBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1BDD20176331C000D610AA /* OHASMarkupParserBase.m */; };
 		5A1BDD2A1763361200D610AA /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A1BDD291763361100D610AA /* CoreText.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		5A1C80C017A24D77007F7434 /* ApiCmdKTV_getNearByKTVs.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C80BF17A24D77007F7434 /* ApiCmdKTV_getNearByKTVs.m */; };
+		5A1C80FE17A2649D007F7434 /* CinemaAllListTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C80D717A2649D007F7434 /* CinemaAllListTableViewDelegate.m */; };
+		5A1C80FF17A2649D007F7434 /* CinemaAllViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C80D917A2649D007F7434 /* CinemaAllViewController.m */; };
+		5A1C810017A2649D007F7434 /* CinemaAllViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A1C80DA17A2649D007F7434 /* CinemaAllViewController.xib */; };
+		5A1C810117A2649D007F7434 /* MovieCinemaAllListDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C80DC17A2649D007F7434 /* MovieCinemaAllListDelegate.m */; };
+		5A1C810217A2649D007F7434 /* CinemaFavoriteListTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C80DF17A2649D007F7434 /* CinemaFavoriteListTableViewDelegate.m */; };
+		5A1C810317A2649D007F7434 /* CinemaFavoriteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C80E117A2649D007F7434 /* CinemaFavoriteViewController.m */; };
+		5A1C810417A2649D007F7434 /* CinemaFavoriteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A1C80E217A2649D007F7434 /* CinemaFavoriteViewController.xib */; };
+		5A1C810517A2649D007F7434 /* MovieCinemaFavoriteListDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C80E417A2649D007F7434 /* MovieCinemaFavoriteListDelegate.m */; };
+		5A1C810617A2649D007F7434 /* CinemaNearByListTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C80E717A2649D007F7434 /* CinemaNearByListTableViewDelegate.m */; };
+		5A1C810717A2649D007F7434 /* CinemaNearByViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C80E917A2649D007F7434 /* CinemaNearByViewController.m */; };
+		5A1C810817A2649D007F7434 /* CinemaNearByViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A1C80EA17A2649D007F7434 /* CinemaNearByViewController.xib */; };
+		5A1C810917A2649D007F7434 /* MovieCinemaNearByListDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C80EC17A2649D007F7434 /* MovieCinemaNearByListDelegate.m */; };
+		5A1C810A17A2649D007F7434 /* CinemaMovieTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C80EF17A2649D007F7434 /* CinemaMovieTableViewDelegate.m */; };
+		5A1C810B17A2649D007F7434 /* CinemaMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C80F117A2649D007F7434 /* CinemaMovieViewController.m */; };
+		5A1C810C17A2649D007F7434 /* CinemaMovieViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A1C80F217A2649D007F7434 /* CinemaMovieViewController.xib */; };
+		5A1C810D17A2649D007F7434 /* CinemaMovieViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A1C80F317A2649D007F7434 /* CinemaMovieViewController_5.xib */; };
+		5A1C810E17A2649D007F7434 /* CinemaTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C80F517A2649D007F7434 /* CinemaTableViewCell.m */; };
+		5A1C810F17A2649D007F7434 /* CinemaTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A1C80F617A2649D007F7434 /* CinemaTableViewCell.xib */; };
+		5A1C811017A2649D007F7434 /* CinemaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C80F817A2649D007F7434 /* CinemaViewController.m */; };
+		5A1C811117A2649D007F7434 /* CinemaViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A1C80F917A2649D007F7434 /* CinemaViewController.xib */; };
+		5A1C811217A2649D007F7434 /* CinemaViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A1C80FA17A2649D007F7434 /* CinemaViewController_5.xib */; };
+		5A1C811317A2649D007F7434 /* MovieCinemaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C80FC17A2649D007F7434 /* MovieCinemaCell.m */; };
+		5A1C811417A2649D007F7434 /* MovieCinemaCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A1C80FD17A2649D007F7434 /* MovieCinemaCell.xib */; };
 		5A246F37175DD0D100C000CA /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A246F36175DD0D100C000CA /* MapKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		5A246F39175DD0D600C000CA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A246F38175DD0D600C000CA /* CoreLocation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		5A26F4F2178D6ED9002E7609 /* SuggestionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A26F4F0178D6ED9002E7609 /* SuggestionViewController.m */; };
@@ -543,26 +567,6 @@
 		5ADD8E54179C05B60026239A /* BuyInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E0B179C05B60026239A /* BuyInfoViewController.m */; };
 		5ADD8E55179C05B60026239A /* BuyInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADD8E0C179C05B60026239A /* BuyInfoViewController.xib */; };
 		5ADD8E56179C05B60026239A /* BuyInfoViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADD8E0D179C05B60026239A /* BuyInfoViewController_5.xib */; };
-		5ADD8E57179C05B60026239A /* CinemaAllListTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E11179C05B60026239A /* CinemaAllListTableViewDelegate.m */; };
-		5ADD8E58179C05B60026239A /* CinemaAllViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E13179C05B60026239A /* CinemaAllViewController.m */; };
-		5ADD8E59179C05B60026239A /* CinemaAllViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADD8E14179C05B60026239A /* CinemaAllViewController.xib */; };
-		5ADD8E5A179C05B60026239A /* CinemaFavoriteListTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E17179C05B60026239A /* CinemaFavoriteListTableViewDelegate.m */; };
-		5ADD8E5B179C05B60026239A /* CinemaFavoriteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E19179C05B60026239A /* CinemaFavoriteViewController.m */; };
-		5ADD8E5C179C05B60026239A /* CinemaFavoriteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADD8E1A179C05B60026239A /* CinemaFavoriteViewController.xib */; };
-		5ADD8E5D179C05B60026239A /* CinemaNearByListTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E1D179C05B60026239A /* CinemaNearByListTableViewDelegate.m */; };
-		5ADD8E5E179C05B60026239A /* CinemaNearByViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E1F179C05B60026239A /* CinemaNearByViewController.m */; };
-		5ADD8E5F179C05B60026239A /* CinemaNearByViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADD8E20179C05B60026239A /* CinemaNearByViewController.xib */; };
-		5ADD8E62179C05B60026239A /* CinemaMovieTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E26179C05B60026239A /* CinemaMovieTableViewDelegate.m */; };
-		5ADD8E63179C05B60026239A /* CinemaMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E28179C05B60026239A /* CinemaMovieViewController.m */; };
-		5ADD8E64179C05B60026239A /* CinemaMovieViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADD8E29179C05B60026239A /* CinemaMovieViewController.xib */; };
-		5ADD8E65179C05B60026239A /* CinemaMovieViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADD8E2A179C05B60026239A /* CinemaMovieViewController_5.xib */; };
-		5ADD8E68179C05B60026239A /* CinemaTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E2F179C05B60026239A /* CinemaTableViewCell.m */; };
-		5ADD8E69179C05B60026239A /* CinemaTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADD8E30179C05B60026239A /* CinemaTableViewCell.xib */; };
-		5ADD8E6A179C05B60026239A /* CinemaTableViewCellSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E32179C05B60026239A /* CinemaTableViewCellSection.m */; };
-		5ADD8E6B179C05B60026239A /* CinemaTableViewCellSection.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADD8E33179C05B60026239A /* CinemaTableViewCellSection.xib */; };
-		5ADD8E6D179C05B60026239A /* CinemaViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADD8E36179C05B60026239A /* CinemaViewController.xib */; };
-		5ADD8E6E179C05B60026239A /* CinemaViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADD8E37179C05B60026239A /* CinemaViewController_5.xib */; };
-		5ADD8E6F179C05B60026239A /* CinemaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E39179C05B60026239A /* CinemaViewController.m */; };
 		5ADD8E71179C05B60026239A /* MovieDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E3D179C05B60026239A /* MovieDetailViewController.m */; };
 		5ADD8E72179C05B60026239A /* MovieDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5ADD8E3E179C05B60026239A /* MovieDetailViewController.xib */; };
 		5ADD8E73179C05B60026239A /* MovieListTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADD8E40179C05B60026239A /* MovieListTableViewDelegate.m */; };
@@ -680,6 +684,45 @@
 		5A1BDD1F176331C000D610AA /* OHASMarkupParserBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OHASMarkupParserBase.h; sourceTree = "<group>"; };
 		5A1BDD20176331C000D610AA /* OHASMarkupParserBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHASMarkupParserBase.m; sourceTree = "<group>"; };
 		5A1BDD291763361100D610AA /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		5A1C80BE17A24D77007F7434 /* ApiCmdKTV_getNearByKTVs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCmdKTV_getNearByKTVs.h; sourceTree = "<group>"; };
+		5A1C80BF17A24D77007F7434 /* ApiCmdKTV_getNearByKTVs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmdKTV_getNearByKTVs.m; sourceTree = "<group>"; };
+		5A1C80D617A2649D007F7434 /* CinemaAllListTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaAllListTableViewDelegate.h; sourceTree = "<group>"; };
+		5A1C80D717A2649D007F7434 /* CinemaAllListTableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaAllListTableViewDelegate.m; sourceTree = "<group>"; };
+		5A1C80D817A2649D007F7434 /* CinemaAllViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaAllViewController.h; sourceTree = "<group>"; };
+		5A1C80D917A2649D007F7434 /* CinemaAllViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaAllViewController.m; sourceTree = "<group>"; };
+		5A1C80DA17A2649D007F7434 /* CinemaAllViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaAllViewController.xib; sourceTree = "<group>"; };
+		5A1C80DB17A2649D007F7434 /* MovieCinemaAllListDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieCinemaAllListDelegate.h; sourceTree = "<group>"; };
+		5A1C80DC17A2649D007F7434 /* MovieCinemaAllListDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieCinemaAllListDelegate.m; sourceTree = "<group>"; };
+		5A1C80DE17A2649D007F7434 /* CinemaFavoriteListTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaFavoriteListTableViewDelegate.h; sourceTree = "<group>"; };
+		5A1C80DF17A2649D007F7434 /* CinemaFavoriteListTableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaFavoriteListTableViewDelegate.m; sourceTree = "<group>"; };
+		5A1C80E017A2649D007F7434 /* CinemaFavoriteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaFavoriteViewController.h; sourceTree = "<group>"; };
+		5A1C80E117A2649D007F7434 /* CinemaFavoriteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaFavoriteViewController.m; sourceTree = "<group>"; };
+		5A1C80E217A2649D007F7434 /* CinemaFavoriteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaFavoriteViewController.xib; sourceTree = "<group>"; };
+		5A1C80E317A2649D007F7434 /* MovieCinemaFavoriteListDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieCinemaFavoriteListDelegate.h; sourceTree = "<group>"; };
+		5A1C80E417A2649D007F7434 /* MovieCinemaFavoriteListDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieCinemaFavoriteListDelegate.m; sourceTree = "<group>"; };
+		5A1C80E617A2649D007F7434 /* CinemaNearByListTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaNearByListTableViewDelegate.h; sourceTree = "<group>"; };
+		5A1C80E717A2649D007F7434 /* CinemaNearByListTableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaNearByListTableViewDelegate.m; sourceTree = "<group>"; };
+		5A1C80E817A2649D007F7434 /* CinemaNearByViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaNearByViewController.h; sourceTree = "<group>"; };
+		5A1C80E917A2649D007F7434 /* CinemaNearByViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaNearByViewController.m; sourceTree = "<group>"; };
+		5A1C80EA17A2649D007F7434 /* CinemaNearByViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaNearByViewController.xib; sourceTree = "<group>"; };
+		5A1C80EB17A2649D007F7434 /* MovieCinemaNearByListDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieCinemaNearByListDelegate.h; sourceTree = "<group>"; };
+		5A1C80EC17A2649D007F7434 /* MovieCinemaNearByListDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieCinemaNearByListDelegate.m; sourceTree = "<group>"; };
+		5A1C80EE17A2649D007F7434 /* CinemaMovieTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaMovieTableViewDelegate.h; sourceTree = "<group>"; };
+		5A1C80EF17A2649D007F7434 /* CinemaMovieTableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaMovieTableViewDelegate.m; sourceTree = "<group>"; };
+		5A1C80F017A2649D007F7434 /* CinemaMovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaMovieViewController.h; sourceTree = "<group>"; };
+		5A1C80F117A2649D007F7434 /* CinemaMovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaMovieViewController.m; sourceTree = "<group>"; };
+		5A1C80F217A2649D007F7434 /* CinemaMovieViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaMovieViewController.xib; sourceTree = "<group>"; };
+		5A1C80F317A2649D007F7434 /* CinemaMovieViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaMovieViewController_5.xib; sourceTree = "<group>"; };
+		5A1C80F417A2649D007F7434 /* CinemaTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaTableViewCell.h; sourceTree = "<group>"; };
+		5A1C80F517A2649D007F7434 /* CinemaTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaTableViewCell.m; sourceTree = "<group>"; };
+		5A1C80F617A2649D007F7434 /* CinemaTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaTableViewCell.xib; sourceTree = "<group>"; };
+		5A1C80F717A2649D007F7434 /* CinemaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaViewController.h; sourceTree = "<group>"; };
+		5A1C80F817A2649D007F7434 /* CinemaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaViewController.m; sourceTree = "<group>"; };
+		5A1C80F917A2649D007F7434 /* CinemaViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaViewController.xib; sourceTree = "<group>"; };
+		5A1C80FA17A2649D007F7434 /* CinemaViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaViewController_5.xib; sourceTree = "<group>"; };
+		5A1C80FB17A2649D007F7434 /* MovieCinemaCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieCinemaCell.h; sourceTree = "<group>"; };
+		5A1C80FC17A2649D007F7434 /* MovieCinemaCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieCinemaCell.m; sourceTree = "<group>"; };
+		5A1C80FD17A2649D007F7434 /* MovieCinemaCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MovieCinemaCell.xib; sourceTree = "<group>"; };
 		5A246F36175DD0D100C000CA /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		5A246F38175DD0D600C000CA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		5A246F42175DE9CC00C000CA /* CoreManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreManager.h; sourceTree = "<group>"; };
@@ -1396,37 +1439,6 @@
 		5ADD8E0B179C05B60026239A /* BuyInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuyInfoViewController.m; sourceTree = "<group>"; };
 		5ADD8E0C179C05B60026239A /* BuyInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BuyInfoViewController.xib; sourceTree = "<group>"; };
 		5ADD8E0D179C05B60026239A /* BuyInfoViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BuyInfoViewController_5.xib; sourceTree = "<group>"; };
-		5ADD8E10179C05B60026239A /* CinemaAllListTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaAllListTableViewDelegate.h; sourceTree = "<group>"; };
-		5ADD8E11179C05B60026239A /* CinemaAllListTableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaAllListTableViewDelegate.m; sourceTree = "<group>"; };
-		5ADD8E12179C05B60026239A /* CinemaAllViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaAllViewController.h; sourceTree = "<group>"; };
-		5ADD8E13179C05B60026239A /* CinemaAllViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaAllViewController.m; sourceTree = "<group>"; };
-		5ADD8E14179C05B60026239A /* CinemaAllViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaAllViewController.xib; sourceTree = "<group>"; };
-		5ADD8E16179C05B60026239A /* CinemaFavoriteListTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaFavoriteListTableViewDelegate.h; sourceTree = "<group>"; };
-		5ADD8E17179C05B60026239A /* CinemaFavoriteListTableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaFavoriteListTableViewDelegate.m; sourceTree = "<group>"; };
-		5ADD8E18179C05B60026239A /* CinemaFavoriteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaFavoriteViewController.h; sourceTree = "<group>"; };
-		5ADD8E19179C05B60026239A /* CinemaFavoriteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaFavoriteViewController.m; sourceTree = "<group>"; };
-		5ADD8E1A179C05B60026239A /* CinemaFavoriteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaFavoriteViewController.xib; sourceTree = "<group>"; };
-		5ADD8E1C179C05B60026239A /* CinemaNearByListTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaNearByListTableViewDelegate.h; sourceTree = "<group>"; };
-		5ADD8E1D179C05B60026239A /* CinemaNearByListTableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaNearByListTableViewDelegate.m; sourceTree = "<group>"; };
-		5ADD8E1E179C05B60026239A /* CinemaNearByViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaNearByViewController.h; sourceTree = "<group>"; };
-		5ADD8E1F179C05B60026239A /* CinemaNearByViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaNearByViewController.m; sourceTree = "<group>"; };
-		5ADD8E20179C05B60026239A /* CinemaNearByViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaNearByViewController.xib; sourceTree = "<group>"; };
-		5ADD8E25179C05B60026239A /* CinemaMovieTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaMovieTableViewDelegate.h; sourceTree = "<group>"; };
-		5ADD8E26179C05B60026239A /* CinemaMovieTableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaMovieTableViewDelegate.m; sourceTree = "<group>"; };
-		5ADD8E27179C05B60026239A /* CinemaMovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaMovieViewController.h; sourceTree = "<group>"; };
-		5ADD8E28179C05B60026239A /* CinemaMovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaMovieViewController.m; sourceTree = "<group>"; };
-		5ADD8E29179C05B60026239A /* CinemaMovieViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaMovieViewController.xib; sourceTree = "<group>"; };
-		5ADD8E2A179C05B60026239A /* CinemaMovieViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaMovieViewController_5.xib; sourceTree = "<group>"; };
-		5ADD8E2E179C05B60026239A /* CinemaTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaTableViewCell.h; sourceTree = "<group>"; };
-		5ADD8E2F179C05B60026239A /* CinemaTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaTableViewCell.m; sourceTree = "<group>"; };
-		5ADD8E30179C05B60026239A /* CinemaTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaTableViewCell.xib; sourceTree = "<group>"; };
-		5ADD8E31179C05B60026239A /* CinemaTableViewCellSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaTableViewCellSection.h; sourceTree = "<group>"; };
-		5ADD8E32179C05B60026239A /* CinemaTableViewCellSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaTableViewCellSection.m; sourceTree = "<group>"; };
-		5ADD8E33179C05B60026239A /* CinemaTableViewCellSection.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaTableViewCellSection.xib; sourceTree = "<group>"; };
-		5ADD8E36179C05B60026239A /* CinemaViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaViewController.xib; sourceTree = "<group>"; };
-		5ADD8E37179C05B60026239A /* CinemaViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaViewController_5.xib; sourceTree = "<group>"; };
-		5ADD8E38179C05B60026239A /* CinemaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaViewController.h; sourceTree = "<group>"; };
-		5ADD8E39179C05B60026239A /* CinemaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaViewController.m; sourceTree = "<group>"; };
 		5ADD8E3C179C05B60026239A /* MovieDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieDetailViewController.h; sourceTree = "<group>"; };
 		5ADD8E3D179C05B60026239A /* MovieDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieDetailViewController.m; sourceTree = "<group>"; };
 		5ADD8E3E179C05B60026239A /* MovieDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MovieDetailViewController.xib; sourceTree = "<group>"; };
@@ -1683,6 +1695,8 @@
 			children = (
 				5AF26F9C17704BCC00C53D1B /* ApiCmdKTV_getAllKTVs.h */,
 				5AF26F9D17704BCC00C53D1B /* ApiCmdKTV_getAllKTVs.m */,
+				5A1C80BE17A24D77007F7434 /* ApiCmdKTV_getNearByKTVs.h */,
+				5A1C80BF17A24D77007F7434 /* ApiCmdKTV_getNearByKTVs.m */,
 				5AAE873B178E8E1500D2F8C2 /* ApiCmdKTV_getSearchKTVs.h */,
 				5AAE873C178E8E1500D2F8C2 /* ApiCmdKTV_getSearchKTVs.m */,
 				5AF26F9F17704CDB00C53D1B /* ApiCmdKTV_getBuyList.h */,
@@ -1784,6 +1798,82 @@
 				5A1BDD20176331C000D610AA /* OHASMarkupParserBase.m */,
 			);
 			path = TagParsers;
+			sourceTree = "<group>";
+		};
+		5A1C80D417A2649D007F7434 /* cinema */ = {
+			isa = PBXGroup;
+			children = (
+				5A1C80F717A2649D007F7434 /* CinemaViewController.h */,
+				5A1C80F817A2649D007F7434 /* CinemaViewController.m */,
+				5A1C80F917A2649D007F7434 /* CinemaViewController.xib */,
+				5A1C80FA17A2649D007F7434 /* CinemaViewController_5.xib */,
+				5A1C80D517A2649D007F7434 /* Cinema-all */,
+				5A1C80DD17A2649D007F7434 /* Cinema-favorite */,
+				5A1C80E517A2649D007F7434 /* Cinema-nearby */,
+				5A1C80ED17A2649D007F7434 /* CinemaMovieController */,
+				5A1C80F417A2649D007F7434 /* CinemaTableViewCell.h */,
+				5A1C80F517A2649D007F7434 /* CinemaTableViewCell.m */,
+				5A1C80F617A2649D007F7434 /* CinemaTableViewCell.xib */,
+				5A1C80FB17A2649D007F7434 /* MovieCinemaCell.h */,
+				5A1C80FC17A2649D007F7434 /* MovieCinemaCell.m */,
+				5A1C80FD17A2649D007F7434 /* MovieCinemaCell.xib */,
+			);
+			path = cinema;
+			sourceTree = "<group>";
+		};
+		5A1C80D517A2649D007F7434 /* Cinema-all */ = {
+			isa = PBXGroup;
+			children = (
+				5A1C80D617A2649D007F7434 /* CinemaAllListTableViewDelegate.h */,
+				5A1C80D717A2649D007F7434 /* CinemaAllListTableViewDelegate.m */,
+				5A1C80D817A2649D007F7434 /* CinemaAllViewController.h */,
+				5A1C80D917A2649D007F7434 /* CinemaAllViewController.m */,
+				5A1C80DA17A2649D007F7434 /* CinemaAllViewController.xib */,
+				5A1C80DB17A2649D007F7434 /* MovieCinemaAllListDelegate.h */,
+				5A1C80DC17A2649D007F7434 /* MovieCinemaAllListDelegate.m */,
+			);
+			path = "Cinema-all";
+			sourceTree = "<group>";
+		};
+		5A1C80DD17A2649D007F7434 /* Cinema-favorite */ = {
+			isa = PBXGroup;
+			children = (
+				5A1C80DE17A2649D007F7434 /* CinemaFavoriteListTableViewDelegate.h */,
+				5A1C80DF17A2649D007F7434 /* CinemaFavoriteListTableViewDelegate.m */,
+				5A1C80E017A2649D007F7434 /* CinemaFavoriteViewController.h */,
+				5A1C80E117A2649D007F7434 /* CinemaFavoriteViewController.m */,
+				5A1C80E217A2649D007F7434 /* CinemaFavoriteViewController.xib */,
+				5A1C80E317A2649D007F7434 /* MovieCinemaFavoriteListDelegate.h */,
+				5A1C80E417A2649D007F7434 /* MovieCinemaFavoriteListDelegate.m */,
+			);
+			path = "Cinema-favorite";
+			sourceTree = "<group>";
+		};
+		5A1C80E517A2649D007F7434 /* Cinema-nearby */ = {
+			isa = PBXGroup;
+			children = (
+				5A1C80E617A2649D007F7434 /* CinemaNearByListTableViewDelegate.h */,
+				5A1C80E717A2649D007F7434 /* CinemaNearByListTableViewDelegate.m */,
+				5A1C80E817A2649D007F7434 /* CinemaNearByViewController.h */,
+				5A1C80E917A2649D007F7434 /* CinemaNearByViewController.m */,
+				5A1C80EA17A2649D007F7434 /* CinemaNearByViewController.xib */,
+				5A1C80EB17A2649D007F7434 /* MovieCinemaNearByListDelegate.h */,
+				5A1C80EC17A2649D007F7434 /* MovieCinemaNearByListDelegate.m */,
+			);
+			path = "Cinema-nearby";
+			sourceTree = "<group>";
+		};
+		5A1C80ED17A2649D007F7434 /* CinemaMovieController */ = {
+			isa = PBXGroup;
+			children = (
+				5A1C80EE17A2649D007F7434 /* CinemaMovieTableViewDelegate.h */,
+				5A1C80EF17A2649D007F7434 /* CinemaMovieTableViewDelegate.m */,
+				5A1C80F017A2649D007F7434 /* CinemaMovieViewController.h */,
+				5A1C80F117A2649D007F7434 /* CinemaMovieViewController.m */,
+				5A1C80F217A2649D007F7434 /* CinemaMovieViewController.xib */,
+				5A1C80F317A2649D007F7434 /* CinemaMovieViewController_5.xib */,
+			);
+			path = CinemaMovieController;
 			sourceTree = "<group>";
 		};
 		5A507F33176B0000001D673D /* iCarousel */ = {
@@ -2716,8 +2806,8 @@
 		5AAC709717601BDB004B7395 /* MovieViewController */ = {
 			isa = PBXGroup;
 			children = (
+				5A1C80D417A2649D007F7434 /* cinema */,
 				5ADD8E04179C05B60026239A /* buyInfo */,
-				5ADD8E0E179C05B60026239A /* cinema */,
 				5ADD8E3B179C05B60026239A /* movie */,
 				5ADD8E47179C05B60026239A /* schedule */,
 			);
@@ -3167,68 +3257,6 @@
 				5ADD8E0D179C05B60026239A /* BuyInfoViewController_5.xib */,
 			);
 			path = buyInfo;
-			sourceTree = "<group>";
-		};
-		5ADD8E0E179C05B60026239A /* cinema */ = {
-			isa = PBXGroup;
-			children = (
-				5ADD8E38179C05B60026239A /* CinemaViewController.h */,
-				5ADD8E39179C05B60026239A /* CinemaViewController.m */,
-				5ADD8E36179C05B60026239A /* CinemaViewController.xib */,
-				5ADD8E37179C05B60026239A /* CinemaViewController_5.xib */,
-				5ADD8E2E179C05B60026239A /* CinemaTableViewCell.h */,
-				5ADD8E2F179C05B60026239A /* CinemaTableViewCell.m */,
-				5ADD8E30179C05B60026239A /* CinemaTableViewCell.xib */,
-				5ADD8E27179C05B60026239A /* CinemaMovieViewController.h */,
-				5ADD8E28179C05B60026239A /* CinemaMovieViewController.m */,
-				5ADD8E29179C05B60026239A /* CinemaMovieViewController.xib */,
-				5ADD8E2A179C05B60026239A /* CinemaMovieViewController_5.xib */,
-				5ADD8E25179C05B60026239A /* CinemaMovieTableViewDelegate.h */,
-				5ADD8E26179C05B60026239A /* CinemaMovieTableViewDelegate.m */,
-				5ADD8E0F179C05B60026239A /* Cinema-all */,
-				5ADD8E15179C05B60026239A /* Cinema-favorite */,
-				5ADD8E1B179C05B60026239A /* Cinema-nearby */,
-				5ADD8E31179C05B60026239A /* CinemaTableViewCellSection.h */,
-				5ADD8E32179C05B60026239A /* CinemaTableViewCellSection.m */,
-				5ADD8E33179C05B60026239A /* CinemaTableViewCellSection.xib */,
-			);
-			path = cinema;
-			sourceTree = "<group>";
-		};
-		5ADD8E0F179C05B60026239A /* Cinema-all */ = {
-			isa = PBXGroup;
-			children = (
-				5ADD8E12179C05B60026239A /* CinemaAllViewController.h */,
-				5ADD8E13179C05B60026239A /* CinemaAllViewController.m */,
-				5ADD8E14179C05B60026239A /* CinemaAllViewController.xib */,
-				5ADD8E10179C05B60026239A /* CinemaAllListTableViewDelegate.h */,
-				5ADD8E11179C05B60026239A /* CinemaAllListTableViewDelegate.m */,
-			);
-			path = "Cinema-all";
-			sourceTree = "<group>";
-		};
-		5ADD8E15179C05B60026239A /* Cinema-favorite */ = {
-			isa = PBXGroup;
-			children = (
-				5ADD8E18179C05B60026239A /* CinemaFavoriteViewController.h */,
-				5ADD8E19179C05B60026239A /* CinemaFavoriteViewController.m */,
-				5ADD8E1A179C05B60026239A /* CinemaFavoriteViewController.xib */,
-				5ADD8E16179C05B60026239A /* CinemaFavoriteListTableViewDelegate.h */,
-				5ADD8E17179C05B60026239A /* CinemaFavoriteListTableViewDelegate.m */,
-			);
-			path = "Cinema-favorite";
-			sourceTree = "<group>";
-		};
-		5ADD8E1B179C05B60026239A /* Cinema-nearby */ = {
-			isa = PBXGroup;
-			children = (
-				5ADD8E1E179C05B60026239A /* CinemaNearByViewController.h */,
-				5ADD8E1F179C05B60026239A /* CinemaNearByViewController.m */,
-				5ADD8E20179C05B60026239A /* CinemaNearByViewController.xib */,
-				5ADD8E1C179C05B60026239A /* CinemaNearByListTableViewDelegate.h */,
-				5ADD8E1D179C05B60026239A /* CinemaNearByListTableViewDelegate.m */,
-			);
-			path = "Cinema-nearby";
 			sourceTree = "<group>";
 		};
 		5ADD8E3B179C05B60026239A /* movie */ = {
@@ -3723,15 +3751,6 @@
 				5ADD8E52179C05B60026239A /* BuyInfoTableViewCell.xib in Resources */,
 				5ADD8E55179C05B60026239A /* BuyInfoViewController.xib in Resources */,
 				5ADD8E56179C05B60026239A /* BuyInfoViewController_5.xib in Resources */,
-				5ADD8E59179C05B60026239A /* CinemaAllViewController.xib in Resources */,
-				5ADD8E5C179C05B60026239A /* CinemaFavoriteViewController.xib in Resources */,
-				5ADD8E5F179C05B60026239A /* CinemaNearByViewController.xib in Resources */,
-				5ADD8E64179C05B60026239A /* CinemaMovieViewController.xib in Resources */,
-				5ADD8E65179C05B60026239A /* CinemaMovieViewController_5.xib in Resources */,
-				5ADD8E69179C05B60026239A /* CinemaTableViewCell.xib in Resources */,
-				5ADD8E6B179C05B60026239A /* CinemaTableViewCellSection.xib in Resources */,
-				5ADD8E6D179C05B60026239A /* CinemaViewController.xib in Resources */,
-				5ADD8E6E179C05B60026239A /* CinemaViewController_5.xib in Resources */,
 				5ADD8E72179C05B60026239A /* MovieDetailViewController.xib in Resources */,
 				5ADD8E75179C05B60026239A /* MovieTableViewCell.xib in Resources */,
 				5ADD8E77179C05B60026239A /* MovieViewController.xib in Resources */,
@@ -3745,6 +3764,15 @@
 				5A71457B179FBF67009E4905 /* KTVPriceTableViewCell.xib in Resources */,
 				5A714580179FC266009E4905 /* KTVPriceCellSection.xib in Resources */,
 				5A71458A17A0C150009E4905 /* UITableViewCellSection_bg@2x.png in Resources */,
+				5A1C810017A2649D007F7434 /* CinemaAllViewController.xib in Resources */,
+				5A1C810417A2649D007F7434 /* CinemaFavoriteViewController.xib in Resources */,
+				5A1C810817A2649D007F7434 /* CinemaNearByViewController.xib in Resources */,
+				5A1C810C17A2649D007F7434 /* CinemaMovieViewController.xib in Resources */,
+				5A1C810D17A2649D007F7434 /* CinemaMovieViewController_5.xib in Resources */,
+				5A1C810F17A2649D007F7434 /* CinemaTableViewCell.xib in Resources */,
+				5A1C811117A2649D007F7434 /* CinemaViewController.xib in Resources */,
+				5A1C811217A2649D007F7434 /* CinemaViewController_5.xib in Resources */,
+				5A1C811417A2649D007F7434 /* MovieCinemaCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4009,17 +4037,6 @@
 				5ADD8E51179C05B60026239A /* BuyInfoTableViewCell.m in Sources */,
 				5ADD8E53179C05B60026239A /* BuyInfoTableViewDelegate.m in Sources */,
 				5ADD8E54179C05B60026239A /* BuyInfoViewController.m in Sources */,
-				5ADD8E57179C05B60026239A /* CinemaAllListTableViewDelegate.m in Sources */,
-				5ADD8E58179C05B60026239A /* CinemaAllViewController.m in Sources */,
-				5ADD8E5A179C05B60026239A /* CinemaFavoriteListTableViewDelegate.m in Sources */,
-				5ADD8E5B179C05B60026239A /* CinemaFavoriteViewController.m in Sources */,
-				5ADD8E5D179C05B60026239A /* CinemaNearByListTableViewDelegate.m in Sources */,
-				5ADD8E5E179C05B60026239A /* CinemaNearByViewController.m in Sources */,
-				5ADD8E62179C05B60026239A /* CinemaMovieTableViewDelegate.m in Sources */,
-				5ADD8E63179C05B60026239A /* CinemaMovieViewController.m in Sources */,
-				5ADD8E68179C05B60026239A /* CinemaTableViewCell.m in Sources */,
-				5ADD8E6A179C05B60026239A /* CinemaTableViewCellSection.m in Sources */,
-				5ADD8E6F179C05B60026239A /* CinemaViewController.m in Sources */,
 				5ADD8E71179C05B60026239A /* MovieDetailViewController.m in Sources */,
 				5ADD8E73179C05B60026239A /* MovieListTableViewDelegate.m in Sources */,
 				5ADD8E74179C05B60026239A /* MovieTableViewCell.m in Sources */,
@@ -4039,6 +4056,21 @@
 				5ADD8EA5179C24760026239A /* ApiCmdMovie_getSearchCinemas.m in Sources */,
 				5A71457A179FBF67009E4905 /* KTVPriceTableViewCell.m in Sources */,
 				5A71457F179FC266009E4905 /* KTVPriceCellSection.m in Sources */,
+				5A1C80C017A24D77007F7434 /* ApiCmdKTV_getNearByKTVs.m in Sources */,
+				5A1C80FE17A2649D007F7434 /* CinemaAllListTableViewDelegate.m in Sources */,
+				5A1C80FF17A2649D007F7434 /* CinemaAllViewController.m in Sources */,
+				5A1C810117A2649D007F7434 /* MovieCinemaAllListDelegate.m in Sources */,
+				5A1C810217A2649D007F7434 /* CinemaFavoriteListTableViewDelegate.m in Sources */,
+				5A1C810317A2649D007F7434 /* CinemaFavoriteViewController.m in Sources */,
+				5A1C810517A2649D007F7434 /* MovieCinemaFavoriteListDelegate.m in Sources */,
+				5A1C810617A2649D007F7434 /* CinemaNearByListTableViewDelegate.m in Sources */,
+				5A1C810717A2649D007F7434 /* CinemaNearByViewController.m in Sources */,
+				5A1C810917A2649D007F7434 /* MovieCinemaNearByListDelegate.m in Sources */,
+				5A1C810A17A2649D007F7434 /* CinemaMovieTableViewDelegate.m in Sources */,
+				5A1C810B17A2649D007F7434 /* CinemaMovieViewController.m in Sources */,
+				5A1C810E17A2649D007F7434 /* CinemaTableViewCell.m in Sources */,
+				5A1C811017A2649D007F7434 /* CinemaViewController.m in Sources */,
+				5A1C811317A2649D007F7434 /* MovieCinemaCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

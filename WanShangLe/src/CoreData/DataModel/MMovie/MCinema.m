@@ -22,7 +22,7 @@
 @dynamic juan;
 @dynamic latitude;
 @dynamic locationDate;
-@dynamic longitue;
+@dynamic longitude;
 @dynamic name;
 @dynamic distance;
 @dynamic phoneNumber;
