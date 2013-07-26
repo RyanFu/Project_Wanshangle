@@ -22,13 +22,13 @@
 + (NSDate *) dateWithDaysFromNow: (NSInteger) days
 {
     // Thanks, Jim Morrison
-	return [[NSDate date] dateByAddingDays:days];
+	return [[[DataBaseManager sharedInstance] date] dateByAddingDays:days];
 }
 
 + (NSDate *) dateWithDaysBeforeNow: (NSInteger) days
 {
     // Thanks, Jim Morrison
-	return [[NSDate date] dateBySubtractingDays:days];
+	return [[[DataBaseManager sharedInstance] date] dateBySubtractingDays:days];
 }
 
 + (NSDate *) dateTomorrow
@@ -43,28 +43,28 @@
 
 + (NSDate *) dateWithHoursFromNow: (NSInteger) dHours
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] + D_HOUR * dHours;
+	NSTimeInterval aTimeInterval = [[[DataBaseManager sharedInstance] date] timeIntervalSinceReferenceDate] + D_HOUR * dHours;
 	NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
 	return newDate;	
 }
 
 + (NSDate *) dateWithHoursBeforeNow: (NSInteger) dHours
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] - D_HOUR * dHours;
+	NSTimeInterval aTimeInterval = [[[DataBaseManager sharedInstance] date] timeIntervalSinceReferenceDate] - D_HOUR * dHours;
 	NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
 	return newDate;	
 }
 
 + (NSDate *) dateWithMinutesFromNow: (NSInteger) dMinutes
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] + D_MINUTE * dMinutes;
+	NSTimeInterval aTimeInterval = [[[DataBaseManager sharedInstance] date] timeIntervalSinceReferenceDate] + D_MINUTE * dMinutes;
 	NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
 	return newDate;		
 }
 
 + (NSDate *) dateWithMinutesBeforeNow: (NSInteger) dMinutes
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] - D_MINUTE * dMinutes;
+	NSTimeInterval aTimeInterval = [[[DataBaseManager sharedInstance] date] timeIntervalSinceReferenceDate] - D_MINUTE * dMinutes;
 	NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
 	return newDate;		
 }
@@ -82,7 +82,7 @@
 
 - (BOOL) isToday
 {
-	return [self isEqualToDateIgnoringTime:[NSDate date]];
+	return [self isEqualToDateIgnoringTime:[[DataBaseManager sharedInstance] date]];
 }
 
 - (BOOL) isTomorrow
@@ -110,19 +110,19 @@
 
 - (BOOL) isThisWeek
 {
-	return [self isSameWeekAsDate:[NSDate date]];
+	return [self isSameWeekAsDate:[[DataBaseManager sharedInstance] date]];
 }
 
 - (BOOL) isNextWeek
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] + D_WEEK;
+	NSTimeInterval aTimeInterval = [[[DataBaseManager sharedInstance] date] timeIntervalSinceReferenceDate] + D_WEEK;
 	NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
 	return [self isSameWeekAsDate:newDate];
 }
 
 - (BOOL) isLastWeek
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] - D_WEEK;
+	NSTimeInterval aTimeInterval = [[[DataBaseManager sharedInstance] date] timeIntervalSinceReferenceDate] - D_WEEK;
 	NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
 	return [self isSameWeekAsDate:newDate];
 }
@@ -138,7 +138,7 @@
 
 - (BOOL) isThisMonth
 {
-    return [self isSameMonthAsDate:[NSDate date]];
+    return [self isSameMonthAsDate:[[DataBaseManager sharedInstance] date]];
 }
 
 - (BOOL) isSameYearAsDate: (NSDate *) aDate
@@ -151,13 +151,13 @@
 - (BOOL) isThisYear
 {
     // Thanks, baspellis
-	return [self isSameYearAsDate:[NSDate date]];
+	return [self isSameYearAsDate:[[DataBaseManager sharedInstance] date]];
 }
 
 - (BOOL) isNextYear
 {
 	NSDateComponents *components1 = [CURRENT_CALENDAR components:NSYearCalendarUnit fromDate:self];
-	NSDateComponents *components2 = [CURRENT_CALENDAR components:NSYearCalendarUnit fromDate:[NSDate date]];
+	NSDateComponents *components2 = [CURRENT_CALENDAR components:NSYearCalendarUnit fromDate:[[DataBaseManager sharedInstance] date]];
 	
 	return (components1.year == (components2.year + 1));
 }
@@ -165,7 +165,7 @@
 - (BOOL) isLastYear
 {
 	NSDateComponents *components1 = [CURRENT_CALENDAR components:NSYearCalendarUnit fromDate:self];
-	NSDateComponents *components2 = [CURRENT_CALENDAR components:NSYearCalendarUnit fromDate:[NSDate date]];
+	NSDateComponents *components2 = [CURRENT_CALENDAR components:NSYearCalendarUnit fromDate:[[DataBaseManager sharedInstance] date]];
 	
 	return (components1.year == (components2.year - 1));
 }
@@ -183,13 +183,13 @@
 // Thanks, markrickert
 - (BOOL) isInFuture
 {
-    return ([self isLaterThanDate:[NSDate date]]);
+    return ([self isLaterThanDate:[[DataBaseManager sharedInstance] date]]);
 }
 
 // Thanks, markrickert
 - (BOOL) isInPast
 {
-    return ([self isEarlierThanDate:[NSDate date]]);
+    return ([self isEarlierThanDate:[[DataBaseManager sharedInstance] date]]);
 }
 
 
@@ -312,7 +312,7 @@
 
 - (NSInteger) nearestHour
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] + D_MINUTE * 30;
+	NSTimeInterval aTimeInterval = [[[DataBaseManager sharedInstance] date] timeIntervalSinceReferenceDate] + D_MINUTE * 30;
 	NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
 	NSDateComponents *components = [CURRENT_CALENDAR components:NSHourCalendarUnit fromDate:newDate];
 	return components.hour;

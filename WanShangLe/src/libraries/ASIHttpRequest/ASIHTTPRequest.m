@@ -1378,7 +1378,7 @@ static NSOperationQueue *sharedQueue = nil;
 	[connectionsLock unlock];
 
 	// Schedule the stream
-	if (![self readStreamIsScheduled] && (!throttleWakeUpTime || [throttleWakeUpTime timeIntervalSinceDate:[NSDate date]] < 0)) {
+	if (![self readStreamIsScheduled] && (!throttleWakeUpTime || [throttleWakeUpTime timeIntervalSinceDate:[[DataBaseManager sharedInstance] date]] < 0)) {
 		[self scheduleReadStream];
 	}
 	
@@ -1425,7 +1425,7 @@ static NSOperationQueue *sharedQueue = nil;
 	
 	
 	// Record when the request started, so we can timeout if nothing happens
-	[self setLastActivityTime:[NSDate date]];
+	[self setLastActivityTime:[[DataBaseManager sharedInstance] date]];
 	[self setStatusTimer:[NSTimer timerWithTimeInterval:0.25 target:self selector:@selector(updateStatus:) userInfo:nil repeats:YES]];
 	[[NSRunLoop currentRunLoop] addTimer:[self statusTimer] forMode:[self runLoopMode]];
 }
@@ -1478,7 +1478,7 @@ static NSOperationQueue *sharedQueue = nil;
 
 - (BOOL)shouldTimeOut
 {
-	NSTimeInterval secondsSinceLastActivity = [[NSDate date] timeIntervalSinceDate:lastActivityTime];
+	NSTimeInterval secondsSinceLastActivity = [[[DataBaseManager sharedInstance] date] timeIntervalSinceDate:lastActivityTime];
 	// See if we need to timeout
 	if ([self readStream] && [self readStreamIsScheduled] && [self lastActivityTime] && [self timeOutSeconds] > 0 && secondsSinceLastActivity > [self timeOutSeconds]) {
 		
@@ -1543,7 +1543,7 @@ static NSOperationQueue *sharedQueue = nil;
 			if (totalBytesSent > lastBytesSent) {
 				
 				// We've uploaded more data,  reset the timeout
-				[self setLastActivityTime:[NSDate date]];
+				[self setLastActivityTime:[[DataBaseManager sharedInstance] date]];
 				[ASIHTTPRequest incrementBandwidthUsedInLastSecond:(unsigned long)(totalBytesSent-lastBytesSent)];		
 						
 				#if DEBUG_REQUEST_STATUS
@@ -3312,7 +3312,7 @@ static NSOperationQueue *sharedQueue = nil;
 		}
 		
 		[self setTotalBytesRead:[self totalBytesRead]+bytesRead];
-		[self setLastActivityTime:[NSDate date]];
+		[self setLastActivityTime:[[DataBaseManager sharedInstance] date]];
 
 		// For bandwidth measurement / throttling
 		[ASIHTTPRequest incrementBandwidthUsedInLastSecond:bytesRead];
@@ -3710,7 +3710,7 @@ static NSOperationQueue *sharedQueue = nil;
 		[connectionsLock unlock];
 
 		// Reset the timeout
-		[self setLastActivityTime:[NSDate date]];
+		[self setLastActivityTime:[[DataBaseManager sharedInstance] date]];
 		CFStreamClientContext ctxt = {0, self, NULL, NULL, NULL};
 		CFReadStreamSetClient((CFReadStreamRef)[self readStream], kNetworkEvents, ReadStreamClientCallBack, &ctxt);
 		[[self readStream] scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:[self runLoopMode]];
@@ -4482,7 +4482,7 @@ static NSOperationQueue *sharedQueue = nil;
 		[bandwidthThrottlingLock lock];
 		// Handle throttling
 		if (throttleWakeUpTime) {
-			if ([throttleWakeUpTime timeIntervalSinceDate:[NSDate date]] > 0) {
+			if ([throttleWakeUpTime timeIntervalSinceDate:[[DataBaseManager sharedInstance] date]] > 0) {
 				if ([self readStreamIsScheduled]) {
 					[self unscheduleReadStream];
 					#if DEBUG_THROTTLING
@@ -4866,7 +4866,7 @@ static NSOperationQueue *sharedQueue = nil;
   
 	// RFC 2612 says max-age must override any Expires header
 	if (maxAge) {
-		return [[NSDate date] addTimeInterval:maxAge];
+		return [[[DataBaseManager sharedInstance] date] addTimeInterval:maxAge];
 	} else {
 		NSString *expires = [responseHeaders objectForKey:@"Expires"];
 		if (expires) {

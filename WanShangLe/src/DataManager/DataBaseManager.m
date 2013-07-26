@@ -117,9 +117,18 @@ static DataBaseManager *_sharedInstance = nil;
 
 #pragma mark -
 #pragma mark 日期-时间
+//服务器时间
+-(NSDate *)date{
+    NSDate *newDate = [[NSDate date] dateByAddingTimeInterval:_missTime];
+    ABLoggerDebug(@"手机时间 ======= %@",[NSDate date]);
+    ABLoggerDebug(@"服务器时间 ======= %@",newDate);
+    ABLoggerDebug(@"时间差 ======= %0.0f",_missTime);
+    return newDate;
+}
+
 - (BOOL)isToday:(NSString *)date{
     _timeFormatter.dateFormat = @"yyyy-MM-dd";
-    NSString *nowDate = [_timeFormatter stringFromDate:[NSDate date]];
+    NSString *nowDate = [_timeFormatter stringFromDate:[[DataBaseManager sharedInstance] date]];
     NSString *cmpDate = [[date componentsSeparatedByString:@" "] objectAtIndex:0];
     return ([nowDate compare:cmpDate options:NSNumericSearch] == NSOrderedSame);
 }

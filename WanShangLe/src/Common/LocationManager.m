@@ -184,7 +184,7 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
     // if the location is older than 30s ignore
-    if (fabs([newLocation.timestamp timeIntervalSinceDate:[NSDate date]]) > 30)
+    if (fabs([newLocation.timestamp timeIntervalSinceDate:[[DataBaseManager sharedInstance] date]]) > 30)
     {
         return;
     }

@@ -61,6 +61,18 @@
 
     // get the data
     ABLoggerDebug(@"1111 responseJSONObject ======== %@",self.responseJSONObject);
+    
+//    NSString *timeStamp = [self.responseJSONObject objectForKey:@"timestamp"];
+//    NSDate *date = [NSDate dateWithTimeIntervalSince1970:[timeStamp intValue]];
+//
+//    NSTimeInterval locationTimeStamp = [[NSDate date] timeIntervalSince1970];
+//    [DataBaseManager sharedInstance].missTime = [timeStamp doubleValue]-locationTimeStamp;
+
+//    NSDate *newDate = [[NSDate date] dateByAddingTimeInterval:missTime];
+//    ABLoggerDebug(@"server date ======= %@",date);
+//    ABLoggerDebug(@"iphone date ======= %@",[NSDate date]);
+//    ABLoggerDebug(@"new Date ======= %@",newDate);
+//    ABLoggerDebug(@"mist time ======= %d",missTime);
 }
 
 -(void) notifyDelegate:(NSDictionary*) dictionary{

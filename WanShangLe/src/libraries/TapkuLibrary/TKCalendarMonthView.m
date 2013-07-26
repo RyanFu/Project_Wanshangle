@@ -253,7 +253,7 @@
 	row = (row / 7) + ((row % 7 == 0) ? 0:1);
 	float h = 44 * row;
 	
-	TKDateInformation todayInfo = [[NSDate date] dateInformation];
+	TKDateInformation todayInfo = [[[DataBaseManager sharedInstance] date] dateInformation];
 	today = dateInfo.month == todayInfo.month && dateInfo.year == todayInfo.year ? todayInfo.day : -5;
 	
 	int preDayCnt = [prev daysBetweenDate:monthDate];		
@@ -630,7 +630,7 @@
 	
 	
 	
-	currentTile = [[[TKCalendarMonthTiles alloc] initWithMonth:[[NSDate date] firstOfMonth] marks:nil startDayOnSunday:sunday] autorelease];
+	currentTile = [[[TKCalendarMonthTiles alloc] initWithMonth:[[[DataBaseManager sharedInstance] date] firstOfMonth] marks:nil startDayOnSunday:sunday] autorelease];
 	[currentTile setTarget:self action:@selector(tile:)];
 	
 	[currentTile setTarget:self action:@selector(tile:)];
@@ -646,7 +646,7 @@
 	[self.tileBox addSubview:currentTile];
 	[self addSubview:self.tileBox];
 	
-	NSDate *date = [NSDate date];
+	NSDate *date = [[DataBaseManager sharedInstance] date];
 	self.monthYear.text = [NSString stringWithFormat:@"%@ %@",[date monthString],[date yearString]];
 	[self addSubview:self.monthYear];
 	

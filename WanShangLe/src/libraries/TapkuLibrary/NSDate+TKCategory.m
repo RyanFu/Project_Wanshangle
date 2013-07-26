@@ -34,12 +34,12 @@
 @implementation NSDate (TKCategory)
 
 + (NSDate*) yesterday{
-	TKDateInformation inf = [[NSDate date] dateInformation];
+	TKDateInformation inf = [[[DataBaseManager sharedInstance] date] dateInformation];
 	inf.day--;
 	return [NSDate dateFromDateInformation:inf];
 }
 + (NSDate*) month{
-    return [[NSDate date] monthDate];
+    return [[[DataBaseManager sharedInstance] date] monthDate];
 }
 
 - (NSDate*) monthDate {
@@ -61,7 +61,7 @@
 }
 
 + (NSDate*) lastofMonthDate{
-    NSDate *day = [NSDate date];
+    NSDate *day = [[DataBaseManager sharedInstance] date];
 	NSCalendar *gregorian = [[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar] autorelease];
 	NSDateComponents *comp = [gregorian components:(NSYearCalendarUnit | NSMonthCalendarUnit) fromDate:day];
 	[comp setDay:0];
@@ -69,7 +69,7 @@
 	return [gregorian dateFromComponents:comp];
 }
 + (NSDate*) lastOfCurrentMonth{
-	NSDate *day = [NSDate date];
+	NSDate *day = [[DataBaseManager sharedInstance] date];
 	NSCalendar *gregorian = [[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar] autorelease];
 	NSDateComponents *comp = [gregorian components:(NSYearCalendarUnit | NSMonthCalendarUnit) fromDate:day];
 	[comp setDay:0];
@@ -127,7 +127,7 @@
 	
 }
 - (BOOL) isToday{
-	return [self isSameDay:[NSDate date]];
+	return [self isSameDay:[[DataBaseManager sharedInstance] date]];
 } 
 
 
@@ -216,7 +216,7 @@
 	
 	NSCalendar *gregorian = [[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar] autorelease];
 	[gregorian setTimeZone:tz];
-	NSDateComponents *comp = [gregorian components:(NSYearCalendarUnit | NSMonthCalendarUnit) fromDate:[NSDate date]];
+	NSDateComponents *comp = [gregorian components:(NSYearCalendarUnit | NSMonthCalendarUnit) fromDate:[[DataBaseManager sharedInstance] date]];
 	
 	[comp setDay:info.day];
 	[comp setMonth:info.month];
@@ -231,7 +231,7 @@
 + (NSDate*) dateFromDateInformation:(TKDateInformation)info{
 	
 	NSCalendar *gregorian = [[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar] autorelease];
-	NSDateComponents *comp = [gregorian components:(NSYearCalendarUnit | NSMonthCalendarUnit) fromDate:[NSDate date]];
+	NSDateComponents *comp = [gregorian components:(NSYearCalendarUnit | NSMonthCalendarUnit) fromDate:[[DataBaseManager sharedInstance] date]];
 	
 	[comp setDay:info.day];
 	[comp setMonth:info.month];

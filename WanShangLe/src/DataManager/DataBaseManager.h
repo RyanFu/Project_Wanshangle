@@ -21,6 +21,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 @interface DataBaseManager : NSObject{
     
 }
+@property(nonatomic,readwrite) NSTimeInterval missTime;
 /**
  单例对象
  @returns single instance type
@@ -46,6 +47,8 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (NSString*)md5PathForKey:(NSString *) key;
 
 /************ 时间处理 ***************/
+//服务器时间
+-(NSDate *)date;
 //日期-时间
 - (BOOL)isToday:(NSString *)date;
 - (BOOL)isTomorrow:(NSString *)date;

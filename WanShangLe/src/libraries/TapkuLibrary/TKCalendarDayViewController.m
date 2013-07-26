@@ -63,15 +63,15 @@
 - (NSArray *)calendarDayTimelineView:(TKCalendarDayTimelineView*)calendarDayTimeline eventsForDate:(NSDate *)eventDate{
 	TKCalendarDayEventView *eventViewFirst = [TKCalendarDayEventView eventViewWithFrame:CGRectZero
 																		 id:nil 
-																  startDate:[[NSDate date]addTimeInterval:60 * 60 * 2] 
-																	endDate:[[NSDate date]addTimeInterval:60 * 60 * 24]
+																  startDate:[[[DataBaseManager sharedInstance] date]addTimeInterval:60 * 60 * 2] 
+																	endDate:[[[DataBaseManager sharedInstance] date]addTimeInterval:60 * 60 * 24]
 																	  title:@"First"
 																   location:@"Test Location"];
 	
 	TKCalendarDayEventView *eventViewSecond = [TKCalendarDayEventView eventViewWithFrame:CGRectZero
 																				  id:nil
-															 			   startDate:[NSDate date] 
-																			 endDate:[NSDate date]
+															 			   startDate:[[DataBaseManager sharedInstance] date] 
+																			 endDate:[[DataBaseManager sharedInstance] date]
 																			   title:@"Second ultra mega hypra long text to test again with more"
 																		    location:nil];
 	

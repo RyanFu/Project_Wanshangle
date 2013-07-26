@@ -201,7 +201,7 @@ static char kAFJSONRequestOperationObjectKey;
     [paramDict setValue:[ApiConfig getApiAppId] forKey:@"appId"];
     [paramDict setValue:@"1.0" forKey:@"v"];
     [paramDict setValue:@"sign" forKey:@"sign"];
-    [paramDict setValue:[NSString stringWithFormat:@"%0.0f",[[NSDate date] timeIntervalSince1970]] forKey:@"time"];
+    [paramDict setValue:[NSString stringWithFormat:@"%0.0f",[[[DataBaseManager sharedInstance] date] timeIntervalSince1970]] forKey:@"time"];
     
     NSMutableString *urlStr = [[NSMutableString alloc] init];
     [urlStr appendString:[ApiConfig getApiRequestUrl]];

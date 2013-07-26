@@ -200,7 +200,7 @@
 
 - (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
 	
-	return [NSDate date]; // should return date data source was last changed
+	return [[DataBaseManager sharedInstance] date]; // should return date data source was last changed
 	
 }
 
