@@ -58,6 +58,7 @@
 		5A1C811217A2649D007F7434 /* CinemaViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A1C80FA17A2649D007F7434 /* CinemaViewController_5.xib */; };
 		5A1C811317A2649D007F7434 /* MovieCinemaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C80FC17A2649D007F7434 /* MovieCinemaCell.m */; };
 		5A1C811417A2649D007F7434 /* MovieCinemaCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A1C80FD17A2649D007F7434 /* MovieCinemaCell.xib */; };
+		5A202B6E17A36655001D11F7 /* UncaughtExceptionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A202B6D17A36655001D11F7 /* UncaughtExceptionHandler.m */; };
 		5A246F37175DD0D100C000CA /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A246F36175DD0D100C000CA /* MapKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		5A246F39175DD0D600C000CA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A246F38175DD0D600C000CA /* CoreLocation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		5A26F4F2178D6ED9002E7609 /* SuggestionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A26F4F0178D6ED9002E7609 /* SuggestionViewController.m */; };
@@ -723,6 +724,8 @@
 		5A1C80FB17A2649D007F7434 /* MovieCinemaCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieCinemaCell.h; sourceTree = "<group>"; };
 		5A1C80FC17A2649D007F7434 /* MovieCinemaCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieCinemaCell.m; sourceTree = "<group>"; };
 		5A1C80FD17A2649D007F7434 /* MovieCinemaCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MovieCinemaCell.xib; sourceTree = "<group>"; };
+		5A202B6C17A36655001D11F7 /* UncaughtExceptionHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UncaughtExceptionHandler.h; sourceTree = "<group>"; };
+		5A202B6D17A36655001D11F7 /* UncaughtExceptionHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UncaughtExceptionHandler.m; sourceTree = "<group>"; };
 		5A246F36175DD0D100C000CA /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		5A246F38175DD0D600C000CA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		5A246F42175DE9CC00C000CA /* CoreManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreManager.h; sourceTree = "<group>"; };
@@ -1876,6 +1879,23 @@
 			path = CinemaMovieController;
 			sourceTree = "<group>";
 		};
+		5A202B6A17A36655001D11F7 /* ExceptionsHandle */ = {
+			isa = PBXGroup;
+			children = (
+				5A202B6B17A36655001D11F7 /* UncaughtExceptions */,
+			);
+			path = ExceptionsHandle;
+			sourceTree = "<group>";
+		};
+		5A202B6B17A36655001D11F7 /* UncaughtExceptions */ = {
+			isa = PBXGroup;
+			children = (
+				5A202B6C17A36655001D11F7 /* UncaughtExceptionHandler.h */,
+				5A202B6D17A36655001D11F7 /* UncaughtExceptionHandler.m */,
+			);
+			path = UncaughtExceptions;
+			sourceTree = "<group>";
+		};
 		5A507F33176B0000001D673D /* iCarousel */ = {
 			isa = PBXGroup;
 			children = (
@@ -2519,6 +2539,7 @@
 		5AAC6FF217601BDB004B7395 /* libraries */ = {
 			isa = PBXGroup;
 			children = (
+				5A202B6A17A36655001D11F7 /* ExceptionsHandle */,
 				5A7D5F591798DD400013D742 /* AFNetworking */,
 				5AA75FEC1797A07B002891CC /* TouchJSON */,
 				5AA75F541797A035002891CC /* TapkuLibrary */,
@@ -4071,6 +4092,7 @@
 				5A1C810E17A2649D007F7434 /* CinemaTableViewCell.m in Sources */,
 				5A1C811017A2649D007F7434 /* CinemaViewController.m in Sources */,
 				5A1C811317A2649D007F7434 /* MovieCinemaCell.m in Sources */,
+				5A202B6E17A36655001D11F7 /* UncaughtExceptionHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

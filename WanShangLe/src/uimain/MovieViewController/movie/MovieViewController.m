@@ -89,7 +89,9 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated{
-    
+    if (_cinemaViewController.view.frame.origin.x == 0) {//当界面处在影院列表的时候才考虑 viewWillAppear
+        [_cinemaViewController viewDidAppear:animated];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -347,6 +349,8 @@
         
         if (isMoviePanel && _movieContentView.frame.origin.x != 0) {
             
+            [_cinemaViewController viewWillDisappear:NO];
+            
             CGRect movieFrame =  _movieContentView.frame;
             movieFrame.origin.x = 0;
             _movieContentView.frame = movieFrame;
@@ -371,7 +375,9 @@
     } completion:^(BOOL finished) {
         [self.view setUserInteractionEnabled:YES];
         
-        if (!isMoviePanel) {
+        if (isMoviePanel) {
+            
+        }else{
             _movieContentView.hidden = YES;
         }
     }];

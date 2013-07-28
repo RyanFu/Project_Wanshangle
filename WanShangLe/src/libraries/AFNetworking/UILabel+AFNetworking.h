@@ -30,6 +30,15 @@
 /**
  This category adds methods to the UIKit framework's `UIImageView` class. The methods in this category provide support for loading remote images asynchronously from a URL.
  */
+@interface AFJsonCache : NSObject{
+    
+}
+@property(nonatomic,retain)NSMutableDictionary *scheduleCache;
+- (NSString *)cachedJsonForRequest:(NSString *)request;
+- (void)cacheJson:(NSString *)Json
+       forRequest:(NSString *)request;
+@end
+
 @class MMovie,MCinema;
 @interface UILabel (AFNetworking)
 
@@ -44,6 +53,9 @@
  */
 - (void)cancelJSONRequestOperation;
 
++ (NSOperationQueue *)af_sharedJsonRequestOperationQueue;
+
++ (AFJsonCache *)af_sharedJsonCache;
 @end
 
 #endif

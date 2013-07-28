@@ -1038,7 +1038,8 @@ static DataBaseManager *_sharedInstance = nil;
     tSchedule.locationDate = [self getTodayTimeStamp];
     tSchedule.timedistance = timedistance;
     
-    [context MR_saveToPersistentStoreAndWait];
+//    [context MR_saveToPersistentStoreAndWait];
+    [self saveInManagedObjectContext:context];
     
     [movie_cinema_uid release];
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
@@ -2407,7 +2408,8 @@ static DataBaseManager *_sharedInstance = nil;
         tBarDetail.bar = tBar;
         [self importBarDetail:tBarDetail ValuesForKeysWithObject:tDic];
         
-        [context MR_saveToPersistentStoreAndWait];
+//        [context MR_saveToPersistentStoreAndWait];
+        [self saveInManagedObjectContext:context];
     }
     
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];

@@ -32,19 +32,18 @@
 
 - (id)init{
     if (self = [super init]) {
-        _scheduleCache = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
     }
     return self;
 }
 
 - (void)dealloc{
     self.msearchController = nil;
-    self.scheduleCache = nil;
     [super dealloc];
 }
 
 - (void)clearScheduleCache{
-    [_scheduleCache removeAllObjects];
+    [[UILabel af_sharedJsonCache].scheduleCache removeAllObjects];
+    [[UILabel af_sharedJsonRequestOperationQueue] cancelAllOperations];
 }
 
 #pragma mark -
@@ -139,21 +138,14 @@
     
     MMovie *aMovie = [_parentViewController.mParentController mMovie];
     
-    NSString *key = [NSString stringWithFormat:@"%@%@",aMovie.uid,cinema.uid];
-    NSString *value = [_scheduleCache objectForKey:key];
-    if (value==nil){
-        [cell.cinema_scheduleCount setJSONWithWithMovie:aMovie
-                                                 cinema:cinema
-                                            placeholder:@"亲,正在加载..."
-                                                success:^(NSURLRequest *request, NSHTTPURLResponse *response, NSString *resultString) {
-                                                    [_scheduleCache setObject:resultString forKey:key];
-                                                } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-                                                    ABLoggerError(@" error == %@",[error description]);
-                                                }];
-    }else{
-        [cell.cinema_scheduleCount setText:value];
-    }
-    
+    [cell.cinema_scheduleCount setJSONWithWithMovie:aMovie
+                                             cinema:cinema
+                                        placeholder:@"亲,正在加载..."
+                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, NSString *resultString) {
+                                            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                                                ABLoggerError(@" error == %@",[error description]);
+                                            }];
+
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:4];
     if ([cinema.zhekou boolValue]) {
         [array addObject:cell.cinema_image_zhekou];

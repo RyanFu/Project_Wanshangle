@@ -18,7 +18,6 @@
 @property(nonatomic,assign) CinemaAllViewController *parentViewController;
 @property(nonatomic,assign) UISearchDisplayController *msearchDisplayController;
 @property(nonatomic,assign) UITableView *mTableView;
-@property(nonatomic,assign) NSMutableDictionary *scheduleCache;
 @property(nonatomic,assign) NSArray *mArray;
 @property(nonatomic,readwrite)BOOL reloading;
 

@@ -10,7 +10,7 @@
 #import "RootViewController.h"
 #import "ApiConfig.h"
 #import <ShareSDK/ShareSDK.h>
-#import "BBar.h"
+#import "UncaughtExceptionHandler.h"
 
 @interface AppDelegate(){
     
@@ -99,27 +99,10 @@
     CFTimeInterval time2 = Elapsed_Time;
     ElapsedTime(time2, time1);
     
-    /* 测试本地时间戳
-    NSArray *arrays = [City MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"locationDate > %@",@"20130715095231898"]];
-    for (City *tCity in arrays) {
-        
-        if ([tCity.locationDate compare:@"20130715095234733" options:NSNumericSearch] == NSOrderedDescending ||
-            [tCity.locationDate compare:@"20130715095234733" options:NSNumericSearch] == NSOrderedSame) {
-            
-            ABLoggerDebug(@"city name = %@ id = %@ locationDate = %@",tCity.name,tCity.uid,tCity.locationDate);
-        }
-    }*/
-    /*
-    NSArray *arrays = [[DataBaseManager sharedInstance] getBarsListFromCoreDataWithCityName:nil
-                                                                                     offset:0
-                                                                                      limit:30
-                                                                                   Latitude:-1
-                                                                                  longitude:-1
-                                                                                   dataType:@"1"
-                                                                                  validDate:@"20130715214708154"];
+    // 异常捕获 exception caught
+    [self performSelector:@selector(installUncaughtExceptionHandler) withObject:nil afterDelay:0];
+//    [self performSelector:@selector(string) withObject:nil afterDelay:4.0];
     
-    ABLoggerDebug(@"bar count ====== %d",[arrays count]);
-     */
     return YES;
 }
 
@@ -193,6 +176,11 @@
 
 + (instancetype)appDelegateInstance{
 	return (AppDelegate *)[UIApplication sharedApplication].delegate;
+}
+
+- (void)installUncaughtExceptionHandler
+{
+	InstallUncaughtExceptionHandler();
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application

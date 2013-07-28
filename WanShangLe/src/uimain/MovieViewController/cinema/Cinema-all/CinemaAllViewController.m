@@ -146,6 +146,7 @@
     
     BOOL isMoviePanel = [CacheManager sharedInstance].isMoviePanel;
     if (isMoviePanel) {
+        self.cinemaDelegate = nil;
         if (_movieDelegate==nil) {
             _movieDelegate = [[MovieCinemaAllListDelegate alloc] init];
         }
@@ -172,6 +173,7 @@
         
         self.searchBar.delegate = _movieDelegate;
     }else{
+        self.movieDelegate = nil;
         if (_cinemaDelegate==nil) {
             _cinemaDelegate = [[CinemaAllListTableViewDelegate alloc] init];
 

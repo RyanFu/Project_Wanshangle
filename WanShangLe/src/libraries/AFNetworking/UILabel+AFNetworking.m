@@ -29,13 +29,12 @@
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
 #import "UILabel+AFNetworking.h"
 
-//@interface AFJsonCache : NSCache
-//- (UIJson *)cachedJsonForRequest:(NSURLRequest *)request;
-//- (void)cacheJson:(UIJson *)Json
-//        forRequest:(NSURLRequest *)request;
-//@end
-
 #pragma mark -
+
+@interface AFJsonCache(){
+    
+}
+@end
 
 static char kAFJSONRequestOperationObjectKey;
 
@@ -71,44 +70,17 @@ static char kAFJSONRequestOperationObjectKey;
     return _af_jsonRequestOperationQueue;
 }
 
-//+ (AFJsonCache *)af_sharedJsonCache {
-//    static AFJsonCache *_af_JsonCache = nil;
-//    static dispatch_once_t oncePredicate;
-//    dispatch_once(&oncePredicate, ^{
-//        _af_JsonCache = [[AFJsonCache alloc] init];
-//    });
-//
-//    return _af_JsonCache;
-//}
++ (AFJsonCache *)af_sharedJsonCache {
+    static AFJsonCache *_af_jsonCache = nil;
+    static dispatch_once_t oncePredicate;
+    dispatch_once(&oncePredicate, ^{
+        _af_jsonCache = [[AFJsonCache alloc] init];
+    });
+    
+    return _af_jsonCache;
+}
 
 #pragma mark -
-
-//- (void)setJsonWithURL:(NSURL *)url {
-//    [self setJsonWithURL:url placeholderJson:nil];
-//}
-//
-//- (void)setJsonWithURL:(NSURL *)url
-//       placeholderJson:(UIJson *)placeholderJson
-//{
-//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-//    [request addValue:@"Json/*" forHTTPHeaderField:@"Accept"];
-//
-//    [self setJsonWithURLRequest:request placeholderJson:placeholderJson success:nil failure:nil];
-//}
-
-/*
- //http://api.wanshangle.com:10000/api? appId=000001&sign=sign&time=1371988912&v=1.0&api=movie.scheduling&movieid=35&cinemaid=97
- - (NSMutableDictionary*) getParamDict {
- 
- NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
- [paramDict setObject:@"movie.scheduling" forKey:@"api"];
- [paramDict setObject:self.movie_id  forKey:@"movieid"];
- [paramDict setObject:self.cinema_id  forKey:@"cinemaid"];
- 
- return paramDict;
- }
- 
- */
 - (void)setJSONWithWithMovie:(MMovie *)aMovie
                       cinema:(MCinema *)aCinema
                  placeholder:(NSString *)placeholderString
@@ -116,14 +88,20 @@ static char kAFJSONRequestOperationObjectKey;
                      failure:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error))failure;
 {
     [self cancelJSONRequestOperation];
+    NSString *key = [NSString stringWithFormat:@"%@-%@",aMovie.uid,aCinema.uid];
+    NSString *cachedJson = nil;
     
-    NSString *cachedJson = [self getCachedJsonForCoreDataWithMovie:aMovie cinema:aCinema];
+    cachedJson = [[[self class] af_sharedJsonCache] cachedJsonForRequest:key];
+    ABLoggerDebug(@"cached schedule === %@",cachedJson);
+    if (isEmpty(cachedJson)) {
+        cachedJson = [self getCachedJsonForCoreDataWithMovie:aMovie cinema:aCinema];
+    }
+    
     if (!isEmpty(cachedJson)) {
         if (success) {
             success(nil, nil, cachedJson);
-        } else {
-            self.text = cachedJson;
         }
+        self.text = cachedJson;
         self.af_jsonRequestOperation = nil;
     } else {
         self.text = placeholderString;
@@ -133,28 +111,27 @@ static char kAFJSONRequestOperationObjectKey;
         
         [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
             
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             
-            NSString *resultString = [self parseResponseObject:responseObject Movie:aMovie cinema:aCinema];
-            if ([urlRequest isEqual:[self.af_jsonRequestOperation request]]) {
-                if (success) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        self.text = resultString;
-                         success(operation.request, operation.response, resultString);
-                    });
-                   
-                } else if (resultString) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        self.text = resultString;
-                    });
+                NSString *resultString = [self parseResponseObject:responseObject Movie:aMovie cinema:aCinema];
+                if ([urlRequest isEqual:[self.af_jsonRequestOperation request]]) {
+                    if (success) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            self.text = resultString;
+                        });
+                        success(operation.request, operation.response, resultString);
+                    } else if (resultString) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            self.text = resultString;
+                        });
+                    }
+                    
+                    if (self.af_jsonRequestOperation == operation) {
+                        self.af_jsonRequestOperation = nil;
+                    }
                 }
-                
-                if (self.af_jsonRequestOperation == operation) {
-                    self.af_jsonRequestOperation = nil;
-                }
-            }
-            
-            });
+                [[[self class] af_sharedJsonCache] cacheJson:resultString forRequest:key];
+//            });
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             if ([urlRequest isEqual:[self.af_jsonRequestOperation request]]) {
                 if (failure) {
@@ -240,7 +217,30 @@ static char kAFJSONRequestOperationObjectKey;
     ABLoggerInfo(@"request url ===== %@",urlStr);
     return url;
 }
+@end
 
+@implementation AFJsonCache
+
+-(id)init{
+    if (self=[super init]) {
+        _scheduleCache = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
+    }
+    return self;
+}
+
+- (NSString *)cachedJsonForRequest:(NSString *)request{
+
+	return [_scheduleCache objectForKey:request];
+}
+
+
+- (void)cacheJson:(NSString *)Json
+       forRequest:(NSString *)request
+{
+    if (Json && request) {
+        [_scheduleCache setObject:Json forKey:request];
+    }
+}
 @end
 
 #endif

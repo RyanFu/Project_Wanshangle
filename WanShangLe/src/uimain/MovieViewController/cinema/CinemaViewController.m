@@ -280,23 +280,6 @@
     [super didReceiveMemoryWarning];
     ABLoggerWarn(@"接收到内存警告了");
     [self cleanUpMemory];
-    //    switch (_filterCinemaListType) {
-    //        case NSFilterCinemaListTypeFavorite:{
-    //            self.allController = nil;
-    //            self.nearByController = nil;
-    //        }
-    //            break;
-    //        case NSFilterCinemaListTypeNearby:{
-    //            self.allController = nil;
-    //            self.favoriteController = nil;
-    //        }
-    //            break;
-    //        default:{
-    //            self.favoriteController = nil;
-    //            self.nearByController = nil;
-    //        }
-    //            break;
-    //    }
 }
 
 - (void)cleanUpMemory{
