@@ -26,7 +26,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        
+        _isLoadDone = NO;
     }
     return self;
 }
@@ -167,16 +167,25 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        NSArray *dataArray = [[DataBaseManager sharedInstance] insertTemporaryCinemasIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+        NSMutableArray *dataArray = (NSMutableArray *)[[DataBaseManager sharedInstance] insertTemporaryCinemasIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
         
+        NSMutableArray *removieArray = [NSMutableArray arrayWithCapacity:10];
         for (MCinema *tCinema in dataArray) {
             CLLocationDegrees latitude = [tCinema.latitude doubleValue];
             CLLocationDegrees longitude = [tCinema.longitude doubleValue];
             double distance = [[LocationManager defaultLocationManager] distanceBetweenUserToLatitude:latitude longitude:longitude];
-            tCinema.distance = [NSNumber numberWithDouble:distance];
+            if (distance<0) {
+                [removieArray addObject:tCinema];
+                _isLoadDone = YES;
+                _refreshNearByTailerView.hidden = YES;
+            }else{
+                tCinema.distance = [NSNumber numberWithDouble:distance];
+            }
         }
         
-        dataArray = [dataArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+        [dataArray removeObjectsInArray:removieArray];
+        
+        dataArray = (NSMutableArray *)[dataArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
             double first =  [[(MCinema*)a distance] doubleValue];
             double second = [[(MCinema*)b distance] doubleValue];
             
@@ -270,12 +279,17 @@
         return;
     }
     
+    if (_isLoadDone) {
+        [self reloadPullRefreshData];
+        return;
+    }
     [self updateData:0 withData:[self getCacheData]];
 }
 
 - (void)loadNewData{
     ABLoggerMethod();
     isLoadMore = NO;
+    _isLoadDone = NO;
     [_mCacheArray removeAllObjects];
     [_mArray removeAllObjects];
     

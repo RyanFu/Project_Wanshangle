@@ -1478,11 +1478,11 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 #pragma mark 将搜索和附近的数据插入到数据库里
-- (NSArray *)insertTemporaryCinemasIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+- (NSMutableArray *)insertTemporaryCinemasIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
     CFTimeInterval time1 = Elapsed_Time;
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     NSArray *info_array = [[objectData objectForKey:@"data"] objectForKey:@"list"];
-    NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:20];
+    NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:DataLimit];
     MCinema *mCinema = nil;
     
     for (int i=0; i<[info_array count]; i++) {
@@ -1526,6 +1526,7 @@ static DataBaseManager *_sharedInstance = nil;
     
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
     ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    ABLoggerWarn(@"returnArray count === %d",[returnArray count]);
     
     //    });
     return [returnArray autorelease];

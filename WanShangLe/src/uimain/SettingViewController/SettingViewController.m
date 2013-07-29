@@ -100,12 +100,20 @@
     
     [self cleanDistanceFilterButtonState];
     
-    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     int index = [(UIButton *)sender tag];
     [(UIButton *)[_distanceFilterBtns objectAtIndex:index] setSelected:YES];
+    
+    [self updateFilterDistanceData:index];
+
+}
+
+
+- (void)updateFilterDistanceData:(int)index{
+    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+    NSArray *array = [[NSArray alloc] initWithObjects:@"1",@"3",@"5",@"10",nil];
+    [userDefault setObject:[array objectAtIndex:index] forKey:DistanceFilterData];
     [userDefault setObject:[NSString stringWithFormat:@"%d",index] forKey:DistanceFilter];
     [userDefault synchronize];
-
 }
 
 -(void)cleanDistanceFilterButtonState{
@@ -171,7 +179,6 @@
 -(IBAction)clickVersionCheck:(id)sender{
     
 }
-
 #pragma mark -
 #pragma mark 提示框
 

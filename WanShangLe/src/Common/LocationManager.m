@@ -383,9 +383,16 @@
     
     CLLocationDistance distance = [to distanceFromLocation:from];
     
-    ABLoggerDebug(@"距离 === %.2f m",distance);
+    NSString *limitDistance = [[NSUserDefaults standardUserDefaults] objectForKey:DistanceFilterData];
+    int limitedDistance = (isEmpty(limitDistance)?10:[limitDistance intValue])*1000;
+    if (distance>limitedDistance) {
+         ABLoggerDebug(@"距离 real === %.2f m",distance);
+        distance = -1;
+    }
     
-    return (distance<0?0:distance);
+    ABLoggerDebug(@"距离 === %.2f m",distance);
+        
+    
+    return distance;
 }
-
 @end

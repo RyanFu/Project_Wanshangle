@@ -12,6 +12,7 @@
 #import "ASIHTTPRequest.h"
 #import "KKTV.h"
 #import "ApiCmd.h"
+#import "JSButton.h"
 
 #import "KTVAllListManagerDelegate.h"
 
@@ -21,7 +22,9 @@
 @interface KtvManagerViewController()<ApiNotify>{
     UIButton *cityBtn;
 }
-@property(nonatomic,retain)KTVAllListManagerDelegate *tableViewDelegate;
+@property(nonatomic,retain) UIView *cityPanel;
+@property(nonatomic,retain) UIControl *cityPanelMask;
+@property(nonatomic,retain) KTVAllListManagerDelegate *tableViewDelegate;
 @end
 
 @implementation KtvManagerViewController
@@ -37,11 +40,8 @@
 }
 
 - (void)dealloc{
-    
-    [_apiCmdKTV_getAllKTVs.httpRequest clearDelegatesAndCancel];
-    _apiCmdKTV_getAllKTVs.delegate = nil;
-    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdKTV_getAllKTVs];
-    self.apiCmdKTV_getAllKTVs = nil;
+
+    [self cancelApiCmd];
     
     _refreshTailerView.delegate = nil;
     [_refreshTailerView removeFromSuperview];
@@ -53,7 +53,17 @@
     self.tableViewDelegate = nil;
     self.searchBar = nil;
     
+    self.cityPanel = nil;
+    self.cityPanelMask = nil;
+    
     [super dealloc];
+}
+
+- (void)cancelApiCmd{
+    [_apiCmdKTV_getAllKTVs.httpRequest clearDelegatesAndCancel];
+    _apiCmdKTV_getAllKTVs.delegate = nil;
+    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdKTV_getAllKTVs];
+    self.apiCmdKTV_getAllKTVs = nil;
 }
 
 #pragma mark -
@@ -227,6 +237,171 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+- (void)clickCityButton:(id)sender{
+    if (!self.cityPanel) {
+        [self popupCityPanel];
+    }else{
+        [self stopAnimationCityPanel];
+    }
+}
+
+- (void)popupCityPanel{
+    
+    _cityPanelMask = [[UIControl alloc] initWithFrame:self.view.bounds];
+    _cityPanelMask.backgroundColor = [UIColor colorWithWhite:0.000 alpha:0.650];
+    [_cityPanelMask addTarget:self action:@selector(dismissCityPanel) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_cityPanelMask];
+    [_cityPanelMask release];
+    
+    self.cityPanel = [[UIView alloc] initWithFrame:CGRectMake(0, -120, 320, 119)];
+    
+    
+    UIImageView *bgImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_city_panel@2x"]];
+    bgImg.frame = CGRectMake(0, 0, 320, 119);
+    [self.cityPanel addSubview:bgImg];
+    [bgImg release];
+    
+    JSButton *bt1 = [[JSButton alloc] initWithFrame:CGRectMake(5,30,70,35)];
+    [bt1 setTitle:@"北京" forState:UIControlStateNormal];
+    [bt1 setTag:1];
+    [bt1 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [_cityPanel addSubview:bt1];
+    
+    [bt1 performBlock:^(JSButton *sender) {
+        [[LocationManager defaultLocationManager] setUserCity:@"北京市" CallBack:^{
+            [self setSelectedButton:bt1];
+        }];
+        [cityBtn setTitle:@"北京" forState:UIControlStateNormal];
+        ABLoggerInfo(@"手动选择城市 北京");
+    } forEvents:UIControlEventTouchUpInside];
+    
+    JSButton *bt2 = [[JSButton alloc] initWithFrame:CGRectMake(85,30,70,35)];
+    [bt2 setTitle:@"上海" forState:UIControlStateNormal];
+    [bt2 setTag:2];
+    [bt2 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [_cityPanel addSubview:bt2];
+    [bt2 performBlock:^(JSButton *sender) {
+        [[LocationManager defaultLocationManager] setUserCity:@"上海市" CallBack:^{
+            [self setSelectedButton:bt2];
+        }];
+        [cityBtn setTitle:@"上海" forState:UIControlStateNormal];
+        ABLoggerInfo(@"手动选择城市 上海");
+    } forEvents:UIControlEventTouchUpInside];
+    
+    JSButton *bt3 = [[JSButton alloc] initWithFrame:CGRectMake(165,30,70,35)];
+    [bt3 setTitle:@"广州" forState:UIControlStateNormal];
+    [bt3 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [_cityPanel addSubview:bt3];
+    [bt3 setTag:3];
+    [bt3 performBlock:^(JSButton *sender) {
+        [[LocationManager defaultLocationManager] setUserCity:@"广州市" CallBack:^{
+            [self setSelectedButton:bt3];
+        }];
+        [cityBtn setTitle:@"广州" forState:UIControlStateNormal];
+        ABLoggerInfo(@"手动选择城市 广州");
+    } forEvents:UIControlEventTouchUpInside];
+    
+    
+    JSButton *bt4 = [[JSButton alloc] initWithFrame:CGRectMake(245,30,70,35)];
+    [bt4 setTitle:@"深圳" forState:UIControlStateNormal];
+    [bt4 setTag:4];
+    [bt4 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [_cityPanel addSubview:bt4];
+    
+    [bt4 performBlock:^(JSButton *sender) {
+        [[LocationManager defaultLocationManager] setUserCity:@"深圳市" CallBack:^{
+            [self setSelectedButton:bt4];
+        }];
+        [cityBtn setTitle:@"深圳" forState:UIControlStateNormal];
+        ABLoggerInfo(@"手动选择城市 深圳");
+    } forEvents:UIControlEventTouchUpInside];
+    
+    [self cleanCityButtonStateWithPanel:_cityPanel];
+    [self selectedCityButtonInPanel:_cityPanel];
+    [self startAnimationCityPanel];
+    [_cityPanel release];
+    [bt4 release];
+    [bt3 release];
+    [bt2 release];
+    [bt1 release];
+}
+
+- (void)dismissCityPanel{
+    [self clickCityButton:nil];
+}
+
+- (void)cleanCityButtonStateWithPanel:(UIView *)panel{
+    for (int i=1;i<5;i++) {
+        UIButton *bt = (UIButton*)[panel viewWithTag:i];
+        [bt setBackgroundImage:[UIImage imageNamed:@"btn_city_n@2x"] forState:UIControlStateNormal];
+        [bt setBackgroundImage:[UIImage imageNamed:@"btn_city_f@2x"] forState:UIControlStateHighlighted];
+    }
+}
+
+- (void)selectedCityButtonInPanel:(UIView*)panel{
+    NSArray *array = [NSArray arrayWithObjects:@"北京",@"上海",@"广州",@"深圳", nil];
+    UIButton *bt = (UIButton *)[panel viewWithTag:(1+[array indexOfObject:[[LocationManager defaultLocationManager] getUserCity]])];
+    [bt setBackgroundImage:[UIImage imageNamed:@"btn_city_f@2x"] forState:UIControlStateNormal];
+    [self addLocationIconWithPanel:panel andButton:bt];
+}
+
+- (void)setSelectedButton:(UIButton *)sender{
+    
+    [self cleanCityButtonStateWithPanel:_cityPanel];
+    [sender setBackgroundImage:[UIImage imageNamed:@"btn_city_f@2x"] forState:UIControlStateNormal];
+    [self addLocationIconWithPanel:_cityPanel andButton:sender];
+    [self stopAnimationCityPanel];
+    [self refreshChangeCityData];
+}
+
+- (void)addLocationIconWithPanel:(UIView *)panel andButton:(UIButton*)bt{
+    
+    NSString *locationCity = [LocationManager defaultLocationManager].locationCity;
+    locationCity = [[DataBaseManager sharedInstance] validateCity:locationCity];
+    
+    if (!isEmpty(locationCity)) {
+        UIImage *img = nil;
+        if ([locationCity isEqualToString:bt.currentTitle]) {
+            img = [UIImage imageNamed:@"btn_location_icon@2x"];
+        }else{
+            img = [UIImage imageNamed:@"btn_location_icon_black@2x"];
+            NSArray *array = [NSArray arrayWithObjects:@"北京",@"上海",@"广州",@"深圳", nil];
+            bt = (UIButton *)[panel viewWithTag:(1+[array indexOfObject:locationCity])];
+            
+        }
+        UIImageView *locationImg = [[UIImageView alloc] initWithImage:img];
+        locationImg.frame = CGRectMake(2, 11, 12, 12);
+        [bt addSubview:locationImg];
+        [locationImg release];
+    }
+}
+
+
+- (void)startAnimationCityPanel{
+    [self.view addSubview:_cityPanel];
+    [UIView animateWithDuration:0.3 animations:^{
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+        _cityPanel.frame = CGRectMake(0, 0, 320, 119);
+    } completion:^(BOOL finished) {
+        
+    }];
+}
+
+- (void)stopAnimationCityPanel{
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
+        _cityPanel.frame = CGRectMake(0, -120, 320, 119);
+    } completion:^(BOOL finished) {
+        [self.cityPanelMask removeFromSuperview];
+        [self.cityPanel removeFromSuperview];
+        self.cityPanel = nil;
+    }];
+}
+
+- (void)refreshChangeCityData{
+    [self loadNewData];
+}
 #pragma mark -
 #pragma mark apiNotiry
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
@@ -272,9 +447,6 @@
     [self formatKTVDataFilterAll:dataArray];
 }
 
-- (void)clickCityButton:(id)sender{
-    
-}
 #pragma mark -
 #pragma mark FilterCinema FormatData
 - (void)formatKTVDataFilterAll:(NSArray*)pageArray{
@@ -401,7 +573,13 @@
 }
 
 - (void)loadNewData{
+    [self cancelApiCmd];
+    [_mArray removeAllObjects];
+    [_mCacheArray removeAllObjects];
+    [_mFavoriteArray removeAllObjects];
+    [_mTableView reloadData];
     
+    [self updateData:API_MCinemaCmd withData:[self getCacheData]];
 }
 
 - (void)reloadPullRefreshData{
