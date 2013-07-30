@@ -117,12 +117,3 @@
 //数据升级
 #import "SystemDataUpdater.h"
 #import "SystemDataUpdater1_0.h"  // updator for version 1.0
-
-//用户偏好设置
-#define MMovie_CinemaFilterType @"MMovie_CinemaFilterType"
-#define BBar_ActivityFilterType @"BBar_ActivityFilterType"
-#define KKTV_FilterType         @"KKTV_FilterType"
-#define SShow_FilterType        @"SShow_FilterType"
-
-//用户选择的城市
-#define UserState @"administrativeArea"

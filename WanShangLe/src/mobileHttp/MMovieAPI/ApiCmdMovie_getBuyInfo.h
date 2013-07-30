@@ -10,6 +10,7 @@
 
 @interface ApiCmdMovie_getBuyInfo : ApiCmd{
 }
+@property(nonatomic,retain)NSString *cinemaId;
 - (NSMutableDictionary*) getParamDict;
 - (void) parseResultData:(NSDictionary*) dictionary;
 

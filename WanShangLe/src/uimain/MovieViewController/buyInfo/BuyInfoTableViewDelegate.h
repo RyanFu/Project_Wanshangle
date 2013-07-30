@@ -7,8 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-@class BuyInfoViewController;
 
+@class BuyInfoViewController;
 @interface BuyInfoTableViewDelegate : NSObject<UITableViewDataSource,UITableViewDelegate>
 @property(nonatomic,assign) BuyInfoViewController *parentViewController;
+@property(nonatomic,assign) UITableView *mTableView;
+@property(nonatomic,assign) NSArray *mArray;
 @end

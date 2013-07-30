@@ -14,10 +14,22 @@ NSString *const SIAlertViewDidShowNotification = @"SIAlertViewDidShowNotificatio
 NSString *const SIAlertViewWillDismissNotification = @"SIAlertViewWillDismissNotification";
 NSString *const SIAlertViewDidDismissNotification = @"SIAlertViewDidDismissNotification";
 
+//#define DEBUG_LAYOUT 0
+//
+//#define MESSAGE_MIN_LINE_COUNT 3
+//#define MESSAGE_MAX_LINE_COUNT 5
+//#define GAP 10
+//#define CANCEL_BUTTON_PADDING_TOP 5
+//#define CONTENT_PADDING_LEFT 10
+//#define CONTENT_PADDING_TOP 12
+//#define CONTENT_PADDING_BOTTOM 10
+//#define BUTTON_HEIGHT 44
+//#define CONTAINER_WIDTH 300
+
 #define DEBUG_LAYOUT 0
 
-#define MESSAGE_MIN_LINE_COUNT 3
-#define MESSAGE_MAX_LINE_COUNT 5
+#define MESSAGE_MIN_LINE_COUNT 2
+#define MESSAGE_MAX_LINE_COUNT 15
 #define GAP 10
 #define CANCEL_BUTTON_PADDING_TOP 5
 #define CONTENT_PADDING_LEFT 10
@@ -34,16 +46,7 @@ static SIAlertBackgroundWindow *__si_alert_background_window;
 static SIAlertView *__si_alert_current_view;
 
 @interface SIAlertView ()
-
-@property (nonatomic, strong) NSMutableArray *items;
-@property (nonatomic, strong) UIWindow *alertWindow;
 @property (nonatomic, assign, getter = isVisible) BOOL visible;
-
-@property (nonatomic, strong) UILabel *titleLabel;
-@property (nonatomic, strong) UILabel *messageLabel;
-@property (nonatomic, strong) UIView *containerView;
-@property (nonatomic, strong) NSMutableArray *buttons;
-
 @property (nonatomic, assign, getter = isLayoutDirty) BOOL layoutDirty;
 
 + (NSMutableArray *)sharedQueue;
@@ -620,7 +623,6 @@ static SIAlertView *__si_alert_current_view;
 #if DEBUG_LAYOUT
     NSLog(@"%@, %@", self, NSStringFromSelector(_cmd));
 #endif
-    
     CGFloat height = [self preferredHeight];
     CGFloat left = (self.bounds.size.width - CONTAINER_WIDTH) * 0.5;
     CGFloat top = (self.bounds.size.height - height) * 0.5;
@@ -641,8 +643,19 @@ static SIAlertView *__si_alert_current_view;
         }
         self.messageLabel.text = self.message;
         CGFloat height = [self heightForMessageLabel];
+        
         self.messageLabel.frame = CGRectMake(CONTENT_PADDING_LEFT, y, self.containerView.bounds.size.width - CONTENT_PADDING_LEFT * 2, height);
         y += height;
+        
+        CGSize real_size = [self.message sizeWithFont:self.messageLabel.font
+                                    constrainedToSize:CGSizeMake(CONTAINER_WIDTH - CONTENT_PADDING_LEFT * 2, MAXFLOAT)
+                                        lineBreakMode:NSLineBreakByWordWrapping];
+        if (real_size.height>height) {
+            self.messageLabel.scrollEnabled = YES;
+        }else{
+            self.messageLabel.contentOffset = CGPointMake(0, 10);
+            self.messageLabel.scrollEnabled = NO;
+        }
     }
     if (self.items.count > 0) {
         if (y > CONTENT_PADDING_TOP) {
@@ -699,21 +712,21 @@ static SIAlertView *__si_alert_current_view;
     height += CONTENT_PADDING_BOTTOM;
 	return height;
 }
-
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 - (CGFloat)heightForTitleLabel
 {
     if (self.titleLabel) {
         CGSize size = CGSizeZero;
         if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")) {
             size = [self.title sizeWithFont:self.titleLabel.font
-                                       minFontSize:self.titleLabel.font.pointSize * self.titleLabel.minimumScaleFactor
-                                    actualFontSize:nil
-                                          forWidth:CONTAINER_WIDTH - CONTENT_PADDING_LEFT * 2
-                                     lineBreakMode:self.titleLabel.lineBreakMode];
+                                minFontSize:self.titleLabel.font.pointSize * self.titleLabel.minimumScaleFactor
+                             actualFontSize:nil
+                                   forWidth:CONTAINER_WIDTH - CONTENT_PADDING_LEFT * 2
+                              lineBreakMode:self.titleLabel.lineBreakMode];
         }else{
-            size = [self.title sizeWithFont:self.titleLabel.font constrainedToSize:CGSizeMake(CONTAINER_WIDTH - CONTENT_PADDING_LEFT * 2, iPhoneAppFrame.size.height)];
+            size = [self.title sizeWithFont:self.titleLabel.font constrainedToSize:CGSizeMake(CONTAINER_WIDTH - CONTENT_PADDING_LEFT * 2, [[UIScreen mainScreen] applicationFrame].size.height)];
         }
-
+        
         return size.height;
     }
     return 0;
@@ -726,10 +739,20 @@ static SIAlertView *__si_alert_current_view;
         CGFloat maxHeight = MESSAGE_MAX_LINE_COUNT * self.messageLabel.font.lineHeight;
         CGSize size = [self.message sizeWithFont:self.messageLabel.font
                                constrainedToSize:CGSizeMake(CONTAINER_WIDTH - CONTENT_PADDING_LEFT * 2, maxHeight)
-                                   lineBreakMode:self.messageLabel.lineBreakMode];
+                                   lineBreakMode:NSLineBreakByWordWrapping];
         return MAX(minHeight, size.height);
     }
     return minHeight;
+    
+    //    CGFloat minHeight = MESSAGE_MIN_LINE_COUNT * self.messageLabel.font.lineHeight;
+    //    if (self.messageLabel) {
+    //        CGFloat maxHeight = MESSAGE_MAX_LINE_COUNT * self.messageLabel.font.lineHeight;
+    //        CGSize size = [self.message sizeWithFont:self.messageLabel.font
+    //                               constrainedToSize:CGSizeMake(CONTAINER_WIDTH - CONTENT_PADDING_LEFT * 2, maxHeight)
+    //                                   lineBreakMode:NSLineBreakByWordWrapping];
+    //        return MAX(minHeight, size.height);
+    //    }
+    //    return minHeight;
 }
 
 #pragma mark - Setup
@@ -765,6 +788,13 @@ static SIAlertView *__si_alert_current_view;
     [self addSubview:self.containerView];
 }
 
+- (void)setupScrollView{
+    self.scrollView = [[UIScrollView alloc] initWithFrame:self.containerView.bounds];
+    self.scrollView.backgroundColor = [UIColor blueColor];
+    self.scrollView.alpha = 1;
+    [self.containerView addSubview:self.scrollView];
+}
+
 - (void)updateTitleLabel
 {
 	if (self.title) {
@@ -775,7 +805,7 @@ static SIAlertView *__si_alert_current_view;
 			self.titleLabel.font = self.titleFont;
             self.titleLabel.textColor = self.titleColor;
             self.titleLabel.adjustsFontSizeToFitWidth = YES;
-//            self.titleLabel.minimumScaleFactor = 0.75;
+            //            self.titleLabel.minimumScaleFactor = 0.75;
 			[self.containerView addSubview:self.titleLabel];
 #if DEBUG_LAYOUT
             self.titleLabel.backgroundColor = [UIColor redColor];
@@ -793,12 +823,13 @@ static SIAlertView *__si_alert_current_view;
 {
     if (self.message) {
         if (!self.messageLabel) {
-            self.messageLabel = [[UILabel alloc] initWithFrame:self.bounds];
+            self.messageLabel = [[UITextView alloc] initWithFrame:self.bounds];
+            self.messageLabel.editable = NO;
             self.messageLabel.textAlignment = NSTextAlignmentCenter;
             self.messageLabel.backgroundColor = [UIColor clearColor];
             self.messageLabel.font = self.messageFont;
             self.messageLabel.textColor = self.messageColor;
-            self.messageLabel.numberOfLines = MESSAGE_MAX_LINE_COUNT;
+            //            self.messageLabel.numberOfLines = MESSAGE_MAX_LINE_COUNT;
             [self.containerView addSubview:self.messageLabel];
 #if DEBUG_LAYOUT
             self.messageLabel.backgroundColor = [UIColor redColor];

@@ -1065,7 +1065,7 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 #pragma mark 购买信息
-- (ApiCmdMovie_getBuyInfo *)getBuyInfoFromWebWithaMovie:(MMovie *)aMovie
+- (ApiCmd *)getBuyInfoFromWebWithaMovie:(MMovie *)aMovie
                                                 aCinema:(MCinema *)aCinema
                                               aSchedule:(NSString *)aSchedule
                                                delegate:(id<ApiNotify>)delegate
@@ -1077,6 +1077,7 @@ static DataBaseManager *_sharedInstance = nil;
     apiCmdMovie_getBuyInfo.delegate = delegate;
     apiCmdMovie_getBuyInfo.cityName = [[LocationManager defaultLocationManager] getUserCity];
     apiCmdMovie_getBuyInfo.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdMovie_getBuyInfo.cinemaId = aCinema.uid;
     [apiClient executeApiCmdAsync:apiCmdMovie_getBuyInfo];
     [apiCmdMovie_getBuyInfo.httpRequest setTag:API_MBuyInfoCmd];
     
@@ -1085,19 +1086,32 @@ static DataBaseManager *_sharedInstance = nil;
 
 /*
  {
- "errors":[],
- "data":{
- "count":6,
- "vendors":[
+ httpCode: 200,
+ errors: [ ],
+ data: {
+ count: 2,
+ deals: [
  {
- "vendorId":"100001",
- "name":"美团",
- "price":30,
- "channel":[1,0,0],
- "img":"http://xxxxxx.jpg",
- "url":"http://www.meituan.com/",
- "clicks":2321,
- "intro":"使用规则"
+ id: "7",
+ uniquekey: "8243ff896207fae23f8f18a226517cda",
+ supplierid: "7",
+ cityid: "1",
+ title: "仅售41元！价值90元的影客票务2D电影票1张，无需预约。",
+ origprice: "9000",
+ price: "4100",
+ startdate: "2013-07-13",
+ enddate: "2014-06-07",
+ imageurl: "",
+ weburl: "http://bj.meituan.com/deal/2634044.html",
+ murl: "http://i.meituan.com/deal/2634044.html",
+ rule: "有效期： 2013.7.13 至 2014.6.7 使用规则： 不可使用日期：西单4D影城9月19-21日；10月1-7日不可使用；花市百老汇影城、当代MOMA百老汇影城、新世纪影城、新东安影城、金宝汇百丽宫影城9月19日、10月1-3日不可使用优惠码使用时间：09:30-23:30本单无需预约，咨询请致电商家每人限用1个优惠码凭优惠码消费不可同时享受店内其他优惠每个优惠码可兑换有效期内任意一天电影票3D影片、巨幕厅、VIP厅、IMAX厅不能兑换现场选座，首映式/见面会/VIP观影厅/情侣座不可使用儿童无优惠，需独立使用1个优惠码 限价片 1 补差价规则以影院公告为准1 限价片： 限价片是指影片发行方或相关部门对于某些热门电影设置了最低票价，任何渠道的售价都不得低于某一个数字。",
+ modifieditems: "",
+ categoryid: "6",
+ currentstatus: "1",
+ createtime: "2013-07-30 10:04:28",
+ createdbysuid: "12",
+ lastmodifiedtime: "2013-07-30 10:04:28",
+ lastmodifiedbysuid: "12"
  },
  */
 - (void)insertBuyInfoIntoCoreDataFromObject:(NSDictionary *)objectData
@@ -1106,22 +1120,19 @@ static DataBaseManager *_sharedInstance = nil;
                                  andaCinema:(MCinema *)aCinema
                                   aSchedule:(NSString *)aSchedule{
     
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     NSDictionary *dataDic = [objectData objectForKey:@"data"];
-    
-    NSString *keyPath = [[NSString alloc] initWithFormat:@"%d%@%@",[aCinema.uid intValue],aMovie.uid,aSchedule];
-    NSString *movie_cinema_schedule_uid = [self md5PathForKey:keyPath];
-    [keyPath release];
-    
-    MBuyTicketInfo *buyInfo = [MBuyTicketInfo MR_findFirstByAttribute:@"uid" withValue:movie_cinema_schedule_uid inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+
+    MBuyTicketInfo *buyInfo = [MBuyTicketInfo MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and locationDate >= %@",aCinema.uid,[self getTodayZeroTimeStamp]] inContext:context];
     if (buyInfo == nil) {
-        buyInfo = [MBuyTicketInfo MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+        buyInfo = [MBuyTicketInfo MR_createInContext:context];
+        buyInfo.uid = aCinema.uid;
     }
     
-    buyInfo.uid = movie_cinema_schedule_uid;
     buyInfo.groupBuyInfo = dataDic;
     
-    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        ABLoggerDebug(@"排期 保存是否成功 ========= %d",success);
+    [context MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"电影团购 保存是否成功 ========= %d",success);
         ABLoggerDebug(@"错误信息 ========= %@",[error description]);
     }];
     

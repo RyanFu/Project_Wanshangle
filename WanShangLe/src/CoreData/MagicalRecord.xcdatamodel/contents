@@ -185,21 +185,21 @@
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ActionState" positionX="160" positionY="192" width="128" height="209"/>
+        <element name="ActionState" positionX="-290" positionY="-729" width="128" height="209"/>
         <element name="BBar" positionX="-522" positionY="-805" width="128" height="315"/>
         <element name="BBarDetail" positionX="-711" positionY="-757" width="128" height="148"/>
-        <element name="City" positionX="-171" positionY="-730" width="128" height="90"/>
+        <element name="City" positionX="-137" positionY="-738" width="128" height="90"/>
         <element name="KKTV" positionX="142" positionY="-838" width="128" height="375"/>
         <element name="KKTVBuyInfo" positionX="430" positionY="-909" width="128" height="103"/>
         <element name="KKTVPriceInfo" positionX="439" positionY="-567" width="128" height="103"/>
-        <element name="MBuyTicketInfo" positionX="-27" positionY="-63" width="128" height="90"/>
+        <element name="MBuyTicketInfo" positionX="-54" positionY="-99" width="128" height="90"/>
         <element name="MCinema" positionX="205" positionY="-420" width="128" height="330"/>
         <element name="MMovie" positionX="-443" positionY="-351" width="128" height="270"/>
         <element name="MMovie_Cinema" positionX="-173" positionY="-313" width="128" height="105"/>
         <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="135"/>
-        <element name="MSchedule" positionX="-189" positionY="-67" width="128" height="120"/>
+        <element name="MSchedule" positionX="-207" positionY="-108" width="128" height="120"/>
         <element name="SShow" positionX="-137" positionY="-1204" width="128" height="330"/>
         <element name="SShowDetail" positionX="-335" positionY="-1044" width="128" height="165"/>
-        <element name="TimeStamp" positionX="-164" positionY="-612" width="128" height="90"/>
+        <element name="TimeStamp" positionX="-137" positionY="-612" width="128" height="90"/>
     </elements>
 </model>

@@ -37,6 +37,15 @@ typedef void(^SIAlertViewHandler)(SIAlertView *alertView);
 
 @interface SIAlertView : UIView
 
+@property (nonatomic, strong) NSMutableArray *items;
+@property (nonatomic, strong) UIWindow *alertWindow;
+
+@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) UITextView *messageLabel;
+@property (nonatomic, strong) UIView *containerView;
+@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) NSMutableArray *buttons;
+
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *message;
 

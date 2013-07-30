@@ -37,6 +37,16 @@
 //测试宏标记
 //#define TestCode
 
+//用户选择的城市
+#define UserState @"administrativeArea"
+
+//用户偏好设置
+#define MMovie_CinemaFilterType @"MMovie_CinemaFilterType"
+#define BBar_ActivityFilterType @"BBar_ActivityFilterType"
+#define KKTV_FilterType         @"KKTV_FilterType"
+#define SShow_FilterType        @"SShow_FilterType"
+#define BuyInfo_HintType        @"BuyInfo_HintType"
+
 #define UserSetting @"UserSetting"
 #define DistanceFilter @"DistanceFilter"
 #define DistanceFilterData @"DistanceFilterData"

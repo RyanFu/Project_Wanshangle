@@ -10,10 +10,10 @@
 #import "BuyInfoViewController.h"
 #import "BuyInfoTableViewCell.h"
 #import "UIImageView+WebCache.h"
+#import "WebSiteBuyViewController.h"
+#import "SIAlertView.h"
 
 @interface BuyInfoTableViewDelegate()
-@property (nonatomic,retain)NSIndexPath *newselectIndex;
-@property (nonatomic,retain)NSIndexPath *oldselectIndex;
 @end
 
 @implementation BuyInfoTableViewDelegate
@@ -21,15 +21,11 @@
 - (id)init{
     self = [super init];
     if (self) {
-        self.newselectIndex = [NSIndexPath indexPathForRow:-1 inSection:-1];
-        self.oldselectIndex = [NSIndexPath indexPathForRow:-1 inSection:-1];
     }
     return self;
 }
 
 - (void)dealloc{
-    self.newselectIndex = nil;
-    self.oldselectIndex = nil;
     [super dealloc];
 }
 #pragma mark -
@@ -42,115 +38,144 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    ABLoggerDebug(@"numberOfRowsInSection == %d",[_parentViewController.marray count]);
-    return [_parentViewController.marray count];
+    return [_mArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    ABLoggerDebug(@"cellForRowAtIndexPath ====== %d",indexPath.row);
-    
     static NSString *CellIdentifier = @"BuyInfoTableViewCell";
-    static BOOL nibsRegistered = NO;
-    if (!nibsRegistered) {
-        UINib *nib = [UINib nibWithNibName:@"BuyInfoTableViewCell" bundle:nil];
-        [tableView registerNib:nib forCellReuseIdentifier:CellIdentifier];
-        nibsRegistered = YES;
-    }
     
     BuyInfoTableViewCell *cell = (BuyInfoTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (!cell) {
-        cell = [self createNewMocieCell];
+        cell = [self createNewCell];
     }
     
-    cell.expansionView.hidden = YES;
-    NSDictionary *cellData = [_parentViewController.marray objectAtIndex:indexPath.row];
+    [self setCellCustomBackgroundView:cell cellForRowAtIndexPath:indexPath];
+    
+    NSDictionary *cellData = [_mArray objectAtIndex:indexPath.row];
     [self configureCell:cell cellForRowAtIndexPath:indexPath withObject:cellData];
     
     return cell;
 }
 
-- (void)configureCell:(BuyInfoTableViewCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath withObject:(NSDictionary *)dataDic {
-
-    if (_newselectIndex.row == indexPath.row) {
-        cell.expansionView.hidden = NO;
-    }else if(_oldselectIndex.row == indexPath.row){
-        cell.expansionView.hidden = YES;
-    }
+- (void)setCellCustomBackgroundView:(BuyInfoTableViewCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    int row = indexPath.row;
+    int count = [_mArray count];
     
-    [cell.imgView setImageWithURL:[NSURL URLWithString:[dataDic objectForKey:@"img"]]
-                         placeholderImage:[UIImage imageNamed:@"movie_placeholder@2x"] options:SDWebImageRetryFailed];
-    cell.vendorName.text = [dataDic objectForKey:@"name"];
-    cell.price.text = [[dataDic objectForKey:@"price"] stringValue];
-    cell.clickCount.text = [NSString stringWithFormat:@"%d人点击购买",[[dataDic objectForKey:@"clicks"] intValue]];
-    cell.buyInfo_textView.text = [dataDic objectForKey:@"intro"];
+    if (count==1) {//只有一条数据
+        [cell.bg_button setBackgroundImage:[UIImage imageNamed:@"cell_one_n@2x"] forState:UIControlStateNormal];
+        [cell.bg_button setBackgroundImage:[UIImage imageNamed:@"cell_one_f@2x"] forState:UIControlStateHighlighted];
+    }else if(count>1 && row==0){
+        [cell.bg_button setBackgroundImage:[UIImage imageNamed:@"cell_top_n@2x"] forState:UIControlStateNormal];
+        [cell.bg_button setBackgroundImage:[UIImage imageNamed:@"cell_top_f@2x"] forState:UIControlStateHighlighted];
+    }else if(count>1 && row==(count-1)){
+        [cell.bg_button setBackgroundImage:[UIImage imageNamed:@"cell_bottom_n@2x"] forState:UIControlStateNormal];
+        [cell.bg_button setBackgroundImage:[UIImage imageNamed:@"cell_bottom_f@2x"] forState:UIControlStateHighlighted];
+    }else{
+        [cell.bg_button setBackgroundImage:[UIImage imageNamed:@"cell_middle_n@2x"] forState:UIControlStateNormal];
+        [cell.bg_button setBackgroundImage:[UIImage imageNamed:@"cell_middle_f@2x"] forState:UIControlStateHighlighted];
+    }
 }
 
--(BuyInfoTableViewCell *)createNewMocieCell{
+- (void)configureCell:(BuyInfoTableViewCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath withObject:(NSDictionary *)dataDic {
+    
+    if (indexPath.row==0) {
+        cell.lowPriceImg.hidden = NO;
+    }else{
+        cell.lowPriceImg.hidden = YES;
+    }
+    cell.tuan_imgView.image = [UIImage imageNamed:@"tag_tuan@2x"];
+    cell.vendor_name.text = [dataDic objectForKey:@"supplierName"];
+    cell.price.text = [NSString stringWithFormat:@"%@元",[dataDic objectForKey:@"price"]];
+}
+
+-(BuyInfoTableViewCell *)createNewCell{
     
     BuyInfoTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"BuyInfoTableViewCell" owner:self options:nil] objectAtIndex:0];
     [cell setAccessoryType:UITableViewCellAccessoryNone];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    //    cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"history_menu_cell_background"]] autorelease];
+    
+    [cell.bg_button addTarget:self action:@selector(clickCellButton:) forControlEvents:UIControlEventTouchUpInside];
     return cell;
 }
 
+- (void)clickCellButton:(id)sender{
+    UIButton *bt = (UIButton *)sender;
+    
+    BuyInfoTableViewCell *cell = (BuyInfoTableViewCell *)[[bt superview] superview];
+    NSIndexPath *indexPath = [_mTableView indexPathForCell:cell];
+    NSDictionary *dataDic = [_mArray objectAtIndex:indexPath.row];
+    NSString *urlstr = [dataDic objectForKey:@"murl"];
+    
+    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+    NSNumber *buy_hint_bool = [userDefault objectForKey:BuyInfo_HintType];
+    
+    if(isNull(buy_hint_bool) || ![buy_hint_bool boolValue]){
+        NSString *supplierName = [dataDic objectForKey:@"supplierName"];
+        SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"你将被跳转到%@完成购买",supplierName]
+                                                         andMessage:@""];
+        [alertView addButtonWithTitle:@"取消"
+                                 type:SIAlertViewButtonTypeCancel
+                              handler:^(SIAlertView *alertView) {
+                              }];
+        [alertView addButtonWithTitle:@"继续"
+                                 type:SIAlertViewButtonTypeDefault
+                              handler:^(SIAlertView *alertView) {
+                                  [self skipToBuyWebSite:urlstr];
+                              }];
+        //        alertView.titleFont = [UIFont boldSystemFontOfSize:17];
+        //        alertView.messageFont = [UIFont systemFontOfSize:12];
+        UILabel *promptLabel = [[[UILabel alloc] initWithFrame:CGRectMake(115, 60, 110, 22)] autorelease];
+        promptLabel.backgroundColor = [UIColor clearColor];
+        promptLabel.text = @"下次不再提醒";
+        promptLabel.textColor = [UIColor colorWithWhite:0.400 alpha:1.000];
+        
+        UIButton *checkBox = [UIButton buttonWithType:UIButtonTypeCustom];
+        [checkBox setImage:[UIImage imageNamed:@"btn_checkBox_n@2x"] forState:UIControlStateNormal];
+        [checkBox setImage:[UIImage imageNamed:@"btn_checkBox_f@2x"] forState:UIControlStateSelected];
+        [checkBox addTarget:self action:@selector(clickCheckBox:) forControlEvents:UIControlEventTouchUpInside];
+        checkBox.frame = CGRectMake(85, 62, 20, 20);
+        
+        [alertView show];
+        [alertView.containerView addSubview:checkBox];
+        [alertView.containerView addSubview:promptLabel];
+        
+        [alertView release];
+    }else{
+        [self skipToBuyWebSite:urlstr];
+    }
+}
+
+- (void)clickCheckBox:(id)sender{
+    UIButton *bt = (UIButton *)sender;
+    if (bt.selected) {
+        bt.selected = NO;
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:BuyInfo_HintType];
+    }else{
+        bt.selected = YES;
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:BuyInfo_HintType];
+    }
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)skipToBuyWebSite:(NSString *)wapURL{
+    WebSiteBuyViewController *webViewController = [[WebSiteBuyViewController alloc] initWithNibName:@"WebSiteBuyViewController" bundle:nil];
+    webViewController.mURLStr = wapURL;
+    [_parentViewController.navigationController pushViewController:webViewController animated:YES];
+    [webViewController release];
+}
 #pragma mark -
 #pragma mark UITableViewDelegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    //If this is the selected index we need to return the height of the cell
-    //in relation to the label height otherwise we just return the minimum label height with padding
-    if(_newselectIndex.row == indexPath.row)
-    {
-        return 410.0f;
-    }
-    else if(indexPath.row == 0){
-        return 80.0f;
-    }else{
-        return 44.0f;
-    }
+    return 45.0f;
 }
 
 #pragma mark - Table view delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    
-    self.oldselectIndex = self.newselectIndex;
-    
-    if (self.newselectIndex.row == indexPath.row) {
-        self.newselectIndex = [NSIndexPath indexPathForRow:-1 inSection:-1];
-    }else{
-        self.newselectIndex = indexPath;
-    }
-    
-    
-    ABLoggerDebug(@"oldselectIndex section = %d row = %d",_oldselectIndex.section,_oldselectIndex.row);
-    ABLoggerDebug(@"newselectIndex section = %d row = %d",_newselectIndex.section,_newselectIndex.row);
-    
-    [self didExpansionCell];
-}
-
-- (void)didExpansionCell{
-    
-    [_parentViewController.mTableView beginUpdates];
-    
-    if (_oldselectIndex.row != -1 && _oldselectIndex.row != _newselectIndex.row) {
-        [_parentViewController.mTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:_oldselectIndex, nil] withRowAnimation:UITableViewRowAnimationFade];
-    }
-    
-    if (_newselectIndex.row != -1) {
-        [_parentViewController.mTableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:_newselectIndex, nil] withRowAnimation:UITableViewRowAnimationFade];
-    }
-    
-    [_parentViewController.mTableView endUpdates];
-    
-    if (_newselectIndex.row != -1) {
-        [_parentViewController.mTableView scrollToRowAtIndexPath:_newselectIndex atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    }
-    
 }
 
 @end
