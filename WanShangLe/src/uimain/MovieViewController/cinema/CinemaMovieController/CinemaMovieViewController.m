@@ -21,6 +21,7 @@
 #import "ReflectionView.h"
 #import "UIImageView+WebCache.h"
 #import <ShareSDK/ShareSDK.h>
+#import "SIAlertView.h"
 
 #define CoverFlowItemTag 100
 
@@ -119,7 +120,7 @@
     self.title = _mCinema.name;
     
     if ([_mCinema.favorite boolValue]) {
-        _favoriteButton.selected = YES;
+      [_favoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
     }
 }
 
@@ -241,6 +242,52 @@
     [_mTableView reloadData];
 }
 
+- (IBAction)clickFavoriteButton:(id)sender{
+    
+    if (_favoriteButton.isSelected) {
+        [_favoriteButton setSelected:NO];
+        [[DataBaseManager sharedInstance] deleteFavoriteCinemaWithId:_mCinema.uid];
+        [_favoriteButton setImage:[UIImage imageNamed:@"btn_unFavorite_n@2x"] forState:UIControlStateNormal];
+    }else{
+        [_favoriteButton setSelected:YES];
+        [_favoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
+        [[DataBaseManager sharedInstance] addFavoriteCinemaWithId:_mCinema.uid];
+    }
+
+}
+- (IBAction)clickPhoneButton:(id)sender{
+    
+    NSString *message = @"";
+    NSString *phoneNumber = nil;
+    
+    if (isEmpty(_mCinema.phoneNumber)) {
+        message = @"该影院暂时没有电话号码";
+    }else{
+        phoneNumber = _mCinema.phoneNumber;
+    }
+    
+    SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:@"电话号码" andMessage:message];
+    
+    if (!isEmpty(phoneNumber)) {
+        [alertView addButtonWithTitle:phoneNumber
+                                 type:SIAlertViewButtonTypeDefault
+                              handler:^(SIAlertView *alertView) {
+                                  [[LocationManager defaultLocationManager] callPhoneNumber:phoneNumber];
+                              }];
+    }
+
+    [alertView addButtonWithTitle:@"取消"
+                             type:SIAlertViewButtonTypeCancel
+                          handler:^(SIAlertView *alertView) {
+                          }];
+    
+//    [alertView addButtonWithTitle:@"取消"
+//                             type:SIAlertViewButtonTypeCancel
+//                          handler:^(SIAlertView *alertView) {
+//                          }];
+    [alertView show];
+    [alertView release];
+}
 #pragma mark -
 #pragma mark iCarousel methods
 
@@ -426,7 +473,8 @@
         self.mSchedule = [[DataBaseManager sharedInstance] insertScheduleIntoCoreDataFromObject:[apiCmd responseJSONObject]
                                                                                      withApiCmd:apiCmd
                                                                                      withaMovie:_mMovie
-                                                                                     andaCinema:_mCinema];
+                                                                                     andaCinema:_mCinema
+                                                                                   timedistance:[(ApiCmdMovie_getSchedule *)apiCmd timedistance]];
         
         int tag = [[apiCmd httpRequest] tag];
         NSString *timedistance = [[[(ApiCmdMovie_getSchedule *)apiCmd timedistance] retain] autorelease];

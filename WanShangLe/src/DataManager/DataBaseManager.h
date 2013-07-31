@@ -116,7 +116,11 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
                                       andaCinema:(MCinema *)aCinema
                                     timedistance:(NSString *)timedistance;
 
-- (MSchedule *)insertScheduleIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd withaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema;
+- (MSchedule *)insertScheduleIntoCoreDataFromObject:(NSDictionary *)objectData
+                                         withApiCmd:(ApiCmd*)apiCmd
+                                         withaMovie:(MMovie *)aMovie
+                                         andaCinema:(MCinema *)aCinema
+                                       timedistance:(NSString *)timedistance;
 - (NSArray *)deleteUnavailableSchedules:(NSArray *)aArray;
 
 //购买信息
@@ -124,6 +128,9 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
                                 aCinema:(MCinema *)aCinema
                               aSchedule:(NSString *)aSchedule
                                delegate:(id<ApiNotify>)delegate;
+
+- (MBuyTicketInfo *)getBuyInfoFromCoreDataWithCinema:(MCinema *)aCinema;
+
 - (void)insertBuyInfoIntoCoreDataFromObject:(NSDictionary *)objectData
                                  withApiCmd:(ApiCmd*)apiCmd
                                  withaMovie:(MMovie *)aMovie
@@ -183,8 +190,16 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (void)importCinema:(MCinema *)mCinema ValuesForKeysWithObject:(NSDictionary *)aCinemaData;
 - (void)importDynamicMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData;
 
+//影院折扣
+- (ApiCmd *)getCinemaDiscountFromWebDelegate:(id<ApiNotify>)delegate cinema:(MCinema *)aCinema;
+- (MBuyTicketInfo *)getCinemaDiscountFromCoreData:(MCinema *)aCinema;
+- (MBuyTicketInfo *)insertCinemaDiscountIntoCoreData:(NSDictionary *)objectData
+                                              cinema:(MCinema *)aCinema
+                                          withApiCmd:(ApiCmd*)apiCmd;
+
 - (BOOL)addFavoriteCinemaWithId:(NSString *)uid;
 - (BOOL)deleteFavoriteCinemaWithId:(NSString *)uid;
+- (BOOL)isFavoriteCinemaWithId:(NSString *)uid;
 - (NSArray *)getRegionOrder;
 
 /************************ 演出 *********************************/
@@ -344,6 +359,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (void)importKTV:(KKTV *)kKTV ValuesForKeysWithObject:(NSDictionary *)aKTVDic;
 - (BOOL)addFavoriteKTVWithId:(NSString *)uid;
 - (BOOL)deleteFavoriteKTVWithId:(NSString *)uid;
+- (BOOL)isFavoriteKTVWithId:(NSString *)uid;
 
 //获得KTV 团购列表 KTV Info
 - (ApiCmd *)getKTVTuanGouListFromWebWithaKTV:(KKTV *)aKTV

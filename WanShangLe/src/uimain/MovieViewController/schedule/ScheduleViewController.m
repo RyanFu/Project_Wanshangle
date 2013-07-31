@@ -339,7 +339,8 @@
         self.mSchedule = [[DataBaseManager sharedInstance] insertScheduleIntoCoreDataFromObject:[apiCmd responseJSONObject]
                                                                     withApiCmd:apiCmd
                                                                     withaMovie:_mMovie
-                                                                    andaCinema:_mCinema];
+                                                                    andaCinema:_mCinema
+                                                                  timedistance:[(ApiCmdMovie_getSchedule *)apiCmd timedistance]];
         int tag = [[apiCmd httpRequest] tag];
          NSString *timedistance = [[[(ApiCmdMovie_getSchedule *)apiCmd timedistance] retain] autorelease];
         [self updateData:tag timeDistance:timedistance];

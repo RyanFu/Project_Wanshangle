@@ -11,6 +11,9 @@
 #import "ApiConfig.h"
 #import <ShareSDK/ShareSDK.h>
 #import "UncaughtExceptionHandler.h"
+#import "AFJSONRequestOperation.h"
+#import "AFHTTPRequestOperation.h"
+#import "ASIHTTPRequest.h"
 
 @interface AppDelegate(){
     
@@ -75,11 +78,11 @@
     
     //inset all citys into coreData
     /*
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        
-        [[DataBaseManager sharedInstance] insertAllCitysIntoCoreData];
-        
-    });*/
+     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+     
+     [[DataBaseManager sharedInstance] insertAllCitysIntoCoreData];
+     
+     });*/
     
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
@@ -101,7 +104,7 @@
     
     // 异常捕获 exception caught
     [self performSelector:@selector(installUncaughtExceptionHandler) withObject:nil afterDelay:0];
-//    [self performSelector:@selector(string) withObject:nil afterDelay:4.0];
+    //    [self performSelector:@selector(string) withObject:nil afterDelay:4.0];
     
     return YES;
 }
@@ -166,6 +169,9 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    
+    //获取服务器的时间用来校对本地时间
+    [self getServerCurrentTime];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -181,6 +187,54 @@
 - (void)installUncaughtExceptionHandler
 {
 	InstallUncaughtExceptionHandler();
+}
+
+/*
+ {
+ httpCode: 200,
+ errors: [ ],
+ data: {
+ timestamp: 1375238669,
+ datetime: "2013-07-31 10:44:29"
+ },
+ token: null,
+ timestamp: "1375238669"
+ }
+ */
+- (void)getServerCurrentTime{
+//    __block AFJSONRequestOperation *requestOperation = [[AFJSONRequestOperation alloc]
+//                                                        initWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://api.wanshangle.com:10000/api?appId=000001&sign=sign&time=1&v=1.0&api=server.currenttime"]]];
+//    
+//    [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        
+//        NSNumber *timeStamp = [[responseObject objectForKey:@"data"] objectForKey:@"timestamp"];
+//        [DataBaseManager sharedInstance].missTime = [timeStamp doubleValue];
+//         ABLoggerInfo(@"获取服务器时间 ======= %@",responseObject);
+//        
+//        [requestOperation release];
+//        requestOperation = nil;
+//        
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        [requestOperation release];
+//        requestOperation = nil;
+//    }];
+//    
+//    
+//    [[[ApiClient defaultClient] networkQueue] addOperation:requestOperation];
+    
+    
+     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+         NSData *timeData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://api.wanshangle.com:10000/api?appId=000001&sign=sign&time=1&v=1.0&api=server.currenttime"]];
+         NSError *error = nil;
+         NSDictionary *timeDic = [NSJSONSerialization JSONObjectWithData:timeData options:0 error:&error];
+         if (error) {
+             ABLoggerWarn(@"Fail to parseJson 系统时间 with error:\n%@", [error localizedDescription]);
+         }
+         
+        NSNumber *timeStamp = [[timeDic objectForKey:@"data"] objectForKey:@"timestamp"];
+        [DataBaseManager sharedInstance].missTime = [timeStamp doubleValue];
+         ABLoggerInfo(@"获取服务器时间 ======= %@",timeDic);
+     });
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application

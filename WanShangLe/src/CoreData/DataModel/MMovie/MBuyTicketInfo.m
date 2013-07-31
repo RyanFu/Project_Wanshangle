@@ -11,8 +11,11 @@
 
 @implementation MBuyTicketInfo
 
+@dynamic discountDate;
+@dynamic discountInfo;
 @dynamic groupBuyInfo;
 @dynamic locationDate;
 @dynamic uid;
+
 
 @end

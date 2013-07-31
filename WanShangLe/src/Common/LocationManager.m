@@ -9,6 +9,7 @@
 #import "LocationManager.h"
 #import "UIAlertView+MKBlockAdditions.h"
 #import "SIAlertView.h"
+#import "AppDelegate.h"
 
 @interface LocationManager()<MKMapViewDelegate,UIAlertViewDelegate,CLLocationManagerDelegate>{
     
@@ -184,10 +185,10 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
     // if the location is older than 30s ignore
-    if (fabs([newLocation.timestamp timeIntervalSinceDate:[[DataBaseManager sharedInstance] date]]) > 30)
-    {
-        return;
-    }
+//    if (fabs([newLocation.timestamp timeIntervalSinceDate:[[DataBaseManager sharedInstance] date]]) > 30)
+//    {
+//        return;
+//    }
     
     if (self.getUserGPSLocation) {
         BOOL isSuccess = YES;
@@ -394,5 +395,20 @@
         
     
     return distance;
+}
+
+//打电话
+- (void)callPhoneNumber:(NSString *)phoneNumber{
+    phoneNumber = [NSString stringWithFormat:@"tel://%@",phoneNumber];
+//    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneNumber]];
+    
+    //可能不能通过审核
+//    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"telprompt://10086"]];
+    
+    UIWebView*callWebview =[[[UIWebView alloc] init] autorelease];
+    NSURL *telURL =[NSURL URLWithString:phoneNumber];// 貌似tel:// 或者 tel: 都行
+    [callWebview loadRequest:[NSURLRequest requestWithURL:telURL]];
+    //记得添加到view上
+    [[AppDelegate appDelegateInstance].window addSubview:callWebview];
 }
 @end

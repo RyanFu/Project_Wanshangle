@@ -374,6 +374,22 @@
 		5AC376A717A7AE3E009B06DF /* btn_web_ok_n@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AC3769217A7AE3E009B06DF /* btn_web_ok_n@2x.png */; };
 		5AC376A817A7AE3E009B06DF /* tag_cry_face@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AC3769317A7AE3E009B06DF /* tag_cry_face@2x.png */; };
 		5AC376A917A7AE3E009B06DF /* tag_smile_face@2x.png.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AC3769417A7AE3E009B06DF /* tag_smile_face@2x.png.png */; };
+		5AC376BD17A89FE4009B06DF /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 5AC376AB17A89FE4009B06DF /* .gitignore */; };
+		5AC376BE17A89FE4009B06DF /* MMHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376AD17A89FE4009B06DF /* MMHud.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5AC376BF17A89FE4009B06DF /* MMProgressHUD+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376AF17A89FE4009B06DF /* MMProgressHUD+Animations.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5AC376C017A89FE4009B06DF /* MMProgressHUD+Class.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376B017A89FE4009B06DF /* MMProgressHUD+Class.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5AC376C117A89FE4009B06DF /* MMProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376B217A89FE4009B06DF /* MMProgressHUD.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5AC376C217A89FE4009B06DF /* MMProgressHUDOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376B417A89FE4009B06DF /* MMProgressHUDOverlayView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5AC376C317A89FE4009B06DF /* MMProgressHUDViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376B617A89FE4009B06DF /* MMProgressHUDViewController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5AC376C417A89FE4009B06DF /* MMProgressHUDWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376B817A89FE4009B06DF /* MMProgressHUDWindow.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5AC376C517A89FE4009B06DF /* MMRadialProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376BA17A89FE4009B06DF /* MMRadialProgressView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5AC376C617A89FE4009B06DF /* MMVectorImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376BC17A89FE4009B06DF /* MMVectorImage.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5AC376CD17A8A664009B06DF /* CinemaDiscountInfoController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AC376C917A8A664009B06DF /* CinemaDiscountInfoController_5.xib */; };
+		5AC376CE17A8A664009B06DF /* CinemaDiscountInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376CB17A8A664009B06DF /* CinemaDiscountInfoController.m */; };
+		5AC376CF17A8A664009B06DF /* CinemaDiscountInfoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AC376CC17A8A664009B06DF /* CinemaDiscountInfoController.xib */; };
+		5AC376D217A8A736009B06DF /* ApiCmdMovie_getCinemaDiscount.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376D117A8A736009B06DF /* ApiCmdMovie_getCinemaDiscount.m */; };
+		5AC376D617A8E49C009B06DF /* NSObject+MKBlockTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376D517A8E49C009B06DF /* NSObject+MKBlockTimer.m */; };
+		5AC376D917A8FC05009B06DF /* NSMutableArray+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376D817A8FC05009B06DF /* NSMutableArray+TKCategory.m */; };
 		5AD321B01794E2B00091F3AC /* bar_btn_filter_bts@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AD320CB1794E2AF0091F3AC /* bar_btn_filter_bts@2x.png */; };
 		5AD321B11794E2B00091F3AC /* bar_btn_yes_blue_f@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AD320CC1794E2AF0091F3AC /* bar_btn_yes_blue_f@2x.png */; };
 		5AD321B21794E2B00091F3AC /* bar_btn_yes_blue_n@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AD320CD1794E2AF0091F3AC /* bar_btn_yes_blue_n@2x.png */; };
@@ -1269,6 +1285,34 @@
 		5AC3769217A7AE3E009B06DF /* btn_web_ok_n@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_web_ok_n@2x.png"; sourceTree = "<group>"; };
 		5AC3769317A7AE3E009B06DF /* tag_cry_face@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tag_cry_face@2x.png"; sourceTree = "<group>"; };
 		5AC3769417A7AE3E009B06DF /* tag_smile_face@2x.png.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tag_smile_face@2x.png.png"; sourceTree = "<group>"; };
+		5AC376AB17A89FE4009B06DF /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		5AC376AC17A89FE4009B06DF /* MMHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHud.h; sourceTree = "<group>"; };
+		5AC376AD17A89FE4009B06DF /* MMHud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHud.m; sourceTree = "<group>"; };
+		5AC376AE17A89FE4009B06DF /* MMProgressHUD+Animations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMProgressHUD+Animations.h"; sourceTree = "<group>"; };
+		5AC376AF17A89FE4009B06DF /* MMProgressHUD+Animations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MMProgressHUD+Animations.m"; sourceTree = "<group>"; };
+		5AC376B017A89FE4009B06DF /* MMProgressHUD+Class.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MMProgressHUD+Class.m"; sourceTree = "<group>"; };
+		5AC376B117A89FE4009B06DF /* MMProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMProgressHUD.h; sourceTree = "<group>"; };
+		5AC376B217A89FE4009B06DF /* MMProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMProgressHUD.m; sourceTree = "<group>"; };
+		5AC376B317A89FE4009B06DF /* MMProgressHUDOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMProgressHUDOverlayView.h; sourceTree = "<group>"; };
+		5AC376B417A89FE4009B06DF /* MMProgressHUDOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMProgressHUDOverlayView.m; sourceTree = "<group>"; };
+		5AC376B517A89FE4009B06DF /* MMProgressHUDViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMProgressHUDViewController.h; sourceTree = "<group>"; };
+		5AC376B617A89FE4009B06DF /* MMProgressHUDViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMProgressHUDViewController.m; sourceTree = "<group>"; };
+		5AC376B717A89FE4009B06DF /* MMProgressHUDWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMProgressHUDWindow.h; sourceTree = "<group>"; };
+		5AC376B817A89FE4009B06DF /* MMProgressHUDWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMProgressHUDWindow.m; sourceTree = "<group>"; };
+		5AC376B917A89FE4009B06DF /* MMRadialProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRadialProgressView.h; sourceTree = "<group>"; };
+		5AC376BA17A89FE4009B06DF /* MMRadialProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRadialProgressView.m; sourceTree = "<group>"; };
+		5AC376BB17A89FE4009B06DF /* MMVectorImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMVectorImage.h; sourceTree = "<group>"; };
+		5AC376BC17A89FE4009B06DF /* MMVectorImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMVectorImage.m; sourceTree = "<group>"; };
+		5AC376C917A8A664009B06DF /* CinemaDiscountInfoController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaDiscountInfoController_5.xib; sourceTree = "<group>"; };
+		5AC376CA17A8A664009B06DF /* CinemaDiscountInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaDiscountInfoController.h; sourceTree = "<group>"; };
+		5AC376CB17A8A664009B06DF /* CinemaDiscountInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaDiscountInfoController.m; sourceTree = "<group>"; };
+		5AC376CC17A8A664009B06DF /* CinemaDiscountInfoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaDiscountInfoController.xib; sourceTree = "<group>"; };
+		5AC376D017A8A736009B06DF /* ApiCmdMovie_getCinemaDiscount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCmdMovie_getCinemaDiscount.h; sourceTree = "<group>"; };
+		5AC376D117A8A736009B06DF /* ApiCmdMovie_getCinemaDiscount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmdMovie_getCinemaDiscount.m; sourceTree = "<group>"; };
+		5AC376D417A8E49C009B06DF /* NSObject+MKBlockTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+MKBlockTimer.h"; sourceTree = "<group>"; };
+		5AC376D517A8E49C009B06DF /* NSObject+MKBlockTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+MKBlockTimer.m"; sourceTree = "<group>"; };
+		5AC376D717A8FC05009B06DF /* NSMutableArray+TKCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+TKCategory.h"; sourceTree = "<group>"; };
+		5AC376D817A8FC05009B06DF /* NSMutableArray+TKCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+TKCategory.m"; sourceTree = "<group>"; };
 		5AD320CB1794E2AF0091F3AC /* bar_btn_filter_bts@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bar_btn_filter_bts@2x.png"; sourceTree = "<group>"; };
 		5AD320CC1794E2AF0091F3AC /* bar_btn_yes_blue_f@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bar_btn_yes_blue_f@2x.png"; sourceTree = "<group>"; };
 		5AD320CD1794E2AF0091F3AC /* bar_btn_yes_blue_n@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bar_btn_yes_blue_n@2x.png"; sourceTree = "<group>"; };
@@ -1766,6 +1810,8 @@
 		5A17472D1761ADCA00E155AB /* MMovieAPI */ = {
 			isa = PBXGroup;
 			children = (
+				5AC376D017A8A736009B06DF /* ApiCmdMovie_getCinemaDiscount.h */,
+				5AC376D117A8A736009B06DF /* ApiCmdMovie_getCinemaDiscount.m */,
 				5A4342541769FB2C00F2C66F /* ApiCmdMovie_getBuyInfo.h */,
 				5A4342551769FB2C00F2C66F /* ApiCmdMovie_getBuyInfo.m */,
 				5A4342351769A27300F2C66F /* ApiCmdMovie_getSchedule.h */,
@@ -1863,16 +1909,16 @@
 				5A1C80F817A2649D007F7434 /* CinemaViewController.m */,
 				5A1C80F917A2649D007F7434 /* CinemaViewController.xib */,
 				5A1C80FA17A2649D007F7434 /* CinemaViewController_5.xib */,
-				5A1C80D517A2649D007F7434 /* Cinema-all */,
-				5A1C80DD17A2649D007F7434 /* Cinema-favorite */,
-				5A1C80E517A2649D007F7434 /* Cinema-nearby */,
-				5A1C80ED17A2649D007F7434 /* CinemaMovieController */,
 				5A1C80F417A2649D007F7434 /* CinemaTableViewCell.h */,
 				5A1C80F517A2649D007F7434 /* CinemaTableViewCell.m */,
 				5A1C80F617A2649D007F7434 /* CinemaTableViewCell.xib */,
 				5A1C80FB17A2649D007F7434 /* MovieCinemaCell.h */,
 				5A1C80FC17A2649D007F7434 /* MovieCinemaCell.m */,
 				5A1C80FD17A2649D007F7434 /* MovieCinemaCell.xib */,
+				5A1C80D517A2649D007F7434 /* Cinema-all */,
+				5A1C80DD17A2649D007F7434 /* Cinema-favorite */,
+				5A1C80E517A2649D007F7434 /* Cinema-nearby */,
+				5A1C80ED17A2649D007F7434 /* CinemaMovieController */,
 			);
 			path = cinema;
 			sourceTree = "<group>";
@@ -2352,6 +2398,8 @@
 		5AA75F541797A035002891CC /* TapkuLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				5AC376D717A8FC05009B06DF /* NSMutableArray+TKCategory.h */,
+				5AC376D817A8FC05009B06DF /* NSMutableArray+TKCategory.m */,
 				5AA75F551797A035002891CC /* NSArray+TKCategory.h */,
 				5AA75F561797A035002891CC /* NSArray+TKCategory.m */,
 				5AA75F571797A035002891CC /* NSDate+TKCategory.h */,
@@ -2583,6 +2631,8 @@
 		5AAC6FF217601BDB004B7395 /* libraries */ = {
 			isa = PBXGroup;
 			children = (
+				5AC376D317A8E49B009B06DF /* MKBlockTimer */,
+				5AC376AA17A89FE4009B06DF /* MMProgressHUD */,
 				5A202B6A17A36655001D11F7 /* ExceptionsHandle */,
 				5A7D5F591798DD400013D742 /* AFNetworking */,
 				5AA75FEC1797A07B002891CC /* TouchJSON */,
@@ -2991,6 +3041,51 @@
 			path = webImgs;
 			sourceTree = "<group>";
 		};
+		5AC376AA17A89FE4009B06DF /* MMProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				5AC376AB17A89FE4009B06DF /* .gitignore */,
+				5AC376AC17A89FE4009B06DF /* MMHud.h */,
+				5AC376AD17A89FE4009B06DF /* MMHud.m */,
+				5AC376AE17A89FE4009B06DF /* MMProgressHUD+Animations.h */,
+				5AC376AF17A89FE4009B06DF /* MMProgressHUD+Animations.m */,
+				5AC376B017A89FE4009B06DF /* MMProgressHUD+Class.m */,
+				5AC376B117A89FE4009B06DF /* MMProgressHUD.h */,
+				5AC376B217A89FE4009B06DF /* MMProgressHUD.m */,
+				5AC376B317A89FE4009B06DF /* MMProgressHUDOverlayView.h */,
+				5AC376B417A89FE4009B06DF /* MMProgressHUDOverlayView.m */,
+				5AC376B517A89FE4009B06DF /* MMProgressHUDViewController.h */,
+				5AC376B617A89FE4009B06DF /* MMProgressHUDViewController.m */,
+				5AC376B717A89FE4009B06DF /* MMProgressHUDWindow.h */,
+				5AC376B817A89FE4009B06DF /* MMProgressHUDWindow.m */,
+				5AC376B917A89FE4009B06DF /* MMRadialProgressView.h */,
+				5AC376BA17A89FE4009B06DF /* MMRadialProgressView.m */,
+				5AC376BB17A89FE4009B06DF /* MMVectorImage.h */,
+				5AC376BC17A89FE4009B06DF /* MMVectorImage.m */,
+			);
+			path = MMProgressHUD;
+			sourceTree = "<group>";
+		};
+		5AC376C817A8A613009B06DF /* cinemaDiscount */ = {
+			isa = PBXGroup;
+			children = (
+				5AC376CA17A8A664009B06DF /* CinemaDiscountInfoController.h */,
+				5AC376CB17A8A664009B06DF /* CinemaDiscountInfoController.m */,
+				5AC376CC17A8A664009B06DF /* CinemaDiscountInfoController.xib */,
+				5AC376C917A8A664009B06DF /* CinemaDiscountInfoController_5.xib */,
+			);
+			path = cinemaDiscount;
+			sourceTree = "<group>";
+		};
+		5AC376D317A8E49B009B06DF /* MKBlockTimer */ = {
+			isa = PBXGroup;
+			children = (
+				5AC376D417A8E49C009B06DF /* NSObject+MKBlockTimer.h */,
+				5AC376D517A8E49C009B06DF /* NSObject+MKBlockTimer.m */,
+			);
+			path = MKBlockTimer;
+			sourceTree = "<group>";
+		};
 		5AD320C91794E2AF0091F3AC /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -3363,6 +3458,7 @@
 		5ADD8E04179C05B60026239A /* buyInfo */ = {
 			isa = PBXGroup;
 			children = (
+				5AC376C817A8A613009B06DF /* cinemaDiscount */,
 				5ADD8E05179C05B60026239A /* BuyInfoTableViewCell.h */,
 				5ADD8E06179C05B60026239A /* BuyInfoTableViewCell.m */,
 				5ADD8E07179C05B60026239A /* BuyInfoTableViewCell.xib */,
@@ -3915,6 +4011,9 @@
 				5AC376A717A7AE3E009B06DF /* btn_web_ok_n@2x.png in Resources */,
 				5AC376A817A7AE3E009B06DF /* tag_cry_face@2x.png in Resources */,
 				5AC376A917A7AE3E009B06DF /* tag_smile_face@2x.png.png in Resources */,
+				5AC376BD17A89FE4009B06DF /* .gitignore in Resources */,
+				5AC376CD17A8A664009B06DF /* CinemaDiscountInfoController_5.xib in Resources */,
+				5AC376CF17A8A664009B06DF /* CinemaDiscountInfoController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4215,6 +4314,19 @@
 				5A1C811317A2649D007F7434 /* MovieCinemaCell.m in Sources */,
 				5AAE4DA717A77DD500914B3D /* UncaughtExceptionHandler.m in Sources */,
 				5AC3767D17A7AB2C009B06DF /* WebSiteBuyViewController.m in Sources */,
+				5AC376BE17A89FE4009B06DF /* MMHud.m in Sources */,
+				5AC376BF17A89FE4009B06DF /* MMProgressHUD+Animations.m in Sources */,
+				5AC376C017A89FE4009B06DF /* MMProgressHUD+Class.m in Sources */,
+				5AC376C117A89FE4009B06DF /* MMProgressHUD.m in Sources */,
+				5AC376C217A89FE4009B06DF /* MMProgressHUDOverlayView.m in Sources */,
+				5AC376C317A89FE4009B06DF /* MMProgressHUDViewController.m in Sources */,
+				5AC376C417A89FE4009B06DF /* MMProgressHUDWindow.m in Sources */,
+				5AC376C517A89FE4009B06DF /* MMRadialProgressView.m in Sources */,
+				5AC376C617A89FE4009B06DF /* MMVectorImage.m in Sources */,
+				5AC376CE17A8A664009B06DF /* CinemaDiscountInfoController.m in Sources */,
+				5AC376D217A8A736009B06DF /* ApiCmdMovie_getCinemaDiscount.m in Sources */,
+				5AC376D617A8E49C009B06DF /* NSObject+MKBlockTimer.m in Sources */,
+				5AC376D917A8FC05009B06DF /* NSMutableArray+TKCategory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

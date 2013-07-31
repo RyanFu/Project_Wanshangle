@@ -41,4 +41,7 @@
 	return [self objectAtIndex:arc4random() % [self count]];
 }
 
+//- (NSArray *)removeObjectWithAttribute:(NSString *)attribute withValue:(NSString *)value{
+//    return [self filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(%@ == %@)", attribute,value]];
+//}
 @end

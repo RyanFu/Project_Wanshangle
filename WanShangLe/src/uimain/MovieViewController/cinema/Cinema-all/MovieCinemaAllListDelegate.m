@@ -137,11 +137,13 @@
     cell.cinema_address.text = cinema.address;
     
     MMovie *aMovie = [_parentViewController.mParentController mMovie];
+    cell.cinema_price.text = @"";
     
     [cell.cinema_scheduleCount setJSONWithWithMovie:aMovie
                                              cinema:cinema
                                         placeholder:@"亲,正在加载..."
                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, NSString *resultString) {
+                                                cell.cinema_price.text = resultString;
                                             } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
                                                 ABLoggerError(@" error == %@",[error description]);
                                             }];

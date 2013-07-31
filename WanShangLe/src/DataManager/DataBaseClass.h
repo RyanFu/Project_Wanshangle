@@ -20,12 +20,14 @@
 @class MCinema;
 @class MMovieDetail;
 @class MSchedule;
+@class MBuyTicketInfo;
 @class ApiCmdMovie_getAllMovies;
 @class ApiCmdMovie_getAllCinemas;
 @class ApiCmdMovie_getNearByCinemas;
 @class ApiCmdMovie_getSearchCinemas;
 @class ApiCmdMovie_getSchedule;
 @class ApiCmdMovie_getBuyInfo;
+@class ApiCmdMovie_getCinemaDiscount;
 //-------------KTV----------------/
 @class KKTV;
 @class KKTVBuyInfo;
@@ -62,6 +64,7 @@
 #define API_MMovieDetailCmd     11 //电影 详情
 #define API_MScheduleCmd        12 //电影 排期
 #define API_MBuyInfoCmd         13 //电影 购买信息
+#define API_MDiscountInfoCmd    14 //电影 折扣信息
 
 #define API_MCinemaCmd          1 //影院 全部
 #define API_MCinemaSearchCmd    2 //影院 搜索

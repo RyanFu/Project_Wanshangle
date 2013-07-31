@@ -30,5 +30,6 @@
 @dynamic uid;
 @dynamic zhekou;
 @dynamic barDetail;
+@dynamic discountInfo;
 
 @end

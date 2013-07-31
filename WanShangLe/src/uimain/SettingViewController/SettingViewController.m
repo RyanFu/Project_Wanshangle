@@ -10,20 +10,18 @@
 #import "KtvManagerViewController.h"
 #import "CinemaManagerViewController.h"
 #import "SuggestionViewController.h"
-#import "TKLoadingView.h"
+#import "MMProgressHUD.h"
 
-#define DisplayTime 3
+#define DisplayTime 2
 
 @interface SettingViewController (){
     
 }
-@property(assign,nonatomic)TKLoadingView *tkLoadingView;
 @property(assign,nonatomic)UIView *markView;
 -(void)genTKLoadingView:(NSString *)title;
 @end
 
 @implementation SettingViewController
-@synthesize tkLoadingView = _tkLoadingView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -35,7 +33,7 @@
 }
 
 - (void)dealloc{
-    self.tkLoadingView = nil;
+    [MMProgressHUD dismissWithSuccess:@""];
     [super dealloc];
 }
 
@@ -133,7 +131,9 @@
 }
 
 -(IBAction)clickCleanDataBaseCache:(id)sender{
-    [self genTKLoadingView:@"正在清理缓存"];
+    [MMProgressHUD setDisplayStyle:MMProgressHUDDisplayStylePlain];
+    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleDrop];
+    [MMProgressHUD showWithTitle:@"正在清理缓存" status:@"请稍等..."];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         CFTimeInterval time1 = Elapsed_Time;
@@ -147,8 +147,9 @@
             [NSThread sleepForTimeInterval:sleeptimee];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
-                [self stopTKLoadingView];
-                [self updateCacheSize];
+//                [self stopTKLoadingView];
+            [MMProgressHUD dismissWithSuccess:@"清理完毕!"];
+            [self updateCacheSize];
         });
     });
 }
@@ -178,27 +179,6 @@
 
 -(IBAction)clickVersionCheck:(id)sender{
     
-}
-#pragma mark -
-#pragma mark 提示框
-
--(void)genTKLoadingView:(NSString *)title{
-
-    self.tkLoadingView = [[[TKLoadingView alloc] initWithTitle:title message:@"请稍等..."] autorelease];
-    _tkLoadingView.center = self.view.center;
-    [self.view addSubview:_tkLoadingView];
-    [_tkLoadingView setTitle:title];
-    [self.view bringSubviewToFront:_tkLoadingView];
-    [self.tkLoadingView startAnimating];
-    
-    self.markView = [[[UIView alloc] initWithFrame:self.view.bounds] autorelease];
-}
-
-- (void)stopTKLoadingView{
-    [_tkLoadingView stopAnimating];
-    [_tkLoadingView removeFromSuperview];
-    self.tkLoadingView = nil;
-
 }
 - (void)didReceiveMemoryWarning
 {

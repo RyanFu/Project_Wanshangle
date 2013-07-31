@@ -85,6 +85,8 @@
         <relationship name="ktv" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="KKTV" inverseName="ktvPriceInfo" inverseEntity="KKTV" syncable="YES"/>
     </entity>
     <entity name="MBuyTicketInfo" representedClassName="MBuyTicketInfo" syncable="YES">
+        <attribute name="discountDate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="discountInfo" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="groupBuyInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
         <attribute name="locationDate" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
@@ -192,7 +194,7 @@
         <element name="KKTV" positionX="142" positionY="-838" width="128" height="375"/>
         <element name="KKTVBuyInfo" positionX="430" positionY="-909" width="128" height="103"/>
         <element name="KKTVPriceInfo" positionX="439" positionY="-567" width="128" height="103"/>
-        <element name="MBuyTicketInfo" positionX="-54" positionY="-99" width="128" height="90"/>
+        <element name="MBuyTicketInfo" positionX="-54" positionY="-99" width="128" height="118"/>
         <element name="MCinema" positionX="205" positionY="-420" width="128" height="330"/>
         <element name="MMovie" positionX="-443" positionY="-351" width="128" height="270"/>
         <element name="MMovie_Cinema" positionX="-173" positionY="-313" width="128" height="105"/>

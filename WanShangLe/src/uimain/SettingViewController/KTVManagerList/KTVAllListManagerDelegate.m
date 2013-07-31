@@ -204,7 +204,7 @@
             [[DataBaseManager sharedInstance] deleteFavoriteKTVWithId:aKTV.uid];
             bt.selected = NO;
             [cell.ktvFavoriteButton setImage:[UIImage imageNamed:@"btn_unFavorite_n@2x"] forState:UIControlStateNormal];
-            [_mFavoriteArray removeObject:aKTV];
+            [_mFavoriteArray filterUsingPredicate:[NSPredicate predicateWithFormat:@"uid != %@",aKTV.uid]];//解决了 收藏数组 删除 搜索数组 中取消收藏的影院
         }
     } 
 }
@@ -276,7 +276,7 @@
     cell.ktv_name.text = aKTV.name;
     cell.ktv_address.text = aKTV.address;
     
-    if ([aKTV.favorite boolValue]) {
+    if ([[DataBaseManager sharedInstance] isFavoriteKTVWithId:aKTV.uid]) {
         cell.ktvFavoriteButton.selected = YES;
         [cell.ktvFavoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
     }

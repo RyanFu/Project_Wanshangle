@@ -31,5 +31,7 @@
 @property (nonatomic, retain) NSString * uid;
 @property (nonatomic, retain) NSNumber * zhekou;
 @property (nonatomic, retain) BBarDetail *barDetail;
+@property (nonatomic, retain) NSString * discountInfo;
+
 
 @end

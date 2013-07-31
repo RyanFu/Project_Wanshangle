@@ -12,8 +12,11 @@
 
 @interface MBuyTicketInfo : NSManagedObject
 
+@property (nonatomic, retain) NSString * discountDate;
+@property (nonatomic, retain) NSString * discountInfo;
 @property (nonatomic, retain) id groupBuyInfo;
 @property (nonatomic, retain) NSString * locationDate;
 @property (nonatomic, retain) NSString * uid;
+
 
 @end

@@ -28,7 +28,7 @@ NSString *const SIAlertViewDidDismissNotification = @"SIAlertViewDidDismissNotif
 
 #define DEBUG_LAYOUT 0
 
-#define MESSAGE_MIN_LINE_COUNT 2
+#define MESSAGE_MIN_LINE_COUNT 0
 #define MESSAGE_MAX_LINE_COUNT 15
 #define GAP 10
 #define CANCEL_BUTTON_PADDING_TOP 5
@@ -37,6 +37,8 @@ NSString *const SIAlertViewDidDismissNotification = @"SIAlertViewDidDismissNotif
 #define CONTENT_PADDING_BOTTOM 10
 #define BUTTON_HEIGHT 44
 #define CONTAINER_WIDTH 300
+#define PhoneNumber @"电话号码"
+
 
 @class SIAlertBackgroundWindow;
 
@@ -661,7 +663,7 @@ static SIAlertView *__si_alert_current_view;
         if (y > CONTENT_PADDING_TOP) {
             y += GAP;
         }
-        if (self.items.count == 2) {
+        if (self.items.count == 2 && ![_title isEqualToString:PhoneNumber]) {
             CGFloat width = (self.containerView.bounds.size.width - CONTENT_PADDING_LEFT * 2 - GAP) * 0.5;
             UIButton *button = self.buttons[0];
             button.frame = CGRectMake(CONTENT_PADDING_LEFT, y, width, BUTTON_HEIGHT);
@@ -700,11 +702,11 @@ static SIAlertView *__si_alert_current_view;
         if (height > CONTENT_PADDING_TOP) {
             height += GAP;
         }
-        if (self.items.count <= 2) {
+        if (self.items.count <= 2 && ![_title isEqualToString:PhoneNumber]) {
             height += BUTTON_HEIGHT;
         } else {
             height += (BUTTON_HEIGHT + GAP) * self.items.count - GAP;
-            if (self.buttons.count > 2 && ((SIAlertItem *)[self.items lastObject]).type == SIAlertViewButtonTypeCancel) {
+            if ((self.buttons.count > 2 || [_title isEqualToString:PhoneNumber]) && ((SIAlertItem *)[self.items lastObject]).type == SIAlertViewButtonTypeCancel) {
                 height += CANCEL_BUTTON_PADDING_TOP;
             }
         }

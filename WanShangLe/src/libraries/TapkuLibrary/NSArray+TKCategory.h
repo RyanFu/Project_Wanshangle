@@ -37,4 +37,5 @@
 
 - (id) randomObject;
 
+//- (NSArray *)removeObjectWithAttribute:(NSString *)attribute withValue:(NSString *)value;
 @end

@@ -9,7 +9,7 @@
 #import "BuyInfoViewController.h"
 #import "BuyInfoTableViewDelegate.h"
 #import "ApiCmdMovie_getBuyInfo.h"
-#import "ApiCmdMovie_getBuyInfo.h"
+#import "CinemaDiscountInfoController.h"
 #import "MMovie.h"
 #import "MCinema.h"
 #import "ASIHTTPRequest.h"
@@ -125,10 +125,19 @@
 }
 
 - (IBAction)clickDiscountButton:(id)sender{
-    
+    CinemaDiscountInfoController *discountController = [[CinemaDiscountInfoController alloc]
+                                                        initWithNibName:(iPhone5?@"CinemaDiscountInfoController_5":@"CinemaDiscountInfoController") bundle:nil];
+    discountController.mCinema = _mCinema;
+    [self.navigationController pushViewController:discountController animated:YES];
+    [discountController release];
 }
 #pragma mark -
 #pragma mark apiNotiry
+
+- (ApiCmd *)apiGetDelegateApiCmd{
+    return _apiCmdMovie_getBuyInfo;
+}
+
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
     if (error) {
@@ -144,17 +153,17 @@
                                                                     aSchedule:nil];
         
         int tag = [[apiCmd httpRequest] tag];
-        [self updateData:tag responseData:[apiCmd responseJSONObject]];
+        [self updateData:tag responseData:[[apiCmd responseJSONObject] objectForKey:@"data"]];
         
     });
     
 }
 
-- (void) apiNotifyLocationResult:(id) apiCmd  error:(NSError*) error{
+- (void) apiNotifyLocationResult:(id)apiCmd cacheOneData:(id)cacheData{
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         int tag = [[apiCmd httpRequest] tag];
-        [self updateData:tag responseData:[apiCmd responseJSONObject]];
+        [self updateData:tag responseData:cacheData];
     });
 }
 
@@ -179,7 +188,7 @@
 - (void)formatCinemaData:(NSDictionary *)responseDic{
     ABLoggerMethod();
     
-    self.marray = [[responseDic objectForKey:@"data"] objectForKey:@"deals"];
+    self.marray = [responseDic objectForKey:@"deals"];
     ABLoggerDebug(@"marray count ==== %d",[_marray count]);
     
     self.marray  = [self.marray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
