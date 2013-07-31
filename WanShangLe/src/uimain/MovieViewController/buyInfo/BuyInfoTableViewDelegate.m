@@ -114,7 +114,7 @@
     if(isNull(buy_hint_bool) || ![buy_hint_bool boolValue]){
         NSString *supplierName = [dataDic objectForKey:@"supplierName"];
         SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"你将被跳转到%@完成购买",supplierName]
-                                                         andMessage:@""];
+                                                         andMessage:@"\n\n\n"];
         [alertView addButtonWithTitle:@"取消"
                                  type:SIAlertViewButtonTypeCancel
                               handler:^(SIAlertView *alertView) {
