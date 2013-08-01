@@ -407,7 +407,7 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        [[DataBaseManager sharedInstance] insertMoviesIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+         self.moviesArray = [[DataBaseManager sharedInstance] insertMoviesIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
         
         int tag = [[apiCmd httpRequest] tag];
         [self updateData:tag];
@@ -415,17 +415,13 @@
     
 }
 
-- (void) apiNotifyLocationResult:(id) apiCmd  error:(NSError*) error{
+- (void) apiNotifyLocationResult:(id)apiCmd cacheOneData:(id)cacheData{
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        ABLoggerMethod();
+        self.moviesArray = cacheData;
         int tag = [[apiCmd httpRequest] tag];
-        
-        CFTimeInterval time1 = Elapsed_Time;
         [self updateData:tag];
-        CFTimeInterval time2 = Elapsed_Time;
-        ElapsedTime(time2, time1);
+
         
     });
 }
@@ -441,8 +437,8 @@
         case 0:
         case API_MMovieCmd:
         {
-            NSArray *array = [[DataBaseManager sharedInstance] getAllMoviesListFromCoreData];
-            self.moviesArray = array;
+//            NSArray *array = [[DataBaseManager sharedInstance] getAllMoviesListFromCoreData];
+//            self.moviesArray = array;
             ABLoggerDebug(@"电影 count ==== %d",[self.moviesArray count]);
             
             [self setTableViewDelegate];

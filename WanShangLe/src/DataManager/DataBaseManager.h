@@ -95,7 +95,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (NSArray *)getAllMoviesListFromCoreDataWithCityName:(NSString *)cityName;
 - (NSUInteger)getCountOfMoviesListFromCoreData;
 - (NSUInteger)getCountOfMoviesListFromCoreDataWithCityName:(NSString *)cityName;
-- (void)insertMoviesIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (NSMutableArray *)insertMoviesIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData;
 - (MMovie*)getMovieWithId:(NSString *)movieId;
 
@@ -107,35 +107,19 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (MMovieDetail *)getMovieDetailWithId:(NSString *)movieId;
 
 //获得排期
-- (ApiCmd *)getScheduleFromWebWithaMovie:(MMovie *)aMovie
-                              andaCinema:(MCinema *)aCinema
-                            timedistance:(NSString *)timedistance
-                                delegate:(id<ApiNotify>)delegate;
+- (ApiCmd *)getScheduleFromWebWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema timedistance:(NSString *)timedistance delegate:(id<ApiNotify>)delegate;
 //从数据库里获取排期
-- (MSchedule *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie
-                                      andaCinema:(MCinema *)aCinema
-                                    timedistance:(NSString *)timedistance;
+- (MSchedule *)getScheduleFromCoreDataWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema timedistance:(NSString *)timedistance;
 
-- (MSchedule *)insertScheduleIntoCoreDataFromObject:(NSDictionary *)objectData
-                                         withApiCmd:(ApiCmd*)apiCmd
-                                         withaMovie:(MMovie *)aMovie
-                                         andaCinema:(MCinema *)aCinema
-                                       timedistance:(NSString *)timedistance;
+- (MSchedule *)insertScheduleIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd withaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema timedistance:(NSString *)timedistance;
 - (NSArray *)deleteUnavailableSchedules:(NSArray *)aArray;
 
 //购买信息
-- (ApiCmd *)getBuyInfoFromWebWithaMovie:(MMovie *)aMovie
-                                aCinema:(MCinema *)aCinema
-                              aSchedule:(NSString *)aSchedule
-                               delegate:(id<ApiNotify>)delegate;
+- (ApiCmd *)getBuyInfoFromWebWithaMovie:(MMovie *)aMovie aCinema:(MCinema *)aCinema aSchedule:(NSString *)aSchedule delegate:(id<ApiNotify>)delegate;
 
 - (MBuyTicketInfo *)getBuyInfoFromCoreDataWithCinema:(MCinema *)aCinema;
 
-- (void)insertBuyInfoIntoCoreDataFromObject:(NSDictionary *)objectData
-                                 withApiCmd:(ApiCmd*)apiCmd
-                                 withaMovie:(MMovie *)aMovie
-                                 andaCinema:(MCinema *)aCinema
-                                  aSchedule:(NSString *)aSchedule;
+- (void)insertBuyInfoIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd withaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema aSchedule:(NSString *)aSchedule;
 
 /************************ 影院 ***************************************/
 /********************************************************************/
@@ -145,35 +129,15 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (BOOL)getNearbyCinemasListFromCoreDataWithCallBack:(GetCinemaNearbyList)callback;
 
 //获取 分页 影院数据
-- (ApiCmd *)getCinemasListFromWeb:(id<ApiNotify>)delegate
-                           offset:(int)offset
-                            limit:(int)limit
-                         dataType:(NSString *)dataType
-                        isNewData:(BOOL)isNewData;
-- (NSArray *)getCinemasListFromCoreDataOffset:(int)offset
-                                        limit:(int)limit
-                                     dataType:(NSString *)dataType
-                                    validDate:(NSString *)validDate;
-- (NSArray *)getCinemasListFromCoreDataWithCityName:(NSString *)cityId
-                                             offset:(int)offset
-                                              limit:(int)limit
-                                           dataType:(NSString *)dataType
-                                          validDate:(NSString *)validDate;
+- (ApiCmd *)getCinemasListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit dataType:(NSString *)dataType isNewData:(BOOL)isNewData;
+- (NSArray *)getCinemasListFromCoreDataOffset:(int)offset limit:(int)limit dataType:(NSString *)dataType validDate:(NSString *)validDate;
+- (NSArray *)getCinemasListFromCoreDataWithCityName:(NSString *)cityId offset:(int)offset limit:(int)limit dataType:(NSString *)dataType validDate:(NSString *)validDate;
 
 //获取 搜索 影院列表
-- (ApiCmd *)getCinemasSearchListFromWeb:(id<ApiNotify>)delegate offset:(int)offset
-                                  limit:(int)limit
-                               dataType:(NSString *)dataType
-                           searchString:(NSString *)searchString;
+- (ApiCmd *)getCinemasSearchListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit dataType:(NSString *)dataType searchString:(NSString *)searchString;
 
 //影院附近分页
-- (ApiCmd *)getNearbyCinemaListFromCoreDataDelegate:(id<ApiNotify>)delegate
-                                           Latitude:(CLLocationDegrees)latitude
-                                          longitude:(CLLocationDegrees)longitude
-                                             offset:(int)offset
-                                              limit:(int)limit
-                                           dataType:(NSString *)dataType
-                                          isNewData:(BOOL)isNewData;
+- (ApiCmd *)getNearbyCinemaListFromCoreDataDelegate:(id<ApiNotify>)delegate Latitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude offset:(int)offset limit:(int)limit dataType:(NSString *)dataType isNewData:(BOOL)isNewData;
 //影院收藏分页
 - (NSArray *)getFavoriteCinemasListFromCoreData;
 - (NSArray *)getFavoriteCinemasListFromCoreDataWithCityName:(NSString *)cityName;
@@ -193,9 +157,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 //影院折扣
 - (ApiCmd *)getCinemaDiscountFromWebDelegate:(id<ApiNotify>)delegate cinema:(MCinema *)aCinema;
 - (MBuyTicketInfo *)getCinemaDiscountFromCoreData:(MCinema *)aCinema;
-- (MBuyTicketInfo *)insertCinemaDiscountIntoCoreData:(NSDictionary *)objectData
-                                              cinema:(MCinema *)aCinema
-                                          withApiCmd:(ApiCmd*)apiCmd;
+- (MBuyTicketInfo *)insertCinemaDiscountIntoCoreData:(NSDictionary *)objectData cinema:(MCinema *)aCinema withApiCmd:(ApiCmd*)apiCmd;
 
 - (BOOL)addFavoriteCinemaWithId:(NSString *)uid;
 - (BOOL)deleteFavoriteCinemaWithId:(NSString *)uid;
@@ -374,8 +336,8 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
                                   delegate:(id<ApiNotify>)delegate;
 - (KKTVPriceInfo *)getKTVPriceInfoFromCoreDataWithId:(NSString *)ktvId;
 - (KKTVPriceInfo *)insertKTVPriceListIntoCoreDataFromObject:(NSDictionary *)objectData
-                                      withApiCmd:(ApiCmd*)apiCmd
-                                        withaKTV:(KKTV *)aKTV;
+                                                 withApiCmd:(ApiCmd*)apiCmd
+                                                   withaKTV:(KKTV *)aKTV;
 
 
 

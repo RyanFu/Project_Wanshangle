@@ -545,6 +545,12 @@ static DataBaseManager *_sharedInstance = nil;
         return tapiCmd;
     }
     
+    NSArray *cacheArray = [self getAllMoviesListFromCoreDataWithCityName:nil];
+    if (cacheArray!=nil && [cacheArray count]>0) {
+        [delegate apiNotifyLocationResult:tapiCmd cacheOneData:cacheArray];
+        return tapiCmd;
+    }
+    
     ApiClient* apiClient = [ApiClient defaultClient];
     
     ApiCmdMovie_getAllMovies* apiCmdMovie_getAllMovies = [[ApiCmdMovie_getAllMovies alloc] init];
@@ -563,8 +569,8 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 - (NSArray *)getAllMoviesListFromCoreDataWithCityName:(NSString *)cityName{
-    
-    return [MMovie MR_findAllInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    NSString *todayTimeStamp = [self getTodayZeroTimeStamp];
+   return [MMovie MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"locationDate >= %@",todayTimeStamp] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
 - (NSUInteger)getCountOfMoviesListFromCoreData{
@@ -579,13 +585,14 @@ static DataBaseManager *_sharedInstance = nil;
 /*
  创建一条数据的时候，如果在哪个managedObjectContext下创建的就得由哪个context来save，这样最终rootSaveingContext才会知道有变化才会save
  */
-- (void)insertMoviesIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd
+- (NSMutableArray *)insertMoviesIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd
 {
     
     CFTimeInterval time1 = Elapsed_Time;
     
     NSArray *array = [[objectData objectForKey:@"data"] objectForKey:@"movies"];
     NSArray *array_dynamic = [[objectData objectForKey:@"data"] objectForKey:@"dynamic"];
+    NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:20];
     
     MMovie *mMovie = nil;
     for (int i=0; i<[array count]; i++) {
@@ -598,34 +605,10 @@ static DataBaseManager *_sharedInstance = nil;
         }
         [self importMovie:mMovie ValuesForKeysWithObject:[array objectAtIndex:i]];
         
-        //        City *city = [self getNowUserCityFromCoreDataWithName:apiCmd.cityName];
-        //
-        //        MMovie_City *movie_city = nil;
-        //        movie_city = [self getFirstMMovie_CityFromCoreData:[NSString stringWithFormat:@"%@%@",[city name],mMovie.uid]];
-        //        if (movie_city == nil) {
-        //            [self insertMMovie_CityWithMovie:mMovie andCity:city];
-        //        }
-        
         [self importDynamicMovie:mMovie ValuesForKeysWithObject:[array_dynamic objectAtIndex:i]];
         
+        [returnArray addObject:mMovie];
     }
-    
-    //    for (int i=0; i<[array_dynamic count]; i++) {
-    //
-    //        mMovie = [MMovie MR_findFirstByAttribute:@"uid" withValue:[NSNumber numberWithInt:[[[array_dynamic objectAtIndex:i] objectForKey:@"id"] intValue]]  inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-    //        if (mMovie == nil)
-    //        {
-    //            ABLoggerInfo(@"插入 一条 更新动态电影 新数据 ======= %@",[[array_dynamic objectAtIndex:i] objectForKey:@"name"]);
-    //            mMovie = [MMovie MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-    //        }
-    //        [self importDynamicMovie:mMovie ValuesForKeysWithObject:[array_dynamic objectAtIndex:i]];
-    //    }
-    
-    //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    //        NSArray *movies = [self getAllMoviesListFromCoreDataWithCityName:apiCmd.cityName];
-    //        NSArray *cinemas = [self getAllCinemasListFromCoreDataWithCityName:apiCmd.cityName];
-    //        [self insertMMovie_CinemaWithMovies:movies andCinemas:cinemas];
-    //    });
     
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         ABLoggerDebug(@"电影保存是否成功 ========= %d",success);
@@ -639,81 +622,71 @@ static DataBaseManager *_sharedInstance = nil;
     ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
     //    });
+    
+    return [returnArray autorelease];
 }
 
 /**
+ {
  {
  httpCode: 200,
  errors: [ ],
  data: {
  movies: [
  {
- id: "19",
- uniquekey: "3a35241f73cb36a91fb90d4339272798",
- name: "不二神探",
- url: "http://movie.douban.com/subject/10604486/",
- rating: "4.9",
- ratingcount: "36877",
- director: "王子鸣",
- star: "文章,李连杰,刘诗诗,陈妍希,柳岩,马伊琍,黄晓明,佟大为,冯德伦,吴京,邹兆龙,郑嘉颖,梁小龙,谢天华,张梓琳,邓丽欣,田亮,方力申,梁家仁,林雪,何超仪",
- type: "喜剧,动作,犯罪",
- hotstarttime: null,
+ id: "45",
+ uniquekey: "410f930d440f4a733817ae31a111714e",
+ name: "不肯去观音",
+ url: "http://movie.douban.com/subject/24269094/",
+ rating: "0.0",
+ ratingcount: "0",
+ director: "张鑫",
+ star: "聂远,李纯,中泉英雄,中野良子,斯琴高娃,牛犇",
+ type: "剧情,历史",
+ hotstarttime: "2013-07-26 17:07:02",
+ ishot: true,
  tag: "0",
- startday: "2013-06-21",
- description: "　　短短几天内，电影明星、舞蹈演员、跳水冠军，三个没有任何关联的知名人士面带微笑意外死亡，在社会上引起不小的轰动。与此同时，擅长搞怪耍宝的热血青年警察王不二（文章 饰）与深藏不露的警队老油条黄飞红（李连杰 饰）搭档破案，惹出不少的乱子，令他们的上司Ａｎｇｅｌａ（陈妍希 饰）郁闷不已。某天，地产项目经理王峰（佟大为 饰）微笑死亡，案子交到Ａｎｇｅｌａ一组手中。为了尽快扭转警局中的不利局面，Ａｎｇｅｌａ、王不二和黄飞红展开全力追查，他们率先从与几名死者都有过交往的女演员刘金水（刘诗诗 饰）入手。而在这一过程中，妖艳鬼魅的戴依依（柳岩 饰）出现，无疑令案情朝向更为扑朔迷离的方向发展。 　　最终真相如何，王不二能否立下奇功？",
- duration: "98",
- coverurl: "http://em.wanshangle.com:8888/attachments/image/movie/c8/rq/80290_1373878359.jpg",
- imagesurl: "http://img3.douban.com/img/trailer/medium/2011511021.jpg,http://img3.douban.com/view/photo/albumicon/public/p1997525540.jpg,http://img3.douban.com/view/photo/albumicon/public/p1958078286.jpg,http://img3.douban.com/view/photo/albumicon/public/p1958082672.jpg,http://img3.douban.com/view/photo/albumicon/public/p1997525534.jpg",
- trailersurl: "http://movie.douban.com/trailer/136839/#content",
+ startday: "2013-07-26",
+ isnew: true,
+ shortdescription: null,
+ duration: "117",
+ coverurl: "Fatal error: Allowed memory size of 268435456 bytes exhausted (tried to allocate 6436 bytes) in /var/www/em.server/protected/modules/attachment/controllers/UploadController.php on line 50",
+ imagesurl: "http://img5.douban.com/img/trailer/medium/2019052729.jpg,http://img3.douban.com/view/photo/albumicon/public/p2009485013.jpg,http://img3.douban.com/view/photo/albumicon/public/p2009483547.jpg,http://img3.douban.com/view/photo/albumicon/public/p2009482366.jpg,http://img3.douban.com/view/photo/albumicon/public/p2009483841.jpg",
+ trailersurl: "http://movie.douban.com/trailer/137305/#content",
  status: "0",
  coverimg: "",
- createtime: "2013-07-15 16:54:05",
+ createtime: "2013-07-26 17:07:02",
  createdbysuid: "12",
- lastmodifiedtime: "2013-07-17 15:33:56",
+ lastmodifiedtime: "2013-07-26 17:07:02",
  lastmodifiedbysuid: "12",
- currentstatus: "3",
+ currentstatus: "2",
  votecountadded: "0",
- ratingadded: "0",
- ratingcountadded: "0",
- recommendadded: "66",
- wantedadded: "39"
- },
- 
- dynamic: [
- {
- rating: 5.3,
- ratingFrom: "豆瓣",
- ratingCount: "531",
- viewtypes: [
- "0",
- "1",
- "1"
- ]
+ ratingadded: "4.7",
+ ratingcountadded: "110",
+ recommendadded: "62",
+ wantedadded: "80"
  },
  ***/
 - (void)importMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData
 {
-    //    ABLoggerInfo(@"amovieData == %@",amovieData);
     mMovie.uid = [amovieData objectForKey:@"id"];
     mMovie.name = [amovieData objectForKey:@"name"];
     mMovie.webImg = [amovieData objectForKey:@"coverurl"];
     mMovie.aword = [amovieData objectForKey:@"description"];
     mMovie.duration = [amovieData objectForKey:@"duration"];
-    
+    mMovie.isHot = [amovieData objectForKey:@"ishot"];
+    mMovie.isNew = [amovieData objectForKey:@"isnew"];
     mMovie.rating =[amovieData objectForKey:@"rating"];
     mMovie.ratingpeople = [amovieData objectForKey:@"ratingcount"];
-    
     mMovie.locationDate = [self getTodayTimeStamp];
 }
 
 - (void)importDynamicMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData
 {
-    //    ABLoggerInfo(@"amovieData == %@",amovieData);
-    mMovie.newMovie = [amovieData objectForKey:@"newMovie"];
     mMovie.ratingFrom = [amovieData objectForKey:@"ratingFrom"];
-    mMovie.twoD = [NSNumber numberWithInt:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:0] intValue]];
-    mMovie.threeD = [NSNumber numberWithInt:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:1] intValue]];
-    mMovie.iMaxD = [NSNumber numberWithInt:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:2] intValue]];
+    mMovie.iMAX3D = [[amovieData objectForKey:@"viewtypes"] objectAtIndex:0];
+    mMovie.iMAX = [[amovieData objectForKey:@"viewtypes"]  objectAtIndex:1];
+    mMovie.v3D = [[amovieData objectForKey:@"viewtypes"]  objectAtIndex:2];
 }
 
 - (BOOL)addFavoriteCinemaWithId:(NSString *)uid{

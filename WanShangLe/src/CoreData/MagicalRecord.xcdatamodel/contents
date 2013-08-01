@@ -115,16 +115,17 @@
     <entity name="MMovie" representedClassName="MMovie" syncable="YES">
         <attribute name="aword" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="duration" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="iMaxD" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="iMAX" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="iMAX3D" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="isHot" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="isNew" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="locationDate" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="newMovie" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="rating" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ratingFrom" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ratingpeople" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="threeD" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <attribute name="twoD" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="v3D" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="webImg" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="movie_cinemas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MMovie_Cinema" inverseName="movie" inverseEntity="MMovie_Cinema" syncable="YES"/>
         <relationship name="movieDetail" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovieDetail" inverseName="movie" inverseEntity="MMovieDetail" syncable="YES"/>
@@ -196,7 +197,7 @@
         <element name="KKTVPriceInfo" positionX="439" positionY="-567" width="128" height="103"/>
         <element name="MBuyTicketInfo" positionX="-54" positionY="-99" width="128" height="118"/>
         <element name="MCinema" positionX="205" positionY="-420" width="128" height="330"/>
-        <element name="MMovie" positionX="-443" positionY="-351" width="128" height="270"/>
+        <element name="MMovie" positionX="-443" positionY="-351" width="128" height="285"/>
         <element name="MMovie_Cinema" positionX="-173" positionY="-313" width="128" height="105"/>
         <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="135"/>
         <element name="MSchedule" positionX="-207" positionY="-108" width="128" height="120"/>

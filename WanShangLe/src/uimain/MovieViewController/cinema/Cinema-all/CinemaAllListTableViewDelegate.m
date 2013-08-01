@@ -120,6 +120,7 @@
     
     cell.cinema_name.text = cinema.name;
     cell.cinema_address.text = cinema.address;
+    [[cell viewWithTag:TagTuan] removeFromSuperview];
     
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:4];
     if ([cinema.zhekou boolValue]) {
@@ -153,6 +154,7 @@
     int width = (int)tFrame.origin.x+ tFrame.size.width;
     ABLoggerInfo(@"view frame ===== %d",width);
     [cell addSubview:view];
+    view.tag = TagTuan;
     [view release];
     
     int nameSize_width = (cell.bounds.size.width-width-cell.cinema_name.frame.origin.x);

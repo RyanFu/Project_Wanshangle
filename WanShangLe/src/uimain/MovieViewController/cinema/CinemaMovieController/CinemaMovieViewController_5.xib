@@ -40,7 +40,6 @@
 				<string key="NSFrameSize">{320, 504}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView"/>
 				<object class="NSColor" key="IBUIBackgroundColor" id="589923325">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MCAwAA</bytes>
@@ -52,9 +51,11 @@
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 			<object class="IBUIImageView" id="721433587">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">292</int>
 				<string key="NSFrameSize">{28, 15}</string>
+				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">1</int>
@@ -67,10 +68,30 @@
 					<string key="NSResourceName">tag_NEW@2x.png</string>
 				</object>
 			</object>
+			<object class="IBUIImageView" id="808711178">
+				<reference key="NSNextResponder"/>
+				<int key="NSvFlags">292</int>
+				<string key="NSFrameSize">{28, 15}</string>
+				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
+				<string key="NSReuseIdentifierKey">_NS:9</string>
+				<object class="NSColor" key="IBUIBackgroundColor">
+					<int key="NSColorSpace">1</int>
+					<bytes key="NSRGB">MSAwLjY3MTI1MjI4OTUgMC44NjM0Mzk5MjE4IDAAA</bytes>
+				</object>
+				<bool key="IBUIUserInteractionEnabled">NO</bool>
+				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+				<object class="NSCustomResource" key="IBUIImage">
+					<string key="NSClassName">NSImage</string>
+					<string key="NSResourceName">tag_hot@2x.png</string>
+				</object>
+			</object>
 			<object class="IBUIImageView" id="76262409">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">292</int>
 				<string key="NSFrameSize">{17, 15}</string>
+				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">1</int>
@@ -401,7 +422,6 @@
 						<string key="NSFrame">{{170, 222}, {140, 35}}</string>
 						<reference key="NSSuperview" ref="685377843"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="589923325"/>
 						<bool key="IBUIOpaque">NO</bool>
@@ -458,7 +478,6 @@
 						<string key="NSFrame">{{98, 124}, {119, 21}}</string>
 						<reference key="NSSuperview" ref="156356024"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="589923325"/>
 						<bool key="IBUIOpaque">NO</bool>
@@ -624,6 +643,22 @@
 						<reference key="destination" ref="296870822"/>
 					</object>
 					<int key="connectionID">82</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">movie_image_hot</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="808711178"/>
+					</object>
+					<int key="connectionID">86</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">phoneButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="282300688"/>
+					</object>
+					<int key="connectionID">87</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -837,6 +872,11 @@
 						<reference key="object" ref="569247950"/>
 						<reference key="parent" ref="156356024"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">85</int>
+						<reference key="object" ref="808711178"/>
+						<reference key="parent" ref="0"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -870,12 +910,13 @@
 				<string key="78.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="79.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="80.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="85.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">84</int>
+			<int key="maxID">87</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -923,6 +964,7 @@
 						<string key="movieRating">UILabel</string>
 						<string key="movie_image_3d">UIImageView</string>
 						<string key="movie_image_3dimx">UIImageView</string>
+						<string key="movie_image_hot">UIImageView</string>
 						<string key="movie_image_imx">UIImageView</string>
 						<string key="movie_image_new">UIImageView</string>
 						<string key="phoneButton">UIButton</string>
@@ -972,6 +1014,10 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="movie_image_3dimx">
 							<string key="name">movie_image_3dimx</string>
+							<string key="candidateClassName">UIImageView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="movie_image_hot">
+							<string key="name">movie_image_hot</string>
 							<string key="candidateClassName">UIImageView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="movie_image_imx">
@@ -1036,6 +1082,7 @@
 			<string key="tag_3Dimx@2x.png">{70, 30}</string>
 			<string key="tag_IMX@2x.png">{44, 30}</string>
 			<string key="tag_NEW@2x.png">{56, 30}</string>
+			<string key="tag_hot@2x.png">{56, 30}</string>
 			<string key="tag_no_schedule@2x.png">{180, 180}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">2083</string>

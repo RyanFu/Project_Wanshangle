@@ -54,6 +54,9 @@
     if (_scheduleViewController!=nil){
         [_scheduleViewController viewWillAppear:NO];
     }
+    
+    [self setTableViewDelegate];
+    [_mTableView reloadData];
 }
 
 - (void)viewDidLoad

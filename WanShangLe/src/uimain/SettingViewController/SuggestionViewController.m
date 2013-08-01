@@ -80,20 +80,26 @@
     }];
     
     [request setCompletionBlock:^{
-       
+       [self parseAppUpdateData:dataReceived];
 	}];
     
 	[request setFailedBlock:^{
         ABLoggerWarn(@"检查 软件 更新 失败");
+        
+        SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"提交失败"]
+                                                         andMessage:@""];
+        [alertView addButtonWithTitle:@"确定"
+                                 type:SIAlertViewButtonTypeDefault
+                              handler:^(SIAlertView *alertView) {
+                              }];
+        [alertView show];
+        [alertView release];
 	}];
 	
     [request setRequestMethod:@"POST"];
     [request setPostValue:_adviceTextView.text forKey:@"content"];
     
-    [request startSynchronous];
-    
-     [self parseAppUpdateData:dataReceived];
-//	[[[ApiClient defaultClient] networkQueue] addOperation:request];
+    [request startAsynchronous];
 }
 
 #pragma mark -

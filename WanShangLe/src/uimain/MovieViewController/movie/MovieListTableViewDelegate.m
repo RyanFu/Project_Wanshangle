@@ -12,6 +12,8 @@
 #import "UIImageView+WebCache.h"
 #import "MMovie.h"
 
+#define TuanViewTag 500
+
 @interface MovieListTableViewDelegate(){
 
 }
@@ -43,13 +45,6 @@
     ABLoggerMethod();
     static NSString *CellIdentifier = @"mMovieCell";
     
-//    static BOOL nibsRegistered = NO;
-//    if (!nibsRegistered) {
-//        UINib *nib = [UINib nibWithNibName:@"MovieTableViewCell" bundle:nil];
-//        [tableView registerNib:nib forCellReuseIdentifier:CellIdentifier];
-//        nibsRegistered = YES;
-//    }
-    
     MovieTableViewCell *cell = (MovieTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [self createNewMocieCell];
@@ -78,23 +73,28 @@
     
    
     cell.movie_word.text = movie.aword;
+    cell.movie_name.text = movie.name;
+    [[cell viewWithTag:TuanViewTag] removeFromSuperview];
     
-     NSMutableArray *array = [NSMutableArray arrayWithCapacity:4];
-    if ([movie.newMovie boolValue]) {
+     NSMutableArray *array = [NSMutableArray arrayWithCapacity:3];
+    if ([movie.isHot boolValue]) {
+        [array addObject:cell.movie_image_hot];
+    }
+    if ([movie.isNew boolValue]) {
         [array addObject:cell.movie_image_new];
     }
-    if ([movie.twoD boolValue]) {
-        [array addObject:cell.movie_image_3d];
+    if ([movie.iMAX3D boolValue]) {
+        [array addObject:cell.movie_image_3dimx];
     }
-    if ([movie.threeD boolValue]) {
+    if ([movie.iMAX boolValue]) {
         [array addObject:cell.movie_image_imx];
     }
-    if ([movie.iMaxD boolValue]) {
-        [array addObject:cell.movie_image_3dimx];
+    if ([movie.v3D boolValue]) {
+        [array addObject:cell.movie_image_3d];
     }
     
     int twidth = 0;
-    UIView *view = [[UIView alloc] init];
+    UIView *tuanView = [[UIView alloc] initWithFrame:CGRectZero];
     for (int i=0;i<[array count];i++) {
         
         UIView *tview = [array objectAtIndex:i];
@@ -104,21 +104,43 @@
         twidth += tframe.size.width + 5;
         
         tview.frame = tframe;
-        [view addSubview:tview];
+        [tuanView addSubview:tview];
     }
     
     CGRect tFrame = [(UIView *)[array lastObject] frame];
-    int width = tFrame.origin.x+ tFrame.size.width;
-    ABLoggerInfo(@"view frame ===== %@",NSStringFromCGRect(view.frame));
-    [cell addSubview:view];
-    [view release];
+    int tuanWidth = tFrame.origin.x+ tFrame.size.width;
     
-    CGSize nameSize = [movie.name sizeWithFont:[UIFont systemFontOfSize:19] constrainedToSize:CGSizeMake((240-width-10), 23)];
+    [cell addSubview:tuanView];
+    tuanView.tag = TuanViewTag;
+    [tuanView release];
+    
+//    int rightGap_of_postImg = 10;
+    int cellWidth = cell.bounds.size.width;
+    int postImgWidth = cell.movie_imageView.bounds.size.width;
+    int postImgLeftMargin = cell.movie_imageView.bounds.origin.y;
+    CGSize nameSize = [cell.movie_name.text sizeWithFont:[cell.movie_name font]
+                              constrainedToSize:CGSizeMake((cellWidth-postImgLeftMargin-postImgWidth),MAXFLOAT)];
 
-    cell.movie_name.frame = CGRectMake(80, 3, nameSize.width, 23);
-    int view_x = cell.movie_name.frame.origin.x+nameSize.width +10;
-    [view setFrame:CGRectMake(view_x, 7, width, 10)];
-    cell.movie_name.text = movie.name;
+    int tuanGap = 0;
+    if (nameSize.height<=cell.movie_name.bounds.size.height) {
+        tuanGap = 10;
+    }
+    
+    CGRect cell_newFrame = cell.movie_name.frame;
+    cell_newFrame.size.width = nameSize.width;
+    cell.movie_name.frame = cell_newFrame;
+    
+    int view_x = cell.movie_name.frame.origin.x+cell.movie_name.bounds.size.width +tuanGap;
+    int tuanHeight = 15;
+    [tuanView setFrame:CGRectMake(view_x, 0, tuanWidth, tuanHeight)];
+    CGPoint newCenter = tuanView.center;
+    newCenter.y = cell.movie_name.center.y;
+    tuanView.center = newCenter;
+    
+    ABLoggerDebug(@"movie name %@",movie.name);
+    ABLoggerDebug(@"nameSize == 111%@",NSStringFromCGSize(nameSize));
+    ABLoggerInfo(@"cell.movie_name ===== 222 %@",NSStringFromCGRect(cell.movie_name.frame));
+    ABLoggerInfo(@"tuan view frame ===== 333 %@",NSStringFromCGRect(tuanView.frame));
 }
 
 -(MovieTableViewCell *)createNewMocieCell{

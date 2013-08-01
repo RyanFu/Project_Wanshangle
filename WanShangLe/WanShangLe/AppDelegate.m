@@ -226,6 +226,9 @@
      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
          NSData *timeData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://api.wanshangle.com:10000/api?appId=000001&sign=sign&time=1&v=1.0&api=server.currenttime"]];
          NSError *error = nil;
+         if (isNull(timeData)) {
+             return ;
+         }
          NSDictionary *timeDic = [NSJSONSerialization JSONObjectWithData:timeData options:0 error:&error];
          if (error) {
              ABLoggerWarn(@"Fail to parseJson 系统时间 with error:\n%@", [error localizedDescription]);

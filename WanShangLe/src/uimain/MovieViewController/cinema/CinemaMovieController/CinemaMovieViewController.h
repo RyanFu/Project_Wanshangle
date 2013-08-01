@@ -28,6 +28,7 @@
 @property(nonatomic,retain) NSArray *schedulesArray;
 
 @property(nonatomic,retain)IBOutlet UIImageView *movie_image_new;
+@property(nonatomic,retain)IBOutlet UIImageView *movie_image_hot;
 @property(nonatomic,retain)IBOutlet UIImageView *movie_image_3dimx;
 @property(nonatomic,retain)IBOutlet UIImageView *movie_image_imx;
 @property(nonatomic,retain)IBOutlet UIImageView *movie_image_3d;

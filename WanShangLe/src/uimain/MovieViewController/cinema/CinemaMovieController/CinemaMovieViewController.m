@@ -120,6 +120,7 @@
     self.title = _mCinema.name;
     
     if ([_mCinema.favorite boolValue]) {
+        _favoriteButton.selected = YES;
       [_favoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
     }
 }
@@ -394,18 +395,21 @@
 
 - (void)changeMovieDisplayData:(MMovie*)aMovie{
     
-    NSMutableArray *array = [NSMutableArray arrayWithCapacity:4];
-    if ([aMovie.newMovie boolValue]) {
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:3];
+    if ([aMovie.isHot boolValue]) {
+        [array addObject:_movie_image_hot];
+    }
+    if ([aMovie.isNew boolValue]) {
         [array addObject:_movie_image_new];
     }
-    if ([aMovie.twoD boolValue]) {
-        [array addObject:_movie_image_3d];
+    if ([aMovie.iMAX3D boolValue]) {
+        [array addObject:_movie_image_3dimx];
     }
-    if ([aMovie.threeD boolValue]) {
+    if ([aMovie.iMAX boolValue]) {
         [array addObject:_movie_image_imx];
     }
-    if ([aMovie.iMaxD boolValue]) {
-        [array addObject:_movie_image_3dimx];
+    if ([aMovie.v3D boolValue]) {
+        [array addObject:_movie_image_3d];
     }
     
     int twidth = 0;
@@ -424,12 +428,8 @@
     
     CGRect tFrame = [(UIView *)[array lastObject] frame];
     int tuanWidth = tFrame.origin.x+ tFrame.size.width;
-//    CGRect tuanFrame = tuanView.frame;
-//    tuanFrame.size.width = width;
-//    tuanView.frame = tuanFrame;
-//    ABLoggerInfo(@"view frame ===== %@",NSStringFromCGRect(tuanView.frame));
+
     [_movieDetailControl addSubview:tuanView];
-//    tuanView.backgroundColor = [UIColor colorWithRed:0.502 green:0.000 blue:1.000 alpha:1.000];
     [tuanView release];
     
     CGSize movieRatingLabel_size = [_movieRating.text sizeWithFont:_movieRating.font constrainedToSize:_movieRating.bounds.size];

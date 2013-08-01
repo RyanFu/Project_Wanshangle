@@ -13,9 +13,11 @@
     IBOutlet UIButton *forwardButton;
     IBOutlet UIButton *postErrorButton;
     IBOutlet UIView *bottomBar;
-    
     IBOutlet UIView *errorPopupView;
+    IBOutlet UIView *commitErrorView;
 }
+@property(nonatomic,retain)IBOutlet UITextView *adviceTextView;
+@property(nonatomic,retain)IBOutlet UILabel *placeHoldText;
 @property(nonatomic,retain) NSString *mURLStr;
 
 - (IBAction)clickcWebBackButton:(id)sender;
@@ -26,4 +28,7 @@
 - (IBAction)clickErrorWebButton:(id)sender;
 - (IBAction)clickErrorInfoButton:(id)sender;
 - (IBAction)clickErrorOtherButton:(id)sender;
+
+- (IBAction)clickErrorOtherCancelButton:(id)sender;
+- (IBAction)clickErrorOtherCommitButton:(id)sender;
 @end
