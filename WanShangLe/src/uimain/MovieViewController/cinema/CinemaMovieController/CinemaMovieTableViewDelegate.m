@@ -105,16 +105,16 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-//    _mArray = _parentViewController.schedulesArray;
-//    NSDictionary *tDic = [_mArray objectAtIndex:indexPath.row];
-//    
-//    BuyInfoViewController *buyInfoController = [[BuyInfoViewController alloc] initWithNibName:(iPhone5?@"BuyInfoViewController_5":@"BuyInfoViewController") bundle:nil];
-//    buyInfoController.mSchedule = [tDic objectForKey:@"time"];
-//    buyInfoController.mPrice = [NSString stringWithFormat:@"%d",[[tDic objectForKey:@"lowestprice"] intValue]];
-//    buyInfoController.mMovie = _parentViewController.mMovie;
-//    buyInfoController.mCinema = _parentViewController.mCinema;
-//    [[CacheManager sharedInstance].rootNavController pushViewController:buyInfoController animated:YES];
-//    [buyInfoController release];
+    _mArray = _parentViewController.schedulesArray;
+    NSDictionary *tDic = [_mArray objectAtIndex:indexPath.row];
+    
+    BuyInfoViewController *buyInfoController = [[BuyInfoViewController alloc] initWithNibName:(iPhone5?@"BuyInfoViewController_5":@"BuyInfoViewController") bundle:nil];
+    buyInfoController.mSchedule = [tDic objectForKey:@"time"];
+    buyInfoController.mPrice = [NSString stringWithFormat:@"%d",[[tDic objectForKey:@"lowestprice"] intValue]];
+    buyInfoController.mMovie = _parentViewController.mMovie;
+    buyInfoController.mCinema = _parentViewController.mCinema;
+    [[CacheManager sharedInstance].rootNavController pushViewController:buyInfoController animated:YES];
+    [buyInfoController release];
 }
 
 

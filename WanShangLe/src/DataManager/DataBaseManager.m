@@ -895,7 +895,7 @@ static DataBaseManager *_sharedInstance = nil;
                             timedistance:(NSString *)timedistance
                                 delegate:(id<ApiNotify>)delegate
 {
-    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmdWithTag:[timedistance intValue]];
     
     MSchedule *tSchedule = [self getScheduleFromCoreDataWithaMovie:aMovie andaCinema:aCinema timedistance:timedistance];
     if (tSchedule!=nil) {
@@ -906,6 +906,11 @@ static DataBaseManager *_sharedInstance = nil;
     }
     
     //因为数据库里没有数据或是数据过期，所以向服务器请求数据
+    
+    int httpTag = API_MScheduleCmd;
+    if ([timedistance intValue]==1) {
+        httpTag = API_MScheduleCmdTomorrow;
+    }
     if (tapiCmd!=nil)
         if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
             ABLoggerWarn(@"不能请求 排期了 列表数据，因为已经请求了");
@@ -921,7 +926,7 @@ static DataBaseManager *_sharedInstance = nil;
     apiCmdMovie_getSchedule.cinema_id = aCinema.uid;
     apiCmdMovie_getSchedule.timedistance = timedistance;
     [apiClient executeApiCmdAsync:apiCmdMovie_getSchedule];
-    [apiCmdMovie_getSchedule.httpRequest setTag:API_MScheduleCmd];
+    [apiCmdMovie_getSchedule.httpRequest setTag:httpTag];
     
     return [apiCmdMovie_getSchedule autorelease];
 }

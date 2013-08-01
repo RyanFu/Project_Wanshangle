@@ -21,6 +21,7 @@
 
 @interface CinemaAllViewController()<ApiNotify>{
     BOOL isLoadMoreAll;
+    CGPoint previousScroll;
 }
 @property(nonatomic,retain)CinemaAllListTableViewDelegate *cinemaDelegate;
 @property(nonatomic,retain)MovieCinemaAllListDelegate *movieDelegate;
@@ -82,6 +83,7 @@
     
     [self setTableViewDelegate];
     [_mTableView reloadData];
+    [_mTableView setContentOffset:previousScroll];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -89,6 +91,8 @@
     
     //清除 电影-影院 代理中的排期缓存
     [_movieDelegate clearScheduleCache];
+    
+    previousScroll = _mTableView.contentOffset;
 }
 
 - (void)viewDidLoad
