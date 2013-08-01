@@ -7,6 +7,11 @@
 //
 
 #import "SuggestionViewController.h"
+#import "ApiCmd_app_suggestion.h"
+#import "ASIHTTPRequest.h"
+#import "ASIFormDataRequest.h"
+#import "SIAlertView.h"
+#import "MMProgressHUD.h"
 
 @interface SuggestionViewController ()
 
@@ -66,7 +71,29 @@
 }
 
 - (void)clickCommitButton:(id)sender{
+//    NSData *dataToSend = [_adviceTextView.text dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableData *dataReceived = [NSMutableData data];
+    __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[ApiCmd_app_suggestion getRequestURL]];
     
+	[request setDataReceivedBlock:^(NSData *data){
+        [dataReceived appendData:data];
+    }];
+    
+    [request setCompletionBlock:^{
+       
+	}];
+    
+	[request setFailedBlock:^{
+        ABLoggerWarn(@"检查 软件 更新 失败");
+	}];
+	
+    [request setRequestMethod:@"POST"];
+    [request setPostValue:_adviceTextView.text forKey:@"content"];
+    
+    [request startSynchronous];
+    
+     [self parseAppUpdateData:dataReceived];
+//	[[[ApiClient defaultClient] networkQueue] addOperation:request];
 }
 
 #pragma mark -
@@ -97,6 +124,59 @@
 
 - (void)textViewDidChangeSelection:(UITextView *)textView{
     
+}
+
+
+/*
+ {
+ httpCode: 200,
+ errors: [ ],
+ data: {
+     record: true
+ },
+ token: null,
+ timestamp: "1375324470"
+ }
+ */
+- (void)parseAppUpdateData:(NSData *)reponseData{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        
+        NSError *error = nil;
+        NSDictionary *updateDic= [NSJSONSerialization JSONObjectWithData:reponseData options:0 error:&error];
+        if (error) {
+            ABLoggerWarn(@"Fail to parseJson 软件更新 with error:\n%@", [error localizedDescription]);
+        }
+        ABLoggerDebug(@"反馈 数据 === %@",updateDic);
+        NSDictionary *dataDic = [updateDic objectForKey:@"data"];
+        NSNumber *record = [dataDic objectForKey:@"record"];
+        
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            
+            if ([record boolValue]) {
+                SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"提交成功"]
+                                                                 andMessage:@""];
+                
+                [alertView show];
+                [alertView release];
+                
+                double delayInSeconds = 1.0;
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                    [self.navigationController popViewControllerAnimated:YES];
+                    [alertView dismissAnimated:YES];
+                });
+            }else {
+                SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"提交失败"]
+                                                                 andMessage:@""];
+                [alertView addButtonWithTitle:@"确定"
+                                         type:SIAlertViewButtonTypeDefault
+                                      handler:^(SIAlertView *alertView) {
+                                      }];
+                [alertView show];
+                [alertView release];
+            }
+        });
+    });
 }
 
 - (void)didReceiveMemoryWarning

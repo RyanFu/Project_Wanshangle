@@ -25,6 +25,7 @@
 #import "MSchedule.h"
 #import "MMovie.h"
 #import "MCinema.h"
+#import "ApiCmdMovie_getTodayTotalSchedule.h"
 
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
 #import "UILabel+AFNetworking.h"
@@ -174,7 +175,8 @@ static char kAFJSONRequestOperationObjectKey;
         self.af_jsonRequestOperation = nil;
     } else {
         self.text = placeholderString;
-        NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[self getURLWithMovie:aMovie cinema:aCinema]];
+        NSURL *url = [ApiCmdMovie_getTodayTotalSchedule getURLWithMovie:aMovie cinema:aCinema];
+        NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
         
         AFJSONRequestOperation *requestOperation = [[AFJSONRequestOperation alloc] initWithRequest:urlRequest];
         
@@ -275,41 +277,17 @@ static char kAFJSONRequestOperationObjectKey;
 
 //http://api.wanshangle.com:10000/api? appId=000001&sign=sign&time=1371988912&v=1.0&api=movie.scheduling&movieid=1&cinemaid=1&timedistance=0
 //http://api.wanshangle.com:10000/api? appId=000001&sign=sign&time=1&v=1.0&api=movie.statistics&movieid=39&cinemaid=120
-- (NSURL *)getURLWithMovie:(MMovie *)aMovie
-                    cinema:(MCinema *)aCinema{
-    // prepare post data
-    NSMutableDictionary* paramDict = [[NSMutableDictionary alloc] init];
-    [paramDict setObject:@"movie.statistics" forKey:@"api"];
-    [paramDict setObject:aMovie.uid forKey:@"movieid"];
-    [paramDict setObject:aCinema.uid  forKey:@"cinemaid"];
-    
-    // add appId & cookie & phoneType
-    [paramDict setValue:[ApiConfig getApiAppId] forKey:@"appId"];
-    [paramDict setValue:@"1.0" forKey:@"v"];
-    [paramDict setValue:@"sign" forKey:@"sign"];
-    [paramDict setValue:[NSString stringWithFormat:@"%0.0f",[[[DataBaseManager sharedInstance] date] timeIntervalSince1970]] forKey:@"time"];
-    
-    NSMutableString *urlStr = [[NSMutableString alloc] init];
-    [urlStr appendString:[ApiConfig getApiRequestUrl]];
-    
-    for (NSString *key in [paramDict allKeys]) {
-        [urlStr appendFormat:@"&%@=%@",key,[paramDict objectForKey:key]];
-    }
-    
-    // prepare http request
-    NSURL *url = [NSURL URLWithString:urlStr];
-    ABLoggerInfo(@"request url ===== %@",urlStr);
-    return url;
+//- (NSURL *)getURLWithMovie:(MMovie *)aMovie
+//                    cinema:(MCinema *)aCinema{
 //    // prepare post data
 //    NSMutableDictionary* paramDict = [[NSMutableDictionary alloc] init];
-//    [paramDict setObject:@"movie.scheduling" forKey:@"api"];
+//    [paramDict setObject:@"movie.statistics" forKey:@"api"];
 //    [paramDict setObject:aMovie.uid forKey:@"movieid"];
 //    [paramDict setObject:aCinema.uid  forKey:@"cinemaid"];
-//    [paramDict setObject:@"0"  forKey:@"timedistance"];
 //    
 //    // add appId & cookie & phoneType
 //    [paramDict setValue:[ApiConfig getApiAppId] forKey:@"appId"];
-//    [paramDict setValue:@"1.0" forKey:@"v"];
+//    [paramDict setValue:AppVersion forKey:@"v"];
 //    [paramDict setValue:@"sign" forKey:@"sign"];
 //    [paramDict setValue:[NSString stringWithFormat:@"%0.0f",[[[DataBaseManager sharedInstance] date] timeIntervalSince1970]] forKey:@"time"];
 //    
@@ -324,7 +302,31 @@ static char kAFJSONRequestOperationObjectKey;
 //    NSURL *url = [NSURL URLWithString:urlStr];
 //    ABLoggerInfo(@"request url ===== %@",urlStr);
 //    return url;
-}
+////    // prepare post data
+////    NSMutableDictionary* paramDict = [[NSMutableDictionary alloc] init];
+////    [paramDict setObject:@"movie.scheduling" forKey:@"api"];
+////    [paramDict setObject:aMovie.uid forKey:@"movieid"];
+////    [paramDict setObject:aCinema.uid  forKey:@"cinemaid"];
+////    [paramDict setObject:@"0"  forKey:@"timedistance"];
+////    
+////    // add appId & cookie & phoneType
+////    [paramDict setValue:[ApiConfig getApiAppId] forKey:@"appId"];
+////    [paramDict setValue:@"1.0" forKey:@"v"];
+////    [paramDict setValue:@"sign" forKey:@"sign"];
+////    [paramDict setValue:[NSString stringWithFormat:@"%0.0f",[[[DataBaseManager sharedInstance] date] timeIntervalSince1970]] forKey:@"time"];
+////    
+////    NSMutableString *urlStr = [[NSMutableString alloc] init];
+////    [urlStr appendString:[ApiConfig getApiRequestUrl]];
+////    
+////    for (NSString *key in [paramDict allKeys]) {
+////        [urlStr appendFormat:@"&%@=%@",key,[paramDict objectForKey:key]];
+////    }
+////    
+////    // prepare http request
+////    NSURL *url = [NSURL URLWithString:urlStr];
+////    ABLoggerInfo(@"request url ===== %@",urlStr);
+////    return url;
+//}
 @end
 
 @implementation AFJsonCache

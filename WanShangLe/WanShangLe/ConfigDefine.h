@@ -37,6 +37,9 @@
 //测试宏标记
 //#define TestCode
 
+//软件版本
+#define AppVersion @"1.0"
+
 //用户选择的城市
 #define UserState @"administrativeArea"
 

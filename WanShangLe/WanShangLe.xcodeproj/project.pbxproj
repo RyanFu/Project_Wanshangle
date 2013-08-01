@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		5A0FA975177A8D5900676253 /* ApiCmdMovie_getAllMovieDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A0FA974177A8D5900676253 /* ApiCmdMovie_getAllMovieDetail.m */; };
-		5A0FA9C5177AE75A00676253 /* ApiCmd_recommendOrLook.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A0FA9C4177AE75A00676253 /* ApiCmd_recommendOrLook.m */; };
 		5A1261EA177C38230018E21A /* ChineseToPinyin.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1261E9177C38230018E21A /* ChineseToPinyin.m */; };
 		5A1261FE177D43C90018E21A /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1261FD177D43C90018E21A /* EGORefreshTableHeaderView.m */; };
 		5A1746F7176057E400E155AB /* SIAlertView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5A1746F4176057E400E155AB /* SIAlertView.bundle */; };
@@ -390,6 +389,10 @@
 		5AC376D217A8A736009B06DF /* ApiCmdMovie_getCinemaDiscount.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376D117A8A736009B06DF /* ApiCmdMovie_getCinemaDiscount.m */; };
 		5AC376D617A8E49C009B06DF /* NSObject+MKBlockTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376D517A8E49C009B06DF /* NSObject+MKBlockTimer.m */; };
 		5AC376D917A8FC05009B06DF /* NSMutableArray+TKCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376D817A8FC05009B06DF /* NSMutableArray+TKCategory.m */; };
+		5AC376DD17A9F1DE009B06DF /* ApiCmd_app_update.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376DC17A9F1DE009B06DF /* ApiCmd_app_update.m */; };
+		5AC376E017A9F668009B06DF /* ApiCmdMovie_getTodayTotalSchedule.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376DF17A9F668009B06DF /* ApiCmdMovie_getTodayTotalSchedule.m */; };
+		5AC376E317A9F7F8009B06DF /* ApiCmd_recommendOrLook.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376E217A9F7F8009B06DF /* ApiCmd_recommendOrLook.m */; };
+		5AC376E617AA007B009B06DF /* ApiCmd_app_suggestion.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376E517AA007B009B06DF /* ApiCmd_app_suggestion.m */; };
 		5AD321B01794E2B00091F3AC /* bar_btn_filter_bts@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AD320CB1794E2AF0091F3AC /* bar_btn_filter_bts@2x.png */; };
 		5AD321B11794E2B00091F3AC /* bar_btn_yes_blue_f@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AD320CC1794E2AF0091F3AC /* bar_btn_yes_blue_f@2x.png */; };
 		5AD321B21794E2B00091F3AC /* bar_btn_yes_blue_n@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AD320CD1794E2AF0091F3AC /* bar_btn_yes_blue_n@2x.png */; };
@@ -674,8 +677,6 @@
 		5A0FA973177A8D5900676253 /* ApiCmdMovie_getAllMovieDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCmdMovie_getAllMovieDetail.h; sourceTree = "<group>"; };
 		5A0FA974177A8D5900676253 /* ApiCmdMovie_getAllMovieDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmdMovie_getAllMovieDetail.m; sourceTree = "<group>"; };
 		5A0FA976177A8EE500676253 /* DataBaseClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataBaseClass.h; sourceTree = "<group>"; };
-		5A0FA9C3177AE75900676253 /* ApiCmd_recommendOrLook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApiCmd_recommendOrLook.h; path = ../MMovieAPI/ApiCmd_recommendOrLook.h; sourceTree = "<group>"; };
-		5A0FA9C4177AE75A00676253 /* ApiCmd_recommendOrLook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ApiCmd_recommendOrLook.m; path = ../MMovieAPI/ApiCmd_recommendOrLook.m; sourceTree = "<group>"; };
 		5A1261E8177C38230018E21A /* ChineseToPinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChineseToPinyin.h; sourceTree = "<group>"; };
 		5A1261E9177C38230018E21A /* ChineseToPinyin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChineseToPinyin.m; sourceTree = "<group>"; };
 		5A1261FC177D43C90018E21A /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
@@ -768,7 +769,7 @@
 		5A1C80FD17A2649D007F7434 /* MovieCinemaCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MovieCinemaCell.xib; sourceTree = "<group>"; };
 		5A246F36175DD0D100C000CA /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		5A246F38175DD0D600C000CA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		5A246F42175DE9CC00C000CA /* CoreManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreManager.h; sourceTree = "<group>"; };
+		5A246F42175DE9CC00C000CA /* ConfigDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigDefine.h; sourceTree = "<group>"; };
 		5A26F4EF178D6ED9002E7609 /* SuggestionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SuggestionViewController.h; sourceTree = "<group>"; };
 		5A26F4F0178D6ED9002E7609 /* SuggestionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SuggestionViewController.m; sourceTree = "<group>"; };
 		5A26F4F1178D6ED9002E7609 /* SuggestionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SuggestionViewController.xib; sourceTree = "<group>"; };
@@ -1313,6 +1314,14 @@
 		5AC376D517A8E49C009B06DF /* NSObject+MKBlockTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+MKBlockTimer.m"; sourceTree = "<group>"; };
 		5AC376D717A8FC05009B06DF /* NSMutableArray+TKCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+TKCategory.h"; sourceTree = "<group>"; };
 		5AC376D817A8FC05009B06DF /* NSMutableArray+TKCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+TKCategory.m"; sourceTree = "<group>"; };
+		5AC376DB17A9F1DE009B06DF /* ApiCmd_app_update.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCmd_app_update.h; sourceTree = "<group>"; };
+		5AC376DC17A9F1DE009B06DF /* ApiCmd_app_update.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmd_app_update.m; sourceTree = "<group>"; };
+		5AC376DE17A9F667009B06DF /* ApiCmdMovie_getTodayTotalSchedule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCmdMovie_getTodayTotalSchedule.h; sourceTree = "<group>"; };
+		5AC376DF17A9F668009B06DF /* ApiCmdMovie_getTodayTotalSchedule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmdMovie_getTodayTotalSchedule.m; sourceTree = "<group>"; };
+		5AC376E117A9F7F8009B06DF /* ApiCmd_recommendOrLook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCmd_recommendOrLook.h; sourceTree = "<group>"; };
+		5AC376E217A9F7F8009B06DF /* ApiCmd_recommendOrLook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmd_recommendOrLook.m; sourceTree = "<group>"; };
+		5AC376E417AA007B009B06DF /* ApiCmd_app_suggestion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCmd_app_suggestion.h; sourceTree = "<group>"; };
+		5AC376E517AA007B009B06DF /* ApiCmd_app_suggestion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmd_app_suggestion.m; sourceTree = "<group>"; };
 		5AD320CB1794E2AF0091F3AC /* bar_btn_filter_bts@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bar_btn_filter_bts@2x.png"; sourceTree = "<group>"; };
 		5AD320CC1794E2AF0091F3AC /* bar_btn_yes_blue_f@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bar_btn_yes_blue_f@2x.png"; sourceTree = "<group>"; };
 		5AD320CD1794E2AF0091F3AC /* bar_btn_yes_blue_n@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bar_btn_yes_blue_n@2x.png"; sourceTree = "<group>"; };
@@ -1784,8 +1793,6 @@
 				5A1747291761ADCA00E155AB /* ApiNotify.h */,
 				5A17472A1761ADCA00E155AB /* DomainProtocol.h */,
 				5A17472B1761ADCA00E155AB /* MobileApi.h */,
-				5A0FA9C3177AE75900676253 /* ApiCmd_recommendOrLook.h */,
-				5A0FA9C4177AE75A00676253 /* ApiCmd_recommendOrLook.m */,
 			);
 			path = CoreAPI;
 			sourceTree = "<group>";
@@ -1816,6 +1823,8 @@
 				5A4342551769FB2C00F2C66F /* ApiCmdMovie_getBuyInfo.m */,
 				5A4342351769A27300F2C66F /* ApiCmdMovie_getSchedule.h */,
 				5A4342361769A27300F2C66F /* ApiCmdMovie_getSchedule.m */,
+				5AC376DE17A9F667009B06DF /* ApiCmdMovie_getTodayTotalSchedule.h */,
+				5AC376DF17A9F668009B06DF /* ApiCmdMovie_getTodayTotalSchedule.m */,
 				5A17472E1761ADCA00E155AB /* ApiCmdMovie_getAllCinemas.h */,
 				5A17472F1761ADCA00E155AB /* ApiCmdMovie_getAllCinemas.m */,
 				5ADD8EA3179C24750026239A /* ApiCmdMovie_getSearchCinemas.h */,
@@ -2315,7 +2324,7 @@
 		5A76C4D3175DBE8B0067BC30 /* WanShangLe */ = {
 			isa = PBXGroup;
 			children = (
-				5A246F42175DE9CC00C000CA /* CoreManager.h */,
+				5A246F42175DE9CC00C000CA /* ConfigDefine.h */,
 				5A76C4DC175DBE8B0067BC30 /* AppDelegate.h */,
 				5A76C4DD175DBE8B0067BC30 /* AppDelegate.m */,
 				5A5E19E9178136F5008A6D97 /* AGViewDelegate.h */,
@@ -2840,6 +2849,7 @@
 		5AAC706D17601BDB004B7395 /* mobileHttp */ = {
 			isa = PBXGroup;
 			children = (
+				5AC376DA17A9F1AB009B06DF /* OtherAPI */,
 				5A1747201761ADCA00E155AB /* CoreAPI */,
 				5A17471F1761ADCA00E155AB /* BBarAPI */,
 				5A17472C1761ADCA00E155AB /* KKTVAPI */,
@@ -3084,6 +3094,19 @@
 				5AC376D517A8E49C009B06DF /* NSObject+MKBlockTimer.m */,
 			);
 			path = MKBlockTimer;
+			sourceTree = "<group>";
+		};
+		5AC376DA17A9F1AB009B06DF /* OtherAPI */ = {
+			isa = PBXGroup;
+			children = (
+				5AC376E417AA007B009B06DF /* ApiCmd_app_suggestion.h */,
+				5AC376E517AA007B009B06DF /* ApiCmd_app_suggestion.m */,
+				5AC376DB17A9F1DE009B06DF /* ApiCmd_app_update.h */,
+				5AC376DC17A9F1DE009B06DF /* ApiCmd_app_update.m */,
+				5AC376E117A9F7F8009B06DF /* ApiCmd_recommendOrLook.h */,
+				5AC376E217A9F7F8009B06DF /* ApiCmd_recommendOrLook.m */,
+			);
+			path = OtherAPI;
 			sourceTree = "<group>";
 		};
 		5AD320C91794E2AF0091F3AC /* UI */ = {
@@ -4155,7 +4178,6 @@
 				5AF26FA417704CDB00C53D1B /* ApiCmdKTV_getPriceList.m in Sources */,
 				5AFDF37D1773E6E7000C38A0 /* SettingViewController.m in Sources */,
 				5A0FA975177A8D5900676253 /* ApiCmdMovie_getAllMovieDetail.m in Sources */,
-				5A0FA9C5177AE75A00676253 /* ApiCmd_recommendOrLook.m in Sources */,
 				5A83CF2E177BEC1F00E86F72 /* JSButton.m in Sources */,
 				5A1261EA177C38230018E21A /* ChineseToPinyin.m in Sources */,
 				5A1261FE177D43C90018E21A /* EGORefreshTableHeaderView.m in Sources */,
@@ -4327,6 +4349,10 @@
 				5AC376D217A8A736009B06DF /* ApiCmdMovie_getCinemaDiscount.m in Sources */,
 				5AC376D617A8E49C009B06DF /* NSObject+MKBlockTimer.m in Sources */,
 				5AC376D917A8FC05009B06DF /* NSMutableArray+TKCategory.m in Sources */,
+				5AC376DD17A9F1DE009B06DF /* ApiCmd_app_update.m in Sources */,
+				5AC376E017A9F668009B06DF /* ApiCmdMovie_getTodayTotalSchedule.m in Sources */,
+				5AC376E317A9F7F8009B06DF /* ApiCmd_recommendOrLook.m in Sources */,
+				5AC376E617AA007B009B06DF /* ApiCmd_app_suggestion.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

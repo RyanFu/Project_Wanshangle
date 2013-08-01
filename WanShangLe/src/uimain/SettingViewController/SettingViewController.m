@@ -10,7 +10,10 @@
 #import "KtvManagerViewController.h"
 #import "CinemaManagerViewController.h"
 #import "SuggestionViewController.h"
+#import "ApiCmd_app_update.h"
 #import "MMProgressHUD.h"
+#import "SIAlertView.h"
+#import "ASIHTTPRequest.h"
 
 #define DisplayTime 2
 
@@ -44,7 +47,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     [self initBarButtonItem];
     
     [self initData];
@@ -64,7 +67,7 @@
 }
 
 - (void)initData{
-     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     
     [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, 505)];
     
@@ -102,7 +105,7 @@
     [(UIButton *)[_distanceFilterBtns objectAtIndex:index] setSelected:YES];
     
     [self updateFilterDistanceData:index];
-
+    
 }
 
 
@@ -134,20 +137,20 @@
     [MMProgressHUD setDisplayStyle:MMProgressHUDDisplayStylePlain];
     [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleDrop];
     [MMProgressHUD showWithTitle:@"正在清理缓存" status:@"请稍等..."];
-
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         CFTimeInterval time1 = Elapsed_Time;
         [[DataBaseManager sharedInstance] cleanUpDataBaseCache];
         
         CFTimeInterval time2 = Elapsed_Time;
-         ElapsedTime(time2, time1);
+        ElapsedTime(time2, time1);
         CFTimeInterval escapeTime = time2 - time1;
         if (escapeTime<DisplayTime) {
             NSTimeInterval sleeptimee = DisplayTime-escapeTime;
             [NSThread sleepForTimeInterval:sleeptimee];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
-//                [self stopTKLoadingView];
+            //                [self stopTKLoadingView];
             [MMProgressHUD dismissWithSuccess:@"清理完毕!"];
             [self updateCacheSize];
         });
@@ -171,18 +174,99 @@
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
 }
 
+#pragma mark 意见反馈
 -(IBAction)clickSuggestionButton:(id)sender{
     SuggestionViewController *suggestionController = [[SuggestionViewController alloc] initWithNibName:@"SuggestionViewController" bundle:nil];
     [self.navigationController pushViewController:suggestionController animated:YES];
     [suggestionController release];
 }
 
+#pragma mark 软件更新检查
+/*
+ {
+ httpCode: 200,
+ errors: [ ],
+ data: {
+     newestversion: "1.0.0",
+     update: false,
+     content: "",
+     uri: ""
+ },
+ token: null,
+ timestamp: "1375323240"
+ }
+ */
 -(IBAction)clickVersionCheck:(id)sender{
     
+    NSMutableData *dataReceived = [NSMutableData data];
+    __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[ApiCmd_app_update getRequestURL]];
+    
+	[request setDataReceivedBlock:^(NSData *data){
+        [dataReceived appendData:data];
+    }];
+    
+    [request setCompletionBlock:^{
+        [self parseAppUpdateData:dataReceived];
+	}];
+    
+	[request setFailedBlock:^{
+        ABLoggerWarn(@"检查 软件 更新 失败");
+	}];
+	
+	[[[ApiClient defaultClient] networkQueue] addOperation:request];
 }
+
+- (void)parseAppUpdateData:(NSData *)reponseData{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+
+        NSError *error = nil;
+        NSDictionary *updateDic= [NSJSONSerialization JSONObjectWithData:reponseData options:0 error:&error];
+        if (error) {
+            ABLoggerWarn(@"Fail to parseJson 软件更新 with error:\n%@", [error localizedDescription]);
+        }
+        ABLoggerDebug(@"更新版本 数据 === %@",updateDic);
+        NSDictionary *dataDic = [updateDic objectForKey:@"data"];
+        NSNumber *isUpdate = [dataDic objectForKey:@"update"];
+        NSString *content = [dataDic objectForKey:@"content"];
+        NSString *uri = [dataDic objectForKey:@"uri"];
+        NSString *newestversion = [dataDic objectForKey:@"newestversion"];
+        
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            
+            if ([isUpdate boolValue]) {
+                SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"有可更新的版本 %@",newestversion]
+                                                                 andMessage:content];
+                
+                
+                [alertView addButtonWithTitle:@"取消"
+                                         type:SIAlertViewButtonTypeCancel
+                                      handler:^(SIAlertView *alertView) {
+                                      }];
+                [alertView addButtonWithTitle:@"更新"
+                                         type:SIAlertViewButtonTypeDefault
+                                      handler:^(SIAlertView *alertView) {
+                                          [[UIApplication sharedApplication] openURL:[NSURL URLWithString:uri]];
+                                      }];
+                [alertView show];
+                [alertView release];
+            }else {
+                SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"你的版本已经是最新的了"]
+                                                                 andMessage:@""];
+                [alertView addButtonWithTitle:@"确定"
+                                         type:SIAlertViewButtonTypeDefault
+                                      handler:^(SIAlertView *alertView) {
+                                      }];
+                [alertView show];
+                [alertView release];
+            }
+        });
+    });
+}
+
+#pragma mark 内存警告
 - (void)didReceiveMemoryWarning
 {
-     ABLoggerWarn(@"接收到内存警告了");
+    ABLoggerWarn(@"接收到内存警告了");
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
