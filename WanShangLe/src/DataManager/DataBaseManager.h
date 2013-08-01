@@ -62,6 +62,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (NSString *)getWhickWeek:(NSDate*)aDate;
 //获取时间
 - (NSString *)getTimeFromDate:(NSString *)dateStr;
+- (NSString *)getHumanityTimeFromDate:(NSString *)dateStr;
 - (NSString *)timeByAddingTimeInterval:(int)time fromDate:(NSString *)dateStr;
 //几天后的时间
 - (NSString *)dateWithTimeIntervalSinceNow:(NSTimeInterval)timeInterval fromDate:(NSString *)beginDate;

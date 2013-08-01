@@ -234,8 +234,11 @@
              ABLoggerWarn(@"Fail to parseJson 系统时间 with error:\n%@", [error localizedDescription]);
          }
          
-        NSNumber *timeStamp = [[timeDic objectForKey:@"data"] objectForKey:@"timestamp"];
-        [DataBaseManager sharedInstance].missTime = [timeStamp doubleValue];
+        double timeStamp = [[[timeDic objectForKey:@"data"] objectForKey:@"timestamp"] doubleValue];
+        double localTime = [[NSDate date] timeIntervalSince1970];
+        
+        
+        [DataBaseManager sharedInstance].missTime = timeStamp-localTime;
          ABLoggerInfo(@"获取服务器时间 ======= %@",timeDic);
      });
 }

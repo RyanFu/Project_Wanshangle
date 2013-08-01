@@ -11,6 +11,7 @@ static DataBaseManager *_sharedInstance = nil;
 #import "DataBaseManager.h"
 #import "ChineseToPinyin.h"
 #import "DataBase.h"
+#import "NSDate-Utilities.h"
 
 @interface DataBaseManager(){
     
@@ -229,6 +230,58 @@ static DataBaseManager *_sharedInstance = nil;
     _timeFormatter.dateFormat = @"HH:mm";
     
     return [_timeFormatter stringFromDate:aDate];
+}
+
+
+#define D_MINUTE	60
+#define D_HOUR		3600
+#define D_DAY		86400
+#define D_WEEK		604800
+#define D_YEAR		31556926
+
+- (NSString *)getHumanityTimeFromDate:(NSString *)dateStr{
+    if (isEmpty(dateStr)) {
+        return nil;
+    }
+    _timeFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    NSDate *aDate = [_timeFormatter dateFromString:dateStr];
+//    NSTimeInterval compareTime = [aDate timeIntervalSince1970];
+    
+    NSDate *nowDate = [self date];
+//    NSTimeInterval nowTime = [nowDate timeIntervalSince1970];
+    
+    NSString *order = nil;
+
+    
+    int dTime = (int)([aDate timeIntervalSinceDate:nowDate]/D_MINUTE);//分钟
+    
+    if (dTime<0) {
+        
+        dTime = abs(dTime);
+        ABLoggerDebug(@"dTime === %d",dTime);
+        
+        if (0 <= dTime && dTime< 30) {
+            order = @"刚刚开始";
+        }else if(30 <= dTime && dTime < 60){
+            order = [NSString stringWithFormat:@"%d分钟前开始",dTime];
+        }else if(60 <= dTime && dTime < (60*24)){
+            order = [NSString stringWithFormat:@"%d小时前开始",dTime/60];
+        }else if((60*24)<dTime){
+            order = [NSString stringWithFormat:@"%d天前开始",dTime/(60*24)];
+        }
+    }else{
+        if (0 <= dTime && dTime< 30) {
+            order = @"即将开始";
+        }else if(30 <= dTime && dTime < 60){
+            order = [NSString stringWithFormat:@"%d分钟后开始",dTime];
+        }else if(60 <= dTime && dTime < (60*24)){
+             order = [NSString stringWithFormat:@"%d小时后开始",dTime/60];
+        }else if((60*24)<dTime){
+            order = [NSString stringWithFormat:@"%d天后开始",dTime/(60*24)];
+        }
+    }
+    
+    return order;
 }
 
 - (NSString *)timeByAddingTimeInterval:(int)time fromDate:(NSString *)dateStr{
@@ -2336,51 +2389,7 @@ static DataBaseManager *_sharedInstance = nil;
     return [returnArray autorelease];
 }
 
-/*
- {
- httpCode: 200,
- errors: [ ],
- data: {
- count: 16,
- events: [
- {
- id: "1",
- barid: "1",
- barname: "bar",
- eventname: "欢乐相聚",
- address: "",
- latitude: "31.21569",
- longitude: "121.43956",
- type: "1",
- cityid: "0",
- districtid: "1",
- begintime: "2013-07-15 10:00:00",
- endtime: "2013-07-16",
- eventtime: "10.5",
- hotadded: "41",
- price: "60",
- recommendadded: "29",
- wantedadded: "11",
- description: null,
- eventurl: null,
- tag: "0",
- currentstatus: "3",
- createtime: "2013-07-15 15:32:43",
- createdbysuid: "11",
- lastmodifiedtime: "2013-07-15 15:45:52",
- lastmodifiedbysuid: "11",
- hot: 41,
- recommend: 29,
- want: 11
- },
- {},
- {}
- ]
- },
- token: null,
- timestamp: "1373876492"
- }
- */
+/**/
 - (void)importBar:(BBar *)bBar ValuesForKeysWithObject:(NSDictionary *)aBarDic{
     bBar.uid = [aBarDic objectForKey:@"id"];
     bBar.barId = [aBarDic objectForKey:@"barid"];
@@ -2389,7 +2398,7 @@ static DataBaseManager *_sharedInstance = nil;
     bBar.popular = [NSNumber numberWithInt:[[aBarDic objectForKey:@"hotadded"] integerValue]];
     bBar.address = [aBarDic objectForKey:@"address"];
     bBar.begintime = [aBarDic objectForKey:@"begintime"];
-    bBar.phoneNumber = [[aBarDic objectForKey:@"tel"] stringValue];
+    bBar.phoneNumber = [aBarDic objectForKey:@"contactphonex"];
     //    bBar.longitude = [aBarDic objectForKey:@"longitude"];
     //    bBar.latitude = [aBarDic objectForKey:@"latitude"];
     bBar.locationDate = [self getTodayTimeStamp];

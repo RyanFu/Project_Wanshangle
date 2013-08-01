@@ -8,10 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-#define TodayKey @"今天"
-#define TomorrowKey @"明天"
-#define ListKey @"list"
-
 @class ApiCmdBar_getAllBars;
 @class EGORefreshTableHeaderView;
 @class BarViewController;

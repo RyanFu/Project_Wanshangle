@@ -14,6 +14,7 @@
 #import "BarDetailViewController.h"
 #import "ApiCmdBar_getBarDetail.h"
 #import "ActionState.h"
+#import "SIAlertView.h"
 
 #define IntroduceLabelHeight 213
 @interface BarDetailViewController ()<ApiNotify>{
@@ -92,6 +93,9 @@
         isRecommended = YES;
     }
     
+    _bar_name.text = _mBar.barName;
+    _bar_address.text = _mBar.address;
+    
     self.mBarDetail = [[DataBaseManager sharedInstance] getBarDetailWithId:_mBar.uid];
 
     if (_mBarDetail==nil) {//酒吧详情为空
@@ -108,8 +112,6 @@
 - (void)initBarDetailData{
     ABLoggerDebug(@"_mBarDetail.detailInfo == %@",_mBarDetail.detailInfo);
     _bar_event.text = [_mBarDetail.detailInfo objectForKey:@"eventname"];
-    _bar_name.text = @"NULL";
-    _bar_address.text = @"NULL";
     NSString *introduceInfo = [_mBarDetail.detailInfo objectForKey:@"description"];
     _bar_introduce.text =  (isEmpty(introduceInfo)?@"该活动暂时没有介绍信息":introduceInfo);
     
@@ -173,7 +175,31 @@
 }
 
 -(IBAction)clickPhoneButton:(id)sender{
+    NSString *message = @"";
+    NSString *phoneNumber = nil;
     
+    if (isEmpty(_mBar.phoneNumber)) {
+        message = @"该影院暂时没有电话号码";
+    }else{
+        phoneNumber = _mBar.phoneNumber;
+    }
+    
+    SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:@"电话号码" andMessage:message];
+    
+    if (!isEmpty(phoneNumber)) {
+        [alertView addButtonWithTitle:phoneNumber
+                                 type:SIAlertViewButtonTypeDefault
+                              handler:^(SIAlertView *alertView) {
+                                  [[LocationManager defaultLocationManager] callPhoneNumber:phoneNumber];
+                              }];
+    }
+    
+    [alertView addButtonWithTitle:@"取消"
+                             type:SIAlertViewButtonTypeCancel
+                          handler:^(SIAlertView *alertView) {
+                          }];
+    [alertView show];
+    [alertView release];
 }
 
 - (void)startAddOneAnimation:(UIButton *)sender{
