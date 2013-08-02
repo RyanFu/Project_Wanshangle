@@ -32,6 +32,7 @@
 @property (nonatomic, retain) NSNumber * zhekou;
 @property (nonatomic, retain) BBarDetail *barDetail;
 @property (nonatomic, retain) NSString * discountInfo;
+@property (nonatomic, retain) NSNumber * distance;
 
 
 @end

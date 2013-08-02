@@ -31,5 +31,6 @@
 @dynamic zhekou;
 @dynamic barDetail;
 @dynamic discountInfo;
+@dynamic distance;
 
 @end

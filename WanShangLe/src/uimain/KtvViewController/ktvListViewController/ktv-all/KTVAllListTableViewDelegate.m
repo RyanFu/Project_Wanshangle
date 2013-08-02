@@ -298,7 +298,7 @@
     if (!_refreshHeaderView.hidden) {
         [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
     }
-    if(!_refreshHeaderView.hidden){
+    if(!_refreshTailerView.hidden){
         [_refreshTailerView egoRefreshScrollViewDidScroll:scrollView];
     }
 }
@@ -307,7 +307,7 @@
     if (!_refreshHeaderView.hidden) {
         [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
     }
-    if(!_refreshHeaderView.hidden){
+    if(!_refreshTailerView.hidden){
         [_refreshTailerView egoRefreshScrollViewDidEndDragging:scrollView];
     }
 }

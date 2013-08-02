@@ -131,7 +131,7 @@
     _movie_director.text = [_mMovieDetail.info objectForKey:@"director"];
     _movie_actor.text = [_mMovieDetail.info objectForKey:@"star"];
     _movie_type.text = [_mMovieDetail.info objectForKey:@"type"];
-    _movie_district.text = @"NULL缺少字段";
+    _movie_district.text = [NSString stringWithFormat:@"%@(%@)",_mMovieDetail.productarea,_mMovieDetail.language];
     _movie_timeLong.text = [[_mMovieDetail.info objectForKey:@"duration"] stringByAppendingString:@"分钟"];
     _movie_uptime.text = [_mMovieDetail.info objectForKey:@"startday"];
     

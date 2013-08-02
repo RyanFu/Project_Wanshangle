@@ -18,5 +18,8 @@
 @dynamic wantlook;
 @dynamic uid;
 @dynamic movie;
+@dynamic language;
+@dynamic productarea;
+
 
 @end

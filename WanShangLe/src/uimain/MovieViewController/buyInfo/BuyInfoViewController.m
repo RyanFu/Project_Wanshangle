@@ -93,7 +93,6 @@
     _cinema_name_label.text = _mCinema.name;
     _cinema_address_label.text = _mCinema.address;
     _schedule_label.text = _mSchedule;
-    _price_label.text = _mPrice;
     
     _buyInfoTableViewDelegate = [[BuyInfoTableViewDelegate alloc] init];
     
@@ -187,6 +186,9 @@
 
 - (void)formatCinemaData:(NSDictionary *)responseDic{
     ABLoggerMethod();
+    
+    _price_label.text = [NSString stringWithFormat:@"现场价 %0.2f元",[[responseDic objectForKey:@"origprice"] floatValue]];
+    _discountNum.text = [NSString stringWithFormat:@"%d项",[[responseDic objectForKey:@"specialpfferscount"] intValue]];
     
     self.marray = [responseDic objectForKey:@"deals"];
     ABLoggerDebug(@"marray count ==== %d",[_marray count]);

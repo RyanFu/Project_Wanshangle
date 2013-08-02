@@ -21,6 +21,7 @@
         <attribute name="begintime" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="cityId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dataType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="distance" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="juan" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="locationDate" optional="YES" attributeType="String" syncable="YES"/>
@@ -138,7 +139,9 @@
     </entity>
     <entity name="MMovieDetail" representedClassName="MMovieDetail" syncable="YES">
         <attribute name="info" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
+        <attribute name="language" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="locationDate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="productarea" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="recommendation" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wantlook" optional="YES" attributeType="String" syncable="YES"/>
@@ -156,7 +159,7 @@
         <attribute name="beginTime" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="cityId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dataType" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="distance" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="distance" optional="YES" attributeType="Float" defaultValueString="0" syncable="YES"/>
         <attribute name="endTime" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="locationDate" optional="YES" attributeType="String" syncable="YES"/>
@@ -189,7 +192,7 @@
     </entity>
     <elements>
         <element name="ActionState" positionX="-290" positionY="-729" width="128" height="209"/>
-        <element name="BBar" positionX="-522" positionY="-805" width="128" height="315"/>
+        <element name="BBar" positionX="-522" positionY="-805" width="128" height="330"/>
         <element name="BBarDetail" positionX="-711" positionY="-757" width="128" height="148"/>
         <element name="City" positionX="-137" positionY="-738" width="128" height="90"/>
         <element name="KKTV" positionX="142" positionY="-838" width="128" height="375"/>
@@ -199,7 +202,7 @@
         <element name="MCinema" positionX="205" positionY="-420" width="128" height="330"/>
         <element name="MMovie" positionX="-443" positionY="-351" width="128" height="285"/>
         <element name="MMovie_Cinema" positionX="-173" positionY="-313" width="128" height="105"/>
-        <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="135"/>
+        <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="165"/>
         <element name="MSchedule" positionX="-207" positionY="-108" width="128" height="120"/>
         <element name="SShow" positionX="-137" positionY="-1204" width="128" height="330"/>
         <element name="SShowDetail" positionX="-335" positionY="-1044" width="128" height="165"/>

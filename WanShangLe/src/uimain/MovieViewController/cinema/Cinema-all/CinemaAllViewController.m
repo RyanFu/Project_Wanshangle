@@ -21,6 +21,7 @@
 
 @interface CinemaAllViewController()<ApiNotify>{
     BOOL isLoadMoreAll;
+    BOOL iskeepScrollOffset;
     CGPoint previousScroll;
 }
 @property(nonatomic,retain)CinemaAllListTableViewDelegate *cinemaDelegate;
@@ -83,7 +84,13 @@
     
     [self setTableViewDelegate];
     [_mTableView reloadData];
-    [_mTableView setContentOffset:previousScroll];
+    
+    if (iskeepScrollOffset == [CacheManager sharedInstance].isMoviePanel) {
+        [_mTableView setContentOffset:previousScroll];
+    }else{
+        [_mTableView scrollsToTop];
+        iskeepScrollOffset = [CacheManager sharedInstance].isMoviePanel;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -482,7 +489,7 @@
         }else{
             [_movieDelegate doneReLoadingTableViewData];
         }
-        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+//        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
         
     }else{
         if (isLoadMoreAll) {
@@ -490,7 +497,7 @@
         }else{
             [_cinemaDelegate doneReLoadingTableViewData];
         }
-        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+//        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
         
     }
 

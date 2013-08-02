@@ -258,7 +258,7 @@ static DataBaseManager *_sharedInstance = nil;
     if (dTime<0) {
         
         dTime = abs(dTime);
-        ABLoggerDebug(@"dTime === %d",dTime);
+//        ABLoggerDebug(@"dTime === %d",dTime);
         
         if (0 <= dTime && dTime< 30) {
             order = @"刚刚开始";
@@ -864,6 +864,8 @@ static DataBaseManager *_sharedInstance = nil;
     aMovieDetail.recommendation = [amovieDetailData objectForKey:@"recommendadded"];
     aMovieDetail.info = amovieDetailData;
     aMovieDetail.uid = [amovieDetailData objectForKey:@"id"];
+    aMovieDetail.language = [amovieDetailData objectForKey:@"language"];
+    aMovieDetail.productarea = [amovieDetailData objectForKey:@"productarea"];
     aMovieDetail.locationDate = [self getTodayTimeStamp];
 }
 
@@ -1127,6 +1129,7 @@ static DataBaseManager *_sharedInstance = nil;
     apiCmdMovie_getBuyInfo.cityName = [[LocationManager defaultLocationManager] getUserCity];
     apiCmdMovie_getBuyInfo.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     apiCmdMovie_getBuyInfo.cinemaId = aCinema.uid;
+    apiCmdMovie_getBuyInfo.movieId = aMovie.uid;
     [apiClient executeApiCmdAsync:apiCmdMovie_getBuyInfo];
     [apiCmdMovie_getBuyInfo.httpRequest setTag:API_MBuyInfoCmd];
     
@@ -1142,33 +1145,39 @@ static DataBaseManager *_sharedInstance = nil;
 
 /*
  {
+ {
  httpCode: 200,
  errors: [ ],
  data: {
- count: 2,
  deals: [
  {
- id: "7",
- uniquekey: "8243ff896207fae23f8f18a226517cda",
+ id: "61",
+ uniquekey: "612412b12b3e16b55a186e33d2597905",
  supplierid: "7",
- cityid: "1",
- title: "仅售41元！价值90元的影客票务2D电影票1张，无需预约。",
- origprice: "9000",
- price: "4100",
- startdate: "2013-07-13",
- enddate: "2014-06-07",
+ cityid: "2",
+ title: "仅售35元！价值150元的沪西电影院2D双人观影套餐，无需预约，如观看3D电影或限价片需到店补齐差价。",
+ origprice: "15000",
+ price: "3500",
+ startdate: "2013-05-21",
+ enddate: "2013-11-21",
  imageurl: "",
- weburl: "http://bj.meituan.com/deal/2634044.html",
- murl: "http://i.meituan.com/deal/2634044.html",
- rule: "有效期： 2013.7.13 至 2014.6.7 使用规则： 不可使用日期：西单4D影城9月19-21日；10月1-7日不可使用；花市百老汇影城、当代MOMA百老汇影城、新世纪影城、新东安影城、金宝汇百丽宫影城9月19日、10月1-3日不可使用优惠码使用时间：09:30-23:30本单无需预约，咨询请致电商家每人限用1个优惠码凭优惠码消费不可同时享受店内其他优惠每个优惠码可兑换有效期内任意一天电影票3D影片、巨幕厅、VIP厅、IMAX厅不能兑换现场选座，首映式/见面会/VIP观影厅/情侣座不可使用儿童无优惠，需独立使用1个优惠码 限价片 1 补差价规则以影院公告为准1 限价片： 限价片是指影片发行方或相关部门对于某些热门电影设置了最低票价，任何渠道的售价都不得低于某一个数字。",
+ weburl: "http://sh.meituan.com/deal/7944561.html",
+ murl: "http://i.meituan.com/deal/7944561.html",
  modifieditems: "",
  categoryid: "6",
  currentstatus: "1",
- createtime: "2013-07-30 10:04:28",
+ createtime: "2013-07-31 10:19:25",
  createdbysuid: "12",
- lastmodifiedtime: "2013-07-30 10:04:28",
+ lastmodifiedtime: "2013-07-31 10:19:25",
  lastmodifiedbysuid: "12"
+ }
+ ],
+ specialpfferscount: 0,
+ origprice: "暂无价格"
  },
+ token: null,
+ timestamp: "1375409459"
+ }
  */
 - (void)insertBuyInfoIntoCoreDataFromObject:(NSDictionary *)objectData
                                  withApiCmd:(ApiCmd*)apiCmd
@@ -2352,7 +2361,7 @@ static DataBaseManager *_sharedInstance = nil;
 
 
 #pragma mark 酒吧 插入数据
-- (NSArray *)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+- (NSMutableArray *)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
     CFTimeInterval time1 = Elapsed_Time;
     
     NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:20];

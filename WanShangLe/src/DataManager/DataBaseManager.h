@@ -245,7 +245,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
                                        validDate:(NSString *)validDate;
 
 //向数据库里插入数据
-- (NSArray *)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (NSMutableArray *)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (void)importBar:(BBar *)bBar ValuesForKeysWithObject:(NSDictionary *)aBarDic;
 //插入推荐
 - (BBarDetail *)insertBarRecommendIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;

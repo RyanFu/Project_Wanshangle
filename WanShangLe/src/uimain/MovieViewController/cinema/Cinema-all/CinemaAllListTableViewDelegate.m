@@ -53,6 +53,14 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
+        
+        if (_mArray==nil || [_mArray count]<=0) {
+            _refreshTailerView.hidden = YES;
+        }else{
+            _refreshTailerView.hidden = NO;
+        }
+        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+        
         return [_mArray count];
     }
     //搜索模式
@@ -63,12 +71,8 @@
     
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
         
-        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
-        if (_mArray==nil || [_mArray count]<=0) {
-            _refreshTailerView.hidden = YES;
-        }else{
-            _refreshTailerView.hidden = NO;
-        }
+//        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+
         
         return [[[_mArray objectAtIndex:section] objectForKey:@"list"] count];
     }
@@ -306,7 +310,7 @@
     if (!_refreshHeaderView.hidden) {
         [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
     }
-    if(!_refreshHeaderView.hidden){
+    if(!_refreshTailerView.hidden){
         [_refreshTailerView egoRefreshScrollViewDidScroll:scrollView];
     }
 }
@@ -315,7 +319,7 @@
     if (!_refreshHeaderView.hidden) {
         [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
     }
-    if(!_refreshHeaderView.hidden){
+    if(!_refreshTailerView.hidden){
         [_refreshTailerView egoRefreshScrollViewDidEndDragging:scrollView];
     }
 }

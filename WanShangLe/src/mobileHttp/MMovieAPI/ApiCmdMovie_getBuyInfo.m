@@ -23,6 +23,7 @@
 
 - (void) dealloc {
     self.cinemaId = nil;
+    self.movieId = nil;
 	[super dealloc];
 }
 
@@ -38,11 +39,14 @@
 }
 
 //http://api.wanshangle.com:10000/api? appId=000001&sign=sign&time=1371988912&v=1.0&api=cinema.deals&cinemaid=259
+
+//http://api.wanshangle.com:10000/api? appId=000001&sign=sign&time=1371988912&v=1.0&api=cinema.movieinfo&cinemaid=148&movieid=10
 - (NSMutableDictionary*) getParamDict {
     NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
     
-    [paramDict setObject:@"cinema.deals" forKey:@"api"];
+    [paramDict setObject:@"cinema.movieinfo" forKey:@"api"];
     [paramDict setObject:self.cinemaId forKey:@"cinemaid"];
+    [paramDict setObject:self.movieId forKey:@"movieid"];
     
     return paramDict;
 }

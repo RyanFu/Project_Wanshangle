@@ -18,6 +18,7 @@
 @property(nonatomic,retain) IBOutlet UILabel *cinema_address_label;
 @property(nonatomic,retain) IBOutlet UILabel *schedule_label;
 @property(nonatomic,retain) IBOutlet UILabel *price_label;
+@property(nonatomic,retain) IBOutlet UILabel *discountNum;
 
 @property(nonatomic,retain) MMovie *mMovie;
 @property(nonatomic,retain) MCinema *mCinema;

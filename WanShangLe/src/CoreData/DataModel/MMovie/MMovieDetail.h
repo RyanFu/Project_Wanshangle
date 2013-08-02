@@ -19,5 +19,8 @@
 @property (nonatomic, retain) NSString * wantlook;
 @property (nonatomic, retain) NSString * uid;
 @property (nonatomic, retain) MMovie *movie;
+@property (nonatomic, retain) NSString * language;
+@property (nonatomic, retain) NSString * productarea;
+
 
 @end
