@@ -13,6 +13,7 @@
 #import "ASIHTTPRequest.h"
 #import <ShareSDK/ShareSDK.h>
 #import "AppDelegate.h"
+#import "SIAlertView.h"
 #import "KKTV.h"
 
 @interface KTVBuyViewController ()<ApiNotify>
@@ -53,6 +54,8 @@
     [self createBarButtonItem];
     [self initTableView];
     [self setTableViewDelegate];
+    
+    [self requestWebData];
 }
 
 #pragma mark -
@@ -67,6 +70,11 @@
     self.ktvAddressLabel.text = _mKTV.address;
     
     if ([_mKTV.favorite boolValue]) {
+        [_favoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
+    }
+    
+    if ([_mKTV.favorite boolValue]) {
+        _favoriteButton.selected = YES;
         [_favoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
     }
 }
@@ -108,6 +116,8 @@
     }
     _mTableView.delegate = _ktvBuyTableViewDelegate;
     _mTableView.dataSource = _ktvBuyTableViewDelegate;
+    _ktvBuyTableViewDelegate.mArray = self.mArray;
+    _ktvBuyTableViewDelegate.parentViewController = self;
 }
 
 #pragma mark -
@@ -117,11 +127,43 @@
 }
 
 - (IBAction)clickPhoneButton:(id)sender{
+    NSString *message = @"";
+    NSString *phoneNumber = nil;
     
+    if (isEmpty(_mKTV.phoneNumber)) {
+        message = @"该影院暂时没有电话号码";
+    }else{
+        phoneNumber = _mKTV.phoneNumber;
+    }
+    
+    SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:@"电话号码" andMessage:message];
+    
+    if (!isEmpty(phoneNumber)) {
+        [alertView addButtonWithTitle:phoneNumber
+                                 type:SIAlertViewButtonTypeDefault
+                              handler:^(SIAlertView *alertView) {
+                                  [[LocationManager defaultLocationManager] callPhoneNumber:phoneNumber];
+                              }];
+    }
+    
+    [alertView addButtonWithTitle:@"取消"
+                             type:SIAlertViewButtonTypeCancel
+                          handler:^(SIAlertView *alertView) {
+                          }];
+    [alertView show];
+    [alertView release];
 }
 
 - (IBAction)clickFavoriteButton:(id)sender{
-    
+    if (_favoriteButton.isSelected) {
+        [_favoriteButton setSelected:NO];
+        [[DataBaseManager sharedInstance] deleteFavoriteKTVWithId:_mKTV.uid];
+        [_favoriteButton setImage:[UIImage imageNamed:@"btn_unFavorite_n@2x"] forState:UIControlStateNormal];
+    }else{
+        [_favoriteButton setSelected:YES];
+        [_favoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
+        [[DataBaseManager sharedInstance] addFavoriteKTVWithId:_mKTV.uid];
+    }
 }
 
 - (IBAction)clickPriceListButton:(id)sender{
@@ -144,16 +186,16 @@
         [[DataBaseManager sharedInstance] insertKTVTuanGouListIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd withaKTV:_mKTV];
         
         int tag = [[apiCmd httpRequest] tag];
-        [self updateData:tag];
+        [self updateData:tag responseData:[[apiCmd responseJSONObject] objectForKey:@"data"]];
         
     }); 
 }
 
-- (void) apiNotifyLocationResult:(id) apiCmd  error:(NSError*) error{
+- (void) apiNotifyLocationResult:(id)apiCmd cacheOneData:(id)cacheData{
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         int tag = [[apiCmd httpRequest] tag];
-        [self updateData:tag];
+        [self updateData:tag responseData:cacheData];
     });
 }
 
@@ -161,14 +203,14 @@
     return _apiCmdKTV_getBuyList;
 }
 
-- (void)updateData:(int)tag
+- (void)updateData:(int)tag responseData:(NSDictionary *)responseDic
 {
     ABLogger_int(tag);
     switch (tag) {
         case 0:
-        case API_KKTVCmd:
+        case API_KKTVBuyListCmd:
         {
-//            [self formatCinemaData];
+            [self formatKTVData:responseDic];
         }
             break;
         default:
@@ -179,6 +221,35 @@
     }
 }
 
+- (void)formatKTVData:(NSDictionary *)responseDic{
+    ABLoggerMethod();
+    
+    self.mArray = [responseDic objectForKey:@"deals"];
+    ABLoggerDebug(@"KTV 团购 列表 count ==== %d",[_mArray count]);
+    
+    self.mArray  = [self.mArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+        int first =  [[(NSDictionary*)a objectForKey:@"price"] intValue];
+        int second = [[(NSDictionary*)b objectForKey:@"price"] intValue];
+        
+        if (first>second) {
+            return NSOrderedDescending;
+        }else if(first<second){
+            return NSOrderedAscending;
+        }else{
+            return NSOrderedSame;
+        }
+    }];
+    
+    [self setTableViewDelegate];
+    
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        
+        [_mTableView reloadData];
+    });
+}
+
+#pragma mark -
+#pragma mark 分享
 - (void)shareButtonClick:(id)sender{
     
     AppDelegate *_appDelegate = [AppDelegate appDelegateInstance];

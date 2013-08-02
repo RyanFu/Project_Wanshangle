@@ -14,4 +14,5 @@
 }
 @property(nonatomic,assign) KTVBuyViewController *parentViewController;
 @property(nonatomic,assign) UITableView *mTableView;
+@property(nonatomic,assign) NSArray *mArray;
 @end

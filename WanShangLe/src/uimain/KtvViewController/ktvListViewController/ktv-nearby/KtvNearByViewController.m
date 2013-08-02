@@ -168,31 +168,39 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        NSArray *dataArray = [[DataBaseManager sharedInstance] insertTemporaryKTVsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
-        
+        NSMutableArray *dataArray = [[DataBaseManager sharedInstance] insertTemporaryKTVsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+         NSMutableArray *removieArray = [NSMutableArray arrayWithCapacity:10];
         for (KKTV *tKTV in dataArray) {
             CLLocationDegrees latitude = [tKTV.latitude doubleValue];
             CLLocationDegrees longitude = [tKTV.longitude doubleValue];
             double distance = [[LocationManager defaultLocationManager] distanceBetweenUserToLatitude:latitude longitude:longitude];
-            tKTV.distance = [NSNumber numberWithDouble:distance];
-        }
-        
-        dataArray = [dataArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-            double first =  [[(MCinema*)a distance] doubleValue];
-            double second = [[(MCinema*)b distance] doubleValue];
-            
-            if (first>second) {
-                return NSOrderedDescending;
-            }else if(first<second){
-                return NSOrderedAscending;
+            if (distance<0) {
+                [removieArray addObject:tKTV];
+                _isLoadDone = YES;
+                _refreshNearByTailerView.hidden = YES;
             }else{
-                return NSOrderedSame;
+                tKTV.distance = [NSNumber numberWithDouble:distance];
             }
-        }];
+
+        }
+        [dataArray removeObjectsInArray:removieArray];
+        
+//        dataArray = [dataArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+//            double first =  [[(KKTV*)a distance] doubleValue];
+//            double second = [[(KKTV*)b distance] doubleValue];
+//            
+//            if (first>second) {
+//                return NSOrderedDescending;
+//            }else if(first<second){
+//                return NSOrderedAscending;
+//            }else{
+//                return NSOrderedSame;
+//            }
+//        }];
         
         ABLoggerDebug(@"距离 排序 测试");
-        for (MCinema *tcinema in dataArray) {
-            ABLoggerDebug(@"距离 === %d",[[tcinema distance] intValue]);
+        for (KKTV *tKTV in dataArray) {
+            ABLoggerDebug(@"距离 === %d",[[tKTV distance] intValue]);
         }
         
         if (dataArray==nil || [dataArray count]<=0) {
@@ -273,12 +281,18 @@
         return;
     }
     
+    if (_isLoadDone) {
+        [self reloadPullRefreshData];
+        return;
+    }
+    
     [self updateData:0 withData:[self getCacheData]];
 }
 
 - (void)loadNewData{
     ABLoggerMethod();
     isLoadMore = NO;
+    _isLoadDone = NO;
     [_mCacheArray removeAllObjects];
     [_mArray removeAllObjects];
     

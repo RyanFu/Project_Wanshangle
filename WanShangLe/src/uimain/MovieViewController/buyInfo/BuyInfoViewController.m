@@ -94,9 +94,9 @@
     _cinema_address_label.text = _mCinema.address;
     _schedule_label.text = _mSchedule;
     
-    _buyInfoTableViewDelegate = [[BuyInfoTableViewDelegate alloc] init];
+   
     
-    self.apiCmdMovie_getBuyInfo =  (ApiCmdMovie_getBuyInfo *)[[DataBaseManager sharedInstance] getBuyInfoFromWebWithaMovie:_mMovie
+    self.apiCmdMovie_getBuyInfo =  (ApiCmdMovie_getBuyInfo *)[[DataBaseManager sharedInstance]       getBuyInfoFromWebWithaMovie:_mMovie
                                                           aCinema:_mCinema
                                                         aSchedule:nil
                                                          delegate:self];
@@ -110,8 +110,14 @@
 }
 
 - (void)setTableViewDelegate{
+    
+    if (_buyInfoTableViewDelegate==nil) {
+         _buyInfoTableViewDelegate = [[BuyInfoTableViewDelegate alloc] init];
+    }
+    
     _mTableView.delegate = _buyInfoTableViewDelegate;
     _mTableView.dataSource = _buyInfoTableViewDelegate;
+    
     _buyInfoTableViewDelegate.parentViewController = self;
     _buyInfoTableViewDelegate.mArray = _marray;
     _buyInfoTableViewDelegate.mTableView = _mTableView;

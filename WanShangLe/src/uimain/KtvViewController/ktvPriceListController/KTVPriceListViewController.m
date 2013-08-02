@@ -95,7 +95,7 @@
     
     _ktv_name.text = _mKTV.name;
     _ktv_address.text = _mKTV.address;
-    //    _ktv_introduce.text = [[_mKTVPriceInfo.priceInfoDic objectForKey:@"info"] objectForKey:@"address"];
+    _ktv_introduce.text = [_mKTVPriceInfo.priceInfoDic objectForKey:@"specialoffers"];
     
     self.mKTVPriceInfo = [[DataBaseManager sharedInstance] getKTVPriceInfoFromCoreDataWithId:_mKTV.uid];
     if (self.mKTVPriceInfo==nil) {
@@ -128,7 +128,9 @@
 - (void)updateKTVPriceInfo{
     
     if (isEmpty(_ktv_introduce.text)) {
-        _ktv_introduce.text = @"你好额度为法国潍坊潍坊问哦 为微粉机问哦 问我饿你好额度为法国潍坊潍坊问哦 为微粉机问哦 问我饿额外违法未缴费为问哦发为范文芳你好额度为法国潍坊潍坊问哦 为微粉机问哦 问我饿额外违法未缴费为问哦发为范文芳你好额度为法国潍坊潍坊问哦 为微粉机问哦 问我饿额外违法未缴费为问哦发为范文芳你好额度为法国潍坊潍坊问哦 为微粉机问哦 问我饿额外违法未缴费为问哦发为范文芳你好额度为法国潍坊潍坊问哦 为微粉机问哦 问我饿额外违法未缴费为问哦发为范文芳你好额度为法国潍坊潍坊问哦 ";
+        _ktv_introduce.text = [_mKTVPriceInfo.priceInfoDic objectForKey:@"specialoffers"];
+        
+//        _ktv_introduce.text = @"你好额度为法国潍坊潍坊问哦 为微粉机问哦 问我饿你好额度为法国潍坊潍坊问哦 为微粉机问哦 问我饿额外违法未缴费为问哦发为范文芳你好额度为法国潍坊潍坊问哦 为微粉机问哦 问我饿额外违法未缴费为问哦发为范文芳你好额度为法国潍坊潍坊问哦 为微粉机问哦 问我饿额外违法未缴费为问哦发为范文芳你好额度为法国潍坊潍坊问哦 为微粉机问哦 问我饿额外违法未缴费为问哦发为范文芳你好额度为法国潍坊潍坊问哦 为微粉机问哦 问我饿额外违法未缴费为问哦发为范文芳你好额度为法国潍坊潍坊问哦 ";
     }
     
     

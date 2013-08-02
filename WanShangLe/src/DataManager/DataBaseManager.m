@@ -2881,7 +2881,7 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 #pragma mark  KTV 搜索和附近 结果数据 插入 数据库
-- (NSArray *)insertTemporaryKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
+- (NSMutableArray *)insertTemporaryKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
     CFTimeInterval time1 = Elapsed_Time;
     NSManagedObjectContext *dataBaseContext = [NSManagedObjectContext MR_contextForCurrentThread];
     NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"list"];
@@ -2991,13 +2991,70 @@ static DataBaseManager *_sharedInstance = nil;
                                     delegate:(id<ApiNotify>)delegate{
     ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
     
+    KKTVBuyInfo *buyInfo = [self getKTVBuyInfoFromCoreDataWithId:aKTV.uid];
+    if (buyInfo!=nil) {
+        [delegate apiNotifyLocationResult:tapiCmd cacheOneData:buyInfo.buyInfoDic];
+        return tapiCmd;
+    }
+    
+    ApiClient* apiClient = [ApiClient defaultClient];
+    ApiCmdKTV_getBuyList* apiCmdKTV_getBuyList = [[ApiCmdKTV_getBuyList alloc] init];
+    apiCmdKTV_getBuyList.delegate = delegate;
+    apiCmdKTV_getBuyList.cityName = [[LocationManager defaultLocationManager] getUserCity];
+    apiCmdKTV_getBuyList.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdKTV_getBuyList.ktvId = aKTV.uid;
+    [apiClient executeApiCmdAsync:apiCmdKTV_getBuyList];
+    [apiCmdKTV_getBuyList.httpRequest setTag:API_KKTVBuyListCmd];
+    
+    return [apiCmdKTV_getBuyList autorelease];
+    
 }
 
-- (void)insertKTVTuanGouListIntoCoreDataFromObject:(NSDictionary *)objectData
+- (KKTVBuyInfo *)getKTVBuyInfoFromCoreDataWithId:(NSString *)ktvId{
+    KKTVBuyInfo *buyInfo = nil;
+    NSString *todayTimeStamp = [self getTodayZeroTimeStamp];
+    buyInfo = [KKTVBuyInfo MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and locationDate >= %@ ",ktvId,todayTimeStamp] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return buyInfo;
+}
+
+/*
+ {
+ httpCode: 200,
+ errors: [ ],
+     data: {
+     count: 1,
+     deals: [
+     {}
+ ]
+ },
+ token: null,
+ timestamp: "1375430047"
+ }
+ */
+- (KKTVBuyInfo *)insertKTVTuanGouListIntoCoreDataFromObject:(NSDictionary *)objectData
                                         withApiCmd:(ApiCmd*)apiCmd
-                                          withaKTV:(KKTV *)aKTV{
+                                          withaKTV:(KKTV *)aKTV
+{
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSDictionary *dataDic = [objectData objectForKey:@"data"];
+    
+    KKTVBuyInfo *buyInfo = [KKTVBuyInfo MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and locationDate >= %@",aKTV.uid,[self getTodayZeroTimeStamp]] inContext:context];
+    if (buyInfo == nil) {
+        buyInfo = [KKTVBuyInfo MR_createInContext:context];
+        buyInfo.uid = aKTV.uid;
+    }
+    buyInfo.locationDate = [self getTodayTimeStamp];
+    buyInfo.buyInfoDic = dataDic;
+    
+    [context MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        ABLoggerDebug(@"电影团购 保存是否成功 ========= %d",success);
+        ABLoggerDebug(@"错误信息 ========= %@",[error description]);
+    }];
+    
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
     ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+    
+    return buyInfo;
 }
 
 //获得KTV 价格列表 Info

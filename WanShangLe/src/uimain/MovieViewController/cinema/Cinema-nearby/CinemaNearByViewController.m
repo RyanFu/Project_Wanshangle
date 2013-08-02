@@ -219,18 +219,18 @@
         
         [dataArray removeObjectsInArray:removieArray];
         
-        dataArray = (NSMutableArray *)[dataArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-            double first =  [[(MCinema*)a distance] doubleValue];
-            double second = [[(MCinema*)b distance] doubleValue];
-            
-            if (first>second) {
-                return NSOrderedDescending;
-            }else if(first<second){
-                return NSOrderedAscending;
-            }else{
-                return NSOrderedSame;
-            }
-        }];
+//        dataArray = (NSMutableArray *)[dataArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+//            double first =  [[(MCinema*)a distance] doubleValue];
+//            double second = [[(MCinema*)b distance] doubleValue];
+//            
+//            if (first>second) {
+//                return NSOrderedDescending;
+//            }else if(first<second){
+//                return NSOrderedAscending;
+//            }else{
+//                return NSOrderedSame;
+//            }
+//        }];
         
         ABLoggerDebug(@"距离 排序 测试");
         for (MCinema *tcinema in dataArray) {

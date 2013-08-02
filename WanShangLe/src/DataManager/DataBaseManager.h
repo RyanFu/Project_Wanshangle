@@ -311,24 +311,27 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (NSArray *)getFavoriteKTVListFromCoreData;
 - (NSArray *)getFavoriteKTVListFromCoreDataWithCityName:(NSString *)cityName;
 
+//添加收藏和取消收藏
+- (BOOL)addFavoriteKTVWithId:(NSString *)uid;
+- (BOOL)deleteFavoriteKTVWithId:(NSString *)uid;
+- (BOOL)isFavoriteKTVWithId:(NSString *)uid;
+
 - (NSUInteger)getCountOfKTVsListFromCoreData;
 - (NSUInteger)getCountOfKTVsListFromCoreDataWithCityName:(NSString *)cityName;
 
 //KTV 插入 数据库
 - (NSArray *)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 //KTV 搜索和附近 结果数据 插入 数据库
-- (NSArray *)insertTemporaryKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
+- (NSMutableArray *)insertTemporaryKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 
 - (void)importKTV:(KKTV *)kKTV ValuesForKeysWithObject:(NSDictionary *)aKTVDic;
-- (BOOL)addFavoriteKTVWithId:(NSString *)uid;
-- (BOOL)deleteFavoriteKTVWithId:(NSString *)uid;
-- (BOOL)isFavoriteKTVWithId:(NSString *)uid;
 
 //获得KTV 团购列表 KTV Info
 - (ApiCmd *)getKTVTuanGouListFromWebWithaKTV:(KKTV *)aKTV
                                     delegate:(id<ApiNotify>)delegate;
 - (KKTVBuyInfo *)getKTVBuyInfoFromCoreDataWithId:(NSString *)ktvId;
-- (void)insertKTVTuanGouListIntoCoreDataFromObject:(NSDictionary *)objectData
+
+- (KKTVBuyInfo *)insertKTVTuanGouListIntoCoreDataFromObject:(NSDictionary *)objectData
                                         withApiCmd:(ApiCmd*)apiCmd
                                           withaKTV:(KKTV *)aKTV;
 
