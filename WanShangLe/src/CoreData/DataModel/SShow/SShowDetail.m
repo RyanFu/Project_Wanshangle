@@ -20,5 +20,6 @@
 @dynamic introduce;
 @dynamic name;
 @dynamic prices;
+@dynamic extpayurl;
 
 @end

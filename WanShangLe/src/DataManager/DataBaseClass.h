@@ -79,28 +79,30 @@
 #define API_BBarRecOrLookCmd    5 //酒吧 详情
 
 //-------------SShow----------------/
-#define API_SShowCmd                       100 //演出
-#define API_SShowDetailCmd                 101 //演出
-#define API_SShow_Type_All_Cmd              1 //演出 类型 全部
-#define API_SShow_Type_VocalConcert_Cmd     2 //演出 类型 演唱会
-#define API_SShow_Type_Music_Cmd            3 //演出 类型 音乐会
-#define API_SShow_Type_Talk_Cmd             4 //演出 类型 相声小品
-#define API_SShow_Type_Drama_Cmd            5 //演出 类型 话剧
-#define API_SShow_Type_Circus_Cmd           6 //演出 类型 马戏杂技
-#define API_SShow_Type_Child_Cmd            7 //演出 类型 亲子
+#define API_SShowCmd                       100 //演出 列表
+#define API_SShowDetailCmd                 101 //演出 详情
 
-#define API_SShow_Time_All_Cmd              1 //演出 时间 全部
-#define API_SShow_Time_Today_Cmd            2 //演出 时间 今天
-#define API_SShow_Time_Tomorrow_Cmd         3 //演出 时间 明天
-#define API_SShow_Time_Weekend_Cmd          4 //演出 时间 周末
-#define API_SShow_Time_InThreeDay_Cmd       5 //演出 时间 三天内
+#define API_SShow_Type_All_Cmd              @"全部" //演出 类型
+#define API_SShow_Type_VocalConcert_Cmd     @"演唱会" //演出 类型 
+#define API_SShow_Type_Music_Cmd            @"音乐会" //演出 类型 
+#define API_SShow_Type_Talk_Cmd             @"话剧歌剧" //演出 类型 
+#define API_SShow_Type_Dance_Cmd            @"舞蹈芭蕾" //演出 类型 
+#define API_SShow_Type_Circus_Cmd           @"曲艺杂谈" //演出 类型 
+#define API_SShow_Type_Sport_Cmd            @"体育比赛" //演出 类型 
+#define API_SShow_Type_Child_Cmd            @"儿童亲子" //演出 类型 
 
-#define API_SShow_Oreder_Recommend_Cmd      0 //演出 排序 推荐
-#define API_SShow_Oreder_Time_Cmd           1 //演出 排序 时间先后
-#define API_SShow_Oreder_PriceL_Cmd         2 //演出 排序 价格低到高
-#define API_SShow_Oreder_PriceH_Cmd         3 //演出 排序 价格高到低
-#define API_SShow_Oreder_Distance_Cmd       4 //演出 排序 距离近到远
-#define API_SShow_Oreder_Rating_Cmd         5 //演出 排序 评分高到低
+#define API_SShow_Time_All_Cmd              @"0" //演出 时间 全部
+#define API_SShow_Time_Today_Cmd            @"1" //演出 时间 今天
+#define API_SShow_Time_Tomorrow_Cmd         @"2" //演出 时间 明天
+#define API_SShow_Time_AfterTomorrow_Cmd    @"3" //演出 时间 后天
+
+#define API_SShow_SortASC_Cmd    @"asc" //演出 排序 低-高
+#define API_SShow_SortDESC_Cmd   @"desc" //演出 排序 高-低
+
+#define API_SShow_Oreder_Time_Cmd      @"1" //演出 时间
+#define API_SShow_Oreder_Rating_Cmd    @"2" //演出 评分
+#define API_SShow_Oreder_Distance_Cmd  @"3" //演出 距离
+#define API_SShow_Oreder_Price_Cmd     @"4" //演出 价格
 
 //-------------KKTV----------------/
 #define API_KKTVCmd             1 //KTV 全部

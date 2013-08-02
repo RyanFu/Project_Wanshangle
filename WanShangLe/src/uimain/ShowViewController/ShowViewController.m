@@ -18,6 +18,11 @@
 @property(nonatomic,retain) ShowTableViewDelegate *showTableViewDelegate;
 @property(nonatomic,retain) UIControl *maskView;
 
+@property(nonatomic,retain) NSString *dataType;
+@property(nonatomic,retain) NSString *dataOrder;
+@property(nonatomic,retain) NSString *dataTimedistance;
+@property(nonatomic,retain) NSString *dataSort;
+
 @end
 
 @implementation ShowViewController
@@ -60,6 +65,11 @@
     self.mArray = nil;
     self.mCacheArray = nil;
     
+    self.dataType = nil;
+    self.dataOrder = nil;
+    self.dataTimedistance = nil;
+    self.dataSort = nil;
+    
     [super dealloc];
 }
 
@@ -74,7 +84,7 @@
 #pragma mark UIView Cycle
 - (void)viewWillAppear:(BOOL)animated{
     
-    if (_selectedOrder==API_SShow_Oreder_Distance_Cmd) {
+    if (_selectedOrder==3) {
         if([self checkGPS] && (_mArray==nil || [_mArray count]<=0))
             [self loadNewData];//初始化加载
     }
@@ -135,19 +145,23 @@
             int index = [[typeArray objectAtIndex:i] intValue];
             switch (i) {
                 case 0:
-                    [(UIButton *)[_typeBts objectAtIndex:index] setSelected:YES];
-                    _selectedType = index;
-                    _oldSelectedType = index;
+                    [self clickTypeSubButtonDown:[_typeBts objectAtIndex:index]];
+//                    [(UIButton *)[_typeBts objectAtIndex:index] setSelected:YES];
+//                    _selectedType = index;
+//                    _oldSelectedType = index;
                     break;
                 case 1:
-                    [(UIButton *)[_timeBts objectAtIndex:index] setSelected:YES];
-                    _selectedTime = index;
-                    _oldSelectedTime = index;
+                      [self clickTimeSubButtonDown:[_timeBts objectAtIndex:index]];
+//                    [(UIButton *)[_timeBts objectAtIndex:index] setSelected:YES];
+//                    _selectedTime = index;
+//                    _oldSelectedTime = index;
                     break;
                 default:
-                    [(UIButton *)[_orderBts objectAtIndex:index] setSelected:YES];
-                    _selectedOrder = index;
-                    _oldSelectedOrder = index;
+                    
+                     [self clickOrderSubButtonDown:[_orderBts objectAtIndex:index]];
+//                    [(UIButton *)[_orderBts objectAtIndex:index] setSelected:YES];
+//                    _selectedOrder = index;
+//                    _oldSelectedOrder = index;
                     break;
             }
         }
@@ -365,6 +379,38 @@
     
     _oldSelectedType = _selectedType;
     _selectedType = tag-1;
+    
+    _isDone = NO;
+    
+    switch (_selectedType) {
+        case 0:
+            self.dataType = API_SShow_Type_All_Cmd;
+            break;
+        case 1:
+            self.dataType = API_SShow_Type_VocalConcert_Cmd;
+            break;
+        case 2:
+            self.dataType = API_SShow_Type_Music_Cmd;
+            break;
+        case 3:
+            self.dataType = API_SShow_Type_Talk_Cmd;
+            break;
+        case 4:
+            self.dataType = API_SShow_Type_Dance_Cmd;
+            break;
+        case 5:
+            self.dataType = API_SShow_Type_Circus_Cmd;
+            break;
+        case 6:
+            self.dataType = API_SShow_Type_Sport_Cmd;
+            break;
+        case 7:
+            self.dataType = API_SShow_Type_Child_Cmd;
+            break;
+            
+        default:
+            break;
+    }
 }
 
 - (void)cleanUpTypeSubButton{
@@ -384,6 +430,26 @@
     
     _oldSelectedTime = _selectedTime;
     _selectedTime = tag-1;
+    
+    _isDone = NO;
+    
+    switch (_selectedTime) {
+        case 0:
+            self.dataTimedistance = API_SShow_Time_All_Cmd;
+            break;
+        case 1:
+            self.dataTimedistance = API_SShow_Time_Today_Cmd;
+            break;
+        case 2:
+            self.dataTimedistance = API_SShow_Time_Tomorrow_Cmd;
+            break;
+        case 3:
+            self.dataTimedistance = API_SShow_Time_AfterTomorrow_Cmd;
+            break;
+        default:
+            break;
+    }
+    
 }
 
 - (void)cleanUpTimeSubButton{
@@ -403,6 +469,29 @@
     
     _oldSelectedOrder = _selectedOrder;
     _selectedOrder = tag-1;
+    
+    _isDone = NO;
+    
+    switch (_selectedOrder) {
+        case 0:
+            self.dataOrder = API_SShow_Oreder_Time_Cmd;
+            self.dataSort = API_SShow_SortASC_Cmd;
+            break;
+        case 1:
+            self.dataOrder = API_SShow_Oreder_Price_Cmd;
+            self.dataSort = API_SShow_SortASC_Cmd;
+            break;
+        case 2:
+            self.dataOrder = API_SShow_Oreder_Price_Cmd;
+            self.dataSort = API_SShow_SortDESC_Cmd;
+            break;
+        case 3:
+            self.dataOrder = API_SShow_Oreder_Distance_Cmd;
+            self.dataSort = API_SShow_SortASC_Cmd;
+            break;
+        default:
+            break;
+    }
 }
 
 - (void)cleanUpOrderSubButton{
@@ -473,12 +562,7 @@
     
     ABLoggerDebug(@"演出 人气 count ==== %d",[pageArray count]);
     [_mArray addObjectsFromArray:pageArray];
-    
-//    _refreshTailerView.hidden = NO;
-//    if ([_mArray count]<=0 || _mArray==nil) {
-//        _refreshTailerView.hidden = YES;
-//    }
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
         [self reloadPullRefreshData];
     });
@@ -493,7 +577,7 @@
     isLoadMoreAll = YES;
     [self setTableViewDelegate];
     
-    if (_selectedOrder==API_SShow_Oreder_Distance_Cmd) {
+    if (_selectedOrder==3) {
         if(![self checkGPS]){
             return;
         }
@@ -508,7 +592,7 @@
     [_mCacheArray removeAllObjects];
     [_mArray removeAllObjects];
     
-    if (_selectedOrder==API_SShow_Oreder_Distance_Cmd) {
+    if (_selectedOrder==3) {
         if(![self checkGPS]){
             return;
         }
@@ -564,7 +648,7 @@
         ABLoggerDebug(@"演出 数组 number ==  %d",number);
         
         
-        if (_selectedOrder==API_SShow_Oreder_Distance_Cmd) {//4代表的是距离筛选
+        if (_selectedOrder==3) {//4代表的是距离筛选
             LocationManager *lm = [LocationManager defaultLocationManager];
             double latitude = lm.userLocation.coordinate.latitude;
             double longitude = lm.userLocation.coordinate.longitude;
@@ -577,14 +661,16 @@
                         
                         [self cleanApiCmd];
                         
-                        NSString *selectedTypeData = [NSString stringWithFormat:@"%d#%d#%d",_selectedType,_selectedTime,_selectedOrder];
                         self.apiCmdShow_getAllShows = (ApiCmdShow_getAllShows *)[[DataBaseManager sharedInstance]
                                                                                  getShowsListFromWeb:self
                                                                                  offset:number
                                                                                  limit:DataLimit
                                                                                  Latitude:latitude
                                                                                  longitude:longitude
-                                                                                 dataType:selectedTypeData
+                                                                                 dataType:_dataType
+                                                                                 dataOrder:_dataOrder
+                                                                                 dataTimedistance:_dataTimedistance
+                                                                                 dataSort:_dataSort
                                                                                  isNewData:!isLoadMoreAll];
                     }else{
                         [self displayNOGPS:YES];
@@ -592,14 +678,16 @@
                 }];
                 
             }else{//加载更多KTV附近
-                NSString *selectedTypeData = [NSString stringWithFormat:@"%d#%d#%d",_selectedType,_selectedTime,_selectedOrder];
                 self.apiCmdShow_getAllShows = (ApiCmdShow_getAllShows *)[[DataBaseManager sharedInstance]
                                                                          getShowsListFromWeb:self
                                                                          offset:number
                                                                          limit:DataLimit
                                                                          Latitude:latitude
                                                                          longitude:longitude
-                                                                         dataType:selectedTypeData
+                                                                         dataType:_dataType
+                                                                         dataOrder:_dataOrder
+                                                                         dataTimedistance:_dataTimedistance
+                                                                         dataSort:_dataSort
                                                                          isNewData:!isLoadMoreAll];
             }
         }else{
@@ -611,14 +699,16 @@
                     number = 0;
                     [self cleanApiCmd];
                 }
-                NSString *selectedTypeData = [NSString stringWithFormat:@"%d#%d#%d",_selectedType,_selectedTime,_selectedOrder];
                 self.apiCmdShow_getAllShows = (ApiCmdShow_getAllShows *)[[DataBaseManager sharedInstance]
                                                                          getShowsListFromWeb:self
                                                                          offset:number
                                                                          limit:DataLimit
                                                                          Latitude:-1
                                                                          longitude:-1
-                                                                         dataType:selectedTypeData
+                                                                         dataType:_dataType
+                                                                         dataOrder:_dataOrder
+                                                                         dataTimedistance:_dataTimedistance
+                                                                         dataSort:_dataSort
                                                                          isNewData:!isLoadMoreAll];
                 return  nil;
             }
@@ -632,6 +722,7 @@
     int count = DataCount; //取DataCount条数据
     if ([_mCacheArray count]<DataCount) {
         count = [_mCacheArray count];//取小于DataCount条数据
+        _isDone = YES;
     }
     
     NSMutableArray *aPageData = [NSMutableArray arrayWithCapacity:count];

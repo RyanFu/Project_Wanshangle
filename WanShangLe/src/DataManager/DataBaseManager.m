@@ -142,7 +142,7 @@ static DataBaseManager *_sharedInstance = nil;
     
     //formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss ZZZ";
     _timeFormatter.dateFormat = @"yyyyMMddHHmmssSSS";
-    NSString *updateTimeStamp = [_timeFormatter stringFromDate:[NSDate date]];
+    NSString *updateTimeStamp = [_timeFormatter stringFromDate:[self date]];
     ABLoggerInfo(@"获取当前时间 ===== %@",updateTimeStamp);
     return updateTimeStamp;
 }
@@ -150,7 +150,7 @@ static DataBaseManager *_sharedInstance = nil;
 - (NSString *)getTodayZeroTimeStamp{
     //formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss ZZZ";
     _timeFormatter.dateFormat = @"yyyyMMdd000000000";
-    NSString *updateTimeStamp = [_timeFormatter stringFromDate:[NSDate date]];
+    NSString *updateTimeStamp = [_timeFormatter stringFromDate:[self date]];
     ABLoggerInfo(@"today time stamp is ===== %@",updateTimeStamp);
     return updateTimeStamp;
 }
@@ -160,11 +160,11 @@ static DataBaseManager *_sharedInstance = nil;
     
     _timeFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
     
-    return [_timeFormatter stringFromDate:[NSDate date]];
+    return [_timeFormatter stringFromDate:[self date]];
 }
 
 - (NSString *)getTodayWeek{
-    return [self getWhickWeek:[NSDate date]];
+    return [self getWhickWeek:[self date]];
 }
 - (NSString *)getTomorrowWeek{
     //得到(24 * 60 * 60)即24小时之前的日期，dateWithTimeIntervalSinceNow:
@@ -232,7 +232,19 @@ static DataBaseManager *_sharedInstance = nil;
     return [_timeFormatter stringFromDate:aDate];
 }
 
-
+//time = "2013-07-03 10:00:00";
+//获取日期
+- (NSString *)getYMDFromDate:(NSString *)dateStr{
+    if (isEmpty(dateStr)) {
+        return nil;
+    }
+    _timeFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    NSDate *aDate = [_timeFormatter dateFromString:dateStr];
+    
+    _timeFormatter.dateFormat = @"yyyy-MM-dd";
+    
+    return [_timeFormatter stringFromDate:aDate];
+}
 #define D_MINUTE	60
 #define D_HOUR		3600
 #define D_DAY		86400
@@ -1769,7 +1781,7 @@ static DataBaseManager *_sharedInstance = nil;
     apiCmdShow_getAllShows.cityName = [[LocationManager defaultLocationManager] getUserCity];
     apiCmdShow_getAllShows.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     [apiClient executeApiCmdAsync:apiCmdShow_getAllShows];
-    [apiCmdShow_getAllShows.httpRequest setTag:API_SShow_Type_All_Cmd];
+    [apiCmdShow_getAllShows.httpRequest setTag:API_SShowCmd];
     
     return [apiCmdShow_getAllShows autorelease];
 }
@@ -1807,6 +1819,9 @@ static DataBaseManager *_sharedInstance = nil;
                        Latitude:(CLLocationDegrees)latitude
                       longitude:(CLLocationDegrees)longitude
                        dataType:(NSString *)dataType
+                      dataOrder:(NSString *)dataOrder
+               dataTimedistance:(NSString *)dataTimedistance
+                       dataSort:(NSString *)dataSort
                       isNewData:(BOOL)isNewData
 {
     ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
@@ -1836,7 +1851,16 @@ static DataBaseManager *_sharedInstance = nil;
     }
     
     //先从数据库里面读取数据
-    NSArray *coreData_array = [self getShowsListFromCoreDataOffset:offset limit:limit Latitude:latitude longitude:longitude dataType:dataType validDate:validDate];
+    NSArray *coreData_array = [self getShowsListFromCoreDataWithCityName:nil
+                                                                  offset:offset
+                                                                   limit:limit
+                                                                Latitude:latitude
+                                                               longitude:longitude
+                                                                dataType:dataType
+                                                               dataOrder:dataOrder
+                                                        dataTimedistance:dataTimedistance
+                                                                dataSort:dataSort
+                                                               validDate:validDate];
     
     if ([coreData_array count]>0 && delegate && [delegate respondsToSelector:@selector(apiNotifyLocationResult:cacheData:)]) {
         [delegate apiNotifyLocationResult:nil cacheData:coreData_array];
@@ -1863,6 +1887,9 @@ static DataBaseManager *_sharedInstance = nil;
     apiCmdShow_getAllShows.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     apiCmdShow_getAllShows.cityName = [[LocationManager defaultLocationManager] getUserCity];
     apiCmdShow_getAllShows.dataType = dataType;
+    apiCmdShow_getAllShows.dataOrder = dataOrder;
+    apiCmdShow_getAllShows.dataTimeDistance = dataTimedistance;
+    apiCmdShow_getAllShows.dataSort = dataSort;
     [apiClient executeApiCmdAsync:apiCmdShow_getAllShows];
     [apiCmdShow_getAllShows.httpRequest setTag:API_SShowCmd];
     
@@ -1887,8 +1914,8 @@ static DataBaseManager *_sharedInstance = nil;
             sShow = [SShow MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
         }
         [self importShow:sShow ValuesForKeysWithObject:[array objectAtIndex:i]];
-        
-        sShow.dataType = apiCmd.dataType; //数据类型
+        ApiCmdShow_getAllShows *showApiCmd = (ApiCmdShow_getAllShows *)apiCmd;
+        sShow.dataType =[NSString stringWithFormat:@"%@-%@-%@-%@",apiCmd.dataType,showApiCmd.dataTimeDistance,showApiCmd.dataOrder,showApiCmd.dataSort]; //数据类型
         sShow.locationDate = [self getTodayTimeStamp];
         sShow.cityId = apiCmd.cityId;
         [returnArray addObject:sShow];
@@ -1909,74 +1936,24 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 
-/*
- {
- httpCode: 200,
- errors: [ ],
- data: {
- count: 18,
- performances: [
- {
- id: "22",
- uniquekey: "7718405e9dbe6100a38f42b61be7bdad",
- name: "上海芭蕾舞团经典芭蕾舞《天鹅湖》",
- url: "http://www.damai.cn/ticket_52009.html",
- dayrange: "2013.09.30",
- starttime: "2013-09-30 00:00:00",
- endtime: "2099-12-31 00:00:00",
- type: "舞蹈芭蕾",
- description: "　　演出团体：上海芭蕾舞团 　　主演：吴虎生、范晓枫、陈艳 　　编导：德里克·迪恩 　　作曲：柴科夫斯基 　　舞美、服装设计：彼得·法莫尔 　　演出介绍： 　　《天鹅湖》创作背景 　　十九世纪末叶，柴可夫斯基的《天鹅湖》、《睡美人》和《胡桃夹子》把芭蕾音乐提高到交响音乐的水平。在他的舞剧中，音乐是和作品内容与舞台动作紧密联系的重要组成部分。柴可夫斯基提高了舞剧音乐的表现力，通过交响性的展开和对人物性格的刻划，加深了作品的戏剧性。他在《天鹅湖》中，以富于浪漫色彩的抒情笔触，表现了诗一般的意境，刻划了主人公优美纯洁的性格和忠贞不渝的爱情；并以磅礴的戏剧力量描绘了敌对势力的矛盾冲突。因此，柴可夫斯基的《天鹅湖》，至今还是芭蕾音乐的典范作品。《天鹅湖》取材于神话故事，描述被妖人洛特巴尔特用魔法变为天鹅的公主奥杰塔和王子齐格弗里德相爱。最后，爱情的力量战胜了魔法，奥杰塔得以恢复为人身。 　　剧情介绍 　　序幕 　　可爱的奥杰塔公主被邪恶的魔王罗特巴尔特抓走。在湖边魔王用魔法将公主变成了白天鹅。 　　第一幕 　　庆祝王子齐格弗里德生日的准备工作正在进行。王子的老教师吩咐手下在宫殿的花园里布置花环。他宣布王子的到来，庆祝活动紧接着开始。 　　皇后前来庆祝王子的生日，并送给他一个精致的弓箭。她把王子拉到一边，对他说你已经成年，应该考虑婚姻的问题。皇后离开后，庆祝活动继续进行。 　　黄昏来临，朋友们散去，王子独自沉思，他看见一群天鹅从头顶飞过，于是带上弓箭出发去打猎。 　　第三幕 　　王子的生日庆祝活动正在进行，各国嘉宾前来庆贺。皇后让儿子在六位公主中挑选一位作为未婚妻，但他却显得很冷淡，因为他心中只有奥杰塔。在母亲的要求下他和公主们跳了舞，但最后还是拒绝从中挑选未婚妻。 　　魔王罗特巴尔特带着装扮成天鹅女王的女儿奥吉莉亚来到城堡。王子以为是奥杰塔，奥吉莉亚紧随王子离开大厅。在一段舞蹈后，奥吉莉亚和王子回到大厅一起跳舞。 　　在邪恶的奥吉莉亚的欺骗下，王子轻信了她就是他的真爱，王子向奥吉莉亚发誓对她永恒的爱情。恶魔胜利了，誓言已被破坏，奥杰塔和她的女友们将会永远毁灭。恶魔指向出现在窗后的奥杰塔的形象，与奥吉莉亚得意地离开了大厅。 　　快绝望的王子跑出大厅寻找奥杰塔并请求她的宽恕，留下失望的皇后，大厅一片混乱。 　　第四幕 　　痛苦的奥杰塔回到湖边。王子紧追并请求她的宽恕，她终于答应了。 　　魔王罗特巴尔特又出现了，提醒王子他先前对奥吉莉亚的誓言。 　　奥杰塔觉得不可忍受，伤心至极，便跳进了湖中。王子随后也跳进了湖中，两人都被淹死了。邪恶的咒语破解了，魔王罗特巴尔特被王子和奥杰塔之间忠诚的爱情力量摧毁了。 　　新的一天黎明又开始了，王子和奥杰塔在永恒的爱中团聚了。 　　温馨提示 　　1.2米以下儿童谢绝入场（儿童项目除外），1.2米以上儿童需持票入场。",
- coverurl: "http://pimg.damai.cn/perform/project/520/52009_n.jpg",
- coverimg: "",
- status: "0",
- supplierid: "11",
- extid: "52009",
- extshopid: "1127",
- cityid: "2",
- districtid: "12",
- extpayurl: "http://m.damai.cn/#52009_",
- paytype: "2",
- votecountadded: "0",
- currentstatus: "3",
- createtime: "2013-07-15 16:33:56",
- createdbysuid: "13",
- lastmodifiedtime: "2013-07-15 16:34:16",
- lastmodifiedbysuid: "13",
- recommendadded: "80",
- wantedadded: "87",
- prices: [
- 80,
- 120,
- 180,
- 280
- ]
- },
- {},
- */
+/**/
 - (void)importShow:(SShow *)sShow ValuesForKeysWithObject:(NSDictionary *)ashowDic{
     sShow.uid = [ashowDic objectForKey:@"id"];
     sShow.name = [ashowDic objectForKey:@"name"];
     if ([[ashowDic objectForKey:@"prices"] count]>0) {
         sShow.price = [[ashowDic objectForKey:@"prices"] objectAtIndex:0];
     }
-    sShow.beginTime = [ashowDic objectForKey:@"starttime"];
+    sShow.beginTime = [ashowDic objectForKey:@"begintime"];
     sShow.endTime = [ashowDic objectForKey:@"endtime"];
     sShow.rating = [NSNumber numberWithInt:[[ashowDic objectForKey:@"extshopid"] intValue]];
     sShow.webImg = [ashowDic objectForKey:@"coverurl"];
     sShow.recommend = [NSNumber numberWithInt:[[ashowDic objectForKey:@"recommendadded"] intValue]];
     sShow.wantLook = [NSNumber numberWithInt:[[ashowDic objectForKey:@"wantedadded"] intValue]];
+    sShow.theatrename = [ashowDic objectForKey:@"theatrename"];
+    sShow.address = [ashowDic objectForKey:@"theatreaddress"];
     
 }
 
-//读数据
-- (NSArray *)getShowsListFromCoreDataOffset:(int)offset
-                                      limit:(int)limit
-                                   Latitude:(CLLocationDegrees)latitude
-                                  longitude:(CLLocationDegrees)longitude
-                                   dataType:(NSString *)dataType
-                                  validDate:(NSString *)validDate{
-    return [self getShowsListFromCoreDataWithCityName:nil offset:offset limit:limit Latitude:latitude longitude:longitude dataType:dataType validDate:validDate];
-}
 //读数据
 - (NSArray *)getShowsListFromCoreDataWithCityName:(NSString *)cityId
                                            offset:(int)offset
@@ -1984,43 +1961,39 @@ static DataBaseManager *_sharedInstance = nil;
                                          Latitude:(CLLocationDegrees)latitude
                                         longitude:(CLLocationDegrees)longitude
                                          dataType:(NSString *)dataType
+                                        dataOrder:(NSString *)dataOrder
+                                 dataTimedistance:(NSString *)dataTimedistance
+                                         dataSort:(NSString *)dataSort
                                         validDate:(NSString *)validDate{
     
-    NSArray *typeArray = [dataType componentsSeparatedByString:@"#"];
-    NSString *sortedBy = @"recommend";
-    BOOL isAscending = NO;
-    switch ([[typeArray lastObject] intValue]) {
-        case API_SShow_Oreder_Recommend_Cmd://推荐
-            sortedBy = @"recommend";
-            break;
-        case API_SShow_Oreder_Time_Cmd://时间
+    NSString *sortedBy = @"beginTime";
+    BOOL isAscending = ([dataSort isEqualToString:@"asc"])?YES:NO;
+    switch ([dataOrder intValue]) {
+        case 1://时间
             sortedBy = @"beginTime";
+            break;
+        case 2://评分
+            sortedBy = @"recommend";
             isAscending = YES;
             break;
-        case API_SShow_Oreder_PriceL_Cmd://价格低到高
-            sortedBy = @"price";
-            isAscending = YES;
-            break;
-        case API_SShow_Oreder_PriceH_Cmd://价格高到低
-            sortedBy = @"price";
-            break;
-        case API_SShow_Oreder_Distance_Cmd://距离近到远
+        case 3://距离
             sortedBy = @"distance";
             isAscending = YES;
             break;
-        case API_SShow_Oreder_Rating_Cmd:
+        case 4://价格
+            sortedBy = @"price";
+            break;
         default://评分高到底
-            sortedBy = @"recommend";
             break;
     }
     
     if (isEmpty(cityId)) {
         cityId = [[LocationManager defaultLocationManager] getUserCityId];
     }
-    
+    NSString *data_type = [NSString stringWithFormat:@"%@-%@-%@-%@",dataType,dataTimedistance,dataOrder,dataSort];
     return [SShow MR_findAllSortedBy:sortedBy
                            ascending:isAscending
-                       withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and locationDate >= %@ and dataType = %@",cityId,validDate,dataType]
+                       withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and locationDate >= %@ and dataType = %@",cityId,validDate,data_type]
                               offset:offset
                                limit:limit
                            inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
@@ -2108,6 +2081,7 @@ static DataBaseManager *_sharedInstance = nil;
         showDetail = [SShowDetail MR_createInContext:context];
     }
     showDetail.introduce = [infoDic objectForKey:@"description"];
+    showDetail.extpayurl = [infoDic objectForKey:@"extpayurl"];
     showDetail.locationDate = [self getTodayTimeStamp];
     showDetail.uid = [infoDic objectForKey:@"id"];
     showDetail.recommendation = [infoDic objectForKey:@"recommend"];

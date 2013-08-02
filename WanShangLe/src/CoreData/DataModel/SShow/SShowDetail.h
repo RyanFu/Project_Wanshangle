@@ -21,5 +21,6 @@
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * prices;
 @property (nonatomic, retain) SShow *show;
+@property (nonatomic, retain) NSString * extpayurl;
 
 @end

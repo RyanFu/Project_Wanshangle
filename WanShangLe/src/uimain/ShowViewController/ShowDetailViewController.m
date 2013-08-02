@@ -16,6 +16,7 @@
 #import "ASIHTTPRequest.h"
 #import "SShow.h"
 #import "SShowDetail.h"
+#import "WebSiteBuyViewController.h"
 
 #define IntroduceLabelHeight 108
 
@@ -136,7 +137,8 @@
     }
     _show_rating.text = [NSString stringWithFormat:@"%@评分: %@ (%d%@)",_mShow.ratingfrom,_mShow.rating,ratingPeople,scopeStr];
     _show_address.text = _mShow.address;
-    _show_time.text = _mShow.beginTime;
+    _theatre_name.text = _mShow.theatrename;
+    _show_time.text = [[DataBaseManager sharedInstance] getYMDFromDate: _mShow.beginTime];
 
 }
 
@@ -188,7 +190,10 @@
 }
 
 - (IBAction)clickBuyButton:(id)sender{
-    
+    WebSiteBuyViewController *webViewController = [[WebSiteBuyViewController alloc] initWithNibName:@"WebSiteBuyViewController" bundle:nil];
+    webViewController.mURLStr = _mShowDetail.extpayurl;
+    [self.navigationController pushViewController:webViewController animated:YES];
+    [webViewController release];
 }
 
 - (IBAction)clickYesButton:(id)sender{
@@ -203,8 +208,8 @@
     NSMutableDictionary *tDic = [NSMutableDictionary dictionaryWithCapacity:5];
     [tDic setObject:_mShow.uid forKey:@"uid"];
     [tDic setObject:API_RecommendOrLookShowType forKey:@"type"];
-    [tDic setObject:_mShow.beginTime forKey:@"beginTime"];
-    [tDic setObject:_mShow.endTime forKey:@"endTime"];
+    [tDic setObject:(isNull(_mShow.beginTime)?[[DataBaseManager sharedInstance] getNowDate]:_mShow.beginTime) forKey:@"beginTime"];
+    [tDic setObject:(isNull(_mShow.endTime)?[[DataBaseManager sharedInstance] getNowDate]:_mShow.endTime) forKey:@"endTime"];
     [tDic setObject:[NSNumber numberWithBool:YES] forKey:@"recommend"];
     [[DataBaseManager sharedInstance] addActionState:tDic];
 
@@ -224,8 +229,8 @@
     NSMutableDictionary *tDic = [NSMutableDictionary dictionaryWithCapacity:5];
     [tDic setObject:_mShow.uid forKey:@"uid"];
     [tDic setObject:API_RecommendOrLookShowType forKey:@"type"];
-    [tDic setObject:_mShow.beginTime forKey:@"beginTime"];
-    [tDic setObject:_mShow.endTime forKey:@"endTime"];
+    [tDic setObject:(isNull(_mShow.beginTime)?[[DataBaseManager sharedInstance] getNowDate]:_mShow.beginTime) forKey:@"beginTime"];
+    [tDic setObject:(isNull(_mShow.endTime)?[[DataBaseManager sharedInstance] getNowDate]:_mShow.endTime) forKey:@"endTime"];
     [tDic setObject:[NSNumber numberWithBool:YES] forKey:@"wantLook"];
     [[DataBaseManager sharedInstance] addActionState:tDic];
     

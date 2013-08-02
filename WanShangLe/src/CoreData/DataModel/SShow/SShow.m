@@ -31,5 +31,6 @@
 @dynamic recommend;
 @dynamic distance;
 @dynamic wantLook;
+@dynamic theatrename;
 
 @end

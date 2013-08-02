@@ -26,21 +26,17 @@
 {
     if (_mArray==nil || [_mArray count]<=DataCount) {//每次刷新表的时候检测是否有数据
         _refreshTailerView.hidden = YES;
-        _mTableView.tableFooterView = nil;
-//        [_refreshTailerView removeFromSuperview];
     }else{
-//        [_mTableView addSubview:_refreshTailerView];
-        _mTableView.tableFooterView = _refreshTailerView;
         _refreshTailerView.hidden = NO;
     }
+    
+    _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
     
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
-//    _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
-    
+
     return [_mArray count];
 }
 
@@ -207,7 +203,7 @@
 {
     [_refreshTailerView egoRefreshScrollViewDataSourceDidFinishedLoading:_mTableView];
     [_mTableView reloadData];
-//    _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+    _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
     _reloading = NO;
 }
 

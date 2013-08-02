@@ -54,6 +54,8 @@ typedef NS_ENUM(NSInteger, NSFilterShowListType) {
 @property(nonatomic,readwrite)int oldSelectedTime;
 @property(nonatomic,readwrite)int oldSelectedOrder;
 
+@property(nonatomic,readwrite)BOOL isDone;
+
 - (IBAction)clickTypeButton:(id)sender;
 - (IBAction)clickTimeButton:(id)sender;
 - (IBAction)clickOrderButton:(id)sender;

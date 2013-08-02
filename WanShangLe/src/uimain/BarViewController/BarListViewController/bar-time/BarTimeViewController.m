@@ -118,7 +118,7 @@
     UITableView *tbView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height) style:UITableViewStylePlain];
     tbView.backgroundColor = [UIColor whiteColor];
     tbView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-//    tbView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+    tbView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
     return [tbView autorelease];
 }
 
@@ -141,13 +141,11 @@
     [self setTableViewDelegate];
     
     if (_refreshHeaderView == nil) {
-        EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame: CGRectMake(0.0f, 0.0, _mTableView.frame.size.width, _mTableView.bounds.size.height)];
-//        EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame: CGRectMake(0.0f, _mTableView.bounds.size.height, _mTableView.frame.size.width, _mTableView.bounds.size.height)];
+        EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame: CGRectMake(0.0f, _mTableView.bounds.size.height, _mTableView.frame.size.width, _mTableView.bounds.size.height)];
 		view.delegate = self.allListDelegate;
         view.tag = EGOBottomView;
         view.backgroundColor = [UIColor clearColor];
-//		[_mTableView addSubview:view];
-        _mTableView.tableFooterView = view;
+		[_mTableView addSubview:view];
 		self.refreshTailerView = view;
 		[view release];
         
@@ -278,8 +276,6 @@
     }else{
         [_allListDelegate doneReLoadingTableViewData];
     }
-//    _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
-    
 }
 
 //添加缓存数据

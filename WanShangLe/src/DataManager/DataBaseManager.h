@@ -62,6 +62,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (NSString *)getWhickWeek:(NSDate*)aDate;
 //获取时间
 - (NSString *)getTimeFromDate:(NSString *)dateStr;
+- (NSString *)getYMDFromDate:(NSString *)dateStr;
 - (NSString *)getHumanityTimeFromDate:(NSString *)dateStr;
 - (NSString *)timeByAddingTimeInterval:(int)time fromDate:(NSString *)dateStr;
 //几天后的时间
@@ -181,6 +182,9 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
                        Latitude:(CLLocationDegrees)latitude
                       longitude:(CLLocationDegrees)longitude
                        dataType:(NSString *)dataType
+                       dataOrder:(NSString *)dataOrder
+                       dataTimedistance:(NSString *)dataTimedistance
+                       dataSort:(NSString *)dataSort
                       isNewData:(BOOL)isNewData;
 
 //插入数据
@@ -188,19 +192,15 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (void)importShow:(SShow *)sShow ValuesForKeysWithObject:(NSDictionary *)ashowDic;
 
 //读数据
-- (NSArray *)getShowsListFromCoreDataOffset:(int)offset
-                                      limit:(int)limit
-                                   Latitude:(CLLocationDegrees)latitude
-                                  longitude:(CLLocationDegrees)longitude
-                                   dataType:(NSString *)dataType
-                                  validDate:(NSString *)validDate;
-//读数据
 - (NSArray *)getShowsListFromCoreDataWithCityName:(NSString *)cityId
                                            offset:(int)offset
                                             limit:(int)limit
                                          Latitude:(CLLocationDegrees)latitude
                                         longitude:(CLLocationDegrees)longitude
                                          dataType:(NSString *)dataType
+                                        dataOrder:(NSString *)dataOrder
+                                 dataTimedistance:(NSString *)dataTimedistance
+                                         dataSort:(NSString *)dataSort
                                         validDate:(NSString *)validDate;
 
 //获取 演出详情

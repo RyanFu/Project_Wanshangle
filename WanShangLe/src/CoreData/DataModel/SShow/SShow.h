@@ -32,5 +32,7 @@
 @property (nonatomic, retain) NSNumber * recommend;
 @property (nonatomic, retain) NSNumber * distance;
 @property (nonatomic, retain) NSNumber * wantLook;
+@property (nonatomic, retain) NSString * theatrename;
+
 
 @end
