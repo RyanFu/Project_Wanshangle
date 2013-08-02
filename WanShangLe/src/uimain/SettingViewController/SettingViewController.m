@@ -187,16 +187,24 @@
  httpCode: 200,
  errors: [ ],
  data: {
-     newestversion: "1.0.0",
-     update: false,
-     content: "",
-     uri: ""
+ newestversion: "1.0.0",
+ update: false,
+ content: "",
+ uri: ""
  },
  token: null,
  timestamp: "1375323240"
  }
  */
 -(IBAction)clickVersionCheck:(id)sender{
+    
+    //    UIButton *bt = (UIButton *)sender;
+    
+//    [MMProgressHUD setDisplayStyle:MMProgressHUDDisplayStylePlain];
+//    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleNone];
+    [MMProgressHUD showWithTitle:@"正在检查更新" status:@"请稍等..."];
+    
+     CFTimeInterval time1 = Elapsed_Time;
     
     NSMutableData *dataReceived = [NSMutableData data];
     __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[ApiCmd_app_update getRequestURL]];
@@ -206,10 +214,28 @@
     }];
     
     [request setCompletionBlock:^{
+
+        [[DataBaseManager sharedInstance] cleanUpDataBaseCache];
+        
+        CFTimeInterval time2 = Elapsed_Time;
+        ElapsedTime(time2, time1);
+        CFTimeInterval escapeTime = time2 - time1;
+        if (escapeTime<DisplayTime) {
+            NSTimeInterval sleeptimee = DisplayTime-escapeTime;
+            [NSThread sleepForTimeInterval:sleeptimee];
+        }
+        [MMProgressHUD dismiss];
         [self parseAppUpdateData:dataReceived];
 	}];
     
 	[request setFailedBlock:^{
+        
+        double delayInSeconds = 1.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^{
+            [MMProgressHUD dismissWithError:@"检查更新失败"];
+        });
+        
         ABLoggerWarn(@"检查 软件 更新 失败");
 	}];
 	
@@ -218,7 +244,7 @@
 
 - (void)parseAppUpdateData:(NSData *)reponseData{
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-
+        
         NSError *error = nil;
         NSDictionary *updateDic= [NSJSONSerialization JSONObjectWithData:reponseData options:0 error:&error];
         if (error) {
