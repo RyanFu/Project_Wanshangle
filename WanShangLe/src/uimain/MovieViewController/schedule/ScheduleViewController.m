@@ -97,6 +97,7 @@
     if (_tomorrowSchedules==nil) {
         [_tomorrowButton setTitle:[NSString stringWithFormat:@"明天(%@)",_tomorrowWeek] forState:UIControlStateNormal];
     }
+    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
 }
 
 - (void)awakeFromNib{

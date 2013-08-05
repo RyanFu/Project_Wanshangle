@@ -87,24 +87,24 @@
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
     
-    RootViewController *rootViewController = [[RootViewController alloc] initWithNibName:(iPhone5?@"RootViewController_5":@"RootViewController") bundle:nil];
+    RootViewController *rootViewController = [[[RootViewController alloc] initWithNibName:(iPhone5?@"RootViewController_5":@"RootViewController") bundle:nil] autorelease];
     
-    UINavigationController *_navigationController = [[UINavigationController alloc] initWithRootViewController:rootViewController];[rootViewController release];
+    UINavigationController *_navigationController = [[[UINavigationController alloc] initWithRootViewController:rootViewController] autorelease];
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
+    _rootController = _navigationController;
     
-    self.window.rootViewController = _navigationController;
-    [CacheManager sharedInstance].rootNavController = _navigationController;
-    [_navigationController release];
-    
-    self.window.backgroundColor = [UIColor whiteColor];
-    [self.window makeKeyAndVisible];
+    self.window.rootViewController = _rootController;
+    [CacheManager sharedInstance].rootNavController = _rootController;
     
     CFTimeInterval time2 = Elapsed_Time;
     ElapsedTime(time2, time1);
     
     // 异常捕获 exception caught
-    [self performSelector:@selector(installUncaughtExceptionHandler) withObject:nil afterDelay:0];
-    //    [self performSelector:@selector(string) withObject:nil afterDelay:4.0];
+//    [self performSelector:@selector(installUncaughtExceptionHandler) withObject:nil afterDelay:0];
+//    [self performSelector:@selector(string) withObject:nil afterDelay:4.0];
+    
+    self.window.backgroundColor = [UIColor whiteColor];
+    [self.window makeKeyAndVisible];
     
     return YES;
 }
@@ -184,6 +184,11 @@
 	return (AppDelegate *)[UIApplication sharedApplication].delegate;
 }
 
+//重置KeyWindow，解决第三方框架更改KeyWindow后为Nil的Bug
+- (void)reSetKeyWindow{
+    _window.rootViewController = _rootController;
+    [_window makeKeyWindow];
+}
 - (void)installUncaughtExceptionHandler
 {
 	InstallUncaughtExceptionHandler();

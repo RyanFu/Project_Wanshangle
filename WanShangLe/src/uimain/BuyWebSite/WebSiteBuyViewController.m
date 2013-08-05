@@ -14,8 +14,9 @@
 #import "ASIFormDataRequest.h"
 #import "AppDelegate.h"
 
-@interface WebSiteBuyViewController ()<UIScrollViewDelegate,UITextViewDelegate>{
+@interface WebSiteBuyViewController ()<UITextViewDelegate>{
     BOOL isShowErrorPanel;
+    BOOL isFirst;
 }
 
 @property(nonatomic,retain) UIControl *markView;
@@ -28,10 +29,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        [MMProgressHUD setDisplayStyle:MMProgressHUDDisplayStylePlain];
-        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleFade];
-        [[MMProgressHUD sharedHUD] setOverlayMode:MMProgressHUDWindowOverlayModeNone];
-        [MMProgressHUD showWithTitle:@"" status:@"正在加载..."];
+        isFirst = YES;
     }
     return self;
 }
@@ -70,6 +68,7 @@
 }
 
 - (void)initData{
+    
     NSURL *url = [NSURL URLWithString:_mURLStr];
     _mWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height-49)];
     [_mWebView loadRequest:[NSURLRequest requestWithURL:url]];
@@ -278,12 +277,18 @@
 #pragma mark -
 #pragma mark UIWebViewDelegate
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
-    
+    [self updateBackForwardButtonState];
     return YES;
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView{
-    [self updateBackForwardButtonState];
+    if (isFirst) {
+        isFirst = NO;
+        [MMProgressHUD setDisplayStyle:MMProgressHUDDisplayStylePlain];
+        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleFade];
+        [[MMProgressHUD sharedHUD] setOverlayMode:MMProgressHUDWindowOverlayModeNone];
+        [MMProgressHUD showWithTitle:@"" status:@"正在加载..."];
+    }
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView{

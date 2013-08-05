@@ -168,7 +168,6 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 
 /************************ 演出 *********************************/
 /***************************************************************/
-- (ApiCmd *)getAllShowsListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllShowsListFromCoreData;
 - (NSArray *)getAllShowsListFromCoreDataWithCityName:(NSString *)cityName;
 - (NSUInteger)getCountOfShowsListFromCoreData;

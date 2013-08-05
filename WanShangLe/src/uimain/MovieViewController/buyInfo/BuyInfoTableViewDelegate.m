@@ -160,7 +160,7 @@
 }
 
 - (void)skipToBuyWebSite:(NSString *)wapURL{
-    WebSiteBuyViewController *webViewController = [[WebSiteBuyViewController alloc] initWithNibName:@"WebSiteBuyViewController" bundle:nil];
+    WebSiteBuyViewController *webViewController = [[WebSiteBuyViewController alloc] initWithNibName:(iPhone5?@"WebSiteBuyViewController_5":@"WebSiteBuyViewController") bundle:nil];
     webViewController.mURLStr = wapURL;
     [_parentViewController.navigationController pushViewController:webViewController animated:YES];
     [webViewController release];

@@ -307,7 +307,7 @@
                                       
                                       [[DataBaseManager sharedInstance] insertCityIntoCoreDataWith:newCity];
                                       
-                                      [_cityLabel setTitle:[NSString stringWithFormat:@"%@%d",newCity,arc4random()%200] forState:UIControlStateNormal];
+                                      [_cityLabel setTitle:[NSString stringWithFormat:@"%@",newCity] forState:UIControlStateNormal];
                                       [_cityLabel setValue:nil forKey:@"title"];
                                       if (_userCityCallBack) {
                                           _userCityCallBack();

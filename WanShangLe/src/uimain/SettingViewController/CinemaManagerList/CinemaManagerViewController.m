@@ -146,7 +146,7 @@
 
 - (UITableView *)createTableView{
     
-    UITableView *tbView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 504.0f) style:UITableViewStylePlain];
+    UITableView *tbView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, iPhoneAppFrame.size.height-navigationBarHeight) style:UITableViewStylePlain];
     tbView.backgroundColor = [UIColor whiteColor];
     tbView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     

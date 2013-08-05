@@ -409,7 +409,9 @@ CGSize const MMProgressHUDDefaultImageSize = {37.f, 37.f};
     CGFloat hudHeight = CGRectGetHeight(self.hud.frame);
     
     CGPoint position;
-    if (UIInterfaceOrientationIsPortrait([[[[UIApplication sharedApplication] keyWindow] rootViewController] interfaceOrientation])) {
+    //修复了bug，当在iphone5以下设备运行的话，keywindow为空，所以改用windows来获取设备方向
+    UIInterfaceOrientation orientation = [[[[UIApplication sharedApplication] windows] objectAtIndex:0] interfaceOrientation];
+    if (UIInterfaceOrientationIsPortrait(orientation)) {
         
         CGFloat y = roundf(self.window.center.y + (anchor.y - 0.5f) * hudHeight);
         CGFloat x = roundf(self.window.center.x);

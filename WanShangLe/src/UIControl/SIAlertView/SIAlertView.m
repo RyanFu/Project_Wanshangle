@@ -8,6 +8,7 @@
 
 #import "SIAlertView.h"
 #import <QuartzCore/QuartzCore.h>
+#import "AppDelegate.h"
 
 NSString *const SIAlertViewWillShowNotification = @"SIAlertViewWillShowNotification";
 NSString *const SIAlertViewDidShowNotification = @"SIAlertViewDidShowNotification";
@@ -906,6 +907,11 @@ static SIAlertView *__si_alert_current_view;
     SIAlertItem *item = self.items[button.tag];
 	if (item.action) {
 		item.action(self);
+        
+        /*解决Bug，KeyWindow 是一个关键的window，意思是可以获取焦点的window，因为一个程序有很多window，哪个window想要处理用户事件或是Toush事件，就必须是KeyWindow，
+         所有很多第三方的弹出框都会更改keywindow，来让自己的的弹出框成为keywindow，这样就会导致别的框架不能使用keywindow
+         */
+        [[AppDelegate appDelegateInstance] reSetKeyWindow];
 	}
 	[self dismissAnimated:YES];
 }

@@ -46,6 +46,11 @@
     [super dealloc];
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -167,7 +172,7 @@
 }
 
 - (IBAction)clickPriceListButton:(id)sender{
-    KTVPriceListViewController *priceController = [[KTVPriceListViewController alloc] initWithNibName:@"KTVPriceListViewController" bundle:nil];
+    KTVPriceListViewController *priceController = [[KTVPriceListViewController alloc] initWithNibName:(iPhone5?@"KTVPriceListViewController_5":@"KTVPriceListViewController") bundle:nil];
     priceController.mKTV = _mKTV;
     [[CacheManager sharedInstance].rootNavController pushViewController:priceController animated:YES];
     [priceController release];

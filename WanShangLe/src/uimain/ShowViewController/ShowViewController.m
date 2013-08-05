@@ -143,32 +143,44 @@
         NSArray *typeArray = [selectedTypeData componentsSeparatedByString:@"#"];
         for (int i=0;i<[typeArray count];i++) {
             int index = [[typeArray objectAtIndex:i] intValue];
+            UIButton *bt = nil;
             switch (i) {
-                case 0:
-                    [self clickTypeSubButtonDown:[_typeBts objectAtIndex:index]];
-//                    [(UIButton *)[_typeBts objectAtIndex:index] setSelected:YES];
-//                    _selectedType = index;
-//                    _oldSelectedType = index;
+                case 0:{
+                    bt = [_typeBts objectAtIndex:index];
+                    [self selectedDataTypeWithTag:index];
+                }
                     break;
-                case 1:
-                      [self clickTimeSubButtonDown:[_timeBts objectAtIndex:index]];
-//                    [(UIButton *)[_timeBts objectAtIndex:index] setSelected:YES];
-//                    _selectedTime = index;
-//                    _oldSelectedTime = index;
+                case 1:{
+                    [self selectedDataTimeDistanceWithTag:index];
+                    bt = [_timeBts objectAtIndex:index];
                     break;
-                default:
-                    
-                     [self clickOrderSubButtonDown:[_orderBts objectAtIndex:index]];
-//                    [(UIButton *)[_orderBts objectAtIndex:index] setSelected:YES];
-//                    _selectedOrder = index;
-//                    _oldSelectedOrder = index;
+                }
+                default:{
+                    [self selectedDataOrderAndSortWithTag:index];
+                    bt = [_orderBts objectAtIndex:index];
+                }
                     break;
             }
+            
+            bt.selected = YES;
+            [bt setTitleColor:[UIColor colorWithRed:0.230 green:0.705 blue:1.000 alpha:1.000] forState:UIControlStateNormal];
         }
     }else{
-        [(UIButton *)[_typeBts objectAtIndex:0] setSelected:YES];
-        [(UIButton *)[_timeBts objectAtIndex:0] setSelected:YES];
-        [(UIButton *)[_orderBts objectAtIndex:0] setSelected:YES];
+        [self selectedDataTypeWithTag:0];
+        [self selectedDataTimeDistanceWithTag:0];
+        [self selectedDataOrderAndSortWithTag:0];
+        
+        UIButton *bt  = [_typeBts objectAtIndex:0];
+        bt.selected = YES;
+        [bt setTitleColor:[UIColor colorWithRed:0.230 green:0.705 blue:1.000 alpha:1.000] forState:UIControlStateNormal];
+        
+        bt  = [_timeBts objectAtIndex:0];
+        bt.selected = YES;
+        [bt setTitleColor:[UIColor colorWithRed:0.230 green:0.705 blue:1.000 alpha:1.000] forState:UIControlStateNormal];
+        
+        bt  = [_orderBts objectAtIndex:0];
+        bt.selected = YES;
+        [bt setTitleColor:[UIColor colorWithRed:0.230 green:0.705 blue:1.000 alpha:1.000] forState:UIControlStateNormal];
     }
     
     [_mTableView setTableFooterView:[[[UIView alloc] initWithFrame:CGRectZero]autorelease]];
@@ -381,8 +393,12 @@
     _selectedType = tag-1;
     
     _isDone = NO;
-    
-    switch (_selectedType) {
+    [self selectedDataTypeWithTag:_selectedType];
+
+}
+
+- (void)selectedDataTypeWithTag:(int)tag{
+    switch (tag) {
         case 0:
             self.dataType = API_SShow_Type_All_Cmd;
             break;
@@ -433,7 +449,12 @@
     
     _isDone = NO;
     
-    switch (_selectedTime) {
+    [self selectedDataTimeDistanceWithTag:_selectedTime];
+    
+}
+
+- (void)selectedDataTimeDistanceWithTag:(int)tag{
+    switch (tag) {
         case 0:
             self.dataTimedistance = API_SShow_Time_All_Cmd;
             break;
@@ -449,7 +470,6 @@
         default:
             break;
     }
-    
 }
 
 - (void)cleanUpTimeSubButton{
@@ -472,7 +492,12 @@
     
     _isDone = NO;
     
-    switch (_selectedOrder) {
+    [self selectedDataOrderAndSortWithTag:_selectedOrder];
+
+}
+
+- (void)selectedDataOrderAndSortWithTag:(int)tag{
+    switch (tag) {
         case 0:
             self.dataOrder = API_SShow_Oreder_Time_Cmd;
             self.dataSort = API_SShow_SortASC_Cmd;

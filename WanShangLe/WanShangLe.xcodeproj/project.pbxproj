@@ -348,10 +348,19 @@
 		5AAE4DA717A77DD500914B3D /* UncaughtExceptionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AAE4DA617A77DD500914B3D /* UncaughtExceptionHandler.m */; };
 		5AAE873D178E8E1500D2F8C2 /* ApiCmdKTV_getSearchKTVs.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AAE873C178E8E1500D2F8C2 /* ApiCmdKTV_getSearchKTVs.m */; };
 		5AB358061760381C002A6803 /* NSDate-Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB358051760381C002A6803 /* NSDate-Utilities.m */; };
+		5AB6303C17AF552D00A5455B /* SettingViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6303B17AF552D00A5455B /* SettingViewController_5.xib */; };
+		5AB6303E17AF553600A5455B /* SuggestionViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6303D17AF553600A5455B /* SuggestionViewController_5.xib */; };
+		5AB6304017AF649500A5455B /* CinemaManagerViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6303F17AF649500A5455B /* CinemaManagerViewController_5.xib */; };
+		5AB6304217AF64BF00A5455B /* KtvManagerViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6304117AF64BF00A5455B /* KtvManagerViewController_5.xib */; };
+		5AB6304717AFA07B00A5455B /* WebSiteBuyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB6304517AFA07B00A5455B /* WebSiteBuyViewController.m */; };
+		5AB6304817AFA07B00A5455B /* WebSiteBuyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6304617AFA07B00A5455B /* WebSiteBuyViewController.xib */; };
+		5AB6304A17AFA0D600A5455B /* WebSiteBuyViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6304917AFA0D600A5455B /* WebSiteBuyViewController_5.xib */; };
+		5AB6304C17AFA81800A5455B /* KtvAllViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6304B17AFA81800A5455B /* KtvAllViewController_5.xib */; };
+		5AB6304E17AFA82700A5455B /* KtvFavoriteViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6304D17AFA82700A5455B /* KtvFavoriteViewController_5.xib */; };
+		5AB6305017AFA83900A5455B /* KtvNearByViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6304F17AFA83900A5455B /* KtvNearByViewController_5.xib */; };
+		5AB6305217AFAADA00A5455B /* KTVPriceListViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6305117AFAADA00A5455B /* KTVPriceListViewController_5.xib */; };
 		5AC3767717A7A60D009B06DF /* btn_checkBox_f@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AC3767517A7A60D009B06DF /* btn_checkBox_f@2x.png */; };
 		5AC3767817A7A60D009B06DF /* btn_checkBox_n@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AC3767617A7A60D009B06DF /* btn_checkBox_n@2x.png */; };
-		5AC3767D17A7AB2C009B06DF /* WebSiteBuyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC3767B17A7AB2C009B06DF /* WebSiteBuyViewController.m */; };
-		5AC3767E17A7AB2C009B06DF /* WebSiteBuyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AC3767C17A7AB2C009B06DF /* WebSiteBuyViewController.xib */; };
 		5AC3769517A7AE3E009B06DF /* bg_error_inputBox@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AC3768017A7AE3E009B06DF /* bg_error_inputBox@2x.png */; };
 		5AC3769617A7AE3E009B06DF /* bg_web_bottomBar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AC3768117A7AE3E009B06DF /* bg_web_bottomBar@2x.png */; };
 		5AC3769717A7AE3E009B06DF /* btn_arrow_back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AC3768217A7AE3E009B06DF /* btn_arrow_back@2x.png */; };
@@ -1261,11 +1270,20 @@
 		5AAE873C178E8E1500D2F8C2 /* ApiCmdKTV_getSearchKTVs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmdKTV_getSearchKTVs.m; sourceTree = "<group>"; };
 		5AB358041760381C002A6803 /* NSDate-Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate-Utilities.h"; sourceTree = "<group>"; };
 		5AB358051760381C002A6803 /* NSDate-Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate-Utilities.m"; sourceTree = "<group>"; };
+		5AB6303B17AF552D00A5455B /* SettingViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_5.xib; sourceTree = "<group>"; };
+		5AB6303D17AF553600A5455B /* SuggestionViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SuggestionViewController_5.xib; sourceTree = "<group>"; };
+		5AB6303F17AF649500A5455B /* CinemaManagerViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaManagerViewController_5.xib; sourceTree = "<group>"; };
+		5AB6304117AF64BF00A5455B /* KtvManagerViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KtvManagerViewController_5.xib; sourceTree = "<group>"; };
+		5AB6304417AFA07B00A5455B /* WebSiteBuyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebSiteBuyViewController.h; sourceTree = "<group>"; };
+		5AB6304517AFA07B00A5455B /* WebSiteBuyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebSiteBuyViewController.m; sourceTree = "<group>"; };
+		5AB6304617AFA07B00A5455B /* WebSiteBuyViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WebSiteBuyViewController.xib; sourceTree = "<group>"; };
+		5AB6304917AFA0D600A5455B /* WebSiteBuyViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WebSiteBuyViewController_5.xib; sourceTree = "<group>"; };
+		5AB6304B17AFA81800A5455B /* KtvAllViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KtvAllViewController_5.xib; sourceTree = "<group>"; };
+		5AB6304D17AFA82700A5455B /* KtvFavoriteViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KtvFavoriteViewController_5.xib; sourceTree = "<group>"; };
+		5AB6304F17AFA83900A5455B /* KtvNearByViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KtvNearByViewController_5.xib; sourceTree = "<group>"; };
+		5AB6305117AFAADA00A5455B /* KTVPriceListViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KTVPriceListViewController_5.xib; sourceTree = "<group>"; };
 		5AC3767517A7A60D009B06DF /* btn_checkBox_f@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_checkBox_f@2x.png"; sourceTree = "<group>"; };
 		5AC3767617A7A60D009B06DF /* btn_checkBox_n@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_checkBox_n@2x.png"; sourceTree = "<group>"; };
-		5AC3767A17A7AB2C009B06DF /* WebSiteBuyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebSiteBuyViewController.h; sourceTree = "<group>"; };
-		5AC3767B17A7AB2C009B06DF /* WebSiteBuyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebSiteBuyViewController.m; sourceTree = "<group>"; };
-		5AC3767C17A7AB2C009B06DF /* WebSiteBuyViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WebSiteBuyViewController.xib; sourceTree = "<group>"; };
 		5AC3768017A7AE3E009B06DF /* bg_error_inputBox@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg_error_inputBox@2x.png"; sourceTree = "<group>"; };
 		5AC3768117A7AE3E009B06DF /* bg_web_bottomBar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg_web_bottomBar@2x.png"; sourceTree = "<group>"; };
 		5AC3768217A7AE3E009B06DF /* btn_arrow_back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_arrow_back@2x.png"; sourceTree = "<group>"; };
@@ -2064,6 +2082,7 @@
 				5A5A41D71793903D00954902 /* KtvAllViewController.h */,
 				5A5A41D81793903D00954902 /* KtvAllViewController.m */,
 				5A5A41D91793903D00954902 /* KtvAllViewController.xib */,
+				5AB6304B17AFA81800A5455B /* KtvAllViewController_5.xib */,
 				5A5A41D51793903D00954902 /* KTVAllListTableViewDelegate.h */,
 				5A5A41D61793903D00954902 /* KTVAllListTableViewDelegate.m */,
 			);
@@ -2078,6 +2097,7 @@
 				5A5A41DD1793903D00954902 /* KtvFavoriteViewController.h */,
 				5A5A41DE1793903D00954902 /* KtvFavoriteViewController.m */,
 				5A5A41DF1793903D00954902 /* KtvFavoriteViewController.xib */,
+				5AB6304D17AFA82700A5455B /* KtvFavoriteViewController_5.xib */,
 			);
 			path = "ktv-favorite";
 			sourceTree = "<group>";
@@ -2090,6 +2110,7 @@
 				5A5A41E31793903D00954902 /* KtvNearByViewController.h */,
 				5A5A41E41793903D00954902 /* KtvNearByViewController.m */,
 				5A5A41E51793903D00954902 /* KtvNearByViewController.xib */,
+				5AB6304F17AFA83900A5455B /* KtvNearByViewController_5.xib */,
 			);
 			path = "ktv-nearby";
 			sourceTree = "<group>";
@@ -2100,6 +2121,7 @@
 				5A5A41EE1793903D00954902 /* KTVPriceListViewController.h */,
 				5A5A41EF1793903D00954902 /* KTVPriceListViewController.m */,
 				5A5A41F01793903D00954902 /* KTVPriceListViewController.xib */,
+				5AB6305117AFAADA00A5455B /* KTVPriceListViewController_5.xib */,
 				5A5A41F11793903D00954902 /* KTVPriceTableViewDelegate.h */,
 				5A5A41F21793903D00954902 /* KTVPriceTableViewDelegate.m */,
 				5A714577179FBF66009E4905 /* KTVPriceTableViewCell.h */,
@@ -2901,6 +2923,7 @@
 		5AAC708E17601BDB004B7395 /* uimain */ = {
 			isa = PBXGroup;
 			children = (
+				5AB6304317AFA07900A5455B /* BuyWebSite */,
 				5AFDF3791773E6C9000C38A0 /* SettingViewController */,
 				5AAC708F17601BDB004B7395 /* BarViewController */,
 				5AAC709317601BDB004B7395 /* KtvViewController */,
@@ -2933,7 +2956,6 @@
 		5AAC709717601BDB004B7395 /* MovieViewController */ = {
 			isa = PBXGroup;
 			children = (
-				5AC3767917A7AB01009B06DF /* buyWebSite */,
 				5A1C80D417A2649D007F7434 /* cinema */,
 				5ADD8E04179C05B60026239A /* buyInfo */,
 				5ADD8E3B179C05B60026239A /* movie */,
@@ -3015,14 +3037,15 @@
 			path = UncaughtExceptions;
 			sourceTree = "<group>";
 		};
-		5AC3767917A7AB01009B06DF /* buyWebSite */ = {
+		5AB6304317AFA07900A5455B /* BuyWebSite */ = {
 			isa = PBXGroup;
 			children = (
-				5AC3767A17A7AB2C009B06DF /* WebSiteBuyViewController.h */,
-				5AC3767B17A7AB2C009B06DF /* WebSiteBuyViewController.m */,
-				5AC3767C17A7AB2C009B06DF /* WebSiteBuyViewController.xib */,
+				5AB6304417AFA07B00A5455B /* WebSiteBuyViewController.h */,
+				5AB6304517AFA07B00A5455B /* WebSiteBuyViewController.m */,
+				5AB6304617AFA07B00A5455B /* WebSiteBuyViewController.xib */,
+				5AB6304917AFA0D600A5455B /* WebSiteBuyViewController_5.xib */,
 			);
-			path = buyWebSite;
+			path = BuyWebSite;
 			sourceTree = "<group>";
 		};
 		5AC3767F17A7AE3E009B06DF /* webImgs */ = {
@@ -3538,6 +3561,7 @@
 				5ADD8E89179C20C20026239A /* CinemaManagerViewController.h */,
 				5ADD8E8A179C20C20026239A /* CinemaManagerViewController.m */,
 				5ADD8E8B179C20C20026239A /* CinemaManagerViewController.xib */,
+				5AB6303F17AF649500A5455B /* CinemaManagerViewController_5.xib */,
 				5ADD8E82179C20C20026239A /* CinemaAllListManagerDelegate.h */,
 				5ADD8E83179C20C20026239A /* CinemaAllListManagerDelegate.m */,
 				5ADD8E84179C20C20026239A /* CinemaManagerCell.h */,
@@ -3562,6 +3586,7 @@
 				5ADD8E94179C20C20026239A /* KtvManagerViewController.h */,
 				5ADD8E95179C20C20026239A /* KtvManagerViewController.m */,
 				5ADD8E96179C20C20026239A /* KtvManagerViewController.xib */,
+				5AB6304117AF64BF00A5455B /* KtvManagerViewController_5.xib */,
 			);
 			path = KTVManagerList;
 			sourceTree = "<group>";
@@ -3645,9 +3670,11 @@
 				5AFDF37A1773E6E7000C38A0 /* SettingViewController.h */,
 				5AFDF37B1773E6E7000C38A0 /* SettingViewController.m */,
 				5AFDF37C1773E6E7000C38A0 /* SettingViewController.xib */,
+				5AB6303B17AF552D00A5455B /* SettingViewController_5.xib */,
 				5A26F4EF178D6ED9002E7609 /* SuggestionViewController.h */,
 				5A26F4F0178D6ED9002E7609 /* SuggestionViewController.m */,
 				5A26F4F1178D6ED9002E7609 /* SuggestionViewController.xib */,
+				5AB6303D17AF553600A5455B /* SuggestionViewController_5.xib */,
 			);
 			path = SettingViewController;
 			sourceTree = "<group>";
@@ -4015,7 +4042,6 @@
 				5A4BE5B417A79339002C7D40 /* tag_lower_price@2x.png in Resources */,
 				5AC3767717A7A60D009B06DF /* btn_checkBox_f@2x.png in Resources */,
 				5AC3767817A7A60D009B06DF /* btn_checkBox_n@2x.png in Resources */,
-				5AC3767E17A7AB2C009B06DF /* WebSiteBuyViewController.xib in Resources */,
 				5AC3769517A7AE3E009B06DF /* bg_error_inputBox@2x.png in Resources */,
 				5AC3769617A7AE3E009B06DF /* bg_web_bottomBar@2x.png in Resources */,
 				5AC3769717A7AE3E009B06DF /* btn_arrow_back@2x.png in Resources */,
@@ -4041,6 +4067,16 @@
 				5AC376CF17A8A664009B06DF /* CinemaDiscountInfoController.xib in Resources */,
 				5AC376E817AA07BF009B06DF /* tag_hot@2x.png in Resources */,
 				5AC376F517AA3DEC009B06DF /* tag_smile_face@2x.png in Resources */,
+				5AB6303C17AF552D00A5455B /* SettingViewController_5.xib in Resources */,
+				5AB6303E17AF553600A5455B /* SuggestionViewController_5.xib in Resources */,
+				5AB6304017AF649500A5455B /* CinemaManagerViewController_5.xib in Resources */,
+				5AB6304217AF64BF00A5455B /* KtvManagerViewController_5.xib in Resources */,
+				5AB6304817AFA07B00A5455B /* WebSiteBuyViewController.xib in Resources */,
+				5AB6304A17AFA0D600A5455B /* WebSiteBuyViewController_5.xib in Resources */,
+				5AB6304C17AFA81800A5455B /* KtvAllViewController_5.xib in Resources */,
+				5AB6304E17AFA82700A5455B /* KtvFavoriteViewController_5.xib in Resources */,
+				5AB6305017AFA83900A5455B /* KtvNearByViewController_5.xib in Resources */,
+				5AB6305217AFAADA00A5455B /* KTVPriceListViewController_5.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4339,7 +4375,6 @@
 				5A1C811017A2649D007F7434 /* CinemaViewController.m in Sources */,
 				5A1C811317A2649D007F7434 /* MovieCinemaCell.m in Sources */,
 				5AAE4DA717A77DD500914B3D /* UncaughtExceptionHandler.m in Sources */,
-				5AC3767D17A7AB2C009B06DF /* WebSiteBuyViewController.m in Sources */,
 				5AC376BE17A89FE4009B06DF /* MMHud.m in Sources */,
 				5AC376BF17A89FE4009B06DF /* MMProgressHUD+Animations.m in Sources */,
 				5AC376C017A89FE4009B06DF /* MMProgressHUD+Class.m in Sources */,
@@ -4357,6 +4392,7 @@
 				5AC376E017A9F668009B06DF /* ApiCmdMovie_getTodayTotalSchedule.m in Sources */,
 				5AC376E317A9F7F8009B06DF /* ApiCmd_recommendOrLook.m in Sources */,
 				5AC376E617AA007B009B06DF /* ApiCmd_app_suggestion.m in Sources */,
+				5AB6304717AFA07B00A5455B /* WebSiteBuyViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4435,8 +4471,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "6A85830D-D404-4672-A304-03521B979D26";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6A85830D-D404-4672-A304-03521B979D26";
+				PROVISIONING_PROFILE = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -4462,8 +4498,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "6A85830D-D404-4672-A304-03521B979D26";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6A85830D-D404-4672-A304-03521B979D26";
+				PROVISIONING_PROFILE = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -4494,8 +4530,8 @@
 				);
 				OTHER_CFLAGS = "-DAB_LOGGER";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6A85830D-D404-4672-A304-03521B979D26";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6A85830D-D404-4672-A304-03521B979D26";
+				PROVISIONING_PROFILE = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -4529,8 +4565,8 @@
 					"-DNS_BLOCK_ASSERTIONS=1",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6A85830D-D404-4672-A304-03521B979D26";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6A85830D-D404-4672-A304-03521B979D26";
+				PROVISIONING_PROFILE = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

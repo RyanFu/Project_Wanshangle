@@ -66,6 +66,12 @@
 
 #pragma mark -
 #pragma mark UIView Cycle
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];

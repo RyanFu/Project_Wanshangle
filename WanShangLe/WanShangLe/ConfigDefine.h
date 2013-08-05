@@ -72,3 +72,6 @@
 //CGRect ( 0, 20, 320, 548)
 #define iPhoneAppFrame [[UIScreen mainScreen] applicationFrame]
 #define iPhoneScreenBounds [[UIScreen mainScreen] bounds]
+#define navigationBarHeight 44.0f
+
+

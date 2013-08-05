@@ -153,7 +153,7 @@
 - (void)clickSettingButton:(id)sender{
     
     if (![self checkUserCity])return;
-    SettingViewController* settingController = [[SettingViewController alloc] initWithNibName:@"SettingViewController" bundle:nil];
+    SettingViewController* settingController = [[SettingViewController alloc] initWithNibName:(iPhone5?@"SettingViewController_5":@"SettingViewController") bundle:nil];
     [self.navigationController pushViewController:settingController animated:YES];
     [settingController release];
 }
@@ -360,6 +360,10 @@
     }
     
     userClickStyle = WSLUserClickStyleNone;
+}
+
+- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	return (interfaceOrientation == UIDeviceOrientationPortrait);
 }
 
 - (void)didReceiveMemoryWarning

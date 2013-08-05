@@ -17,7 +17,9 @@
     enum WXScene _scene;
 }
 @property (nonatomic,readonly) AGViewDelegate *viewDelegate;
+@property (nonatomic,readonly) UINavigationController *rootController;
 @property (retain, nonatomic) UIWindow *window;
 
 + (instancetype)appDelegateInstance;
+- (void)reSetKeyWindow;
 @end

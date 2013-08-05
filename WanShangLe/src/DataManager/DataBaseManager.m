@@ -1766,26 +1766,6 @@ static DataBaseManager *_sharedInstance = nil;
 #pragma mark -
 #pragma mark 演出
 /****************************************** 演出 *********************************************/
-- (ApiCmd *)getAllShowsListFromWeb:(id<ApiNotify>)delegate{
-    
-    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
-    if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
-        ABLoggerWarn(@"不能请求演出列表数据，因为已经请求了");
-        return tapiCmd;
-    }
-    
-    ApiClient* apiClient = [ApiClient defaultClient];
-    
-    ApiCmdShow_getAllShows* apiCmdShow_getAllShows = [[ApiCmdShow_getAllShows alloc] init];
-    apiCmdShow_getAllShows.delegate = delegate;
-    apiCmdShow_getAllShows.cityName = [[LocationManager defaultLocationManager] getUserCity];
-    apiCmdShow_getAllShows.cityId = [[LocationManager defaultLocationManager] getUserCityId];
-    [apiClient executeApiCmdAsync:apiCmdShow_getAllShows];
-    [apiCmdShow_getAllShows.httpRequest setTag:API_SShowCmd];
-    
-    return [apiCmdShow_getAllShows autorelease];
-}
-
 
 - (NSArray *)getAllShowsListFromCoreData{
     return [self getAllShowsListFromCoreDataWithCityName:nil];
