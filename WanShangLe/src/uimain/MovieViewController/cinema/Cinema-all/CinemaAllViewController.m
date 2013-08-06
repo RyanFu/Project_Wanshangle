@@ -397,7 +397,7 @@
     NSArray *array_coreData = pageArray;
     ABLoggerDebug(@"影院 count ==== %d",[array_coreData count]);
     
-    NSArray *regionOrder = [[DataBaseManager sharedInstance] getRegionOrder];
+//    NSArray *regionOrder = [[DataBaseManager sharedInstance] getRegionOrder];
     
     NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
     
@@ -405,7 +405,7 @@
         NSString *key = tMcine.district;
         
         if (![districtDic objectForKey:key]) {
-            ABLoggerInfo(@"key === %@",key);
+            ABLoggerInfo(@"districtName === %@",key);
             NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:DataCount];
             [districtDic setObject:tarray forKey:key];
             [tarray release];
@@ -417,11 +417,11 @@
         [_mArray removeAllObjects];
     }
     
-    for (NSString *key in regionOrder) {
+    for (NSString *key in [districtDic allKeys]) {
         
-        if (![districtDic objectForKey:key]) {
-            continue;
-        }
+//        if (![districtDic objectForKey:key]) {
+//            continue;
+//        }
         
         NSMutableDictionary *dic = nil;
         

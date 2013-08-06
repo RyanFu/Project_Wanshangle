@@ -121,13 +121,13 @@
         
         self.mMovieDetail = _mMovie.movieDetail;
     }
-
-    [_movie_portImgView setImageWithURL:[NSURL URLWithString:_mMovie.webImg]
-                      placeholderImage:[UIImage imageNamed:@"movie_placeholder_H@2x"]
-                               options:SDWebImageRetryFailed];
 }
 
 - (void)initMovieDetailData{
+    
+    [_movie_portImgView setImageWithURL:[NSURL URLWithString:_mMovieDetail.webImg]
+                       placeholderImage:[UIImage imageNamed:@"movie_placeholder_H@2x"]
+                                options:SDWebImageRetryFailed];
 
     _movie_director.text = [_mMovieDetail.info objectForKey:@"director"];
     _movie_actor.text = [_mMovieDetail.info objectForKey:@"star"];
@@ -135,7 +135,6 @@
     _movie_district.text = [NSString stringWithFormat:@"%@(%@)",_mMovieDetail.productarea,_mMovieDetail.language];
     _movie_timeLong.text = [[_mMovieDetail.info objectForKey:@"duration"] stringByAppendingString:@"分钟"];
     _movie_uptime.text = [_mMovieDetail.info objectForKey:@"startday"];
-    
     _movie_rating.text = [NSString stringWithFormat:@"%@评分: %@",_mMovie.ratingFrom,_mMovie.rating];
     _movie_introduce.text = [_mMovieDetail.info objectForKey:@"description"];
     

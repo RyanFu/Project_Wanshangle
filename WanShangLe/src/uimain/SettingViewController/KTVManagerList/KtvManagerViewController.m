@@ -454,7 +454,7 @@
     NSArray *array_coreData = pageArray;
     ABLoggerDebug(@"KTV店 count ==== %d",[array_coreData count]);
     
-    NSArray *regionOrder = [[DataBaseManager sharedInstance] getRegionOrder];
+//    NSArray *regionOrder = [[DataBaseManager sharedInstance] getRegionOrder];
     
     NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
     NSMutableDictionary *district_id_Dic = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
@@ -468,7 +468,7 @@
             ABLoggerInfo(@"districtId === %d",[districtId intValue]);
             NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:DataCount];
             [districtDic setObject:tarray forKey:key];
-            [districtDic setObject:key forKey:@"districtId"];
+//            [districtDic setObject:key forKey:@"districtId"];
             [tarray release];
             
             [district_id_Dic setObject:districtId forKey:key];
@@ -476,11 +476,11 @@
         [[districtDic objectForKey:key] addObject:tKTV];
     }
     
-    for (NSString *key in regionOrder) {
+    for (NSString *key in [districtDic allKeys]) {
         
-        if (![districtDic objectForKey:key]) {
-            continue;
-        }
+//        if (![districtDic objectForKey:key]) {
+//            continue;
+//        }
         
         NSMutableDictionary *dic = nil;
         

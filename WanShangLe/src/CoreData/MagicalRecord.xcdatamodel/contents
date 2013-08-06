@@ -42,6 +42,7 @@
         <attribute name="recommendation" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wantlook" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="webImg" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="bar" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="BBar" inverseName="barDetail" inverseEntity="BBar" syncable="YES"/>
     </entity>
     <entity name="City" representedClassName="City" syncable="YES">
@@ -145,6 +146,7 @@
         <attribute name="recommendation" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wantlook" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="webImg" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="movie" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="MMovie" inverseName="movieDetail" inverseEntity="MMovie" syncable="YES"/>
     </entity>
     <entity name="MSchedule" representedClassName="MSchedule" syncable="YES">
@@ -196,7 +198,7 @@
     <elements>
         <element name="ActionState" positionX="-290" positionY="-729" width="128" height="209"/>
         <element name="BBar" positionX="-522" positionY="-805" width="128" height="330"/>
-        <element name="BBarDetail" positionX="-711" positionY="-757" width="128" height="148"/>
+        <element name="BBarDetail" positionX="-711" positionY="-757" width="128" height="165"/>
         <element name="City" positionX="-137" positionY="-738" width="128" height="90"/>
         <element name="KKTV" positionX="142" positionY="-838" width="128" height="375"/>
         <element name="KKTVBuyInfo" positionX="430" positionY="-909" width="128" height="103"/>
@@ -205,7 +207,7 @@
         <element name="MCinema" positionX="205" positionY="-420" width="128" height="330"/>
         <element name="MMovie" positionX="-443" positionY="-351" width="128" height="285"/>
         <element name="MMovie_Cinema" positionX="-173" positionY="-313" width="128" height="105"/>
-        <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="165"/>
+        <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="180"/>
         <element name="MSchedule" positionX="-207" positionY="-108" width="128" height="120"/>
         <element name="SShow" positionX="-137" positionY="-1204" width="128" height="345"/>
         <element name="SShowDetail" positionX="-335" positionY="-1044" width="128" height="180"/>

@@ -903,6 +903,7 @@ static DataBaseManager *_sharedInstance = nil;
     aMovieDetail.language = [amovieDetailData objectForKey:@"language"];
     aMovieDetail.productarea = [amovieDetailData objectForKey:@"productarea"];
     aMovieDetail.locationDate = [self getTodayTimeStamp];
+    aMovieDetail.webImg = [amovieDetailData objectForKey:@"coverurl_thumbnail_1"];
 }
 
 /*
@@ -1619,6 +1620,7 @@ static DataBaseManager *_sharedInstance = nil;
             mCinema.locationDate = [self getTodayTimeStamp];
             mCinema.dataType = apiCmd.dataType;
             mCinema.districtId =  [NSNumber numberWithInt:[[cinema_dic objectForKey:@"districtid"] intValue]];
+            mCinema.district = [cinema_dic objectForKey:@"districtName"];
             
             /*折扣和团购*/
             mCinema.tuan = [[dynamic_dic objectForKey:@"channel"] objectAtIndex:0];
