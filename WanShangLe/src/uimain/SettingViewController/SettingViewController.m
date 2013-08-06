@@ -17,7 +17,7 @@
 #import <ShareSDK/ShareSDK.h>
 #import "AppDelegate.h"
 
-#define DisplayTime 2
+#define DisplayTime 1
 
 @interface SettingViewController (){
     
@@ -122,7 +122,7 @@
 
 - (void)updateFilterDistanceData:(int)index{
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    NSArray *array = [[NSArray alloc] initWithObjects:@"1",@"3",@"5",@"10",nil];
+    NSArray *array = [[[NSArray alloc] initWithObjects:@"1",@"3",@"5",@"10",nil] autorelease];
     [userDefault setObject:[array objectAtIndex:index] forKey:DistanceFilterData];
     [userDefault setObject:[NSString stringWithFormat:@"%d",index] forKey:DistanceFilter];
     [userDefault synchronize];
@@ -162,7 +162,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             //                [self stopTKLoadingView];
             [MMProgressHUD dismissWithSuccess:@"清理完毕!"];
-            [self updateCacheSize];
+             _cacheLabel.text = [NSString stringWithFormat:@"0.0M"];
         });
     });
 }
@@ -177,7 +177,7 @@
 }
 
 -(IBAction)clickRatingUs:(id)sender{
-    NSUInteger m_appleID = 519513981;
+    NSUInteger m_appleID = 684303588;
     NSString *str = [NSString stringWithFormat:
                      @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%d",
                      m_appleID ];

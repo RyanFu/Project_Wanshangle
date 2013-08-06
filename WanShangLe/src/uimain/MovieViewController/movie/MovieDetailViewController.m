@@ -17,7 +17,8 @@
 #import "ApiCmd_recommendOrLook.h"
 #import "ApiCmd_recommendOrLook.h"
 
-#define IntroduceLabelHeight 213
+#define IntroduceLabelHeight_5 213
+#define IntroduceLabelHeight 127
 
 @interface MovieDetailViewController ()<ApiNotify>{
      ShareType _followType;
@@ -146,8 +147,8 @@
         introFrame.size.height = misize.height;
         _movie_introduce.frame = introFrame;
         
-        if (misize.height>IntroduceLabelHeight) {
-            float extendHeight = misize.height - IntroduceLabelHeight;
+        if (misize.height>(iPhone5?IntroduceLabelHeight_5:IntroduceLabelHeight)) {
+            float extendHeight = misize.height - (iPhone5?IntroduceLabelHeight_5:IntroduceLabelHeight);
              [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height+extendHeight)];
             CGRect bgImgFrame = _movie_introBgImgView.frame;
             bgImgFrame.size.height += extendHeight;

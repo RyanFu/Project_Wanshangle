@@ -252,7 +252,7 @@
     [self.view addSubview:_cityPanelMask];
     [_cityPanelMask release];
     
-    self.cityPanel = [[UIView alloc] initWithFrame:CGRectMake(0, -120, 320, 119)];
+    self.cityPanel = [[[UIView alloc] initWithFrame:CGRectMake(0, -120, 320, 119)] autorelease];
     
     
     UIImageView *bgImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_city_panel@2x"]];

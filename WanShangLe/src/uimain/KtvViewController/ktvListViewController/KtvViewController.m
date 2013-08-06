@@ -104,11 +104,10 @@
     nearbyButton = bt2;
     allButton = bt3;
     
-    UIImageView *imgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"btn_filter_indicator"]];
+    UIImageView *imgView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"btn_filter_indicator"]] autorelease];
     imgView.frame = CGRectMake(46, 34, 13, 6);
     [_filterHeaderView addSubview:imgView];
-    _filterIndicator = imgView;
-    [imgView release];
+    self.filterIndicator = imgView;
     
     [self.view addSubview:_filterHeaderView];
 }

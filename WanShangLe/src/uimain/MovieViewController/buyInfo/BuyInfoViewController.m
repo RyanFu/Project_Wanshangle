@@ -108,7 +108,7 @@
 
 - (void)initTableView{
     [_mTableView setTableHeaderView:_mHeaderView];
-    [_mTableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
+    [_mTableView setTableFooterView:[[[UIView alloc] initWithFrame:CGRectZero] autorelease]];
     [_mTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [_mTableView setBackgroundColor:[UIColor colorWithRed:0.784 green:0.800 blue:0.835 alpha:1.000]];
 }

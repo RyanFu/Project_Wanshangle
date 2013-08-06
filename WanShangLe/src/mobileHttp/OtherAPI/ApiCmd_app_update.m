@@ -84,6 +84,7 @@
     // prepare http request
     NSURL *url = [NSURL URLWithString:urlStr];
     ABLoggerInfo(@"软件更新 url ===== %@",urlStr);
+    [urlStr release];
     return url;
 }
 

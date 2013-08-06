@@ -275,7 +275,7 @@
 - (void)newCinemaController{
     
     if (!_cinemaViewController) {
-        _cinemaViewController = [[CinemaViewController alloc] initWithNibName:nil bundle:nil];
+        _cinemaViewController = [[CinemaViewController alloc] initWithNibName:(iPhone5?@"CinemaViewController_5":@"CinemaViewController") bundle:nil];
         _cinemaViewController.mparentController = self;
     }
     _cinemaViewController.view.frame = CGRectMake(self.view.bounds.size.width, 0, self.view.bounds.size.width, self.view.bounds.size.height);

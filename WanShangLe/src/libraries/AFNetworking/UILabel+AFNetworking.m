@@ -195,6 +195,7 @@ static char kAFJSONRequestOperationObjectKey;
          }*/
         [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
             
+            ABLoggerDebug(@"今天排期 总数 是 ===== %@",responseObject);
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 int rounds = [[[responseObject objectForKey:@"data"] objectForKey:@"rounds"] intValue];
                 NSString *resultString = [NSString stringWithFormat:@"还剩%d场 %@",rounds,[[responseObject objectForKey:@"data"] objectForKey:@"type"]] ;

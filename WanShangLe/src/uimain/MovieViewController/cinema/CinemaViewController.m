@@ -137,7 +137,7 @@
 
 - (void)switchToAllTableView{
     if (_allController==nil) {
-        _allController = [[CinemaAllViewController alloc] initWithNibName:@"CinemaAllViewController" bundle:nil];
+        _allController = [[CinemaAllViewController alloc] initWithNibName:(iPhone5?@"CinemaAllViewController_5":@"CinemaAllViewController") bundle:nil];
         _allController.mParentController = self;
     }
     self.mSelectedController = _allController;
@@ -152,7 +152,7 @@
 
 - (void)switchToNearByTableView{
     if (_nearByController==nil) {
-        _nearByController = [[CinemaNearByViewController alloc] initWithNibName:@"CinemaNearByViewController" bundle:nil];
+        _nearByController = [[CinemaNearByViewController alloc] initWithNibName:(iPhone5?@"CinemaNearByViewController_5":@"CinemaNearByViewController") bundle:nil];
         _nearByController.mParentController = self;
     }
     self.mSelectedController = _nearByController;
@@ -168,7 +168,7 @@
 
 - (void)switchToFavoriteTableView {
     if (_favoriteController==nil) {
-        _favoriteController = [[CinemaFavoriteViewController alloc] initWithNibName:@"CinemaFavoriteViewController" bundle:nil];
+        _favoriteController = [[CinemaFavoriteViewController alloc] initWithNibName:(iPhone5?@"CinemaFavoriteViewController_5":@"CinemaFavoriteViewController") bundle:nil];
         _favoriteController.mParentController = self;
     }
     self.mSelectedController = _favoriteController;
@@ -190,7 +190,7 @@
 }
 
 - (void)clickMovieDetail:(id)sender{
-    MovieDetailViewController *movieDetailController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
+    MovieDetailViewController *movieDetailController = [[MovieDetailViewController alloc] initWithNibName:(iPhone5?@"MovieDetailViewController_5":@"MovieDetailViewController") bundle:nil];
     movieDetailController.mMovie = self.mMovie;
     [_mparentController.navigationController pushViewController:movieDetailController animated:YES];
     [movieDetailController release];

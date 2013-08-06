@@ -75,10 +75,11 @@
     for (NSString *key in [paramDict allKeys]) {
         [urlStr appendFormat:@"&%@=%@",key,[paramDict objectForKey:key]];
     }
-    
+    [paramDict release];
     // prepare http request
     NSURL *url = [NSURL URLWithString:urlStr];
     ABLoggerInfo(@"request url ===== %@",urlStr);
+    [urlStr release];
     return url;
 }
 

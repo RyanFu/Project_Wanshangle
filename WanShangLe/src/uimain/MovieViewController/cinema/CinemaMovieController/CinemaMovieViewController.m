@@ -174,7 +174,7 @@
 
 - (IBAction)clickMovieInfo:(id)sender{
     ABLoggerInfo(@"");
-    MovieDetailViewController *movieDetailController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
+    MovieDetailViewController *movieDetailController = [[MovieDetailViewController alloc] initWithNibName:(iPhone5?@"MovieDetailViewController_5":@"MovieDetailViewController") bundle:nil];
     movieDetailController.mMovie = self.mMovie;
     [self.navigationController pushViewController:movieDetailController animated:YES];
     [movieDetailController release];

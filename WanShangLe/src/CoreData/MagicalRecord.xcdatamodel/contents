@@ -192,6 +192,7 @@
         <attribute name="locationDate" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <fetchRequest name="FetchRequest" entity="KKTV" predicateString="dataType != &quot;1&quot;"/>
     <elements>
         <element name="ActionState" positionX="-290" positionY="-729" width="128" height="209"/>
         <element name="BBar" positionX="-522" positionY="-805" width="128" height="330"/>

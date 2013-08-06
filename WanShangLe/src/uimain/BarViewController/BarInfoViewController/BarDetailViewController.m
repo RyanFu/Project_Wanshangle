@@ -16,7 +16,8 @@
 #import "ActionState.h"
 #import "SIAlertView.h"
 
-#define IntroduceLabelHeight 213
+#define IntroduceLabelHeight_5 213
+#define IntroduceLabelHeight 130
 @interface BarDetailViewController ()<ApiNotify>{
     ShareType _followType;
     BOOL isRecommended;
@@ -123,8 +124,8 @@
         introFrame.size.height = misize.height;
         _bar_introduce.frame = introFrame;
         
-        if (misize.height>IntroduceLabelHeight) {
-            float extendHeight = misize.height - IntroduceLabelHeight;
+        if (misize.height>(iPhone5?IntroduceLabelHeight_5:IntroduceLabelHeight) ) {
+            float extendHeight = misize.height - (iPhone5?IntroduceLabelHeight_5:IntroduceLabelHeight);
             [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height+extendHeight)];
             CGRect bgImgFrame = _barDetailImg.frame;
             bgImgFrame.size.height += extendHeight;

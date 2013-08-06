@@ -111,7 +111,7 @@
     
     if (![self checkUserCity])return;
     
-    MovieViewController *_movieViewController = [[MovieViewController alloc] initWithNibName:nil bundle:nil];
+    MovieViewController *_movieViewController = [[MovieViewController alloc] initWithNibName:(iPhone5?@"MovieViewController_5":@"MovieViewController") bundle:nil];
     [self.navigationController pushViewController:_movieViewController animated:YES];
     [_movieViewController release];
 }
@@ -189,7 +189,7 @@
     [self.view addSubview:_cityPanelMask];
     [_cityPanelMask release];
     
-    self.cityPanel = [[UIView alloc] initWithFrame:CGRectMake(0, -120, 320, 119)];
+    self.cityPanel = [[[UIView alloc] initWithFrame:CGRectMake(0, -120, 320, 119)] autorelease];
     
     
     UIImageView *bgImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_city_panel@2x"]];
@@ -251,7 +251,6 @@
     [self cleanCityButtonStateWithPanel:_cityPanel];
     [self selectedCityButtonInPanel:_cityPanel];
     [self startAnimationCityPanel];
-    [_cityPanel release];
     [bt4 release];
     [bt3 release];
     [bt2 release];

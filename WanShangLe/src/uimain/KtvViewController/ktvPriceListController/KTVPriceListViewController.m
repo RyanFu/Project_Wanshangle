@@ -88,7 +88,7 @@
     
     _mTableViewDelegate = [[KTVPriceTableViewDelegate alloc] init];
     
-    _mTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    _mTableView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
     [_mTableView setTableHeaderView:_mTableHeaderView];
     
     _ktv_introduce.numberOfLines = 0;

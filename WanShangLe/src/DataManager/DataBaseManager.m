@@ -100,7 +100,31 @@ static DataBaseManager *_sharedInstance = nil;
     [[NSFileManager defaultManager] removeItemAtPath:cachePath error:nil];
     
     //清除缓存的CoreData
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSManagedObjectModel *managedObjectModel = [NSManagedObjectModel MR_defaultManagedObjectModel];
+    NSArray *entitiesByName = [[managedObjectModel entitiesByName] allKeys];
     
+    for (NSString *tableName in entitiesByName ){
+        ABLoggerDebug(@"tableName === %@",tableName);
+        if ([tableName isEqualToString:@"City"]) {
+            continue;
+        }
+        
+        NSPredicate *predicate = nil;
+        if ([tableName isEqualToString:@"ActionState"]) {
+            predicate = [NSPredicate predicateWithFormat:@"endTime < %@",[self getTodayZeroTimeStamp]];
+        }else if([tableName isEqualToString:@"KKTV"]){
+            NSString *dataType = [NSString stringWithFormat:@"%d",API_KKTVCmd];
+            predicate = [NSPredicate predicateWithFormat:@"dataType != %@ or favorite = NO",dataType];
+        }else if([tableName isEqualToString:@"MCinema"]){
+            NSString *dataType = [NSString stringWithFormat:@"%d",API_MCinemaCmd];
+            predicate = [NSPredicate predicateWithFormat:@"dataType != %@ or favorite = NO",dataType];
+        }
+    
+        [NSClassFromString(tableName) MR_deleteAllMatchingPredicate:predicate inContext:context];
+    }
+    
+    [self saveInManagedObjectContext:context];
     return YES;
 }
 
@@ -328,8 +352,8 @@ static DataBaseManager *_sharedInstance = nil;
 //几天后的时间
 - (NSString *)dateWithTimeIntervalSinceNow:(NSTimeInterval)timeInterval fromDate:(NSString *)beginDate{
     _timeFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-    NSDate *afterDate = [_timeFormatter dateFromString:beginDate];
-    afterDate = [NSDate dateWithTimeIntervalSinceNow:timeInterval];//(2*30*24 * 60 * 60)两个月
+//    NSDate *afterDate = [_timeFormatter dateFromString:beginDate];
+    NSDate *afterDate = [NSDate dateWithTimeIntervalSinceNow:timeInterval];//(2*30*24 * 60 * 60)两个月
     
     return [_timeFormatter stringFromDate:afterDate];
 }
@@ -736,7 +760,7 @@ static DataBaseManager *_sharedInstance = nil;
 {
     mMovie.uid = [amovieData objectForKey:@"id"];
     mMovie.name = [amovieData objectForKey:@"name"];
-    mMovie.webImg = [amovieData objectForKey:@"coverurl"];
+    mMovie.webImg = [amovieData objectForKey:@"coverurl_thumbnail_2"];
     mMovie.aword = [amovieData objectForKey:@"description"];
     mMovie.duration = [amovieData objectForKey:@"duration"];
     mMovie.isHot = [amovieData objectForKey:@"ishot"];

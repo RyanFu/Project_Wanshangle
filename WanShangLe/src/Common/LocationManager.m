@@ -280,6 +280,11 @@
     //        ABLoggerInfo(@"定位信息 == 英文");
     //    }
     
+    if ([[newCity substringFromIndex:[newCity length]-1] isEqualToString:@"市"]) {
+        newCity = [newCity substringToIndex:[newCity length]-1];
+        ABLoggerInfo(@"定位信息 == 汉字 == %@",newCity);
+    }
+    
     if ([[DataBaseManager sharedInstance] validateCity:newCity]) {
         
     }
@@ -316,7 +321,7 @@
                                       ABLoggerDebug(@"确定切换城市");
                                   }];
             
-            alertView.transitionStyle = SIAlertViewTransitionStyleDropDown;
+            alertView.transitionStyle = SIAlertViewTransitionStyleFade;
             alertView.backgroundStyle = SIAlertViewBackgroundStyleSolid;
             
             [alertView show];
@@ -353,7 +358,7 @@
                                   ABLoggerDebug(@"确定切换城市");
                               }];
         
-        alertView.transitionStyle = SIAlertViewTransitionStyleDropDown;
+        alertView.transitionStyle = SIAlertViewTransitionStyleFade;
         alertView.backgroundStyle = SIAlertViewBackgroundStyleSolid;
         
         [alertView show];

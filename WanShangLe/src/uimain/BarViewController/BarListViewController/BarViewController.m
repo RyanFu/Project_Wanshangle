@@ -107,7 +107,7 @@
     UIImageView *imgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"btn_filter_indicator"]];
     imgView.frame = CGRectMake(46, 34, 13, 6);
     [_filterHeaderView addSubview:imgView];
-    _filterIndicator = imgView;
+    self.filterIndicator = imgView;
     [imgView release];
     
     [self.view addSubview:_filterHeaderView];
@@ -118,7 +118,7 @@
 
 - (void)switchToAllTableView{
     if (_allController==nil) {
-        _allController = [[BarTimeViewController alloc] initWithNibName:@"BarTimeViewController" bundle:nil];
+        _allController = [[BarTimeViewController alloc] initWithNibName:(iPhone5?@"BarTimeViewController_5":@"BarTimeViewController") bundle:nil];
         _allController.mParentController = self;
     }
     self.mSelectedController = _allController;
@@ -133,7 +133,7 @@
 
 - (void)switchToNearByTableView{
     if (_nearByController==nil) {
-        _nearByController = [[BarNearByViewController alloc] initWithNibName:@"BarNearByViewController" bundle:nil];
+        _nearByController = [[BarNearByViewController alloc] initWithNibName:(iPhone5?@"BarNearByViewController_5":@"BarNearByViewController") bundle:nil];
     }
     self.mSelectedController = _nearByController;
     UIView *currentActiveView = [self.view viewWithTag:KTVVIEW];
@@ -148,7 +148,7 @@
 
 - (void)switchToFavoriteTableView {
     if (_favoriteController==nil) {
-        _favoriteController = [[BarPopularViewController alloc] initWithNibName:@"BarPopularViewController" bundle:nil];
+        _favoriteController = [[BarPopularViewController alloc] initWithNibName:(iPhone5?@"BarPopularViewController_5":@"BarPopularViewController") bundle:nil];
     }
     self.mSelectedController = _favoriteController;
     UIView *currentActiveView = [self.view viewWithTag:KTVVIEW];
