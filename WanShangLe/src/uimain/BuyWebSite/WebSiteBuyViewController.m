@@ -43,11 +43,21 @@
     [super dealloc];
 }
 
+#pragma mark -
+#pragma mark UIView Recycle
+- (void)viewWillAppear:(BOOL)animated{
+    [self.navigationController setNavigationBarHidden:YES];
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+     [self.navigationController setNavigationBarHidden:NO];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    [self initBarItem];
+//    [self initBarItem];
     
     [self initData];
     
@@ -70,7 +80,7 @@
 - (void)initData{
     
     NSURL *url = [NSURL URLWithString:_mURLStr];
-    _mWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height-49)];
+    _mWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height-40)];
     [_mWebView loadRequest:[NSURLRequest requestWithURL:url]];
     _mWebView.delegate = self;
     _mWebView.scrollView.delegate = self;
@@ -81,6 +91,10 @@
 
 #pragma mark -
 #pragma mark UIButton Events
+- (IBAction)popViewController:(id)sender{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 - (void)clickBackButton:(id)sender{
     [self.navigationController popViewControllerAnimated:YES];
     [self clickErrorOtherCancelButton:nil];

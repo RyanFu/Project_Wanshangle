@@ -329,6 +329,7 @@
 //    NSArray *regionOrder = [[DataBaseManager sharedInstance] getRegionOrder];
     
     NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
+    NSMutableArray *districtOrder = [NSMutableArray arrayWithCapacity:DataCount];
     
     for (KKTV *tKTV in array_coreData) {
         NSString *key = tKTV.district;
@@ -346,7 +347,11 @@
         [_mArray removeAllObjects];
     }
     
-    for (NSString *key in [districtDic allKeys]) {
+    for (NSString *key in districtOrder) {
+        
+        if (![districtDic objectForKey:key]) {
+            continue;
+        }
         
         NSMutableDictionary *dic = nil;
         

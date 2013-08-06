@@ -347,7 +347,6 @@
 		5AAE4DA017A75D9000914B3D /* bg_information_bar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AAE4D9F17A75D9000914B3D /* bg_information_bar@2x.png */; };
 		5AAE4DA717A77DD500914B3D /* UncaughtExceptionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AAE4DA617A77DD500914B3D /* UncaughtExceptionHandler.m */; };
 		5AAE873D178E8E1500D2F8C2 /* ApiCmdKTV_getSearchKTVs.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AAE873C178E8E1500D2F8C2 /* ApiCmdKTV_getSearchKTVs.m */; };
-		5AB358061760381C002A6803 /* NSDate-Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB358051760381C002A6803 /* NSDate-Utilities.m */; };
 		5AB6303C17AF552D00A5455B /* SettingViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6303B17AF552D00A5455B /* SettingViewController_5.xib */; };
 		5AB6303E17AF553600A5455B /* SuggestionViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6303D17AF553600A5455B /* SuggestionViewController_5.xib */; };
 		5AB6304017AF649500A5455B /* CinemaManagerViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6303F17AF649500A5455B /* CinemaManagerViewController_5.xib */; };
@@ -369,6 +368,9 @@
 		5AB6306217B09D4600A5455B /* CinemaFavoriteViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6306117B09D4600A5455B /* CinemaFavoriteViewController_5.xib */; };
 		5AB6306417B09D5E00A5455B /* CinemaNearByViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6306317B09D5E00A5455B /* CinemaNearByViewController_5.xib */; };
 		5AB6306617B09D9100A5455B /* CinemaMovieViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6306517B09D9000A5455B /* CinemaMovieViewController.xib */; };
+		5AB6307317B0DEB800A5455B /* NSDate-Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB6306F17B0DEB800A5455B /* NSDate-Utilities.m */; };
+		5AB6307417B0DEB800A5455B /* UIImage+Crop.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB6307217B0DEB800A5455B /* UIImage+Crop.m */; };
+		5AB6307717B0F35A00A5455B /* btn_webView_back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6307617B0F35A00A5455B /* btn_webView_back@2x.png */; };
 		5AC3767717A7A60D009B06DF /* btn_checkBox_f@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AC3767517A7A60D009B06DF /* btn_checkBox_f@2x.png */; };
 		5AC3767817A7A60D009B06DF /* btn_checkBox_n@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AC3767617A7A60D009B06DF /* btn_checkBox_n@2x.png */; };
 		5AC3769517A7AE3E009B06DF /* bg_error_inputBox@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5AC3768017A7AE3E009B06DF /* bg_error_inputBox@2x.png */; };
@@ -1278,8 +1280,6 @@
 		5AAE4DA617A77DD500914B3D /* UncaughtExceptionHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UncaughtExceptionHandler.m; sourceTree = "<group>"; };
 		5AAE873B178E8E1500D2F8C2 /* ApiCmdKTV_getSearchKTVs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCmdKTV_getSearchKTVs.h; sourceTree = "<group>"; };
 		5AAE873C178E8E1500D2F8C2 /* ApiCmdKTV_getSearchKTVs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmdKTV_getSearchKTVs.m; sourceTree = "<group>"; };
-		5AB358041760381C002A6803 /* NSDate-Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate-Utilities.h"; sourceTree = "<group>"; };
-		5AB358051760381C002A6803 /* NSDate-Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate-Utilities.m"; sourceTree = "<group>"; };
 		5AB6303B17AF552D00A5455B /* SettingViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingViewController_5.xib; sourceTree = "<group>"; };
 		5AB6303D17AF553600A5455B /* SuggestionViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SuggestionViewController_5.xib; sourceTree = "<group>"; };
 		5AB6303F17AF649500A5455B /* CinemaManagerViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaManagerViewController_5.xib; sourceTree = "<group>"; };
@@ -1302,6 +1302,12 @@
 		5AB6306117B09D4600A5455B /* CinemaFavoriteViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaFavoriteViewController_5.xib; sourceTree = "<group>"; };
 		5AB6306317B09D5E00A5455B /* CinemaNearByViewController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaNearByViewController_5.xib; sourceTree = "<group>"; };
 		5AB6306517B09D9000A5455B /* CinemaMovieViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaMovieViewController.xib; sourceTree = "<group>"; };
+		5AB6306E17B0DEB800A5455B /* NSDate-Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate-Utilities.h"; sourceTree = "<group>"; };
+		5AB6306F17B0DEB800A5455B /* NSDate-Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate-Utilities.m"; sourceTree = "<group>"; };
+		5AB6307117B0DEB800A5455B /* UIImage+Crop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Crop.h"; sourceTree = "<group>"; };
+		5AB6307217B0DEB800A5455B /* UIImage+Crop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Crop.m"; sourceTree = "<group>"; };
+		5AB6307517B0E30200A5455B /* ShareDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareDefine.h; sourceTree = "<group>"; };
+		5AB6307617B0F35A00A5455B /* btn_webView_back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_webView_back@2x.png"; sourceTree = "<group>"; };
 		5AC3767517A7A60D009B06DF /* btn_checkBox_f@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_checkBox_f@2x.png"; sourceTree = "<group>"; };
 		5AC3767617A7A60D009B06DF /* btn_checkBox_n@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_checkBox_n@2x.png"; sourceTree = "<group>"; };
 		5AC3768017A7AE3E009B06DF /* bg_error_inputBox@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg_error_inputBox@2x.png"; sourceTree = "<group>"; };
@@ -2376,11 +2382,12 @@
 		5A76C4D3175DBE8B0067BC30 /* WanShangLe */ = {
 			isa = PBXGroup;
 			children = (
-				5A246F42175DE9CC00C000CA /* ConfigDefine.h */,
 				5A76C4DC175DBE8B0067BC30 /* AppDelegate.h */,
 				5A76C4DD175DBE8B0067BC30 /* AppDelegate.m */,
 				5A5E19E9178136F5008A6D97 /* AGViewDelegate.h */,
 				5A5E19EA178136F5008A6D97 /* AGViewDelegate.m */,
+				5A246F42175DE9CC00C000CA /* ConfigDefine.h */,
+				5AB6307517B0E30200A5455B /* ShareDefine.h */,
 				5A76C4D4175DBE8B0067BC30 /* Supporting Files */,
 			);
 			path = WanShangLe;
@@ -2640,8 +2647,8 @@
 		5AAC6FDD17601BDB004B7395 /* category */ = {
 			isa = PBXGroup;
 			children = (
-				5AB358041760381C002A6803 /* NSDate-Utilities.h */,
-				5AB358051760381C002A6803 /* NSDate-Utilities.m */,
+				5AB6306D17B0DEB800A5455B /* NSDate */,
+				5AB6307017B0DEB800A5455B /* UIImage */,
 				5AAC6FDE17601BDB004B7395 /* MKAdditions */,
 			);
 			path = category;
@@ -3076,9 +3083,28 @@
 			path = BuyWebSite;
 			sourceTree = "<group>";
 		};
+		5AB6306D17B0DEB800A5455B /* NSDate */ = {
+			isa = PBXGroup;
+			children = (
+				5AB6306E17B0DEB800A5455B /* NSDate-Utilities.h */,
+				5AB6306F17B0DEB800A5455B /* NSDate-Utilities.m */,
+			);
+			path = NSDate;
+			sourceTree = "<group>";
+		};
+		5AB6307017B0DEB800A5455B /* UIImage */ = {
+			isa = PBXGroup;
+			children = (
+				5AB6307117B0DEB800A5455B /* UIImage+Crop.h */,
+				5AB6307217B0DEB800A5455B /* UIImage+Crop.m */,
+			);
+			path = UIImage;
+			sourceTree = "<group>";
+		};
 		5AC3767F17A7AE3E009B06DF /* webImgs */ = {
 			isa = PBXGroup;
 			children = (
+				5AB6307617B0F35A00A5455B /* btn_webView_back@2x.png */,
 				5AC3768017A7AE3E009B06DF /* bg_error_inputBox@2x.png */,
 				5AC3768117A7AE3E009B06DF /* bg_web_bottomBar@2x.png */,
 				5AC3768217A7AE3E009B06DF /* btn_arrow_back@2x.png */,
@@ -4117,6 +4143,7 @@
 				5AB6306217B09D4600A5455B /* CinemaFavoriteViewController_5.xib in Resources */,
 				5AB6306417B09D5E00A5455B /* CinemaNearByViewController_5.xib in Resources */,
 				5AB6306617B09D9100A5455B /* CinemaMovieViewController.xib in Resources */,
+				5AB6307717B0F35A00A5455B /* btn_webView_back@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4224,7 +4251,6 @@
 				5AAC70F317601BDB004B7395 /* RootViewController.m in Sources */,
 				5AAC70F617601BDB004B7395 /* ShowViewController.m in Sources */,
 				5AAC70FF17601C83004B7395 /* DataBaseManager.m in Sources */,
-				5AB358061760381C002A6803 /* NSDate-Utilities.m in Sources */,
 				5A1746F8176057E400E155AB /* SIAlertView.m in Sources */,
 				5A1747171761729300E155AB /* MagicalRecord.xcdatamodel in Sources */,
 				5A1747331761ADCA00E155AB /* ApiClient.m in Sources */,
@@ -4433,6 +4459,8 @@
 				5AC376E317A9F7F8009B06DF /* ApiCmd_recommendOrLook.m in Sources */,
 				5AC376E617AA007B009B06DF /* ApiCmd_app_suggestion.m in Sources */,
 				5AB6304717AFA07B00A5455B /* WebSiteBuyViewController.m in Sources */,
+				5AB6307317B0DEB800A5455B /* NSDate-Utilities.m in Sources */,
+				5AB6307417B0DEB800A5455B /* UIImage+Crop.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

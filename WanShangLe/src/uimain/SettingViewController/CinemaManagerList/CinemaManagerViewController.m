@@ -470,6 +470,7 @@
     
     NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
     NSMutableDictionary *district_id_Dic = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
+    NSMutableArray *districtOrder = [NSMutableArray arrayWithCapacity:DataCount];
     
     for (MCinema *tCinema in array_coreData) {
         NSString *key = tCinema.district;
@@ -478,6 +479,7 @@
         if (![districtDic objectForKey:key]) {
             ABLoggerInfo(@"key === %@",key);
             ABLoggerInfo(@"districtId === %d",[districtId intValue]);
+            [districtOrder addObject:key];
             NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:DataCount];
             [districtDic setObject:tarray forKey:key];
 //            [districtDic setObject:key forKey:@"districtId"];
@@ -488,11 +490,11 @@
         [[districtDic objectForKey:key] addObject:tCinema];
     }
     
-    for (NSString *key in [districtDic allKeys]) {
+    for (NSString *key in districtOrder) {
         
-//        if (![districtDic objectForKey:key]) {
-//            continue;
-//        }
+        if (![districtDic objectForKey:key]) {
+            continue;
+        }
         
         NSMutableDictionary *dic = nil;
         

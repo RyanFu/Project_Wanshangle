@@ -400,12 +400,14 @@
 //    NSArray *regionOrder = [[DataBaseManager sharedInstance] getRegionOrder];
     
     NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
+    NSMutableArray *districtOrder = [NSMutableArray arrayWithCapacity:DataCount];
     
     for (MCinema *tMcine in array_coreData) {
         NSString *key = tMcine.district;
         
         if (![districtDic objectForKey:key]) {
             ABLoggerInfo(@"districtName === %@",key);
+            [districtOrder addObject:key];
             NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:DataCount];
             [districtDic setObject:tarray forKey:key];
             [tarray release];
@@ -417,11 +419,11 @@
         [_mArray removeAllObjects];
     }
     
-    for (NSString *key in [districtDic allKeys]) {
+    for (NSString *key in districtOrder) {
         
-//        if (![districtDic objectForKey:key]) {
-//            continue;
-//        }
+        if (![districtDic objectForKey:key]) {
+            continue;
+        }
         
         NSMutableDictionary *dic = nil;
         

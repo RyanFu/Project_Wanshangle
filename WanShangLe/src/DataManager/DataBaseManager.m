@@ -619,7 +619,7 @@ static DataBaseManager *_sharedInstance = nil;
     NSString *cityId = nil;
     cityId = [[LocationManager defaultLocationManager] getUserCityId];
     
-    return [City MR_findAllSortedBy:@"uid" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"uid != %@",cityId] offset:0 limit:1000 inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return [City MR_findAllSortedBy:@"uid" ascendingBy:@"YES" withPredicate:[NSPredicate predicateWithFormat:@"uid != %@",cityId] offset:0 limit:1000 inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 //========================================= 城市 =========================================/
 
@@ -659,7 +659,15 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (NSArray *)getAllMoviesListFromCoreDataWithCityName:(NSString *)cityName{
     NSString *todayTimeStamp = [self getTodayZeroTimeStamp];
-   return [MMovie MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"locationDate >= %@",todayTimeStamp] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    NSString *sortTerm = @"isHot,isNew,iMAX3D,v3D,iMAX3D,startday,name";
+    NSString *ascendingTerm = @"NO,NO,NO,NO,NO,YES,YES";
+    
+    return [MMovie MR_findAllSortedBy:sortTerm
+                          ascendingBy:ascendingTerm
+                        withPredicate:[NSPredicate predicateWithFormat:@"locationDate >= %@",todayTimeStamp]
+                               offset:0
+                                limit:10000
+                            inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
 - (NSUInteger)getCountOfMoviesListFromCoreData{
@@ -692,8 +700,9 @@ static DataBaseManager *_sharedInstance = nil;
             ABLoggerInfo(@"插入 一条 New电影 新数据 ======= %@",[[array objectAtIndex:i] objectForKey:@"name"]);
             mMovie = [MMovie MR_createInContext:[NSManagedObjectContext MR_contextForCurrentThread]];
         }
-        [self importMovie:mMovie ValuesForKeysWithObject:[array objectAtIndex:i]];
         
+        mMovie.sortID = [NSNumber numberWithInt:i];
+        [self importMovie:mMovie ValuesForKeysWithObject:[array objectAtIndex:i]];
         [self importDynamicMovie:mMovie ValuesForKeysWithObject:[array_dynamic objectAtIndex:i]];
         
         [returnArray addObject:mMovie];
@@ -716,45 +725,6 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 /**
- {
- {
- httpCode: 200,
- errors: [ ],
- data: {
- movies: [
- {
- id: "45",
- uniquekey: "410f930d440f4a733817ae31a111714e",
- name: "不肯去观音",
- url: "http://movie.douban.com/subject/24269094/",
- rating: "0.0",
- ratingcount: "0",
- director: "张鑫",
- star: "聂远,李纯,中泉英雄,中野良子,斯琴高娃,牛犇",
- type: "剧情,历史",
- hotstarttime: "2013-07-26 17:07:02",
- ishot: true,
- tag: "0",
- startday: "2013-07-26",
- isnew: true,
- shortdescription: null,
- duration: "117",
- coverurl: "Fatal error: Allowed memory size of 268435456 bytes exhausted (tried to allocate 6436 bytes) in /var/www/em.server/protected/modules/attachment/controllers/UploadController.php on line 50",
- imagesurl: "http://img5.douban.com/img/trailer/medium/2019052729.jpg,http://img3.douban.com/view/photo/albumicon/public/p2009485013.jpg,http://img3.douban.com/view/photo/albumicon/public/p2009483547.jpg,http://img3.douban.com/view/photo/albumicon/public/p2009482366.jpg,http://img3.douban.com/view/photo/albumicon/public/p2009483841.jpg",
- trailersurl: "http://movie.douban.com/trailer/137305/#content",
- status: "0",
- coverimg: "",
- createtime: "2013-07-26 17:07:02",
- createdbysuid: "12",
- lastmodifiedtime: "2013-07-26 17:07:02",
- lastmodifiedbysuid: "12",
- currentstatus: "2",
- votecountadded: "0",
- ratingadded: "4.7",
- ratingcountadded: "110",
- recommendadded: "62",
- wantedadded: "80"
- },
  ***/
 - (void)importMovie:(MMovie *)mMovie ValuesForKeysWithObject:(NSDictionary *)amovieData
 {
@@ -765,8 +735,9 @@ static DataBaseManager *_sharedInstance = nil;
     mMovie.duration = [amovieData objectForKey:@"duration"];
     mMovie.isHot = [amovieData objectForKey:@"ishot"];
     mMovie.isNew = [amovieData objectForKey:@"isnew"];
-    mMovie.rating =[amovieData objectForKey:@"rating"];
+    mMovie.rating = [NSNumber numberWithFloat:[[amovieData objectForKey:@"rating"] floatValue]];
     mMovie.ratingpeople = [amovieData objectForKey:@"ratingcount"];
+    mMovie.startday = [amovieData objectForKey:@"startday"];
     mMovie.locationDate = [self getTodayTimeStamp];
 }
 
@@ -1450,7 +1421,7 @@ static DataBaseManager *_sharedInstance = nil;
     }
     
     NSArray *returnArray = [MCinema MR_findAllSortedBy:@"districtId"
-                                             ascending:YES
+                                             ascendingBy:@"YES"
                                          withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and locationDate >= %@ and dataType = %@",cityId,validDate,dataType]
                                                 offset:offset
                                                  limit:limit
@@ -1973,18 +1944,18 @@ static DataBaseManager *_sharedInstance = nil;
                                         validDate:(NSString *)validDate{
     
     NSString *sortedBy = @"beginTime";
-    BOOL isAscending = ([dataSort isEqualToString:@"asc"])?YES:NO;
+    NSString* isAscending = ([dataSort isEqualToString:@"asc"])?@"YES":@"NO";
     switch ([dataOrder intValue]) {
         case 1://时间
             sortedBy = @"beginTime";
             break;
         case 2://评分
             sortedBy = @"recommend";
-            isAscending = YES;
+            isAscending = @"YES";
             break;
         case 3://距离
             sortedBy = @"distance";
-            isAscending = YES;
+            isAscending = @"YES";
             break;
         case 4://价格
             sortedBy = @"price";
@@ -1998,7 +1969,7 @@ static DataBaseManager *_sharedInstance = nil;
     }
     NSString *data_type = [NSString stringWithFormat:@"%@-%@-%@-%@",dataType,dataTimedistance,dataOrder,dataSort];
     return [SShow MR_findAllSortedBy:sortedBy
-                           ascending:isAscending
+                           ascendingBy:isAscending
                        withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and locationDate >= %@ and dataType = %@",cityId,validDate,data_type]
                               offset:offset
                                limit:limit
@@ -2322,7 +2293,7 @@ static DataBaseManager *_sharedInstance = nil;
                                         dataType:(NSString *)dataType
                                        validDate:(NSString *)validDate{
     NSString *sortStr = @"begintime";
-    BOOL isAscending = YES;
+    NSString* isAscending = @"YES";
     if ([dataType intValue]==2) {//1代表时间，2代表人气，3代表附近
         sortStr = @"popular";
         isAscending = NO;
@@ -2332,7 +2303,7 @@ static DataBaseManager *_sharedInstance = nil;
     }
     
     return [BBar MR_findAllSortedBy:sortStr
-                          ascending:isAscending
+                          ascendingBy:isAscending
                       withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and locationDate >= %@ and dataType = %@",cityId,validDate,dataType]
                              offset:offset
                               limit:limit
@@ -2692,7 +2663,7 @@ static DataBaseManager *_sharedInstance = nil;
         cityId = [[LocationManager defaultLocationManager] getUserCityId];
     }
     NSArray *returnArray = [KKTV MR_findAllSortedBy:@"districtid"
-                                             ascending:YES
+                                             ascendingBy:@"YES"
                                          withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and locationDate >= %@ and dataType = %@",cityId,validDate,dataType]
                                                 offset:offset
                                                  limit:limit

@@ -58,10 +58,9 @@
 
 //分页
 + (NSArray *) MR_findAllSortedBy:(NSString *)sortTerm
-                       ascending:(BOOL)ascending
+                       ascendingBy:(NSString *)ascending
                    withPredicate:(NSPredicate *)searchTerm
                           offset:(int)offset
                            limit:(int)limit
                        inContext:(NSManagedObjectContext *)context;
-
 @end

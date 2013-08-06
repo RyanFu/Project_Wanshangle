@@ -226,7 +226,7 @@
         
         NSString *name = [[_mArray objectAtIndex:section] objectForKey:@"name"];
         NSArray *list = [[_mArray objectAtIndex:section] objectForKey:@"list"];
-        headerView.text = [NSString stringWithFormat:@"%@  (共%d家)",name,[list count]];
+        headerView.text = [NSString stringWithFormat:@"%@",name];
         
         return [headerView autorelease];
 

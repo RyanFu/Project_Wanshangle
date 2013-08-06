@@ -135,7 +135,7 @@
     _movie_district.text = [NSString stringWithFormat:@"%@(%@)",_mMovieDetail.productarea,_mMovieDetail.language];
     _movie_timeLong.text = [[_mMovieDetail.info objectForKey:@"duration"] stringByAppendingString:@"分钟"];
     _movie_uptime.text = [_mMovieDetail.info objectForKey:@"startday"];
-    _movie_rating.text = [NSString stringWithFormat:@"%@评分: %@",_mMovie.ratingFrom,_mMovie.rating];
+    _movie_rating.text = [NSString stringWithFormat:@"%@评分: %0.1f",_mMovie.ratingFrom,[_mMovie.rating floatValue]];
     _movie_introduce.text = [_mMovieDetail.info objectForKey:@"description"];
     
     CGSize misize = [_movie_introduce.text sizeWithFont:_movie_introduce.font constrainedToSize:CGSizeMake(_movie_introduce.bounds.size.width, MAXFLOAT)];

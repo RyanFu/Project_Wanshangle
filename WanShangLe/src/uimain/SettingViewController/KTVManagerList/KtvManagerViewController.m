@@ -458,6 +458,7 @@
     
     NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
     NSMutableDictionary *district_id_Dic = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
+     NSMutableArray *districtOrder = [NSMutableArray arrayWithCapacity:DataCount];
     
     for (KKTV *tKTV in array_coreData) {
         NSString *key = tKTV.district;
@@ -476,11 +477,11 @@
         [[districtDic objectForKey:key] addObject:tKTV];
     }
     
-    for (NSString *key in [districtDic allKeys]) {
+    for (NSString *key in districtOrder) {
         
-//        if (![districtDic objectForKey:key]) {
-//            continue;
-//        }
+        if (![districtDic objectForKey:key]) {
+            continue;
+        }
         
         NSMutableDictionary *dic = nil;
         
