@@ -43,7 +43,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         
-        self.apiCmdMovie_getAllMovies = (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+        self.apiCmdMovie_getAllMovies = (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self cinemaId:nil];
         
         [self newCinemaController];
         
@@ -77,7 +77,7 @@
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
     
-    self.apiCmdMovie_getAllMovies =  (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+    self.apiCmdMovie_getAllMovies =  (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self cinemaId:nil];
     
     if (_cinemaViewController.view.frame.origin.x == 0) {//当界面处在影院列表的时候才考虑 viewWillAppear
         [_cinemaViewController viewWillAppear:animated];

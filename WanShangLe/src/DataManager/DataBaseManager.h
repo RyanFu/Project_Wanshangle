@@ -92,7 +92,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 
 /************************  电影 *********************************/
 /***************************************************************/
-- (ApiCmd *)getAllMoviesListFromWeb:(id<ApiNotify>)delegate;
+- (ApiCmd *)getAllMoviesListFromWeb:(id<ApiNotify>)delegate cinemaId:(NSString *)cinemaID;
 - (NSArray *)getAllMoviesListFromCoreData;
 - (NSArray *)getAllMoviesListFromCoreDataWithCityName:(NSString *)cityName;
 - (NSUInteger)getCountOfMoviesListFromCoreData;

@@ -626,18 +626,26 @@ static DataBaseManager *_sharedInstance = nil;
 #pragma mark -
 #pragma mark 电影
 /****************************************** 电影 *********************************************/
-- (ApiCmd *)getAllMoviesListFromWeb:(id<ApiNotify>)delegate{
+- (ApiCmd *)getAllMoviesListFromWeb:(id<ApiNotify>)delegate cinemaId:(NSString *)cinemaID{
     
-    ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
+    ApiCmd *tapiCmd = nil;
+    if (isEmpty(cinemaID)) {
+        tapiCmd = [delegate apiGetDelegateApiCmd];
+    }else{
+         tapiCmd = [delegate apiGetDelegateApiCmdWithTag:API_MCinemaValidMovies];
+    }
+    
     if ([[[[ApiClient defaultClient] networkQueue] operations]containsObject:tapiCmd.httpRequest]) {
         ABLoggerWarn(@"不能请求电影列表数据，因为已经请求了");
         return tapiCmd;
     }
     
-    NSArray *cacheArray = [self getAllMoviesListFromCoreDataWithCityName:nil];
-    if (cacheArray!=nil && [cacheArray count]>0) {
-        [delegate apiNotifyLocationResult:tapiCmd cacheOneData:cacheArray];
-        return tapiCmd;
+    if (isEmpty(cinemaID)) {
+        NSArray *cacheArray = [self getAllMoviesListFromCoreDataWithCityName:nil];
+        if (cacheArray!=nil && [cacheArray count]>0) {
+            [delegate apiNotifyLocationResult:tapiCmd cacheOneData:cacheArray];
+            return tapiCmd;
+        }
     }
     
     ApiClient* apiClient = [ApiClient defaultClient];
@@ -646,8 +654,15 @@ static DataBaseManager *_sharedInstance = nil;
     apiCmdMovie_getAllMovies.delegate = delegate;
     apiCmdMovie_getAllMovies.cityName = [[LocationManager defaultLocationManager] getUserCity];
     apiCmdMovie_getAllMovies.cityId = [[LocationManager defaultLocationManager] getUserCityId];
+    apiCmdMovie_getAllMovies.cinemaid = cinemaID;
     [apiClient executeApiCmdAsync:apiCmdMovie_getAllMovies];
-    [apiCmdMovie_getAllMovies.httpRequest setTag:API_MMovieCmd];
+    
+    if (isEmpty(cinemaID)) {
+       [apiCmdMovie_getAllMovies.httpRequest setTag:API_MMovieCmd]; 
+    }else{
+        [apiCmdMovie_getAllMovies.httpRequest setTag:API_MCinemaValidMovies]; 
+    }
+    
     [apiCmdMovie_getAllMovies.httpRequest setNumberOfTimesToRetryOnTimeout:2];
     [apiCmdMovie_getAllMovies.httpRequest setTimeOutSeconds:60*2];
     

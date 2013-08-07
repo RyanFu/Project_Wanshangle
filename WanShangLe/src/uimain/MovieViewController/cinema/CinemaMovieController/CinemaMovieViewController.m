@@ -8,6 +8,7 @@
 
 #import "CinemaMovieViewController.h"
 #import "ApiCmdMovie_getSchedule.h"
+#import "ApiCmdMovie_getAllMovies.h"
 #import "CinemaMovieTableViewDelegate.h"
 #import "CinemaViewController.h"
 #import "ASIHTTPRequest.h"
@@ -22,6 +23,7 @@
 #import "UIImageView+WebCache.h"
 #import <ShareSDK/ShareSDK.h>
 #import "SIAlertView.h"
+#import "NSMutableArray+TKCategory.h"
 
 #define CoverFlowItemTag 100
 #define TuanViewTag 50
@@ -33,10 +35,11 @@
 @property(nonatomic,retain) NSString *tomorrowWeek;
 @property(nonatomic,retain) ApiCmdMovie_getSchedule *apiCmdMovie_getScheduleToday;
 @property(nonatomic,retain) ApiCmdMovie_getSchedule *apiCmdMovie_getScheduleTomorrow;
+@property(nonatomic,retain) ApiCmdMovie_getAllMovies *apiCmdMovie_getAllMovies;
 @property(nonatomic,retain) CinemaMovieTableViewDelegate *cinemaMovieTableViewDelegate;
 @property(nonatomic,retain) NSArray *todaySchedules;
 @property(nonatomic,retain) NSArray *tomorrowSchedules;
-@property(nonatomic,retain) NSArray *moviesArray;
+@property(nonatomic,retain) NSMutableArray *moviesArray;
 @end
 
 @implementation CinemaMovieViewController
@@ -84,6 +87,11 @@
     [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdMovie_getScheduleTomorrow];
     self.apiCmdMovie_getScheduleTomorrow.delegate = nil;
     self.apiCmdMovie_getScheduleTomorrow = nil;
+    
+    [self.apiCmdMovie_getAllMovies.httpRequest clearDelegatesAndCancel];
+    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdMovie_getAllMovies];
+    self.apiCmdMovie_getAllMovies.delegate = nil;
+    self.apiCmdMovie_getAllMovies = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -109,7 +117,10 @@
 }
 
 - (void)initData{
-    self.moviesArray = [[DataBaseManager sharedInstance] getAllMoviesListFromCoreData];
+    
+    self.moviesArray = [[[NSMutableArray alloc] initWithCapacity:DataCount] autorelease];
+    NSArray *movies = [[DataBaseManager sharedInstance] getAllMoviesListFromCoreData];
+    [self.moviesArray addObjectsFromArray:movies];
     
     if (!_cinemaMovieTableViewDelegate) {
         _cinemaMovieTableViewDelegate = [[CinemaMovieTableViewDelegate alloc] init];
@@ -119,7 +130,7 @@
     _todayButton.selected =YES;
     
     _coverFlow.type = iCarouselTypeLinear;
-    [_coverFlow reloadData];
+//    [_coverFlow reloadData];
     
     self.cinemaName.text = _mCinema.name;
     self.cinemaAddress.text = _mCinema.address;
@@ -129,6 +140,9 @@
         _favoriteButton.selected = YES;
         [_favoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
     }
+    
+    //请求服务器获取改影院正在放映的电影列表
+    self.apiCmdMovie_getAllMovies = (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self cinemaId:_mCinema.uid];
 }
 
 - (void)createBarButtonItem{
@@ -470,15 +484,18 @@
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        MSchedule *tSchedule = [[DataBaseManager sharedInstance] insertScheduleIntoCoreDataFromObject:[apiCmd responseJSONObject]
-                                                                                           withApiCmd:apiCmd
-                                                                                           withaMovie:_mMovie
-                                                                                           andaCinema:_mCinema
-                                                                                         timedistance:[(ApiCmdMovie_getSchedule *)apiCmd timedistance]];
-        int tag = [[apiCmd httpRequest] tag];
-        NSString *timedistance = [[[(ApiCmdMovie_getSchedule *)apiCmd timedistance] retain] autorelease];
-        [self updateData:tag timeDistance:timedistance dataDic:tSchedule.scheduleInfo];
-        
+         int tag = [[apiCmd httpRequest] tag];
+        if (tag==API_MCinemaValidMovies) {
+            [self updateData:API_MCinemaValidMovies timeDistance:nil dataDic:[apiCmd responseJSONObject]];
+        }else{
+            MSchedule *tSchedule = [[DataBaseManager sharedInstance] insertScheduleIntoCoreDataFromObject:[apiCmd responseJSONObject]
+                                                                                               withApiCmd:apiCmd
+                                                                                               withaMovie:_mMovie
+                                                                                               andaCinema:_mCinema
+                                                                                             timedistance:[(ApiCmdMovie_getSchedule *)apiCmd timedistance]];
+            NSString *timedistance = [[[(ApiCmdMovie_getSchedule *)apiCmd timedistance] retain] autorelease];
+            [self updateData:tag timeDistance:timedistance dataDic:tSchedule.scheduleInfo];
+        }
     });
 }
 
@@ -498,10 +515,20 @@
             return _apiCmdMovie_getScheduleToday;
             break;
             
-        default:
+        case 1:
             return _apiCmdMovie_getScheduleTomorrow;
             break;
+            
+        case API_MCinemaValidMovies:
+            return _apiCmdMovie_getAllMovies;
+            break;
+        default:
+        {
+            NSAssert(0, @"没有从网络抓取到数据");
+        }
     }
+    
+    return nil;
 }
 
 - (void)updateData:(int)tag timeDistance:(NSString *)timedistance dataDic:(NSDictionary *)dataDic
@@ -513,6 +540,11 @@
         case API_MScheduleCmd:
         {
             [self formatCinemaData:dataDic timeDistance:timedistance];
+        }
+            break;
+        case API_MCinemaValidMovies:
+        {
+            [self filterAvalidateMoviesDataDic:dataDic];
         }
             break;
         default:
@@ -550,6 +582,19 @@
             [self refreshTomorrowSchedule];
         }
     });
+}
+
+- (void)filterAvalidateMoviesDataDic:(NSDictionary *)dataDic{
+    
+    NSArray *array = [[dataDic objectForKey:@"data"] objectForKey:@"movies"];
+    ABLoggerDebug(@"count 1 == %d",[_moviesArray count]);
+    [self.moviesArray filterUsingPredicate:[NSPredicate predicateWithFormat:@"self.uid IN %@", array]];
+    
+    ABLoggerDebug(@"count 2 == %d",[_moviesArray count]);
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [_coverFlow reloadData];
+    });
+    
 }
 
 - (void)shareButtonClick:(id)sender{
