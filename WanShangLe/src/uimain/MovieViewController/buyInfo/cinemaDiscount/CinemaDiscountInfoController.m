@@ -101,13 +101,14 @@
     
     self.mCinemaDiscount = [[DataBaseManager sharedInstance] getCinemaDiscountFromCoreData:_mCinema];
     
-    if (isEmpty(_mCinemaDiscount.discountInfo)) {//影院折扣详情空
+    if (_mCinemaDiscount.discountInfo==nil) {//影院折扣详情空
            self.apiCmdMovie_getCinemaDiscount =  (ApiCmdMovie_getCinemaDiscount *)[[DataBaseManager sharedInstance] getCinemaDiscountFromWebDelegate:self cinema:_mCinema];
         
     }else{
-        dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-             [self formatCinemaData:nil];
-        });
+        self.mArray = [self.mCinemaDiscount.discountInfo objectForKey:@"specialoffers"];
+        [self setTableViewDelegate];
+        
+        [_mTableView reloadData];
     }
 }
 
