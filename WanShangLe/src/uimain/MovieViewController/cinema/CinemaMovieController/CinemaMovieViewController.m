@@ -366,6 +366,10 @@
 - (void)carouselDidEndScrollingAnimation:(iCarousel *)carousel{
     ABLoggerDebug(@"carouselDidEndScrollingAnimation ====== %d",carousel.currentItemIndex);
     
+    int moviesCount = [_moviesArray count];
+    if (carousel.currentItemIndex>moviesCount || carousel.currentItemIndex<=0) {
+        return;
+    }
     MMovie *aMovie = [_moviesArray objectAtIndex:carousel.currentItemIndex];
     self.mMovie = aMovie;
     

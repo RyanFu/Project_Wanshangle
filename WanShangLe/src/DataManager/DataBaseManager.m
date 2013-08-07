@@ -766,6 +766,9 @@ static DataBaseManager *_sharedInstance = nil;
     mMovie.iMAX3D = [[amovieData objectForKey:@"viewtypes"] objectAtIndex:0];
     mMovie.iMAX = [[amovieData objectForKey:@"viewtypes"]  objectAtIndex:1];
     mMovie.v3D = [[amovieData objectForKey:@"viewtypes"]  objectAtIndex:2];
+//    mMovie.iMAX3D = [NSNumber numberWithBool:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:0] intValue]];
+//    mMovie.iMAX = [NSNumber numberWithBool:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:1] intValue]];
+//    mMovie.v3D = [NSNumber numberWithBool:[[[amovieData objectForKey:@"viewtypes"] objectAtIndex:2] intValue]];
 }
 
 - (BOOL)addFavoriteCinemaWithId:(NSString *)uid{
