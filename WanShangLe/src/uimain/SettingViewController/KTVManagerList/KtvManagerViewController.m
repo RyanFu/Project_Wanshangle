@@ -469,7 +469,7 @@
             ABLoggerInfo(@"districtId === %d",[districtId intValue]);
             NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:DataCount];
             [districtDic setObject:tarray forKey:key];
-//            [districtDic setObject:key forKey:@"districtId"];
+            [districtOrder addObject:key];
             [tarray release];
             
             [district_id_Dic setObject:districtId forKey:key];

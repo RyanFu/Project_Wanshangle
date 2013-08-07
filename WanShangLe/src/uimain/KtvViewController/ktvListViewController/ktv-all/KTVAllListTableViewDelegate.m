@@ -250,10 +250,16 @@
     KTVBuyViewController *ktvBuyController = [[KTVBuyViewController alloc] initWithNibName:iPhone5?@"KTVBuyViewController_5":@"KTVBuyViewController" bundle:nil];
     
     KKTV *aKTV = nil;
-    int row = indexPath.row;
     
-    NSArray *list = [[_mArray objectAtIndex:indexPath.section] objectForKey:@"list"];
-    aKTV = [list objectAtIndex:row];
+    if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
+        
+        NSDictionary *dic = [_mArray objectAtIndex:indexPath.section];
+        NSArray *list = [dic objectForKey:@"list"];
+        aKTV = [list objectAtIndex:indexPath.row];
+        
+    } else {//搜索模式
+        aKTV = [_mSearchArray objectAtIndex:indexPath.row];
+    }
     
     ktvBuyController.mKTV = aKTV;
     [[CacheManager sharedInstance].rootNavController pushViewController:ktvBuyController animated:YES];

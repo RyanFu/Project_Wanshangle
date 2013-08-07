@@ -338,6 +338,7 @@
             ABLoggerInfo(@"key === %@",key);
             NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:DataCount];
             [districtDic setObject:tarray forKey:key];
+            [districtOrder addObject:key];
             [tarray release];
         }
         [[districtDic objectForKey:key] addObject:tKTV];
