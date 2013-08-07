@@ -97,13 +97,13 @@
     _cinema_name_label.text = _mCinema.name;
     _cinema_address_label.text = _mCinema.address;
     _schedule_label.text = _mSchedule;
+   _discountButton.enabled = NO;
     
-   
-    
-    self.apiCmdMovie_getBuyInfo =  (ApiCmdMovie_getBuyInfo *)[[DataBaseManager sharedInstance]       getBuyInfoFromWebWithaMovie:_mMovie
-                                                          aCinema:_mCinema
-                                                        aSchedule:nil
-                                                         delegate:self];
+    self.apiCmdMovie_getBuyInfo =  (ApiCmdMovie_getBuyInfo *)[[DataBaseManager sharedInstance]
+                                                              getBuyInfoFromWebWithaMovie:_mMovie
+                                                              aCinema:_mCinema
+                                                              aSchedule:_mSchedule
+                                                              delegate:self];
 }
 
 - (void)initTableView{
@@ -159,7 +159,7 @@
                                                                     withApiCmd:apiCmd
                                                                     withaMovie:_mMovie
                                                                     andaCinema:_mCinema
-                                                                    aSchedule:nil];
+                                                                    aSchedule:_mSchedule];
         
         int tag = [[apiCmd httpRequest] tag];
         [self updateData:tag responseData:[[apiCmd responseJSONObject] objectForKey:@"data"]];
@@ -197,28 +197,38 @@
 - (void)formatCinemaData:(NSDictionary *)responseDic{
     ABLoggerMethod();
     
-    _price_label.text = [NSString stringWithFormat:@"现场价 %0.2f元",[[responseDic objectForKey:@"origprice"] floatValue]];
-    _discountNum.text = [NSString stringWithFormat:@"%d项",[[responseDic objectForKey:@"specialpfferscount"] intValue]];
-    
-    self.marray = [responseDic objectForKey:@"deals"];
+    self.marray = [responseDic objectForKey:@"prices"];
     ABLoggerDebug(@"marray count ==== %d",[_marray count]);
     
-    self.marray  = [self.marray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-        int first =  [[(NSDictionary*)a objectForKey:@"price"] intValue];
-        int second = [[(NSDictionary*)b objectForKey:@"price"] intValue];
-        
-        if (first>second) {
-            return NSOrderedDescending;
-        }else if(first<second){
-            return NSOrderedAscending;
-        }else{
-            return NSOrderedSame;
-        }
-    }];
+//    //价钱排序，从低到高
+//    self.marray  = [self.marray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+//        int first =  [[(NSDictionary*)a objectForKey:@"price"] intValue];
+//        int second = [[(NSDictionary*)b objectForKey:@"price"] intValue];
+//        
+//        if (first>second) {
+//            return NSOrderedDescending;
+//        }else if(first<second){
+//            return NSOrderedAscending;
+//        }else{
+//            return NSOrderedSame;
+//        }
+//    }];
     
     [self setTableViewDelegate];
     
     dispatch_sync(dispatch_get_main_queue(), ^{
+        
+        _price_label.text = [NSString stringWithFormat:@"现场价 %0.1f元",[[responseDic objectForKey:@"origprice"] floatValue]];
+        
+        int discountCount = [[responseDic objectForKey:@"specialpfferscount"] intValue];
+        if (discountCount>0) {
+            _discountNum.text = [NSString stringWithFormat:@"%d项",discountCount];
+            _discountButton.enabled = YES;
+        }else{
+            _discountNum.text = @"暂无";
+            _discountButton.enabled = NO;
+        }
+    
         
         [_mTableView reloadData];
     });

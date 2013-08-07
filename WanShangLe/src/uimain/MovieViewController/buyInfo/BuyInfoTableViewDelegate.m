@@ -85,7 +85,23 @@
     }else{
         cell.lowPriceImg.hidden = YES;
     }
-    cell.tuan_imgView.image = [UIImage imageNamed:@"tag_tuan@2x"];
+    
+    UIImage *tuanTypeImg = nil;
+    switch ([[dataDic objectForKey:@"type"] intValue]) {
+        case TuanGou:
+            tuanTypeImg = [UIImage imageNamed:@"tag_tuan@2x"];
+            break;
+        case TuanJuan:
+            tuanTypeImg = [UIImage imageNamed:@"tag_juan@2x"];
+            break;
+        case XuanZuo:
+            tuanTypeImg = [UIImage imageNamed:@"tag_seat@2x"];
+            break;
+        default:
+            tuanTypeImg = [UIImage imageNamed:@"tag_tuan@2x"];
+            break;
+    }
+    cell.tuan_imgView.image = tuanTypeImg;
     cell.vendor_name.text = [dataDic objectForKey:@"supplierName"];
     cell.price.text = [NSString stringWithFormat:@"%@元",[dataDic objectForKey:@"price"]];
 }
@@ -106,7 +122,7 @@
     BuyInfoTableViewCell *cell = (BuyInfoTableViewCell *)[[bt superview] superview];
     NSIndexPath *indexPath = [_mTableView indexPathForCell:cell];
     NSDictionary *dataDic = [_mArray objectAtIndex:indexPath.row];
-    NSString *urlstr = [dataDic objectForKey:@"murl"];
+    NSString *urlstr = [dataDic objectForKey:@"extpayurl"];
     
     NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
     NSNumber *buy_hint_bool = [userDefault objectForKey:BuyInfo_HintType];

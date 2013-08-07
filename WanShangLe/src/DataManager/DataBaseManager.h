@@ -117,9 +117,14 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (NSArray *)deleteUnavailableSchedules:(NSArray *)aArray;
 
 //购买信息
-- (ApiCmd *)getBuyInfoFromWebWithaMovie:(MMovie *)aMovie aCinema:(MCinema *)aCinema aSchedule:(NSString *)aSchedule delegate:(id<ApiNotify>)delegate;
+- (ApiCmd *)getBuyInfoFromWebWithaMovie:(MMovie *)aMovie
+                                aCinema:(MCinema *)aCinema
+                              aSchedule:(NSString *)aSchedule
+                               delegate:(id<ApiNotify>)delegate;
 
-- (MBuyTicketInfo *)getBuyInfoFromCoreDataWithCinema:(MCinema *)aCinema;
+- (MBuyTicketInfo *)getBuyInfoFromCoreDataWithCinema:(MCinema *)aCinema
+                                          withaMovie:(MMovie *)aMovie
+                                           aSchedule:(NSString *)aSchedule;
 
 - (void)insertBuyInfoIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd withaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema aSchedule:(NSString *)aSchedule;
 
@@ -158,8 +163,8 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 
 //影院折扣
 - (ApiCmd *)getCinemaDiscountFromWebDelegate:(id<ApiNotify>)delegate cinema:(MCinema *)aCinema;
-- (MBuyTicketInfo *)getCinemaDiscountFromCoreData:(MCinema *)aCinema;
-- (MBuyTicketInfo *)insertCinemaDiscountIntoCoreData:(NSDictionary *)objectData cinema:(MCinema *)aCinema withApiCmd:(ApiCmd*)apiCmd;
+- (MCinemaDiscount *)getCinemaDiscountFromCoreData:(MCinema *)aCinema;
+- (MCinemaDiscount *)insertCinemaDiscountIntoCoreData:(NSDictionary *)objectData cinema:(MCinema *)aCinema withApiCmd:(ApiCmd*)apiCmd;
 
 - (BOOL)addFavoriteCinemaWithId:(NSString *)uid;
 - (BOOL)deleteFavoriteCinemaWithId:(NSString *)uid;

@@ -20,6 +20,7 @@
 #import "MCinema.h"
 #import "MSchedule.h"
 #import "MBuyTicketInfo.h"
+#import "MCinemaDiscount.h"
 #import "ApiCmdMovie_getAllMovies.h"
 #import "ApiCmdMovie_getAllMovieDetail.h"
 #import "ApiCmdMovie_getAllCinemas.h"

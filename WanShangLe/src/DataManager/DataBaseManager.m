@@ -648,6 +648,8 @@ static DataBaseManager *_sharedInstance = nil;
     apiCmdMovie_getAllMovies.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     [apiClient executeApiCmdAsync:apiCmdMovie_getAllMovies];
     [apiCmdMovie_getAllMovies.httpRequest setTag:API_MMovieCmd];
+    [apiCmdMovie_getAllMovies.httpRequest setNumberOfTimesToRetryOnTimeout:2];
+    [apiCmdMovie_getAllMovies.httpRequest setTimeOutSeconds:60*2];
     
     return [apiCmdMovie_getAllMovies autorelease];
 }
@@ -659,14 +661,16 @@ static DataBaseManager *_sharedInstance = nil;
 
 - (NSArray *)getAllMoviesListFromCoreDataWithCityName:(NSString *)cityName{
     NSString *todayTimeStamp = [self getTodayZeroTimeStamp];
-    NSString *sortTerm = @"isHot,isNew,iMAX3D,v3D,iMAX3D,startday,name";
-    NSString *ascendingTerm = @"NO,NO,NO,NO,NO,YES,YES";
+    NSString *sortTerm = @"sortID";
+    NSString *ascendingTerm = @"YES";
+//    NSString *sortTerm = @"isHot,isNew,iMAX3D,v3D,iMAX3D,startday,name";
+//    NSString *ascendingTerm = @"NO,NO,NO,NO,NO,YES,YES";
     
     return [MMovie MR_findAllSortedBy:sortTerm
                           ascendingBy:ascendingTerm
                         withPredicate:[NSPredicate predicateWithFormat:@"locationDate >= %@",todayTimeStamp]
                                offset:0
-                                limit:10000
+                                limit:MAXFLOAT
                             inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
 }
 
@@ -929,8 +933,8 @@ static DataBaseManager *_sharedInstance = nil;
         movieDetail = [MMovieDetail MR_createInContext:context];
         movieDetail.uid = [infoDic objectForKey:@"movieid"];
     }
-    movieDetail.recommendation = [infoDic objectForKey:@"recommend"];
-    movieDetail.wantlook = [infoDic objectForKey:@"look"];
+    movieDetail.recommendation = [[infoDic objectForKey:@"recommend"] stringValue];
+    movieDetail.wantlook = [[infoDic objectForKey:@"look"] stringValue];
     
     [self saveInManagedObjectContext:context];
     
@@ -1125,7 +1129,7 @@ static DataBaseManager *_sharedInstance = nil;
 {
     ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
     
-    MBuyTicketInfo *buyInfo = [self getBuyInfoFromCoreDataWithCinema:aCinema];
+    MBuyTicketInfo *buyInfo = [self getBuyInfoFromCoreDataWithCinema:aCinema withaMovie:aMovie aSchedule:aSchedule];
     if (buyInfo!=nil) {
         [delegate apiNotifyLocationResult:tapiCmd cacheOneData:buyInfo.groupBuyInfo];
         return tapiCmd;
@@ -1138,54 +1142,24 @@ static DataBaseManager *_sharedInstance = nil;
     apiCmdMovie_getBuyInfo.cityId = [[LocationManager defaultLocationManager] getUserCityId];
     apiCmdMovie_getBuyInfo.cinemaId = aCinema.uid;
     apiCmdMovie_getBuyInfo.movieId = aMovie.uid;
+    apiCmdMovie_getBuyInfo.playtime = aSchedule;
     [apiClient executeApiCmdAsync:apiCmdMovie_getBuyInfo];
     [apiCmdMovie_getBuyInfo.httpRequest setTag:API_MBuyInfoCmd];
     
     return [apiCmdMovie_getBuyInfo autorelease];
 }
 
-- (MBuyTicketInfo *)getBuyInfoFromCoreDataWithCinema:(MCinema *)aCinema{
+- (MBuyTicketInfo *)getBuyInfoFromCoreDataWithCinema:(MCinema *)aCinema
+                                          withaMovie:(MMovie *)aMovie
+                                           aSchedule:(NSString *)aSchedule{
     MBuyTicketInfo *buyInfo = nil;
     NSString *todayTimeStamp = [self getTodayZeroTimeStamp];
-    buyInfo = [MBuyTicketInfo MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and locationDate >= %@ ",aCinema.uid,todayTimeStamp] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    NSString *uid = [NSString stringWithFormat:@"%@-%@-%@",aCinema.uid,aMovie.uid,aSchedule];
+    buyInfo = [MBuyTicketInfo MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and locationDate >= %@ ",uid,todayTimeStamp] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     return buyInfo;
 }
 
 /*
- {
- {
- httpCode: 200,
- errors: [ ],
- data: {
- deals: [
- {
- id: "61",
- uniquekey: "612412b12b3e16b55a186e33d2597905",
- supplierid: "7",
- cityid: "2",
- title: "仅售35元！价值150元的沪西电影院2D双人观影套餐，无需预约，如观看3D电影或限价片需到店补齐差价。",
- origprice: "15000",
- price: "3500",
- startdate: "2013-05-21",
- enddate: "2013-11-21",
- imageurl: "",
- weburl: "http://sh.meituan.com/deal/7944561.html",
- murl: "http://i.meituan.com/deal/7944561.html",
- modifieditems: "",
- categoryid: "6",
- currentstatus: "1",
- createtime: "2013-07-31 10:19:25",
- createdbysuid: "12",
- lastmodifiedtime: "2013-07-31 10:19:25",
- lastmodifiedbysuid: "12"
- }
- ],
- specialpfferscount: 0,
- origprice: "暂无价格"
- },
- token: null,
- timestamp: "1375409459"
- }
  */
 - (void)insertBuyInfoIntoCoreDataFromObject:(NSDictionary *)objectData
                                  withApiCmd:(ApiCmd*)apiCmd
@@ -1195,11 +1169,11 @@ static DataBaseManager *_sharedInstance = nil;
     
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     NSDictionary *dataDic = [objectData objectForKey:@"data"];
-
-    MBuyTicketInfo *buyInfo = [MBuyTicketInfo MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and locationDate >= %@",aCinema.uid,[self getTodayZeroTimeStamp]] inContext:context];
+    NSString *uid = [NSString stringWithFormat:@"%@-%@-%@",aCinema.uid,aMovie.uid,aSchedule];
+    MBuyTicketInfo *buyInfo = [MBuyTicketInfo MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and locationDate >= %@",uid,[self getTodayZeroTimeStamp]] inContext:context];
     if (buyInfo == nil) {
         buyInfo = [MBuyTicketInfo MR_createInContext:context];
-        buyInfo.uid = aCinema.uid;
+        buyInfo.uid = uid;
     }
     buyInfo.locationDate = [self getTodayTimeStamp];
     buyInfo.groupBuyInfo = dataDic;
@@ -1221,9 +1195,9 @@ static DataBaseManager *_sharedInstance = nil;
     
     ApiCmd *tapiCmd = [delegate apiGetDelegateApiCmd];
     
-    MBuyTicketInfo *buyInfo = [self getCinemaDiscountFromCoreData:aCinema];
-    if (buyInfo!=nil) {
-        [delegate apiNotifyLocationResult:tapiCmd cacheOneData:buyInfo];
+    MCinemaDiscount *discountInfo = [self getCinemaDiscountFromCoreData:aCinema];
+    if (discountInfo!=nil) {
+        [delegate apiNotifyLocationResult:tapiCmd cacheOneData:discountInfo];
         return tapiCmd;
     }
     
@@ -1238,30 +1212,30 @@ static DataBaseManager *_sharedInstance = nil;
     
     return [apiCmdMovie_getCinemaDiscount autorelease];
 }
-- (MBuyTicketInfo *)getCinemaDiscountFromCoreData:(MCinema *)aCinema{
-    MBuyTicketInfo *buyInfo = nil;
+- (MCinemaDiscount *)getCinemaDiscountFromCoreData:(MCinema *)aCinema{
+    MCinemaDiscount *discountInfo = nil;
     NSString *todayTimeStamp = [self getTodayZeroTimeStamp];
-    buyInfo = [MBuyTicketInfo MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and discountDate >= %@ ",aCinema.uid,todayTimeStamp] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-    return buyInfo;
+    discountInfo = [MCinemaDiscount MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and locationDate >= %@ ",aCinema.uid,todayTimeStamp] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return discountInfo;
 }
 
-- (MBuyTicketInfo *)insertCinemaDiscountIntoCoreData:(NSDictionary *)objectData
+- (MCinemaDiscount *)insertCinemaDiscountIntoCoreData:(NSDictionary *)objectData
                                               cinema:(MCinema *)aCinema
                                           withApiCmd:(ApiCmd*)apiCmd{
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    MBuyTicketInfo *buyInfo = [MBuyTicketInfo MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and discountDate >= %@",aCinema.uid,[self getTodayZeroTimeStamp]] inContext:context];
-    if (buyInfo == nil) {
-        buyInfo = [MBuyTicketInfo MR_createInContext:context];
-        buyInfo.uid = aCinema.uid;
+    MCinemaDiscount *discountInfo = [MBuyTicketInfo MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:@"uid = %@ and locationDate >= %@",aCinema.uid,[self getTodayZeroTimeStamp]] inContext:context];
+    if (discountInfo == nil) {
+        discountInfo = [MCinemaDiscount MR_createInContext:context];
+        discountInfo.uid = aCinema.uid;
     }
     
-    buyInfo.discountInfo = [[objectData objectForKey:@"data"] objectForKey:@"specialoffers"];
-    buyInfo.discountDate = [self getTodayTimeStamp];
+    discountInfo.discountInfo = [objectData objectForKey:@"data"];
+    discountInfo.locationDate = [self getTodayTimeStamp];
     
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
     ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
-    return buyInfo;
+    return discountInfo;
 }
 //========================================= 电影 =========================================/
 
@@ -2099,8 +2073,8 @@ static DataBaseManager *_sharedInstance = nil;
         showDetail = [SShowDetail MR_createInContext:context];
         showDetail.uid = [infoDic objectForKey:@"performid"];
     }
-    showDetail.recommendation = [infoDic objectForKey:@"recommend"];
-    showDetail.wantLook = [infoDic objectForKey:@"look"];
+    showDetail.recommendation = [[infoDic objectForKey:@"recommend"] stringValue];
+    showDetail.wantLook = [[infoDic objectForKey:@"look"] stringValue];
     
     [self saveInManagedObjectContext:context];
     
@@ -2481,8 +2455,8 @@ static DataBaseManager *_sharedInstance = nil;
         barDetail = [BBarDetail MR_createInContext:context];
         barDetail.uid = [infoDic objectForKey:@"id"];
     }
-    barDetail.recommendation = [infoDic objectForKey:@"recommend"];
-    barDetail.wantlook = [infoDic objectForKey:@"look"];
+    barDetail.recommendation = [[infoDic objectForKey:@"recommend"] stringValue];
+    barDetail.wantlook = [[infoDic objectForKey:@"look"] stringValue];
     
     [self saveInManagedObjectContext:context];
     

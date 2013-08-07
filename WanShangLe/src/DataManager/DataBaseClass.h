@@ -21,6 +21,7 @@
 @class MMovieDetail;
 @class MSchedule;
 @class MBuyTicketInfo;
+@class MCinemaDiscount;
 @class ApiCmdMovie_getAllMovies;
 @class ApiCmdMovie_getAllCinemas;
 @class ApiCmdMovie_getNearByCinemas;
@@ -47,12 +48,17 @@
 @class BBarDetail;
 @class ApiCmdBar_getAllBars;
 @class ApiCmdBar_getBarDetail;
+
 //分页数据
 #define DataLimit 40
 #define DataCount 20
 
-//API HTTPRequest TAG
+//电影团购信息 描述是1为选座 2为团购 3为券
+#define XuanZuo  1
+#define TuanGou  2
+#define TuanJuan 3
 
+//API HTTPRequest TAG
 //-------------推荐和想看----------------/
 #define API_RecommendOrLookCmd 99 //推荐和想看
 #define API_RecommendOrLookMovieType    @"MovieType" //推荐和想看

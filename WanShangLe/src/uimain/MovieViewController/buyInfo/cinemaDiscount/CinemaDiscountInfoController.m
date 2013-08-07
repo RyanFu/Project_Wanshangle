@@ -8,8 +8,10 @@
 
 #import "CinemaDiscountInfoController.h"
 #import "ApiCmdMovie_getCinemaDiscount.h"
+#import "CinemaDiscountInfoDelegate.h"
 #import "MCinema.h"
 #import "MBuyTicketInfo.h"
+#import "MCinemaDiscount.h"
 #import "ASIHTTPRequest.h"
 #import <ShareSDK/ShareSDK.h>
 #import "AppDelegate.h"
@@ -19,8 +21,9 @@
 @interface CinemaDiscountInfoController ()<ApiNotify>{
     
 }
-@property(nonatomic,retain)MBuyTicketInfo *mBuyTicketInfo;
+@property(nonatomic,retain)MCinemaDiscount *mCinemaDiscount;
 @property(nonatomic,retain)ApiCmdMovie_getCinemaDiscount *apiCmdMovie_getCinemaDiscount;
+@property(nonatomic,retain)CinemaDiscountInfoDelegate *mTableDelegate;
 @end
 
 @implementation CinemaDiscountInfoController
@@ -37,7 +40,9 @@
 - (void)dealloc{
     
     [self cancelApiCmd];
-    self.mBuyTicketInfo = nil;
+    self.mCinemaDiscount = nil;
+    self.mTableDelegate = nil;
+    self.mArray = nil;
     
     [super dealloc];
 }
@@ -91,40 +96,34 @@
     _cinema_name_label.text = _mCinema.name;
     _cinema_address_label.text = _mCinema.address;
     
-
+    [_mTableView setTableHeaderView:_mHeaderView];
+    _mHeaderView.backgroundColor = [UIColor clearColor];
     
-    self.mBuyTicketInfo = [[DataBaseManager sharedInstance] getCinemaDiscountFromCoreData:_mCinema];
+    self.mCinemaDiscount = [[DataBaseManager sharedInstance] getCinemaDiscountFromCoreData:_mCinema];
     
-    if (isEmpty(_mBuyTicketInfo.discountInfo)) {//影院折扣详情空
+    if (isEmpty(_mCinemaDiscount.discountInfo)) {//影院折扣详情空
            self.apiCmdMovie_getCinemaDiscount =  (ApiCmdMovie_getCinemaDiscount *)[[DataBaseManager sharedInstance] getCinemaDiscountFromWebDelegate:self cinema:_mCinema];
         
     }else{
-        [self updateCinemaDiscountData];
+        dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+             [self formatCinemaData:nil];
+        });
     }
 }
 
-- (void)updateCinemaDiscountData{
+- (void)setTableViewDelegate{
     
-    _cinema_introduce.text = _mBuyTicketInfo.discountInfo;
-    
-    CGSize misize = [_cinema_introduce.text sizeWithFont:_cinema_introduce.font constrainedToSize:CGSizeMake(_cinema_introduce.bounds.size.width, MAXFLOAT)];
-    
-    if (misize.height>_cinema_introduce.bounds.size.height) {
-        
-        CGRect introFrame = _cinema_introduce.frame;
-        introFrame.size.height = misize.height;
-        _cinema_introduce.frame = introFrame;
-        
-        if (misize.height>IntroduceLabelHeight) {
-            float extendHeight = misize.height - IntroduceLabelHeight;
-            [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height+extendHeight)];
-            CGRect bgImgFrame = _cinema_introBgImgView.frame;
-            bgImgFrame.size.height += extendHeight;
-            _cinema_introBgImgView.frame = bgImgFrame;
-        }
+    if (_mTableDelegate==nil) {
+        _mTableDelegate = [[CinemaDiscountInfoDelegate alloc] init];
     }
+    
+    _mTableView.delegate = _mTableDelegate;
+    _mTableView.dataSource = _mTableDelegate;
+    
+    _mTableDelegate.parentViewController = self;
+    _mTableDelegate.mArray = self.mArray;
+    _mTableDelegate.mTableView = _mTableView;
 }
-
 #pragma mark -
 #pragma mark 点击按钮 Event
 - (void)clickBackButton:(id)sender{
@@ -146,7 +145,7 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        self.mBuyTicketInfo = [[DataBaseManager sharedInstance] insertCinemaDiscountIntoCoreData:[apiCmd responseJSONObject] cinema:_mCinema withApiCmd:apiCmd];
+        self.mCinemaDiscount = [[DataBaseManager sharedInstance] insertCinemaDiscountIntoCoreData:[apiCmd responseJSONObject] cinema:_mCinema withApiCmd:apiCmd];
         
         int tag = [[apiCmd httpRequest] tag];
         [self updateData:tag responseData:nil];
@@ -159,7 +158,7 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         int tag = [[apiCmd httpRequest] tag];
-        self.mBuyTicketInfo = cacheData;
+        self.mCinemaDiscount = cacheData;
         [self updateData:tag responseData:nil];
     });
 }
@@ -184,8 +183,11 @@
 
 - (void)formatCinemaData:(NSDictionary *)responseDic{
     
+    self.mArray = [self.mCinemaDiscount.discountInfo objectForKey:@"specialoffers"];
+    [self setTableViewDelegate];
+    
     dispatch_sync(dispatch_get_main_queue(), ^{
-        [self updateCinemaDiscountData];
+        [_mTableView reloadData];
     });
 }
 

@@ -159,7 +159,7 @@
 }
 
 - (void)requestRecommendAndWantLookCount{
-    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mMovie.uid APIType:WSLRecommendAPITypeMovieInteract cType:WSLRecommendLookTypeLook delegate:self];
+    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mMovie.uid APIType:WSLRecommendAPITypeMovieInteract cType:WSLRecommendLookTypeNone delegate:self];
 }
 
 - (void)updateRecommendAndWantLookCount{

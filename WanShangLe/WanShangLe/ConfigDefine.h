@@ -35,6 +35,9 @@
 //软件版本
 #define AppVersion @"1.0"
 
+//如何是YES显示引导界面，NO不显示
+#define NewApp @"NewApp"
+
 //用户选择的城市
 #define UserState @"administrativeArea"
 

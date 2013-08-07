@@ -38,15 +38,14 @@
     return self.httpRequest;
 }
 
-//http://api.wanshangle.com:10000/api? appId=000001&sign=sign&time=1371988912&v=1.0&api=cinema.deals&cinemaid=259
-
-//http://api.wanshangle.com:10000/api? appId=000001&sign=sign&time=1371988912&v=1.0&api=cinema.movieinfo&cinemaid=148&movieid=10
+//http://api.wanshangle.com:10000/api? appId=000001&sign=sign&time=1371988912&v=1.0&api=cinema.movieinfo&cinemaid=393&movieid=48&timedistance=0&playtime=2013-08-07%2014:40:00
 - (NSMutableDictionary*) getParamDict {
     NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
     
     [paramDict setObject:@"cinema.movieinfo" forKey:@"api"];
     [paramDict setObject:self.cinemaId forKey:@"cinemaid"];
     [paramDict setObject:self.movieId forKey:@"movieid"];
+    [paramDict setObject:self.playtime forKey:@"playtime"];
     
     return paramDict;
 }

@@ -171,7 +171,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     BBar *tBar = [_mArray objectAtIndex:indexPath.row];
-    BarDetailViewController *barDetailController = [[BarDetailViewController alloc] initWithNibName:@"BarDetailViewController" bundle:nil];
+    BarDetailViewController *barDetailController = [[BarDetailViewController alloc] initWithNibName:(iPhone5?@"BarDetailViewController_5":@"BarDetailViewController") bundle:nil];
     barDetailController.mBar = tBar;
     [[[CacheManager sharedInstance] rootNavController] pushViewController:barDetailController animated:YES];
     [barDetailController release];

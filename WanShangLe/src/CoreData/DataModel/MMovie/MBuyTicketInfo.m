@@ -2,7 +2,7 @@
 //  MBuyTicketInfo.m
 //  WanShangLe
 //
-//  Created by stephenliu on 13-7-15.
+//  Created by stephenliu on 13-8-7.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -11,11 +11,8 @@
 
 @implementation MBuyTicketInfo
 
-@dynamic discountDate;
-@dynamic discountInfo;
 @dynamic groupBuyInfo;
 @dynamic locationDate;
 @dynamic uid;
-
 
 @end

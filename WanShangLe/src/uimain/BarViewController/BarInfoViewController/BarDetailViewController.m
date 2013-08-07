@@ -138,7 +138,7 @@
 }
 
 - (void)requestRecommendAndWantLookCount{
-    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mBar.uid APIType:WSLRecommendAPITypeBarInteract cType:WSLRecommendLookTypeRecommend delegate:self];
+    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mBar.uid APIType:WSLRecommendAPITypeBarInteract cType:WSLRecommendLookTypeNone delegate:self];
 }
 
 - (void)updateRecommendAndWantLookCount{

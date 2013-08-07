@@ -14,6 +14,7 @@
 #import "AFJSONRequestOperation.h"
 #import "AFHTTPRequestOperation.h"
 #import "ASIHTTPRequest.h"
+#import "GuidePagesController.h"
 
 @interface AppDelegate(){
     
@@ -73,9 +74,6 @@
     [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:@"DataStore.sqlite"];
     //[MagicalRecord setupCoreDataStackWithStoreNamed:@"DataStore.sqlite"];
     
-    //location user city 定位用户的城市
-    [[LocationManager defaultLocationManager] startLocationUserGPS];
-    
     //inset all citys into coreData
     /*
      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -88,7 +86,6 @@
     // Override point for customization after application launch.
     
     RootViewController *rootViewController = [[[RootViewController alloc] initWithNibName:(iPhone5?@"RootViewController_5":@"RootViewController") bundle:nil] autorelease];
-    
     UINavigationController *_navigationController = [[[UINavigationController alloc] initWithRootViewController:rootViewController] autorelease];
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
     _rootController = _navigationController;
@@ -96,17 +93,34 @@
     self.window.rootViewController = _rootController;
     [CacheManager sharedInstance].rootNavController = _rootController;
     
-    CFTimeInterval time2 = Elapsed_Time;
-    ElapsedTime(time2, time1);
-    
     // 异常捕获 exception caught
-//    [self performSelector:@selector(installUncaughtExceptionHandler) withObject:nil afterDelay:0];
-//    [self performSelector:@selector(string) withObject:nil afterDelay:4.0];
+    [self performSelector:@selector(installUncaughtExceptionHandler) withObject:nil afterDelay:0];
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
+    [self showGuidePage];//显示引导页面
+    
+    CFTimeInterval time2 = Elapsed_Time;
+    ElapsedTime(time2, time1);
+    
     return YES;
+}
+
+- (void)showGuidePage{
+    if (isNull([[NSUserDefaults standardUserDefaults] objectForKey:NewApp]) || [[[NSUserDefaults standardUserDefaults] objectForKey:NewApp] boolValue]) {
+        GuidePagesController* guidePagesController = [[GuidePagesController alloc] init];
+        guidePagesController.delegate = self;
+        guidePagesController.selector = @selector(guidePageComplete:);
+        
+        [_rootController.view addSubview:guidePagesController.view];
+
+        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:NO] forKey:NewApp];
+    }
+}
+
+- (void)guidePageComplete:(GuidePagesController *)guidePageController{
+    [guidePageController release];
 }
 
 - (void)initializePlat{

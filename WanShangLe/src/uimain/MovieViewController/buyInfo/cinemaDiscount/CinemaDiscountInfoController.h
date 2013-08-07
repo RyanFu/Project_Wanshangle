@@ -16,9 +16,9 @@
 @property(nonatomic,retain) IBOutlet UILabel *cinema_name_label;
 @property(nonatomic,retain) IBOutlet UILabel *cinema_address_label;
 
-@property(nonatomic,retain)IBOutlet UIScrollView *mScrollView;
-@property(nonatomic,retain)IBOutlet UILabel *cinema_introduce;
-@property(nonatomic,retain)IBOutlet UIImageView *cinema_introBgImgView;
-
+@property(nonatomic,retain)IBOutlet UITableView *mTableView;
+@property(nonatomic,retain)IBOutlet UIView *mHeaderView;
+@property(nonatomic,retain) NSArray *mArray;
 @property(nonatomic,retain) MCinema *mCinema;
+
 @end

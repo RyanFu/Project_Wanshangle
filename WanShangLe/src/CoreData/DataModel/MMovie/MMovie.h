@@ -2,7 +2,7 @@
 //  MMovie.h
 //  WanShangLe
 //
-//  Created by stephenliu on 13-8-6.
+//  Created by stephenliu on 13-8-7.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -24,13 +24,12 @@
 @property (nonatomic, retain) NSNumber * rating;
 @property (nonatomic, retain) NSString * ratingFrom;
 @property (nonatomic, retain) NSString * ratingpeople;
+@property (nonatomic, retain) NSNumber * sortID;
+@property (nonatomic, retain) NSString * startday;
 @property (nonatomic, retain) NSString * uid;
 @property (nonatomic, retain) NSNumber * v3D;
 @property (nonatomic, retain) NSString * webImg;
-@property (nonatomic, retain) NSString * startday;
 @property (nonatomic, retain) NSSet *movie_cinemas;
-@property (nonatomic, retain) NSNumber * sortID;
-
 @property (nonatomic, retain) MMovieDetail *movieDetail;
 @end
 

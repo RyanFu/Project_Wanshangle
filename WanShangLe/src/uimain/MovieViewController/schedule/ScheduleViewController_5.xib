@@ -96,7 +96,7 @@
 					<object class="IBUIImageView" id="973103696">
 						<reference key="NSNextResponder" ref="653374625"/>
 						<int key="NSvFlags">274</int>
-						<string key="NSFrame">{{112, 20}, {95, 90}}</string>
+						<string key="NSFrame">{{115, 20}, {90, 90}}</string>
 						<reference key="NSSuperview" ref="653374625"/>
 						<reference key="NSNextKeyView" ref="328216245"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -110,7 +110,7 @@
 					<object class="IBUILabel" id="328216245">
 						<reference key="NSNextResponder" ref="653374625"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{98, 124}, {119, 21}}</string>
+						<string key="NSFrame">{{125, 124}, {68, 21}}</string>
 						<reference key="NSSuperview" ref="653374625"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -118,7 +118,7 @@
 						<int key="IBUIContentMode">7</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<string key="IBUIText">抱歉今日无排期</string>
+						<string key="IBUIText">暂无排期</string>
 						<object class="NSColor" key="IBUITextColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC40MDAwMDAwMDYgMC40MDAwMDAwMDYgMC40MDAwMDAwMDYAA</bytes>

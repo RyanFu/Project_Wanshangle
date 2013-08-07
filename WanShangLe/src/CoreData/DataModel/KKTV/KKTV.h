@@ -2,7 +2,7 @@
 //  KKTV.h
 //  WanShangLe
 //
-//  Created by stephenliu on 13-7-15.
+//  Created by stephenliu on 13-8-7.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSString * cityName;
 @property (nonatomic, retain) NSString * dataType;
 @property (nonatomic, retain) NSNumber * discounts;
+@property (nonatomic, retain) NSNumber * distance;
 @property (nonatomic, retain) NSString * district;
 @property (nonatomic, retain) NSNumber * districtid;
 @property (nonatomic, retain) NSNumber * favorite;
@@ -26,13 +27,13 @@
 @property (nonatomic, retain) NSString * locationDate;
 @property (nonatomic, retain) NSNumber * longitude;
 @property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSNumber * distance;
 @property (nonatomic, retain) NSString * phoneNumber;
 @property (nonatomic, retain) NSNumber * price;
 @property (nonatomic, retain) NSNumber * seat;
 @property (nonatomic, retain) NSNumber * tuan;
 @property (nonatomic, retain) NSString * uid;
 @property (nonatomic, retain) NSNumber * zhekou;
+@property (nonatomic, retain) NSNumber * sortID;
 @property (nonatomic, retain) KKTVBuyInfo *ktvBuyInfo;
 @property (nonatomic, retain) KKTVPriceInfo *ktvPriceInfo;
 

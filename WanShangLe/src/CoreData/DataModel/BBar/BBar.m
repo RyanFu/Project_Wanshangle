@@ -2,7 +2,7 @@
 //  BBar.m
 //  WanShangLe
 //
-//  Created by stephenliu on 13-7-23.
+//  Created by stephenliu on 13-8-7.
 //  Copyright (c) 2013年 stephenliu. All rights reserved.
 //
 
@@ -18,6 +18,7 @@
 @dynamic begintime;
 @dynamic cityId;
 @dynamic dataType;
+@dynamic distance;
 @dynamic juan;
 @dynamic latitude;
 @dynamic locationDate;
@@ -29,8 +30,7 @@
 @dynamic tuan;
 @dynamic uid;
 @dynamic zhekou;
+@dynamic sortID;
 @dynamic barDetail;
-@dynamic discountInfo;
-@dynamic distance;
 
 @end

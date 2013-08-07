@@ -30,6 +30,7 @@
         <attribute name="phoneNumber" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="popular" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="seat" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="sortID" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="tuan" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="zhekou" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
@@ -68,6 +69,7 @@
         <attribute name="phoneNumber" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="price" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="seat" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="sortID" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="tuan" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="zhekou" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
@@ -87,8 +89,6 @@
         <relationship name="ktv" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="KKTV" inverseName="ktvPriceInfo" inverseEntity="KKTV" syncable="YES"/>
     </entity>
     <entity name="MBuyTicketInfo" representedClassName="MBuyTicketInfo" syncable="YES">
-        <attribute name="discountDate" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="discountInfo" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="groupBuyInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
         <attribute name="locationDate" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
@@ -109,10 +109,16 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phoneNumber" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="seat" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="sortID" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="tuan" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="zhekou" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <relationship name="movie_cinemas" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MMovie_Cinema" inverseName="cinema" inverseEntity="MMovie_Cinema" syncable="YES"/>
+    </entity>
+    <entity name="MCinemaDiscount" representedClassName="MCinemaDiscount" syncable="YES">
+        <attribute name="discountInfo" optional="YES" attributeType="Transformable" valueTransformerName="NSDictionaryToNSValueTransformer" syncable="YES"/>
+        <attribute name="locationDate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="MMovie" representedClassName="MMovie" syncable="YES">
         <attribute name="aword" optional="YES" attributeType="String" syncable="YES"/>
@@ -174,6 +180,7 @@
         <attribute name="ratingfrom" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ratingpeople" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="recommend" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="sortID" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="theatrename" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wantLook" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -196,23 +203,23 @@
         <attribute name="locationDate" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uid" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <fetchRequest name="FetchRequest" entity="KKTV" predicateString="dataType != &quot;1&quot;"/>
     <elements>
         <element name="ActionState" positionX="-290" positionY="-729" width="128" height="209"/>
-        <element name="BBar" positionX="-522" positionY="-805" width="128" height="330"/>
+        <element name="BBar" positionX="-522" positionY="-805" width="128" height="345"/>
         <element name="BBarDetail" positionX="-711" positionY="-757" width="128" height="165"/>
         <element name="City" positionX="-137" positionY="-738" width="128" height="90"/>
-        <element name="KKTV" positionX="142" positionY="-838" width="128" height="375"/>
-        <element name="KKTVBuyInfo" positionX="430" positionY="-909" width="128" height="103"/>
-        <element name="KKTVPriceInfo" positionX="439" positionY="-567" width="128" height="103"/>
-        <element name="MBuyTicketInfo" positionX="-54" positionY="-99" width="128" height="118"/>
-        <element name="MCinema" positionX="205" positionY="-420" width="128" height="330"/>
+        <element name="KKTV" positionX="142" positionY="-838" width="128" height="390"/>
+        <element name="KKTVBuyInfo" positionX="430" positionY="-909" width="128" height="105"/>
+        <element name="KKTVPriceInfo" positionX="439" positionY="-567" width="128" height="105"/>
+        <element name="MBuyTicketInfo" positionX="-54" positionY="-99" width="128" height="90"/>
+        <element name="MCinema" positionX="205" positionY="-420" width="128" height="345"/>
         <element name="MMovie" positionX="-443" positionY="-351" width="128" height="315"/>
         <element name="MMovie_Cinema" positionX="-173" positionY="-313" width="128" height="105"/>
         <element name="MMovieDetail" positionX="-675" positionY="-288" width="128" height="180"/>
         <element name="MSchedule" positionX="-207" positionY="-108" width="128" height="120"/>
-        <element name="SShow" positionX="-137" positionY="-1204" width="128" height="345"/>
+        <element name="SShow" positionX="-137" positionY="-1204" width="128" height="360"/>
         <element name="SShowDetail" positionX="-335" positionY="-1044" width="128" height="180"/>
         <element name="TimeStamp" positionX="-137" positionY="-612" width="128" height="90"/>
+        <element name="MCinemaDiscount" positionX="160" positionY="192" width="128" height="90"/>
     </elements>
 </model>
