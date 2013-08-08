@@ -59,7 +59,6 @@
     self.mKTV = nil;
     self.mKTVPriceInfo = nil;
     
-    
     [super dealloc];
 }
 
@@ -107,7 +106,11 @@
     
     _ktv_name.text = _mKTV.name;
     _ktv_address.text = _mKTV.address;
+    
     self.mDiscountArray = [_mKTVPriceInfo.priceInfoDic objectForKey:@"specialoffers"];
+    if (!isNull(self.mDiscountArray) && [self.mDiscountArray count]>0) {
+        [self addDiscountPanelView];
+    }
     
     self.mKTVPriceInfo = [[DataBaseManager sharedInstance] getKTVPriceInfoFromCoreDataWithId:_mKTV.uid];
     if (self.mKTVPriceInfo==nil) {
@@ -140,86 +143,29 @@
 - (void)updateKTVPriceInfo{
     
     self.mDiscountArray = [_mKTVPriceInfo.priceInfoDic objectForKey:@"specialoffers"];
+    if (!isNull(self.mDiscountArray) && [self.mDiscountArray count]>0) {
+        [self addDiscountPanelView];
+    }
+
+}
+
+- (void)addDiscountPanelView{
+    _discountHeaderView.frame = CGRectMake(10, 0, 300, 45);
+    _mDiscountTableView.frame = CGRectMake(0, 123, 320, 93);
+    _discountFooterView.frame = CGRectMake(10, 0, 320, 20);
+    [_mTableHeaderView addSubview:_discountHeaderView];
+    [_mTableHeaderView addSubview:_mDiscountTableView];
+    [_mTableHeaderView addSubview:_discountFooterView];
+
+    _mHeaderTailerView.frame = CGRectMake(0, 246, 320, 70);
+    
+    CGRect headerFrame = _mTableHeaderView.frame;
+    headerFrame.size.height = TableHeaderViewHeight;
+    _mTableHeaderView.frame = headerFrame;
+    [_mTableView setTableHeaderView:_mTableHeaderView];
+    
     [self setDiscountTableViewDelegate];
     [_mDiscountTableView reloadData];
-    
-    
-//    CGSize misize = [_ktv_introduce.text sizeWithFont:_ktv_introduce.font constrainedToSize:CGSizeMake(_ktv_introduce.bounds.size.width, MAXFLOAT)];
-//    
-//    //    [UIView beginAnimations:nil context:nil];
-//    //    [UIView setAnimationDuration:5];
-//    //    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-//    
-//    __block CGRect introFrame = _ktv_introduce.frame;
-//    
-//    [UIView animateWithDuration:0.3 animations:^{
-//        if (isExpandInfo) {//折叠
-//            isExpandInfo = !isExpandInfo;
-//            _arrowImg.transform = CGAffineTransformIdentity;
-//
-//            introFrame.size.height = misize.height;
-//            
-//            if (misize.height>IntroduceLabelHeight) {
-//                introFrame.size.height = IntroduceLabelHeight;
-//                isCanExpand = YES;
-//            }else{
-//                isCanExpand = NO;
-//            }
-//            
-//            _introduceImgView.frame = CGRectMake(0, 0, IntroduceLabelWidth, IntroduceControlWidth);
-//            _infoControl.frame = CGRectMake(9, 76, IntroduceLabelWidth, IntroduceControlWidth);
-//            
-//            CGRect tailerFrame = _mHeaderTailerView.frame;
-//            tailerFrame.origin.y = TailerView_Y;
-//            _mHeaderTailerView.frame = tailerFrame;
-//            
-//            CGRect headerFrame = _mTableHeaderView.frame;
-//            headerFrame.size.height = TableHeaderViewHeight;
-//            _mTableHeaderView.frame = headerFrame;
-//
-//            CGRect arrowFrame = _arrowImg.frame;
-//            arrowFrame.origin.y = _infoControl.height-14;
-//            _arrowImg.frame = arrowFrame;
-//            
-//            _ktv_introduce.frame = introFrame;
-//            [_mTableView setTableHeaderView:_mTableHeaderView];
-//            
-//        }else if(!isExpandInfo && isCanExpand){//展开
-//            isExpandInfo = !isExpandInfo;
-//            _arrowImg.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(180));
-//            
-//            if (misize.height>_ktv_introduce.bounds.size.height) {
-//                
-//                if (misize.height>IntroduceLabelHeight) {
-//                    float extendHeight = misize.height - IntroduceLabelHeight;
-//                    
-//                    CGRect headerFrame = _mTableHeaderView.frame;
-//                    headerFrame.size.height += extendHeight;
-//                    _mTableHeaderView.frame = headerFrame;
-//
-//                    _introduceImgView.frame = CGRectMake(0, 0, IntroduceLabelWidth, IntroduceControlWidth+extendHeight);
-//                    _infoControl.frame = CGRectMake(9, 76, IntroduceLabelWidth, IntroduceControlWidth+extendHeight);
-//                    
-//                    CGRect tailerFrame = _mHeaderTailerView.frame;
-//                    tailerFrame.origin.y = TailerView_Y+extendHeight;
-//                    _mHeaderTailerView.frame = tailerFrame;
-//
-//                    CGRect arrowFrame = _arrowImg.frame;
-//                    arrowFrame.origin.y = _infoControl.height-14;
-//                    _arrowImg.frame = arrowFrame;
-//                }
-//                
-//                introFrame.size.height = misize.height;
-//                [_mTableView setTableHeaderView:_mTableHeaderView];
-//            }
-//        }
-//    } completion:^(BOOL finished) {
-//
-//        _ktv_introduce.frame = introFrame;
-//        [_mTableView reloadData];
-//    }];
-    
-    //    [UIView commitAnimations];
 }
 
 - (void)expandDiscountTableView{
@@ -312,6 +258,9 @@
 #pragma mark -
 #pragma mark UIButton Event
 - (void)clickBackButton:(id)sender{
+    
+    [[CacheManager sharedInstance] showAddFavoritePopupView:@"要就改KTV添加到常去吗？" objectId:self.mKTV.uid dataType:KKTVFavorite];
+    
     [self.navigationController popViewControllerAnimated:YES];
 }
 

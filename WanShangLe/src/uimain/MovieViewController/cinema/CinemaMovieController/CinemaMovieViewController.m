@@ -74,6 +74,9 @@
     self.todayWeek = nil;
     self.tomorrowButton = nil;
     
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc removeObserver:self];
+    
     [super dealloc];
 }
 
@@ -147,6 +150,15 @@
     
     //请求服务器获取改影院正在放映的电影列表
     self.apiCmdMovie_getAllMovies = (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self cinemaId:_mCinema.uid];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateFavoriteState:) name:MCinemaAddFavoriteNotification object:nil];
+}
+
+- (void)updateFavoriteState:(NSNotification *)notification {
+    if ([_mCinema.favorite boolValue]) {
+        _favoriteButton.selected = YES;
+        [_favoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
+    }
 }
 
 - (void)createBarButtonItem{

@@ -58,6 +58,10 @@
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
 }
 
+- (void)viewDidDisappear:(BOOL)animated{
+   
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -130,6 +134,9 @@
 #pragma mark -
 #pragma mark 点击按钮 Event
 - (void)clickBackButton:(id)sender{
+    
+    [[CacheManager sharedInstance] showAddFavoritePopupView:@"要收藏这个影院吗？" objectId:self.mCinema.uid dataType:MCinemaFavorite];
+    
     [self.navigationController popViewControllerAnimated:YES];
 }
 

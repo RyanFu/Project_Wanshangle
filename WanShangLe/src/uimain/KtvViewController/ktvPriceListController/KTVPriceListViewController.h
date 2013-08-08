@@ -21,6 +21,7 @@
 @property(nonatomic,retain) IBOutlet UITableView *mTableView;
 @property(nonatomic,retain) IBOutlet UITableView *mDiscountTableView;
 @property(nonatomic,retain) IBOutlet UIView *discountFooterView;
+@property(nonatomic,retain) IBOutlet UIView *discountHeaderView;
 @property(nonatomic,retain) IBOutlet UIImageView* arrowImg;
 
 @property(nonatomic,retain) NSMutableArray *mTodayArray;

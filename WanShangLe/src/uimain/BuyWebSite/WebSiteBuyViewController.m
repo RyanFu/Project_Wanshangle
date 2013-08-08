@@ -46,18 +46,16 @@
 #pragma mark -
 #pragma mark UIView Recycle
 - (void)viewWillAppear:(BOOL)animated{
-    [self.navigationController setNavigationBarHidden:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
-     [self.navigationController setNavigationBarHidden:NO];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-//    [self initBarItem];
+    [self initBarItem];
     
     [self initData];
     
@@ -67,11 +65,10 @@
 #pragma mark 初始化数据
 - (void)initBarItem{
     UIButton *backBt = [UIButton buttonWithType:UIButtonTypeCustom];
-    [backBt setFrame:CGRectMake(0, 0, 90, 32)];
-    [backBt addTarget:self action:@selector(clickBackButton:) forControlEvents:UIControlEventTouchUpInside];
-    [backBt setBackgroundImage:[UIImage imageNamed:@"btn_arrow_back@2x"] forState:UIControlStateNormal];
-    [backBt setTitle:@"返回晚上了" forState:UIControlStateNormal];
-    backBt.titleLabel.font = [UIFont systemFontOfSize:14];
+    [backBt setFrame:CGRectMake(0, 0, 45, 30)];
+    [backBt addTarget:self action:@selector(popViewController:) forControlEvents:UIControlEventTouchUpInside];
+    [backBt setBackgroundImage:[UIImage imageNamed:@"bt_back_n@2x"] forState:UIControlStateNormal];
+    [backBt setBackgroundImage:[UIImage imageNamed:@"bt_back_f@2x"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:backBt];
     self.navigationItem.leftBarButtonItem = backItem;
     [backItem release];
@@ -93,11 +90,11 @@
 #pragma mark UIButton Events
 - (IBAction)popViewController:(id)sender{
     [self.navigationController popViewControllerAnimated:YES];
+     [self clickErrorOtherCancelButton:nil];
 }
 
-- (void)clickBackButton:(id)sender{
-    [self.navigationController popViewControllerAnimated:YES];
-    [self clickErrorOtherCancelButton:nil];
+- (IBAction)clickSafariButton:(id)sender{
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:_mURLStr]];
 }
 
 - (IBAction)clickcWebBackButton:(id)sender{

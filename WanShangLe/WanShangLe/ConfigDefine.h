@@ -48,6 +48,13 @@
 #define SShow_FilterType        @"SShow_FilterType"
 #define BuyInfo_HintType        @"BuyInfo_HintType"
 
+#define AddFavorite_HintType    @"AddFavorite_HintType"
+#define MCinemaFavorite         0
+#define KKTVFavorite            1
+
+#define MCinemaAddFavoriteNotification @"MCinemaAddFavoriteNotification"
+#define KKTVAddFavoriteNotification @"KKTVAddFavoriteNotification"
+
 #define UserSetting @"UserSetting"
 #define DistanceFilter @"DistanceFilter"
 #define DistanceFilterData @"DistanceFilterData"

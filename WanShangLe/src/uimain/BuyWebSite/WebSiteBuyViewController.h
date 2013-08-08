@@ -15,7 +15,6 @@
     IBOutlet UIView *bottomBar;
     IBOutlet UIView *errorPopupView;
     IBOutlet UIView *commitErrorView;
-    IBOutlet UIButton *webBackButton;
 }
 @property(nonatomic,retain)IBOutlet UITextView *adviceTextView;
 @property(nonatomic,retain)IBOutlet UILabel *placeHoldText;
@@ -34,4 +33,5 @@
 - (IBAction)clickErrorOtherCommitButton:(id)sender;
 
 - (IBAction)popViewController:(id)sender;
+- (IBAction)clickSafariButton:(id)sender;
 @end

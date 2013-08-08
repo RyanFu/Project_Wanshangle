@@ -43,12 +43,20 @@
     
     self.mKTV = nil;
     self.mArray = nil;
+    
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc removeObserver:self];
+    
     [super dealloc];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    
 }
 
 - (void)viewDidLoad
@@ -78,6 +86,15 @@
         [_favoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
     }
     
+    if ([_mKTV.favorite boolValue]) {
+        _favoriteButton.selected = YES;
+        [_favoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
+    }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateFavoriteState:) name:KKTVAddFavoriteNotification object:nil];
+}
+
+- (void)updateFavoriteState:(NSNotification *)notification {
     if ([_mKTV.favorite boolValue]) {
         _favoriteButton.selected = YES;
         [_favoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
