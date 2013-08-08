@@ -125,7 +125,7 @@
     }else{
         NSString *starttime =[[DataBaseManager sharedInstance] getYMDFromDate:[dataDic objectForKey:@"starttime"]] ;
         NSString *endtime = [[DataBaseManager sharedInstance] getYMDFromDate:[dataDic objectForKey:@"endtime"]];
-        cell.discount_time.text = [NSString stringWithFormat:@"%@/%@",starttime,endtime];
+        cell.discount_time.text = [NSString stringWithFormat:@"%@至%@",starttime,endtime];
     }
     
     cell.discount_info.text = [dataDic objectForKey:@"info"];

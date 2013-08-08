@@ -113,7 +113,7 @@
 }
 
 - (void)setTableViewDelegate{
-    
+
     if (_mTableDelegate==nil) {
         _mTableDelegate = [[CinemaDiscountInfoDelegate alloc] init];
     }

@@ -10,6 +10,9 @@
 		5A0FA975177A8D5900676253 /* ApiCmdMovie_getAllMovieDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A0FA974177A8D5900676253 /* ApiCmdMovie_getAllMovieDetail.m */; };
 		5A1261EA177C38230018E21A /* ChineseToPinyin.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1261E9177C38230018E21A /* ChineseToPinyin.m */; };
 		5A1261FE177D43C90018E21A /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1261FD177D43C90018E21A /* EGORefreshTableHeaderView.m */; };
+		5A12D1FF17B3333400D46770 /* KTVDiscountInfoDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A12D1FB17B3333400D46770 /* KTVDiscountInfoDelegate.m */; };
+		5A12D20017B3333400D46770 /* KTVDiscountTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A12D1FD17B3333400D46770 /* KTVDiscountTableViewCell.m */; };
+		5A12D20117B3333400D46770 /* KTVDiscountTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A12D1FE17B3333400D46770 /* KTVDiscountTableViewCell.xib */; };
 		5A1746F7176057E400E155AB /* SIAlertView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5A1746F4176057E400E155AB /* SIAlertView.bundle */; };
 		5A1746F8176057E400E155AB /* SIAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1746F6176057E400E155AB /* SIAlertView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		5A1747171761729300E155AB /* MagicalRecord.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 5A17470F1761729200E155AB /* MagicalRecord.xcdatamodel */; };
@@ -724,6 +727,11 @@
 		5A1261E9177C38230018E21A /* ChineseToPinyin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChineseToPinyin.m; sourceTree = "<group>"; };
 		5A1261FC177D43C90018E21A /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
 		5A1261FD177D43C90018E21A /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
+		5A12D1FA17B3333400D46770 /* KTVDiscountInfoDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KTVDiscountInfoDelegate.h; sourceTree = "<group>"; };
+		5A12D1FB17B3333400D46770 /* KTVDiscountInfoDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KTVDiscountInfoDelegate.m; sourceTree = "<group>"; };
+		5A12D1FC17B3333400D46770 /* KTVDiscountTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KTVDiscountTableViewCell.h; sourceTree = "<group>"; };
+		5A12D1FD17B3333400D46770 /* KTVDiscountTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KTVDiscountTableViewCell.m; sourceTree = "<group>"; };
+		5A12D1FE17B3333400D46770 /* KTVDiscountTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KTVDiscountTableViewCell.xib; sourceTree = "<group>"; };
 		5A1746F4176057E400E155AB /* SIAlertView.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SIAlertView.bundle; sourceTree = "<group>"; };
 		5A1746F5176057E400E155AB /* SIAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIAlertView.h; sourceTree = "<group>"; };
 		5A1746F6176057E400E155AB /* SIAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIAlertView.m; sourceTree = "<group>"; };
@@ -2199,6 +2207,11 @@
 				5A5A41EF1793903D00954902 /* KTVPriceListViewController.m */,
 				5A5A41F01793903D00954902 /* KTVPriceListViewController.xib */,
 				5AB6305117AFAADA00A5455B /* KTVPriceListViewController_5.xib */,
+				5A12D1FA17B3333400D46770 /* KTVDiscountInfoDelegate.h */,
+				5A12D1FB17B3333400D46770 /* KTVDiscountInfoDelegate.m */,
+				5A12D1FC17B3333400D46770 /* KTVDiscountTableViewCell.h */,
+				5A12D1FD17B3333400D46770 /* KTVDiscountTableViewCell.m */,
+				5A12D1FE17B3333400D46770 /* KTVDiscountTableViewCell.xib */,
 				5A5A41F11793903D00954902 /* KTVPriceTableViewDelegate.h */,
 				5A5A41F21793903D00954902 /* KTVPriceTableViewDelegate.m */,
 				5A714577179FBF66009E4905 /* KTVPriceTableViewCell.h */,
@@ -4249,6 +4262,7 @@
 				5A78EC1A17B20025004AC603 /* page_03_5@2x.png in Resources */,
 				5A88846A17B2294F00F9082E /* MDiscountTableViewCell.xib in Resources */,
 				5A88846C17B22B5700F9082E /* tag_badge_count@2x.png in Resources */,
+				5A12D20117B3333400D46770 /* KTVDiscountTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4571,6 +4585,8 @@
 				5A88846517B2291700F9082E /* CinemaDiscountInfoDelegate.m in Sources */,
 				5A88846917B2294F00F9082E /* MDiscountTableViewCell.m in Sources */,
 				5A88846F17B22ECF00F9082E /* MCinemaDiscount.m in Sources */,
+				5A12D1FF17B3333400D46770 /* KTVDiscountInfoDelegate.m in Sources */,
+				5A12D20017B3333400D46770 /* KTVDiscountTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
