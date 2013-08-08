@@ -65,6 +65,7 @@
 		5A26F4F2178D6ED9002E7609 /* SuggestionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A26F4F0178D6ED9002E7609 /* SuggestionViewController.m */; };
 		5A26F4F3178D6ED9002E7609 /* SuggestionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A26F4F1178D6ED9002E7609 /* SuggestionViewController.xib */; };
 		5A4207E317B3AC8000FA2A06 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A4207E217B3AC7E00FA2A06 /* icon.png */; };
+		5A4207E517B3B0CC00FA2A06 /* tag_tuan_introduce@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A4207E417B3B0CB00FA2A06 /* tag_tuan_introduce@2x.png */; };
 		5A4294BD176EAB4C00D9B987 /* ShowDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4294BB176EAB4C00D9B987 /* ShowDetailViewController.m */; };
 		5A4294BE176EAB4C00D9B987 /* ShowDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A4294BC176EAB4C00D9B987 /* ShowDetailViewController.xib */; };
 		5A4294C1176EB3D200D9B987 /* ShowViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5A4294C0176EB3D200D9B987 /* ShowViewController_5.xib */; };
@@ -827,6 +828,7 @@
 		5A26F4F1178D6ED9002E7609 /* SuggestionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SuggestionViewController.xib; sourceTree = "<group>"; };
 		5A4207DF17B3791D00FA2A06 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		5A4207E217B3AC7E00FA2A06 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		5A4207E417B3B0CB00FA2A06 /* tag_tuan_introduce@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tag_tuan_introduce@2x.png"; sourceTree = "<group>"; };
 		5A4294BA176EAB4C00D9B987 /* ShowDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowDetailViewController.h; sourceTree = "<group>"; };
 		5A4294BB176EAB4C00D9B987 /* ShowDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowDetailViewController.m; sourceTree = "<group>"; };
 		5A4294BC176EAB4C00D9B987 /* ShowDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowDetailViewController.xib; sourceTree = "<group>"; };
@@ -2523,6 +2525,7 @@
 		5A78E9E317B1F3C6004AC603 /* commonImgs */ = {
 			isa = PBXGroup;
 			children = (
+				5A4207E417B3B0CB00FA2A06 /* tag_tuan_introduce@2x.png */,
 				5A88846B17B22B5700F9082E /* tag_badge_count@2x.png */,
 				5A78E9E417B1F3C6004AC603 /* bg_city_panel@2x.png */,
 				5A78E9E517B1F3C6004AC603 /* bg_information_bar@2x.png */,
@@ -4270,6 +4273,7 @@
 				5A88846C17B22B5700F9082E /* tag_badge_count@2x.png in Resources */,
 				5A12D20117B3333400D46770 /* KTVDiscountTableViewCell.xib in Resources */,
 				5A4207E317B3AC8000FA2A06 /* icon.png in Resources */,
+				5A4207E517B3B0CC00FA2A06 /* tag_tuan_introduce@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4655,8 +4659,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Bin Liu (8CDC34PXA2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bin Liu (8CDC34PXA2)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Shanghai JEPS network technology Inc. (K8BBFZK2YX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shanghai JEPS network technology Inc. (K8BBFZK2YX)";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				COPY_PHASE_STRIP = NO;
@@ -4673,8 +4677,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
+				PROVISIONING_PROFILE = "1251C8DA-2005-4554-8BCA-E64C7BF4B82B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1251C8DA-2005-4554-8BCA-E64C7BF4B82B";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -4690,8 +4694,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Bin Liu (8CDC34PXA2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bin Liu (8CDC34PXA2)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Shanghai JEPS network technology Inc. (K8BBFZK2YX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shanghai JEPS network technology Inc. (K8BBFZK2YX)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = NS_BLOCK_ASSERTIONS;
@@ -4700,8 +4704,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
+				PROVISIONING_PROFILE = "1251C8DA-2005-4554-8BCA-E64C7BF4B82B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1251C8DA-2005-4554-8BCA-E64C7BF4B82B";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -4710,8 +4714,8 @@
 		5A76C4FD175DBE8B0067BC30 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Bin Liu (8CDC34PXA2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bin Liu (8CDC34PXA2)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Shanghai JEPS network technology Inc. (K8BBFZK2YX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shanghai JEPS network technology Inc. (K8BBFZK2YX)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/src/libraries/ShareSDK_v2.2.4/Connection\"",
@@ -4732,8 +4736,8 @@
 				);
 				OTHER_CFLAGS = "-DAB_LOGGER";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
+				PROVISIONING_PROFILE = "1251C8DA-2005-4554-8BCA-E64C7BF4B82B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1251C8DA-2005-4554-8BCA-E64C7BF4B82B";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -4741,8 +4745,8 @@
 		5A76C4FE175DBE8B0067BC30 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Bin Liu (8CDC34PXA2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bin Liu (8CDC34PXA2)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Shanghai JEPS network technology Inc. (K8BBFZK2YX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shanghai JEPS network technology Inc. (K8BBFZK2YX)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/src/libraries/ShareSDK_v2.2.4/Connection\"",
@@ -4767,8 +4771,8 @@
 					"-DNS_BLOCK_ASSERTIONS=1",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
+				PROVISIONING_PROFILE = "1251C8DA-2005-4554-8BCA-E64C7BF4B82B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1251C8DA-2005-4554-8BCA-E64C7BF4B82B";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

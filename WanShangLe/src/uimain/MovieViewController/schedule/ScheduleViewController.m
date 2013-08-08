@@ -260,7 +260,7 @@
 
 - (void)refreshTodaySchedule{
     
-    self.todaySchedules = [[DataBaseManager sharedInstance] deleteUnavailableSchedules:_todaySchedules];
+//    self.todaySchedules = [[DataBaseManager sharedInstance] deleteUnavailableSchedules:_todaySchedules];
     self.schedulesArray = self.todaySchedules;
     if (isNull(self.schedulesArray) || [self.schedulesArray count]==0) {
         [self setTableViewFooterViewHaveData:NO];
@@ -422,7 +422,7 @@
     NSArray *resultArray = [schedules objectForKey:@"starts"];
     
     if ([timedistance intValue]==0) {
-        self.todaySchedules = resultArray;
+        self.todaySchedules = [[DataBaseManager sharedInstance] deleteUnavailableSchedules:resultArray];
         ABLoggerDebug(@"今天 count ==== %d",[_todaySchedules count]);
     }else{
         self.tomorrowSchedules = resultArray;
