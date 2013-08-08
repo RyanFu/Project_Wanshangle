@@ -90,7 +90,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (void)insertMMovie_CinemaWithMovies:(NSArray *)movies andCinemas:(NSArray *)cinemas;
 - (MMovie_Cinema *)insertMMovie_CinemaWithaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema;
 
-/************************  电影 *********************************/
+/************************  电影 ************************************************************************************************/
 /***************************************************************/
 - (ApiCmd *)getAllMoviesListFromWeb:(id<ApiNotify>)delegate cinemaId:(NSString *)cinemaID;
 - (NSArray *)getAllMoviesListFromCoreData;
@@ -128,7 +128,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 
 - (void)insertBuyInfoIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd withaMovie:(MMovie *)aMovie andaCinema:(MCinema *)aCinema aSchedule:(NSString *)aSchedule;
 
-/************************ 影院 ***************************************/
+/************************ 影院 ******************************************************************************************************/
 /********************************************************************/
 - (ApiCmd *)getAllCinemasListFromWeb:(id<ApiNotify>)delegate;
 - (NSArray *)getAllCinemasListFromCoreData;
@@ -171,7 +171,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (BOOL)isFavoriteCinemaWithId:(NSString *)uid;
 - (NSArray *)getRegionOrder;
 
-/************************ 演出 *********************************/
+/************************ 演出 ************************************************************************************************/
 /***************************************************************/
 - (NSArray *)getAllShowsListFromCoreData;
 - (NSArray *)getAllShowsListFromCoreDataWithCityName:(NSString *)cityName;
@@ -212,7 +212,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (SShowDetail *)insertShowDetailIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (SShowDetail *)insertShowDetailRecommendOrLookCountIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
 - (SShowDetail *)getShowDetailFromCoreDataWithId:(NSString *)showId;
-/************************ 酒吧 *********************************/
+/************************ 酒吧 ************************************************************************************************/
 /***************************************************************/
 //分页 时间和人气 酒吧
 - (ApiCmd *)getBarsListFromWeb:(id<ApiNotify>)delegate
@@ -268,7 +268,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (NSUInteger)getCountOfBarsListFromCoreData;
 - (NSUInteger)getCountOfBarsListFromCoreDataWithCityName:(NSString *)cityName;
 
-/************************ KTV *********************************/
+/************************ KTV ************************************************************************************************/
 /***************************************************************/
 //获取 全部 KTV数据
 - (ApiCmd *)getAllKTVsListFromWeb:(id<ApiNotify>)delegate;
@@ -349,7 +349,7 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 
 
 
-/******************************** 喜欢和想看 *************************************/
+/******************************** 喜欢和想看 ****************************************************************************************************/
 /*******************************************************************************/
 /**
  推荐和想看接口

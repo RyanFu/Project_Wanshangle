@@ -23,6 +23,8 @@
 @property(nonatomic,retain) NSMutableArray *mArray;
 @property(nonatomic,retain) NSMutableArray *mCacheArray;
 
+@property(nonatomic,readwrite) BOOL isLoadDone;
+
 - (void)loadMoreData;
 - (void)loadNewData;
 @end

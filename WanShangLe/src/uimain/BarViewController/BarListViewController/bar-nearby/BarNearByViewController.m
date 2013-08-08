@@ -171,6 +171,12 @@
         
        NSMutableArray *dataArray  = [[DataBaseManager sharedInstance] insertBarsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
         
+        if (isNull(dataArray) || [dataArray count]==0) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self reloadPullRefreshData];
+            });
+            return ;
+        }
         
         NSMutableArray *removieArray = [NSMutableArray arrayWithCapacity:10];
         for (BBar *tBar in dataArray) {
@@ -188,18 +194,18 @@
         
         [dataArray removeObjectsInArray:removieArray];
         
-        dataArray = (NSMutableArray *)[dataArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-            double first =  [[(MCinema*)a distance] doubleValue];
-            double second = [[(MCinema*)b distance] doubleValue];
-            
-            if (first>second) {
-                return NSOrderedDescending;
-            }else if(first<second){
-                return NSOrderedAscending;
-            }else{
-                return NSOrderedSame;
-            }
-        }];
+//        dataArray = (NSMutableArray *)[dataArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+//            double first =  [[(MCinema*)a distance] doubleValue];
+//            double second = [[(MCinema*)b distance] doubleValue];
+//            
+//            if (first>second) {
+//                return NSOrderedDescending;
+//            }else if(first<second){
+//                return NSOrderedAscending;
+//            }else{
+//                return NSOrderedSame;
+//            }
+//        }];
         
         ABLoggerDebug(@"距离 排序 测试");
         for (MCinema *tcinema in dataArray) {

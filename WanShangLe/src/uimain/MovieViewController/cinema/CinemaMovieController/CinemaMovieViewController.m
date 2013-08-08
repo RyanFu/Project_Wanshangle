@@ -118,6 +118,10 @@
 
 - (void)initData{
     
+    DataBaseManager *dbManager = [DataBaseManager sharedInstance];
+    self.todayWeek = [dbManager getTodayWeek];
+    self.tomorrowWeek = [dbManager getTomorrowWeek];
+    
     self.moviesArray = [[[NSMutableArray alloc] initWithCapacity:DataCount] autorelease];
     NSArray *movies = [[DataBaseManager sharedInstance] getAllMoviesListFromCoreData];
     [self.moviesArray addObjectsFromArray:movies];
@@ -367,22 +371,13 @@
     ABLoggerDebug(@"carouselDidEndScrollingAnimation ====== %d",carousel.currentItemIndex);
     
     int moviesCount = [_moviesArray count];
-    if (carousel.currentItemIndex>moviesCount || carousel.currentItemIndex<=0) {
+    if (carousel.currentItemIndex>moviesCount || carousel.currentItemIndex<0) {
         return;
     }
     MMovie *aMovie = [_moviesArray objectAtIndex:carousel.currentItemIndex];
     self.mMovie = aMovie;
     
     //change today tomorrow button title
-    DataBaseManager *dbManager = [DataBaseManager sharedInstance];
-    
-    if (isEmpty(_todayWeek)) {
-        self.todayWeek = [dbManager getTodayWeek];
-    }
-    
-    if (isEmpty(_tomorrowWeek)) {
-        self.tomorrowWeek = [dbManager getTomorrowWeek];
-    }
     
     [_todayButton setTitle:[NSString stringWithFormat:@"今天(%@)",_todayWeek] forState:UIControlStateNormal];
     [_todayButton setTitle:[NSString stringWithFormat:@"今天(%@)",_todayWeek] forState:UIControlStateSelected];

@@ -40,6 +40,8 @@
 - (void)dealloc{
     self.cityPanel = nil;
     self.cityPanelMask = nil;
+    [_cityButton removeObserver:self forKeyPath:@"title"];
+    self.cityButton = nil;
     [super dealloc];
 }
 

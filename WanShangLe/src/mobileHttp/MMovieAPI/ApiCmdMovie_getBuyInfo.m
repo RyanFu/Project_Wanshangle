@@ -24,6 +24,7 @@
 - (void) dealloc {
     self.cinemaId = nil;
     self.movieId = nil;
+    self.timedistance = nil;
 	[super dealloc];
 }
 
@@ -38,7 +39,7 @@
     return self.httpRequest;
 }
 
-//http://api.wanshangle.com:10000/api? appId=000001&sign=sign&time=1371988912&v=1.0&api=cinema.movieinfo&cinemaid=393&movieid=48&timedistance=0&playtime=2013-08-07%2014:40:00
+//http://api.wanshangle.com:10000/api? &playtime=2013-08-09%2016:50:00&sign=sign&movieid=33&api=cinema.movieinfo&appId=000001&v=1.0&time=1375945570&cinemaid=110&timedistance=1
 - (NSMutableDictionary*) getParamDict {
     NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
     
@@ -46,6 +47,7 @@
     [paramDict setObject:self.cinemaId forKey:@"cinemaid"];
     [paramDict setObject:self.movieId forKey:@"movieid"];
     [paramDict setObject:self.playtime forKey:@"playtime"];
+    [paramDict setObject:self.timedistance forKey:@"timedistance"];
     
     return paramDict;
 }

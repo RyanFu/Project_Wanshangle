@@ -152,14 +152,15 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 - (BOOL)isToday:(NSString *)date{
-    _timeFormatter.dateFormat = @"yyyy-MM-dd";
-    NSString *nowDate = [_timeFormatter stringFromDate:[[DataBaseManager sharedInstance] date]];
-    NSString *cmpDate = [[date componentsSeparatedByString:@" "] objectAtIndex:0];
-    return ([nowDate compare:cmpDate options:NSNumericSearch] == NSOrderedSame);
+    _timeFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    NSDate *cmpDate = [_timeFormatter dateFromString:date];
+    return [cmpDate isToday];
 }
 
 - (BOOL)isTomorrow:(NSString *)date{
-    return YES;
+    _timeFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    NSDate *cmpDate = [_timeFormatter dateFromString:date];
+    return [cmpDate isTomorrow];
 }
 
 - (NSString *)getTodayTimeStamp{
@@ -1161,6 +1162,7 @@ static DataBaseManager *_sharedInstance = nil;
     apiCmdMovie_getBuyInfo.cinemaId = aCinema.uid;
     apiCmdMovie_getBuyInfo.movieId = aMovie.uid;
     apiCmdMovie_getBuyInfo.playtime = aSchedule;
+    apiCmdMovie_getBuyInfo.timedistance = ([self isToday:aSchedule]?@"0":@"1");
     [apiClient executeApiCmdAsync:apiCmdMovie_getBuyInfo];
     [apiCmdMovie_getBuyInfo.httpRequest setTag:API_MBuyInfoCmd];
     
@@ -1412,7 +1414,7 @@ static DataBaseManager *_sharedInstance = nil;
         cityId = [[LocationManager defaultLocationManager] getUserCityId];
     }
     
-    NSArray *returnArray = [MCinema MR_findAllSortedBy:@"districtId"
+    NSArray *returnArray = [MCinema MR_findAllSortedBy:@"sortID"
                                              ascendingBy:@"YES"
                                          withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and locationDate >= %@ and dataType = %@",cityId,validDate,dataType]
                                                 offset:offset
@@ -1556,8 +1558,17 @@ static DataBaseManager *_sharedInstance = nil;
     CFTimeInterval time1 = Elapsed_Time;
     
     NSArray *info_array = [[objectData objectForKey:@"data"] objectForKey:@"list"];
-    NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:20];
+    NSArray *errors = [objectData objectForKey:@"errors"];
     MCinema *mCinema = nil;
+    
+    if (isNull(info_array) || [info_array count]==0 || [errors count]>0) {
+        [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+        ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+        return nil;
+    }
+    
+     NSMutableArray *returnArray = [[[NSMutableArray alloc] initWithCapacity:20] autorelease];
+    int totalCount = [self getCountOfCinemasListFromCoreDataWithCityName:nil];
     
     for (int i=0; i<[info_array count]; i++) {
         
@@ -1584,6 +1595,8 @@ static DataBaseManager *_sharedInstance = nil;
             mCinema.dataType = apiCmd.dataType;
             mCinema.districtId =  [NSNumber numberWithInt:[[cinema_dic objectForKey:@"districtid"] intValue]];
             mCinema.district = [cinema_dic objectForKey:@"districtName"];
+            mCinema.sortID = [NSNumber numberWithInt:totalCount];
+            totalCount++;
             
             /*折扣和团购*/
             mCinema.tuan = [[dynamic_dic objectForKey:@"channel"] objectAtIndex:0];
@@ -1609,7 +1622,7 @@ static DataBaseManager *_sharedInstance = nil;
     ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
     //    });
-    return [returnArray autorelease];
+    return returnArray;
 }
 
 #pragma mark 将搜索和附近的数据插入到数据库里
@@ -1668,78 +1681,6 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 /*
- {
- httpCode: 200,
- errors: [ ],
- data: {
- count: 2,
- infos: [
- {
- districtName: "海淀区",
- list: [
- {
- id: "94",
- uniquekey: "3bc32f5056f3c01b957aa62dccb741f7",
- name: "17.5今典花园影城",
- shortname: "17.5今典花园店",
- description: "",
- address: "北京市海淀区文慧园北路9号蒙太奇大厦二层",
- contactphonex: "010-62228452",
- contactphonetypex: "1",
- contactphoney: "",
- contactphonetypey: "1",
- contactphonez: "",
- contactphonetypez: "1",
- latitude: "39.958636",
- longitude: "116.367761",
- cityid: "1",
- districtid: "8",
- logourl: "logourl",
- coverurl: "http://em.wanshangle.com:8888/attachments/image/cinema/71670_1372211089.jpg",
- specialoffers: "",
- trafficroutes: "乘坐498路到今典花园下；乘坐21路、331路、375路、387路、392路、490路、498路、562路、604路、632路、691路、693路、80路、84电车到文慧桥北下车",
- exturl: "",
- createtime: "2013-06-26 09:59:48",
- createdbysuid: "11",
- lastmodifiedtime: "2013-06-26 10:02:27",
- lastmodifiedbysuid: "11",
- source: "1",
- currentstatus: "3"
- },
- {},
- {},
- {},
- {},
- {}
- ],
- dynamic: [
- {
- cinemaid: "94",
- rounds: 0,
- prices: "0-0",
- channel: [
- 0,
- 1,
- 1
- ],
- hotmovies: [ ]
- },
- {},
- {},
- {},
- {},
- {}
- ]
- },
- {
- districtName: "东城区",
- list: [],
- dynamic: []
- }
- ]
- },
- token: null,
- timestamp: "1373621139"
  */
 - (void)importCinema:(MCinema *)mCinema ValuesForKeysWithObject:(NSDictionary *)aCinemaData
 {
@@ -1872,7 +1813,15 @@ static DataBaseManager *_sharedInstance = nil;
     CFTimeInterval time1 = Elapsed_Time;
     
     NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"perform"];
-    NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:20];
+    
+    if (isNull(array) || [array count]==0) {
+        [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+        ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+        return nil;
+    }
+    
+     NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:20];
+    int TotalCount = [self getCountOfShowsListFromCoreDataWithCityName:nil];
     
     SShow *sShow = nil;
     for (int i=0; i<[array count]; i++) {
@@ -1887,6 +1836,10 @@ static DataBaseManager *_sharedInstance = nil;
         sShow.dataType =[NSString stringWithFormat:@"%@-%@-%@-%@",apiCmd.dataType,showApiCmd.dataTimeDistance,showApiCmd.dataOrder,showApiCmd.dataSort]; //数据类型
         sShow.locationDate = [self getTodayTimeStamp];
         sShow.cityId = apiCmd.cityId;
+        
+        sShow.sortID = [NSNumber numberWithInt:TotalCount];
+        TotalCount++;
+        
         [returnArray addObject:sShow];
     }
     
@@ -1935,33 +1888,36 @@ static DataBaseManager *_sharedInstance = nil;
                                          dataSort:(NSString *)dataSort
                                         validDate:(NSString *)validDate{
     
-    NSString *sortedBy = @"beginTime";
-    NSString* isAscending = ([dataSort isEqualToString:@"asc"])?@"YES":@"NO";
-    switch ([dataOrder intValue]) {
-        case 1://时间
-            sortedBy = @"beginTime";
-            break;
-        case 2://评分
-            sortedBy = @"recommend";
-            isAscending = @"YES";
-            break;
-        case 3://距离
-            sortedBy = @"distance";
-            isAscending = @"YES";
-            break;
-        case 4://价格
-            sortedBy = @"price";
-            break;
-        default://评分高到底
-            break;
-    }
+//    NSString *sortedBy = @"beginTime";
+//    NSString* isAscending = ([dataSort isEqualToString:@"asc"])?@"YES":@"NO";
+//    switch ([dataOrder intValue]) {
+//        case 1://时间
+//            sortedBy = @"beginTime";
+//            break;
+//        case 2://评分
+//            sortedBy = @"recommend";
+//            isAscending = @"YES";
+//            break;
+//        case 3://距离
+//            sortedBy = @"distance";
+//            isAscending = @"YES";
+//            break;
+//        case 4://价格
+//            sortedBy = @"price";
+//            break;
+//        default://评分高到底
+//            break;
+//    }
+    
+    NSString *sortTerm = @"sortID";
+    NSString *ascendingTerm = @"YES";
     
     if (isEmpty(cityId)) {
         cityId = [[LocationManager defaultLocationManager] getUserCityId];
     }
     NSString *data_type = [NSString stringWithFormat:@"%@-%@-%@-%@",dataType,dataTimedistance,dataOrder,dataSort];
-    return [SShow MR_findAllSortedBy:sortedBy
-                           ascendingBy:isAscending
+    return [SShow MR_findAllSortedBy:sortTerm
+                           ascendingBy:ascendingTerm
                        withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and locationDate >= %@ and dataType = %@",cityId,validDate,data_type]
                               offset:offset
                                limit:limit
@@ -2284,18 +2240,22 @@ static DataBaseManager *_sharedInstance = nil;
                                        longitude:(CLLocationDegrees)longitude
                                         dataType:(NSString *)dataType
                                        validDate:(NSString *)validDate{
-    NSString *sortStr = @"begintime";
-    NSString* isAscending = @"YES";
-    if ([dataType intValue]==2) {//1代表时间，2代表人气，3代表附近
-        sortStr = @"popular";
-        isAscending = NO;
-    }
+//    NSString *sortStr = @"begintime";
+//    NSString* isAscending = @"YES";
+//    if ([dataType intValue]==2) {//1代表时间，2代表人气，3代表附近
+//        sortStr = @"popular";
+//        isAscending = NO;
+//    }
+    
+    NSString *sortTerm = @"sortID";
+    NSString *ascendingTerm = @"YES";
+    
     if (isEmpty(cityId)) {
         cityId = [[LocationManager defaultLocationManager] getUserCityId];
     }
     
-    return [BBar MR_findAllSortedBy:sortStr
-                          ascendingBy:isAscending
+    return [BBar MR_findAllSortedBy:sortTerm
+                          ascendingBy:ascendingTerm
                       withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and locationDate >= %@ and dataType = %@",cityId,validDate,dataType]
                              offset:offset
                               limit:limit
@@ -2307,8 +2267,16 @@ static DataBaseManager *_sharedInstance = nil;
 - (NSMutableArray *)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
     CFTimeInterval time1 = Elapsed_Time;
     
-    NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:20];
     NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"events"];
+    
+    if (isNull(array) || [array count]==0) {
+        [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+        ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+        return nil;
+    }
+    
+    NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:20];
+    int totalCount = [self getCountOfBarsListFromCoreDataWithCityName:nil];
     
     BBar *bBar = nil;
     for (int i=0; i<[array count]; i++) {
@@ -2324,6 +2292,10 @@ static DataBaseManager *_sharedInstance = nil;
         bBar.cityId = apiCmd.cityId;
         bBar.locationDate = [self getTodayTimeStamp];
         bBar.dataType = apiCmd.dataType; //数据类型，1是时间过滤，2是人气过滤，3是附近
+        
+        bBar.sortID = [NSNumber numberWithInt:totalCount];
+        totalCount++;
+        
         [returnArray addObject:bBar];
     }
     
@@ -2378,43 +2350,6 @@ static DataBaseManager *_sharedInstance = nil;
 }
 
 //插入 酒吧 详情
-/*
- {
- httpCode: 200,
- errors: [ ],
- data: {
-     eventinfo: {
-     id: "10",
-     barid: "6",
-     barname: "bar",
-     eventname: "欢乐相聚10",
-     address: "",
-     latitude: "",
-     longitude: "",
-     type: "2",
-     cityid: "0",
-     districtid: "1",
-     begintime: "2013-07-26",
-     endtime: "2013-07-27",
-     eventtime: "22.5",
-     hotadded: "45",
-     price: "446",
-     recommendadded: "3",
-     wantedadded: "99",
-     description: null,
-     eventurl: null,
-     tag: "0",
-     currentstatus: "3",
-     createtime: "2013-07-15 15:52:24",
-     createdbysuid: "11",
-     lastmodifiedtime: "2013-07-15 15:56:26",
-     lastmodifiedbysuid: "11"
- }
- },
- token: null,
- timestamp: "1374575326"
- }
- */
 - (BBarDetail *)insertBarDetailIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
     
     BBarDetail *tBarDetail = nil;
@@ -2654,8 +2589,12 @@ static DataBaseManager *_sharedInstance = nil;
     if (isEmpty(cityId)) {
         cityId = [[LocationManager defaultLocationManager] getUserCityId];
     }
-    NSArray *returnArray = [KKTV MR_findAllSortedBy:@"districtid"
-                                             ascendingBy:@"YES"
+    
+    NSString *sortTerm = @"sortID";
+    NSString *ascendingTerm = @"YES";
+    
+    NSArray *returnArray = [KKTV MR_findAllSortedBy:sortTerm
+                                             ascendingBy:ascendingTerm
                                          withPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and locationDate >= %@ and dataType = %@",cityId,validDate,dataType]
                                                 offset:offset
                                                  limit:limit
@@ -2764,56 +2703,23 @@ static DataBaseManager *_sharedInstance = nil;
     
 }
 
-/*
- 
- {
- httpCode: 200,
- errors: [ ],
- data: {
- count: "20",
- infos: [
- {
-     districtName: "长宁区",
-     list: [
-     {
-     id: "519",
-     uniquekey: "b11f330d5a81c3fbc85cf7c826615938",
-     name: "新罗马假期KTV",
-     description: null,
-     address: "长宁路547号",
-     contactphone: null,
-     contactphonex: "021-52380679",
-     contactphonetypex: "1",
-     contactphoney: "",
-     contactphonetypey: "1",
-     contactphonez: "",
-     contactphonetypez: "1",
-     latitude: "35.281521",
-     longitude: "107.950447",
-     cityid: "2",
-     districtid: "3",
-     logourl: "logourl",
-     coverurl: "http://i1.dpfile.com/2009-12-11/3319992_b.jpg(700x700)/thumb.jpg",
-     specialoffers: "",
-     trafficroutes: "",
-     exturl: "http://dpurl.cn/p/NcycBI9eR0",
-     createtime: "2013-07-16 18:23:11",
-     createdbysuid: "11",
-     lastmodifiedtime: "2013-07-23 15:21:17",
-     lastmodifiedbysuid: "11",
-     source: "1",
-     currentstatus: "3"
- },
- */
-
 #pragma mark KTV 插入 数据库
 - (NSArray *)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
     CFTimeInterval time1 = Elapsed_Time;
-    NSManagedObjectContext *dataBaseContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    
     NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"list"];
     
-    KKTV *kKTV = nil;
+    if (isNull(array) || [array count]==0) {
+        [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
+        ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
+        return nil;
+    }
+    
+    NSManagedObjectContext *dataBaseContext = [NSManagedObjectContext MR_contextForCurrentThread];
     NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:20];
+    KKTV *kKTV = nil;
+    
+    int totalCount = [self getCountOfKTVsListFromCoreDataWithCityName:nil];
     for (int i=0; i<[array count]; i++) {
         
         NSString *districtStr = [[array objectAtIndex:i] objectForKey:@"districtName"];
@@ -2830,6 +2736,10 @@ static DataBaseManager *_sharedInstance = nil;
             kKTV.cityName = apiCmd.cityName;
             kKTV.locationDate = [self getTodayTimeStamp];
             kKTV.dataType = apiCmd.dataType;
+            
+            kKTV.sortID = [NSNumber numberWithInt:totalCount];
+            totalCount++;
+            
             [self importKTV:kKTV ValuesForKeysWithObject:[arrayktvs objectAtIndex:j]];
             [returnArray addObject:kKTV];
         }

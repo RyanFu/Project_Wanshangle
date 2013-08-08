@@ -270,19 +270,24 @@
         return NO;
     }
     
-    //    unichar c = [newCity characterAtIndex:0];
-    //    if (c >=0x4E00 && c <=0x9FFF){
-    //        if ([[newCity substringFromIndex:[newCity length]-1] isEqualToString:@"市"]) {
-    //            newCity = [newCity substringToIndex:[newCity length]-1];
-    //            ABLoggerInfo(@"定位信息 == 汉字 == %@",newCity);
-    //        }
-    //    }else{
-    //        ABLoggerInfo(@"定位信息 == 英文");
-    //    }
-    
-    if ([[newCity substringFromIndex:[newCity length]-1] isEqualToString:@"市"]) {
-        newCity = [newCity substringToIndex:[newCity length]-1];
-        ABLoggerInfo(@"定位信息 == 汉字 == %@",newCity);
+    unichar c = [newCity characterAtIndex:0];
+    if (c >=0x4E00 && c <=0x9FFF){
+        if ([[newCity substringFromIndex:[newCity length]-1] isEqualToString:@"市"]) {
+            newCity = [newCity substringToIndex:[newCity length]-1];
+            ABLoggerInfo(@"定位信息 == 汉字 == %@",newCity);
+        }
+    }else{
+        ABLoggerInfo(@"定位信息 == 英文");
+
+        NSArray *cityEnglishStrs = [NSArray arrayWithObjects:@"shanghai",@"beijing",@"guangzhou",@"shenzhen",nil];
+        NSArray *cityZHStrs = [NSArray arrayWithObjects:@"上海",@"北京",@"广州",@"深圳", nil];
+        
+        for (int i=0 ;i<[cityEnglishStrs count];i++) {
+            NSRange range = [newCity rangeOfString:[cityEnglishStrs objectAtIndex:i] options:NSCaseInsensitiveSearch];
+            if (range.location!=NSNotFound) {
+                newCity = [cityZHStrs objectAtIndex:i];
+            }
+        }
     }
     
     if ([[DataBaseManager sharedInstance] validateCity:newCity]) {
@@ -293,7 +298,7 @@
     
     NSString *city = [self getUserCity];
     if (city) {
-        
+
         NSRange range=[newCity rangeOfString:city options:NSCaseInsensitiveSearch];
         if(range.location == NSNotFound){
             

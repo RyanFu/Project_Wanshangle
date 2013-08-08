@@ -292,16 +292,16 @@
     [self.view addSubview:_timeView];
     
     CGRect newFrame = _timeView.frame;
-    newFrame.origin = CGPointMake(_timeButton.frame.origin.x - (_timeView.frame.size.width-_timeButton.frame.size.width)/2,
-                                  _timeButton.frame.origin.y);
+    newFrame.origin = CGPointMake(_timeButtonView.frame.origin.x - (_timeView.frame.size.width-_timeButtonView.frame.size.width)/2,
+                                  _timeButtonView.frame.origin.y);
     _timeView.frame = newFrame;
     
     [UIView animateWithDuration:0.2 animations:^{
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
         [_timeView setAlpha:1];
         CGRect newFrame = _timeView.frame;
-        newFrame.origin = CGPointMake(_timeButton.frame.origin.x - (_timeView.frame.size.width-_timeButton.frame.size.width)/2,
-                                      _timeButton.frame.origin.y+_timeButton.frame.size.height);
+        newFrame.origin = CGPointMake(_timeButtonView.frame.origin.x - (_timeView.frame.size.width-_timeButtonView.frame.size.width)/2,
+                                      _timeButtonView.frame.origin.y+_timeButtonView.frame.size.height);
         _timeView.frame = newFrame;
         _timeArrowImg.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(180));
     } completion:^(BOOL finished) {
@@ -325,16 +325,16 @@
     [self.view addSubview:_orderView];
     
     CGRect newFrame = _orderView.frame;
-    newFrame.origin = CGPointMake(_orderButton.frame.origin.x - (_orderView.frame.size.width-_orderButton.frame.size.width),
-                                  _orderButton.frame.origin.y);
+    newFrame.origin = CGPointMake(_orderButtonView.frame.origin.x - (_orderView.frame.size.width-_orderButtonView.frame.size.width),
+                                  _orderButtonView.frame.origin.y);
     _orderView.frame = newFrame;
     
     [UIView animateWithDuration:0.2 animations:^{
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
         [_orderView setAlpha:1];
         CGRect newFrame = _orderView.frame;
-        newFrame.origin = CGPointMake(_orderButton.frame.origin.x - (_orderView.frame.size.width-_orderButton.frame.size.width),
-                                      _orderButton.frame.origin.y+_orderButton.frame.size.height);
+        newFrame.origin = CGPointMake(_orderButtonView.frame.origin.x - (_orderView.frame.size.width-_orderButtonView.frame.size.width),
+                                      _orderButtonView.frame.origin.y+_orderButtonView.frame.size.height);
         _orderView.frame = newFrame;
         _orderArrowImg.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(180));
     } completion:^(BOOL finished) {
@@ -427,6 +427,12 @@
         default:
             break;
     }
+    
+    [self.typeButton setTitle:self.dataType forState:UIControlStateNormal];
+    [self.typeButton setTitle:self.dataType forState:UIControlStateSelected];
+
+    CGSize textSize = [self.dataType sizeWithFont:self.typeButton.titleLabel.font constrainedToSize:CGSizeMake(100, 100)];
+    self.typeArrowImg.center = CGPointMake((53+textSize.width/2+4), 20);
 }
 
 - (void)cleanUpTypeSubButton{
@@ -454,22 +460,34 @@
 }
 
 - (void)selectedDataTimeDistanceWithTag:(int)tag{
+    
+     NSString *titleStr = nil;
+    
     switch (tag) {
         case 0:
+            titleStr = @"时间";
             self.dataTimedistance = API_SShow_Time_All_Cmd;
             break;
         case 1:
+            titleStr = @"今天";
             self.dataTimedistance = API_SShow_Time_Today_Cmd;
             break;
         case 2:
+            titleStr = @"明天";
             self.dataTimedistance = API_SShow_Time_Tomorrow_Cmd;
             break;
         case 3:
+            titleStr = @"后天";
             self.dataTimedistance = API_SShow_Time_AfterTomorrow_Cmd;
             break;
         default:
             break;
     }
+    
+    [self.timeButton setTitle:titleStr forState:UIControlStateNormal];
+    [self.timeButton setTitle:titleStr forState:UIControlStateSelected];
+    CGSize textSize = [titleStr sizeWithFont:self.timeButton.titleLabel.font constrainedToSize:CGSizeMake(100, 100)];
+    self.timeArrowImg.center = CGPointMake((53+textSize.width/2+4), 20);
 }
 
 - (void)cleanUpTimeSubButton{
@@ -497,26 +515,38 @@
 }
 
 - (void)selectedDataOrderAndSortWithTag:(int)tag{
+    
+    NSString *titleStr = nil;
+    
     switch (tag) {
         case 0:
+            titleStr = @"早到晚";
             self.dataOrder = API_SShow_Oreder_Time_Cmd;
             self.dataSort = API_SShow_SortASC_Cmd;
             break;
         case 1:
+            titleStr = @"低到高";
             self.dataOrder = API_SShow_Oreder_Price_Cmd;
             self.dataSort = API_SShow_SortASC_Cmd;
             break;
         case 2:
+            titleStr = @"高到低";
             self.dataOrder = API_SShow_Oreder_Price_Cmd;
             self.dataSort = API_SShow_SortDESC_Cmd;
             break;
         case 3:
+            titleStr = @"近到远";
             self.dataOrder = API_SShow_Oreder_Distance_Cmd;
             self.dataSort = API_SShow_SortASC_Cmd;
             break;
         default:
             break;
     }
+    
+    [self.orderButton setTitle:titleStr forState:UIControlStateNormal];
+    [self.orderButton setTitle:titleStr forState:UIControlStateSelected];
+    CGSize textSize = [titleStr sizeWithFont:self.orderButton.titleLabel.font constrainedToSize:CGSizeMake(100, 100)];
+    self.orderArrowImg.center = CGPointMake((53+textSize.width/2+4), 20);
 }
 
 - (void)cleanUpOrderSubButton{
@@ -573,7 +603,6 @@
     [self formatKTVData:dataArray];
 
 }
-
 #pragma mark -
 #pragma mark FormateData
 - (void)formatKTVData:(NSArray*)dataArray{

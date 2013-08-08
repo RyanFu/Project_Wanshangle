@@ -258,7 +258,7 @@
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
-						<string key="IBUINormalTitle">今天(周六)3场</string>
+						<string key="IBUINormalTitle">今天</string>
 						<reference key="IBUIHighlightedTitleColor" ref="929366523"/>
 						<object class="NSColor" key="IBUISelectedTitleColor">
 							<int key="NSColorSpace">1</int>
@@ -294,7 +294,7 @@
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
-						<string key="IBUINormalTitle">明天(周日)8场</string>
+						<string key="IBUINormalTitle">明天</string>
 						<reference key="IBUIHighlightedTitleColor" ref="929366523"/>
 						<object class="NSColor" key="IBUISelectedTitleColor">
 							<int key="NSColorSpace">1</int>

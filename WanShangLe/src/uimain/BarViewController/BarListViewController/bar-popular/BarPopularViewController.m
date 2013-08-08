@@ -32,6 +32,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        _isLoadDone = NO;
     }
     return self;
 }
@@ -166,6 +167,8 @@
         
         if (dataArray==nil || [dataArray count]<=0) {
             dispatch_async(dispatch_get_main_queue(), ^{
+                _isLoadDone = YES;
+                _refreshTailerView.hidden = YES;
                 [self reloadPullRefreshData];
             });
             return;
@@ -243,6 +246,12 @@
 - (void)loadMoreData{
     
     isLoadMoreAll = YES;
+    
+    if (_isLoadDone) {
+        [self reloadPullRefreshData];
+        return;
+    }
+    
     [self setTableViewDelegate];
     [self updateData:0 withData:[self getCacheData]];
 }
@@ -250,6 +259,7 @@
 - (void)loadNewData{
     
     isLoadMoreAll = NO;
+    _isLoadDone = NO;
     [_mCacheArray removeAllObjects];
     [_mArray removeAllObjects];
     [self updateData:0 withData:[self getCacheData]];

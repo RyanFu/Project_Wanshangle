@@ -268,7 +268,7 @@
         [self setTableViewFooterViewHaveData:YES];
     }
     
-    [self refreshTodayButtonTitle];
+//    [self refreshTodayButtonTitle];
     [_mTableView reloadData];
 }
 
@@ -293,19 +293,25 @@
         [self setTableViewFooterViewHaveData:YES];
     }
     
-    [self refreshTomorrowButtonTitle];
+//    [self refreshTomorrowButtonTitle];
     [_mTableView reloadData];
 }
 
 
 - (void)refreshTodayButtonTitle{
     
+//    if ([_todaySchedules count]==0 || _todaySchedules==nil) {
+//        return;
+//    }
     [_todayButton setTitle:[NSString stringWithFormat:@"今天(%@)%d场",_todayWeek,[_todaySchedules count]] forState:UIControlStateSelected];
     [_todayButton setTitle:[NSString stringWithFormat:@"今天(%@)%d场",_todayWeek,[_todaySchedules count]] forState:UIControlStateNormal];
 }
 
 - (void)refreshTomorrowButtonTitle{
     
+//    if ([_tomorrowSchedules count]==0 || _tomorrowSchedules==nil) {
+//        return;
+//    }
     [_tomorrowButton setTitle:[NSString stringWithFormat:@"明天(%@)%d场",_tomorrowWeek,[_tomorrowSchedules count]] forState:UIControlStateSelected];
     [_tomorrowButton setTitle:[NSString stringWithFormat:@"明天(%@)%d场",_tomorrowWeek,[_tomorrowSchedules count]] forState:UIControlStateNormal];
 }
@@ -313,7 +319,7 @@
 - (void)setTableViewFooterViewHaveData:(BOOL)haveData{
     
     UIView *tableViewFooter = nil;
-    if (_mTableView.tableFooterView.tag==100) {
+    if (_mTableView.tableFooterView.tag==100) {//包含常去按钮和无排期笑脸
         tableViewFooter = [[[UIView alloc] init] autorelease];
         //        [tableViewFooter setBackgroundColor:[UIColor redColor]];
         tableViewFooter.tag = EmBedFooterView;
@@ -339,7 +345,7 @@
             [tableViewFooter addSubview:_addFavoriteFooterView];
             _mTableView.tableFooterView = tableViewFooter;
         }
-    }else{
+    }else{//紧紧包含无排期笑脸
         if (!haveData) {
             [_mTableView setTableFooterView:_footerView];
         }else{
@@ -433,7 +439,7 @@
             [self refreshTomorrowButtonTitle];
         }
         
-        if (_todayButton.selected) {
+        if (_todayButton.selected && ([timedistance intValue]==0)) {
             [self refreshTodaySchedule];
         }else if(_tomorrowButton.selected){
             [self refreshTomorrowSchedule];

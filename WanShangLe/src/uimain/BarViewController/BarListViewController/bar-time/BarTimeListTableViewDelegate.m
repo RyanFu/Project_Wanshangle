@@ -24,7 +24,7 @@
 #pragma mark UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (_mArray==nil || [_mArray count]<=DataCount) {//每次刷新表的时候检测是否有数据
+    if (_mArray==nil ||[_mArray count]<=DataCount || _parentViewController.isLoadDone) {//每次刷新表的时候检测是否有数据
         _refreshTailerView.hidden = YES;
     }else{
         _refreshTailerView.hidden = NO;

@@ -218,22 +218,35 @@
     
     dispatch_sync(dispatch_get_main_queue(), ^{
         
-        _price_label.text = [NSString stringWithFormat:@"现场价 %0.1f元",[[responseDic objectForKey:@"origprice"] floatValue]];
+        _price_label.text = [NSString stringWithFormat:@"现场价 %0.0f元",[[responseDic objectForKey:@"origprice"] floatValue]];
         
         int discountCount = [[responseDic objectForKey:@"specialpfferscount"] intValue];
         if (discountCount>0) {
             _discountNum.text = [NSString stringWithFormat:@"%d项",discountCount];
             _discountButton.enabled = YES;
         }else{
-            _discountNum.text = @"暂无";
+//            _discountNum.text = @"暂无";
             _discountButton.enabled = NO;
+            [self removieDiscountButton];
         }
     
         
         [_mTableView reloadData];
     });
 }
+#pragma mark -
+#pragma mark 刷新Header View
+- (void)removieDiscountButton{
+    [_discountView removeFromSuperview];
+    CGRect newFrame = _mHeaderView.frame;
+    newFrame.size.height = 80;
+    _mHeaderView.frame = newFrame;
+    
+    _mTableView.tableHeaderView = _mHeaderView;
+}
 
+#pragma mark -
+#pragma mark 分享
 - (void)shareButtonClick:(id)sender{
     
     AppDelegate *_appDelegate = [AppDelegate appDelegateInstance];
