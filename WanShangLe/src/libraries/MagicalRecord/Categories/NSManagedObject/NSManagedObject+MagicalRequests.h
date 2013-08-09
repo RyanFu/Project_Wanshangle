@@ -30,7 +30,7 @@
 
 //分页
 + (NSFetchRequest *) MR_requestAllSortedBy:(NSString *)sortTerm
-                                 ascending:(BOOL)ascending
+                                 ascendingBy:(NSString *)ascending
                              withPredicate:(NSPredicate *)searchTerm
                                     offset:(int)offset
                                      limit:(int)limit

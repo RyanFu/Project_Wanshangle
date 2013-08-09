@@ -10,6 +10,7 @@
 #import "CinemaManagerSearchController.h"
 #import "CinemaManagerCell.h"
 #import "MCinema.h"
+#import "NSMutableArray+TKCategory.h"
 
 #define TagTuan 500
 
@@ -56,7 +57,7 @@
 #pragma mark UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (tableView != self.msearchDisplayController.searchResultsTableView) {//正常模式
+    if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
         
         [_parentViewController hiddenRefreshTailerView];
         
@@ -68,7 +69,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
-    if (tableView != self.msearchDisplayController.searchResultsTableView) {//正常模式
+    if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
         if (section==0) {
             return [_mFavoriteArray count];
         }
@@ -207,7 +208,7 @@
             [[DataBaseManager sharedInstance] deleteFavoriteCinemaWithId:aCinema.uid];
             bt.selected = NO;
             [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_unFavorite_n@2x"] forState:UIControlStateNormal];
-            [_mFavoriteArray removeObject:aCinema];
+            [_mFavoriteArray filterUsingPredicate:[NSPredicate predicateWithFormat:@"uid != %@",aCinema.uid]];//解决了 收藏数组 删除 搜索数组 中取消收藏的影院
         }
     } 
 }
@@ -279,7 +280,7 @@
     cell.cinema_name.text = aCinema.name;
     cell.cinema_address.text = aCinema.address;
     
-    if ([aCinema.favorite boolValue]) {
+    if ([[DataBaseManager sharedInstance] isFavoriteCinemaWithId:aCinema.uid]) {
         cell.cinemaFavoriteButton.selected = YES;
         [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
     }
@@ -317,7 +318,7 @@
         label2.backgroundColor = [UIColor colorWithWhite:0.829 alpha:1.000];
         NSString *name = [[_mArray objectAtIndex:section-1] objectForKey:@"name"];
         NSArray *list = [[_mArray objectAtIndex:section-1] objectForKey:@"list"];
-        label2.text = [NSString stringWithFormat:@"%@  (共%d家)",name,[list count]];
+        label2.text = [NSString stringWithFormat:@"%@",name];
         
         [headerView addSubview:label1];
         [headerView addSubview:label2];
@@ -331,7 +332,7 @@
     
     NSString *name = [[_mArray objectAtIndex:section-1] objectForKey:@"name"];
     NSArray *list = [[_mArray objectAtIndex:section-1] objectForKey:@"list"];
-    headerView.text = [NSString stringWithFormat:@"%@  (共%d家)",name,[list count]];
+    headerView.text = [NSString stringWithFormat:@"%@",name];
     
     return [headerView autorelease];
 }
@@ -493,7 +494,7 @@
     
     self.msearchController = nil;
     self.mSearchArray = nil;
-    [_mTableView reloadData];//解决退出搜索后，新添加的TKV收藏列表没有刷新的Bug
+    [_mTableView reloadData];//解决退出搜索后，新添加的影院收藏列表没有刷新的Bug
 }
 
 - (void)cleanUpSearchBar:(UISearchBar *)searchBar{

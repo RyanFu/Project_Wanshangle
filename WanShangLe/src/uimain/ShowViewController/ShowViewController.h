@@ -28,6 +28,9 @@ typedef NS_ENUM(NSInteger, NSFilterShowListType) {
 @property(nonatomic,retain) IBOutlet UIButton* typeButton;
 @property(nonatomic,retain) IBOutlet UIButton* timeButton;
 @property(nonatomic,retain) IBOutlet UIButton* orderButton;
+@property(nonatomic,retain) IBOutlet UIView* typeButtonView;
+@property(nonatomic,retain) IBOutlet UIView* timeButtonView;
+@property(nonatomic,retain) IBOutlet UIView* orderButtonView;
 @property(nonatomic,retain) IBOutlet UIView* typeView;
 @property(nonatomic,retain) IBOutlet UIView* timeView;
 @property(nonatomic,retain) IBOutlet UIView* orderView;
@@ -53,6 +56,8 @@ typedef NS_ENUM(NSInteger, NSFilterShowListType) {
 @property(nonatomic,readwrite)int oldSelectedType;
 @property(nonatomic,readwrite)int oldSelectedTime;
 @property(nonatomic,readwrite)int oldSelectedOrder;
+
+@property(nonatomic,readwrite)BOOL isDone;
 
 - (IBAction)clickTypeButton:(id)sender;
 - (IBAction)clickTimeButton:(id)sender;

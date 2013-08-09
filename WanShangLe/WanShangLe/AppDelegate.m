@@ -11,6 +11,10 @@
 #import "ApiConfig.h"
 #import <ShareSDK/ShareSDK.h>
 #import "UncaughtExceptionHandler.h"
+#import "AFJSONRequestOperation.h"
+#import "AFHTTPRequestOperation.h"
+#import "ASIHTTPRequest.h"
+#import "GuidePagesController.h"
 
 @interface AppDelegate(){
     
@@ -70,40 +74,53 @@
     [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:@"DataStore.sqlite"];
     //[MagicalRecord setupCoreDataStackWithStoreNamed:@"DataStore.sqlite"];
     
-    //location user city 定位用户的城市
-    [[LocationManager defaultLocationManager] startLocationUserGPS];
-    
     //inset all citys into coreData
     /*
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        
-        [[DataBaseManager sharedInstance] insertAllCitysIntoCoreData];
-        
-    });*/
+     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+     
+     [[DataBaseManager sharedInstance] insertAllCitysIntoCoreData];
+     
+     });*/
     
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
     
-    RootViewController *rootViewController = [[RootViewController alloc] initWithNibName:(iPhone5?@"RootViewController_5":@"RootViewController") bundle:nil];
-    
-    UINavigationController *_navigationController = [[UINavigationController alloc] initWithRootViewController:rootViewController];[rootViewController release];
+    RootViewController *rootViewController = [[[RootViewController alloc] initWithNibName:(iPhone5?@"RootViewController_5":@"RootViewController") bundle:nil] autorelease];
+    UINavigationController *_navigationController = [[[UINavigationController alloc] initWithRootViewController:rootViewController] autorelease];
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
+    _rootController = _navigationController;
     
-    self.window.rootViewController = _navigationController;
-    [CacheManager sharedInstance].rootNavController = _navigationController;
-    [_navigationController release];
+    self.window.rootViewController = _rootController;
+    [CacheManager sharedInstance].rootNavController = _rootController;
+    
+    // 异常捕获 exception caught
+    [self performSelector:@selector(installUncaughtExceptionHandler) withObject:nil afterDelay:0];
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
+    [self showGuidePage];//显示引导页面
+    
     CFTimeInterval time2 = Elapsed_Time;
     ElapsedTime(time2, time1);
     
-    // 异常捕获 exception caught
-    [self performSelector:@selector(installUncaughtExceptionHandler) withObject:nil afterDelay:0];
-//    [self performSelector:@selector(string) withObject:nil afterDelay:4.0];
-    
     return YES;
+}
+
+- (void)showGuidePage{
+    if (isNull([[NSUserDefaults standardUserDefaults] objectForKey:NewApp]) || [[[NSUserDefaults standardUserDefaults] objectForKey:NewApp] boolValue]) {
+        GuidePagesController* guidePagesController = [[GuidePagesController alloc] init];
+        guidePagesController.delegate = self;
+        guidePagesController.selector = @selector(guidePageComplete:);
+        
+        [_rootController.view addSubview:guidePagesController.view];
+
+        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:NO] forKey:NewApp];
+    }
+}
+
+- (void)guidePageComplete:(GuidePagesController *)guidePageController{
+    [guidePageController release];
 }
 
 - (void)initializePlat{
@@ -166,6 +183,9 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    
+    //获取服务器的时间用来校对本地时间
+    [self getServerCurrentTime];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -178,9 +198,68 @@
 	return (AppDelegate *)[UIApplication sharedApplication].delegate;
 }
 
+//重置KeyWindow，解决第三方框架更改KeyWindow后为Nil的Bug
+- (void)reSetKeyWindow{
+    _window.rootViewController = _rootController;
+    [_window makeKeyWindow];
+}
 - (void)installUncaughtExceptionHandler
 {
 	InstallUncaughtExceptionHandler();
+}
+
+/*
+ {
+ httpCode: 200,
+ errors: [ ],
+ data: {
+ timestamp: 1375238669,
+ datetime: "2013-07-31 10:44:29"
+ },
+ token: null,
+ timestamp: "1375238669"
+ }
+ */
+- (void)getServerCurrentTime{
+//    __block AFJSONRequestOperation *requestOperation = [[AFJSONRequestOperation alloc]
+//                                                        initWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://api.wanshangle.com:10000/api?appId=000001&sign=sign&time=1&v=1.0&api=server.currenttime"]]];
+//    
+//    [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        
+//        NSNumber *timeStamp = [[responseObject objectForKey:@"data"] objectForKey:@"timestamp"];
+//        [DataBaseManager sharedInstance].missTime = [timeStamp doubleValue];
+//         ABLoggerInfo(@"获取服务器时间 ======= %@",responseObject);
+//        
+//        [requestOperation release];
+//        requestOperation = nil;
+//        
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        [requestOperation release];
+//        requestOperation = nil;
+//    }];
+//    
+//    
+//    [[[ApiClient defaultClient] networkQueue] addOperation:requestOperation];
+    
+    
+     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+         NSData *timeData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://api.wanshangle.com:10000/api?appId=000001&sign=sign&time=1&v=1.0&api=server.currenttime"]];
+         NSError *error = nil;
+         if (isNull(timeData)) {
+             return ;
+         }
+         NSDictionary *timeDic = [NSJSONSerialization JSONObjectWithData:timeData options:0 error:&error];
+         if (error) {
+             ABLoggerWarn(@"Fail to parseJson 系统时间 with error:\n%@", [error localizedDescription]);
+         }
+         
+        double timeStamp = [[[timeDic objectForKey:@"data"] objectForKey:@"timestamp"] doubleValue];
+        double localTime = [[NSDate date] timeIntervalSince1970];
+        
+        
+        [DataBaseManager sharedInstance].missTime = timeStamp-localTime;
+         ABLoggerInfo(@"获取服务器时间 ======= %@",timeDic);
+     });
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application

@@ -18,6 +18,11 @@
 @property(nonatomic,retain) ShowTableViewDelegate *showTableViewDelegate;
 @property(nonatomic,retain) UIControl *maskView;
 
+@property(nonatomic,retain) NSString *dataType;
+@property(nonatomic,retain) NSString *dataOrder;
+@property(nonatomic,retain) NSString *dataTimedistance;
+@property(nonatomic,retain) NSString *dataSort;
+
 @end
 
 @implementation ShowViewController
@@ -60,6 +65,11 @@
     self.mArray = nil;
     self.mCacheArray = nil;
     
+    self.dataType = nil;
+    self.dataOrder = nil;
+    self.dataTimedistance = nil;
+    self.dataSort = nil;
+    
     [super dealloc];
 }
 
@@ -74,7 +84,7 @@
 #pragma mark UIView Cycle
 - (void)viewWillAppear:(BOOL)animated{
     
-    if (_selectedOrder==API_SShow_Oreder_Distance_Cmd) {
+    if (_selectedOrder==3) {
         if([self checkGPS] && (_mArray==nil || [_mArray count]<=0))
             [self loadNewData];//初始化加载
     }
@@ -133,28 +143,44 @@
         NSArray *typeArray = [selectedTypeData componentsSeparatedByString:@"#"];
         for (int i=0;i<[typeArray count];i++) {
             int index = [[typeArray objectAtIndex:i] intValue];
+            UIButton *bt = nil;
             switch (i) {
-                case 0:
-                    [(UIButton *)[_typeBts objectAtIndex:index] setSelected:YES];
-                    _selectedType = index;
-                    _oldSelectedType = index;
+                case 0:{
+                    bt = [_typeBts objectAtIndex:index];
+                    [self selectedDataTypeWithTag:index];
+                }
                     break;
-                case 1:
-                    [(UIButton *)[_timeBts objectAtIndex:index] setSelected:YES];
-                    _selectedTime = index;
-                    _oldSelectedTime = index;
+                case 1:{
+                    [self selectedDataTimeDistanceWithTag:index];
+                    bt = [_timeBts objectAtIndex:index];
                     break;
-                default:
-                    [(UIButton *)[_orderBts objectAtIndex:index] setSelected:YES];
-                    _selectedOrder = index;
-                    _oldSelectedOrder = index;
+                }
+                default:{
+                    [self selectedDataOrderAndSortWithTag:index];
+                    bt = [_orderBts objectAtIndex:index];
+                }
                     break;
             }
+            
+            bt.selected = YES;
+            [bt setTitleColor:[UIColor colorWithRed:0.230 green:0.705 blue:1.000 alpha:1.000] forState:UIControlStateNormal];
         }
     }else{
-        [(UIButton *)[_typeBts objectAtIndex:0] setSelected:YES];
-        [(UIButton *)[_timeBts objectAtIndex:0] setSelected:YES];
-        [(UIButton *)[_orderBts objectAtIndex:0] setSelected:YES];
+        [self selectedDataTypeWithTag:0];
+        [self selectedDataTimeDistanceWithTag:0];
+        [self selectedDataOrderAndSortWithTag:0];
+        
+        UIButton *bt  = [_typeBts objectAtIndex:0];
+        bt.selected = YES;
+        [bt setTitleColor:[UIColor colorWithRed:0.230 green:0.705 blue:1.000 alpha:1.000] forState:UIControlStateNormal];
+        
+        bt  = [_timeBts objectAtIndex:0];
+        bt.selected = YES;
+        [bt setTitleColor:[UIColor colorWithRed:0.230 green:0.705 blue:1.000 alpha:1.000] forState:UIControlStateNormal];
+        
+        bt  = [_orderBts objectAtIndex:0];
+        bt.selected = YES;
+        [bt setTitleColor:[UIColor colorWithRed:0.230 green:0.705 blue:1.000 alpha:1.000] forState:UIControlStateNormal];
     }
     
     [_mTableView setTableFooterView:[[[UIView alloc] initWithFrame:CGRectZero]autorelease]];
@@ -266,16 +292,16 @@
     [self.view addSubview:_timeView];
     
     CGRect newFrame = _timeView.frame;
-    newFrame.origin = CGPointMake(_timeButton.frame.origin.x - (_timeView.frame.size.width-_timeButton.frame.size.width)/2,
-                                  _timeButton.frame.origin.y);
+    newFrame.origin = CGPointMake(_timeButtonView.frame.origin.x - (_timeView.frame.size.width-_timeButtonView.frame.size.width)/2,
+                                  _timeButtonView.frame.origin.y);
     _timeView.frame = newFrame;
     
     [UIView animateWithDuration:0.2 animations:^{
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
         [_timeView setAlpha:1];
         CGRect newFrame = _timeView.frame;
-        newFrame.origin = CGPointMake(_timeButton.frame.origin.x - (_timeView.frame.size.width-_timeButton.frame.size.width)/2,
-                                      _timeButton.frame.origin.y+_timeButton.frame.size.height);
+        newFrame.origin = CGPointMake(_timeButtonView.frame.origin.x - (_timeView.frame.size.width-_timeButtonView.frame.size.width)/2,
+                                      _timeButtonView.frame.origin.y+_timeButtonView.frame.size.height);
         _timeView.frame = newFrame;
         _timeArrowImg.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(180));
     } completion:^(BOOL finished) {
@@ -299,16 +325,16 @@
     [self.view addSubview:_orderView];
     
     CGRect newFrame = _orderView.frame;
-    newFrame.origin = CGPointMake(_orderButton.frame.origin.x - (_orderView.frame.size.width-_orderButton.frame.size.width),
-                                  _orderButton.frame.origin.y);
+    newFrame.origin = CGPointMake(_orderButtonView.frame.origin.x - (_orderView.frame.size.width-_orderButtonView.frame.size.width),
+                                  _orderButtonView.frame.origin.y);
     _orderView.frame = newFrame;
     
     [UIView animateWithDuration:0.2 animations:^{
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
         [_orderView setAlpha:1];
         CGRect newFrame = _orderView.frame;
-        newFrame.origin = CGPointMake(_orderButton.frame.origin.x - (_orderView.frame.size.width-_orderButton.frame.size.width),
-                                      _orderButton.frame.origin.y+_orderButton.frame.size.height);
+        newFrame.origin = CGPointMake(_orderButtonView.frame.origin.x - (_orderView.frame.size.width-_orderButtonView.frame.size.width),
+                                      _orderButtonView.frame.origin.y+_orderButtonView.frame.size.height);
         _orderView.frame = newFrame;
         _orderArrowImg.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(180));
     } completion:^(BOOL finished) {
@@ -365,6 +391,48 @@
     
     _oldSelectedType = _selectedType;
     _selectedType = tag-1;
+    
+    _isDone = NO;
+    [self selectedDataTypeWithTag:_selectedType];
+
+}
+
+- (void)selectedDataTypeWithTag:(int)tag{
+    switch (tag) {
+        case 0:
+            self.dataType = API_SShow_Type_All_Cmd;
+            break;
+        case 1:
+            self.dataType = API_SShow_Type_VocalConcert_Cmd;
+            break;
+        case 2:
+            self.dataType = API_SShow_Type_Music_Cmd;
+            break;
+        case 3:
+            self.dataType = API_SShow_Type_Talk_Cmd;
+            break;
+        case 4:
+            self.dataType = API_SShow_Type_Dance_Cmd;
+            break;
+        case 5:
+            self.dataType = API_SShow_Type_Circus_Cmd;
+            break;
+        case 6:
+            self.dataType = API_SShow_Type_Sport_Cmd;
+            break;
+        case 7:
+            self.dataType = API_SShow_Type_Child_Cmd;
+            break;
+            
+        default:
+            break;
+    }
+    
+    [self.typeButton setTitle:self.dataType forState:UIControlStateNormal];
+    [self.typeButton setTitle:self.dataType forState:UIControlStateSelected];
+
+    CGSize textSize = [self.dataType sizeWithFont:self.typeButton.titleLabel.font constrainedToSize:CGSizeMake(100, 100)];
+    self.typeArrowImg.center = CGPointMake((53+textSize.width/2+4), 20);
 }
 
 - (void)cleanUpTypeSubButton{
@@ -384,6 +452,42 @@
     
     _oldSelectedTime = _selectedTime;
     _selectedTime = tag-1;
+    
+    _isDone = NO;
+    
+    [self selectedDataTimeDistanceWithTag:_selectedTime];
+    
+}
+
+- (void)selectedDataTimeDistanceWithTag:(int)tag{
+    
+     NSString *titleStr = nil;
+    
+    switch (tag) {
+        case 0:
+            titleStr = @"时间";
+            self.dataTimedistance = API_SShow_Time_All_Cmd;
+            break;
+        case 1:
+            titleStr = @"今天";
+            self.dataTimedistance = API_SShow_Time_Today_Cmd;
+            break;
+        case 2:
+            titleStr = @"明天";
+            self.dataTimedistance = API_SShow_Time_Tomorrow_Cmd;
+            break;
+        case 3:
+            titleStr = @"后天";
+            self.dataTimedistance = API_SShow_Time_AfterTomorrow_Cmd;
+            break;
+        default:
+            break;
+    }
+    
+    [self.timeButton setTitle:titleStr forState:UIControlStateNormal];
+    [self.timeButton setTitle:titleStr forState:UIControlStateSelected];
+    CGSize textSize = [titleStr sizeWithFont:self.timeButton.titleLabel.font constrainedToSize:CGSizeMake(100, 100)];
+    self.timeArrowImg.center = CGPointMake((53+textSize.width/2+4), 20);
 }
 
 - (void)cleanUpTimeSubButton{
@@ -403,6 +507,46 @@
     
     _oldSelectedOrder = _selectedOrder;
     _selectedOrder = tag-1;
+    
+    _isDone = NO;
+    
+    [self selectedDataOrderAndSortWithTag:_selectedOrder];
+
+}
+
+- (void)selectedDataOrderAndSortWithTag:(int)tag{
+    
+    NSString *titleStr = nil;
+    
+    switch (tag) {
+        case 0:
+            titleStr = @"早到晚";
+            self.dataOrder = API_SShow_Oreder_Time_Cmd;
+            self.dataSort = API_SShow_SortASC_Cmd;
+            break;
+        case 1:
+            titleStr = @"低到高";
+            self.dataOrder = API_SShow_Oreder_Price_Cmd;
+            self.dataSort = API_SShow_SortASC_Cmd;
+            break;
+        case 2:
+            titleStr = @"高到低";
+            self.dataOrder = API_SShow_Oreder_Price_Cmd;
+            self.dataSort = API_SShow_SortDESC_Cmd;
+            break;
+        case 3:
+            titleStr = @"近到远";
+            self.dataOrder = API_SShow_Oreder_Distance_Cmd;
+            self.dataSort = API_SShow_SortASC_Cmd;
+            break;
+        default:
+            break;
+    }
+    
+    [self.orderButton setTitle:titleStr forState:UIControlStateNormal];
+    [self.orderButton setTitle:titleStr forState:UIControlStateSelected];
+    CGSize textSize = [titleStr sizeWithFont:self.orderButton.titleLabel.font constrainedToSize:CGSizeMake(100, 100)];
+    self.orderArrowImg.center = CGPointMake((53+textSize.width/2+4), 20);
 }
 
 - (void)cleanUpOrderSubButton{
@@ -459,7 +603,6 @@
     [self formatKTVData:dataArray];
 
 }
-
 #pragma mark -
 #pragma mark FormateData
 - (void)formatKTVData:(NSArray*)dataArray{
@@ -473,12 +616,7 @@
     
     ABLoggerDebug(@"演出 人气 count ==== %d",[pageArray count]);
     [_mArray addObjectsFromArray:pageArray];
-    
-//    _refreshTailerView.hidden = NO;
-//    if ([_mArray count]<=0 || _mArray==nil) {
-//        _refreshTailerView.hidden = YES;
-//    }
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
         [self reloadPullRefreshData];
     });
@@ -493,7 +631,7 @@
     isLoadMoreAll = YES;
     [self setTableViewDelegate];
     
-    if (_selectedOrder==API_SShow_Oreder_Distance_Cmd) {
+    if (_selectedOrder==3) {
         if(![self checkGPS]){
             return;
         }
@@ -508,7 +646,7 @@
     [_mCacheArray removeAllObjects];
     [_mArray removeAllObjects];
     
-    if (_selectedOrder==API_SShow_Oreder_Distance_Cmd) {
+    if (_selectedOrder==3) {
         if(![self checkGPS]){
             return;
         }
@@ -564,7 +702,7 @@
         ABLoggerDebug(@"演出 数组 number ==  %d",number);
         
         
-        if (_selectedOrder==API_SShow_Oreder_Distance_Cmd) {//4代表的是距离筛选
+        if (_selectedOrder==3) {//4代表的是距离筛选
             LocationManager *lm = [LocationManager defaultLocationManager];
             double latitude = lm.userLocation.coordinate.latitude;
             double longitude = lm.userLocation.coordinate.longitude;
@@ -577,14 +715,16 @@
                         
                         [self cleanApiCmd];
                         
-                        NSString *selectedTypeData = [NSString stringWithFormat:@"%d#%d#%d",_selectedType,_selectedTime,_selectedOrder];
                         self.apiCmdShow_getAllShows = (ApiCmdShow_getAllShows *)[[DataBaseManager sharedInstance]
                                                                                  getShowsListFromWeb:self
                                                                                  offset:number
                                                                                  limit:DataLimit
                                                                                  Latitude:latitude
                                                                                  longitude:longitude
-                                                                                 dataType:selectedTypeData
+                                                                                 dataType:_dataType
+                                                                                 dataOrder:_dataOrder
+                                                                                 dataTimedistance:_dataTimedistance
+                                                                                 dataSort:_dataSort
                                                                                  isNewData:!isLoadMoreAll];
                     }else{
                         [self displayNOGPS:YES];
@@ -592,14 +732,16 @@
                 }];
                 
             }else{//加载更多KTV附近
-                NSString *selectedTypeData = [NSString stringWithFormat:@"%d#%d#%d",_selectedType,_selectedTime,_selectedOrder];
                 self.apiCmdShow_getAllShows = (ApiCmdShow_getAllShows *)[[DataBaseManager sharedInstance]
                                                                          getShowsListFromWeb:self
                                                                          offset:number
                                                                          limit:DataLimit
                                                                          Latitude:latitude
                                                                          longitude:longitude
-                                                                         dataType:selectedTypeData
+                                                                         dataType:_dataType
+                                                                         dataOrder:_dataOrder
+                                                                         dataTimedistance:_dataTimedistance
+                                                                         dataSort:_dataSort
                                                                          isNewData:!isLoadMoreAll];
             }
         }else{
@@ -611,14 +753,16 @@
                     number = 0;
                     [self cleanApiCmd];
                 }
-                NSString *selectedTypeData = [NSString stringWithFormat:@"%d#%d#%d",_selectedType,_selectedTime,_selectedOrder];
                 self.apiCmdShow_getAllShows = (ApiCmdShow_getAllShows *)[[DataBaseManager sharedInstance]
                                                                          getShowsListFromWeb:self
                                                                          offset:number
                                                                          limit:DataLimit
                                                                          Latitude:-1
                                                                          longitude:-1
-                                                                         dataType:selectedTypeData
+                                                                         dataType:_dataType
+                                                                         dataOrder:_dataOrder
+                                                                         dataTimedistance:_dataTimedistance
+                                                                         dataSort:_dataSort
                                                                          isNewData:!isLoadMoreAll];
                 return  nil;
             }
@@ -632,6 +776,7 @@
     int count = DataCount; //取DataCount条数据
     if ([_mCacheArray count]<DataCount) {
         count = [_mCacheArray count];//取小于DataCount条数据
+        _isDone = YES;
     }
     
     NSMutableArray *aPageData = [NSMutableArray arrayWithCapacity:count];

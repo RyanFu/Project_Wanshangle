@@ -13,13 +13,20 @@
 @interface BuyInfoViewController : UIViewController
 
 @property(nonatomic,retain) IBOutlet UITableView *mTableView;
-@property(nonatomic,retain) IBOutlet UILabel *movieName;
-@property(nonatomic,retain) IBOutlet UILabel *cinemaName;
-@property(nonatomic,retain) IBOutlet UILabel *movieInfo;
-@property(nonatomic,retain) IBOutlet UILabel *cinemaInfo;
+@property(nonatomic,retain) IBOutlet UIView *mHeaderView;
+@property(nonatomic,retain) IBOutlet UILabel *cinema_name_label;
+@property(nonatomic,retain) IBOutlet UILabel *cinema_address_label;
+@property(nonatomic,retain) IBOutlet UILabel *schedule_label;
+@property(nonatomic,retain) IBOutlet UILabel *price_label;
+@property(nonatomic,retain) IBOutlet UILabel *discountNum;
+@property(nonatomic,retain) IBOutlet UIButton *discountButton;
+@property(nonatomic,retain) IBOutlet UIView *discountView;
 
 @property(nonatomic,retain) MMovie *mMovie;
 @property(nonatomic,retain) MCinema *mCinema;
-@property(nonatomic,retain) NSString *schedule;
+@property(nonatomic,retain) NSString *mSchedule;
+@property(nonatomic,retain) NSString *mPrice;
 @property(nonatomic,retain) NSArray *marray;
+
+- (IBAction)clickDiscountButton:(id)sender;
 @end

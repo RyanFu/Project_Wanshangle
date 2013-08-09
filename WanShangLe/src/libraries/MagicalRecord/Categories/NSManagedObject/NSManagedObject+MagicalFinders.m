@@ -50,15 +50,16 @@
 	return [self MR_executeFetchRequest:request inContext:context];
 }
 
+//分页
 + (NSArray *) MR_findAllSortedBy:(NSString *)sortTerm
-                       ascending:(BOOL)ascending
+                       ascendingBy:(NSString *)ascending
                    withPredicate:(NSPredicate *)searchTerm
                           offset:(int)offset
                            limit:(int)limit
                        inContext:(NSManagedObjectContext *)context
 {
 	NSFetchRequest *request = [self MR_requestAllSortedBy:sortTerm
-                                                ascending:ascending
+                                                ascendingBy:ascending
                                             withPredicate:searchTerm
                                                    offset:offset
                                                     limit:limit

@@ -24,16 +24,18 @@
 #pragma mark UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    
+    if ([_mArray count]<=0 || _parentViewController.isLoadDone) {//每次刷新表的时候检测是否有数据
+        _refreshTailerView.hidden = YES;
+    }else{
+        _refreshTailerView.hidden = NO;
+    }
+    
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if ([_mArray count]<=0) {//每次刷新表的时候检测是否有数据
-        _refreshTailerView.hidden = YES;
-    }else{
-         _refreshTailerView.hidden = NO;
-    }
     
   return [_mArray count];
 }
@@ -155,7 +157,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     BBar *tBar = [_mArray objectAtIndex:indexPath.row];
-    BarDetailViewController *barDetailController = [[BarDetailViewController alloc] initWithNibName:@"BarDetailViewController" bundle:nil];
+    BarDetailViewController *barDetailController = [[BarDetailViewController alloc] initWithNibName:(iPhone5?@"BarDetailViewController_5":@"BarDetailViewController") bundle:nil];
     barDetailController.mBar = tBar;
     [[[CacheManager sharedInstance] rootNavController] pushViewController:barDetailController animated:YES];
     [barDetailController release];

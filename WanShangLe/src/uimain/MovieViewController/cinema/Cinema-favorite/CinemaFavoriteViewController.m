@@ -12,11 +12,14 @@
 #import "ScheduleViewController.h"
 #import "CinemaViewController.h"
 #import "CinemaManagerViewController.h"
+#import "MovieCinemaFavoriteListDelegate.h"
+
 
 @interface CinemaFavoriteViewController(){
 }
 @property(nonatomic,retain)ScheduleViewController *scheduleViewController;
-@property(nonatomic,retain)CinemaFavoriteListTableViewDelegate *favoriteListDelegate;
+@property(nonatomic,retain)CinemaFavoriteListTableViewDelegate *cinemaDelegate;
+@property(nonatomic,retain)MovieCinemaFavoriteListDelegate *movieDelegate;
 @end
 
 @implementation CinemaFavoriteViewController
@@ -31,7 +34,9 @@
 
 - (void)dealloc{
 
-    self.favoriteListDelegate = nil;
+    self.cinemaDelegate = nil;
+    self.movieDelegate = nil;
+    
     self.scheduleViewController = nil;
 
     self.mTableView = nil;
@@ -49,6 +54,9 @@
     if (_scheduleViewController!=nil){
         [_scheduleViewController viewWillAppear:NO];
     }
+    
+    [self setTableViewDelegate];
+    [_mTableView reloadData];
 }
 
 - (void)viewDidLoad
@@ -97,14 +105,45 @@
 
 #pragma mark 设置 TableView Delegate
 - (void)setTableViewDelegate{
-    if (_favoriteListDelegate==nil) {
-        _favoriteListDelegate = [[CinemaFavoriteListTableViewDelegate alloc] init];
-        _favoriteListDelegate.parentViewController = self;
+//    if (_cinemaDelegate==nil) {
+//        _cinemaDelegate = [[CinemaFavoriteListTableViewDelegate alloc] init];
+//        _cinemaDelegate.parentViewController = self;
+//    }
+//    _mTableView.dataSource = _cinemaDelegate;
+//    _mTableView.delegate = _cinemaDelegate;
+//    _cinemaDelegate.mArray = _mArray;
+//    _cinemaDelegate.mTableView = _mTableView;
+    
+    BOOL isMoviePanel = [CacheManager sharedInstance].isMoviePanel;
+    if (isMoviePanel) {
+        self.cinemaDelegate = nil;
+        if (_movieDelegate==nil) {
+            _movieDelegate = [[MovieCinemaFavoriteListDelegate alloc] init];
+        }
+        
+        _mTableView.dataSource = _movieDelegate;
+        _mTableView.delegate = _movieDelegate;
+        
+        _movieDelegate.mTableView = _mTableView;
+        _movieDelegate.mArray = _mArray;
+        
+        _movieDelegate.parentViewController = self;
+    }else{
+        self.movieDelegate = nil;
+        if (_cinemaDelegate==nil) {
+            _cinemaDelegate = [[CinemaFavoriteListTableViewDelegate alloc] init];
+            
+        }
+        
+        _mTableView.dataSource = _cinemaDelegate;
+        _mTableView.delegate = _cinemaDelegate;
+        
+        _cinemaDelegate.mTableView = _mTableView;
+        _cinemaDelegate.mArray = _mArray;
+        
+        _cinemaDelegate.parentViewController = self;
     }
-    _mTableView.dataSource = _favoriteListDelegate;
-    _mTableView.delegate = _favoriteListDelegate;
-    _favoriteListDelegate.mArray = _mArray;
-    _favoriteListDelegate.mTableView = _mTableView;
+    
 }
 
 #pragma mark -

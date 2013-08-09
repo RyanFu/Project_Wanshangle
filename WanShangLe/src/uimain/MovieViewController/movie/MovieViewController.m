@@ -43,7 +43,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         
-        self.apiCmdMovie_getAllMovies = (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+        self.apiCmdMovie_getAllMovies = (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self cinemaId:nil];
         
         [self newCinemaController];
         
@@ -77,7 +77,7 @@
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
     
-    self.apiCmdMovie_getAllMovies =  (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
+    self.apiCmdMovie_getAllMovies =  (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self cinemaId:nil];
     
     if (_cinemaViewController.view.frame.origin.x == 0) {//当界面处在影院列表的时候才考虑 viewWillAppear
         [_cinemaViewController viewWillAppear:animated];
@@ -275,7 +275,7 @@
 - (void)newCinemaController{
     
     if (!_cinemaViewController) {
-        _cinemaViewController = [[CinemaViewController alloc] initWithNibName:nil bundle:nil];
+        _cinemaViewController = [[CinemaViewController alloc] initWithNibName:(iPhone5?@"CinemaViewController_5":@"CinemaViewController") bundle:nil];
         _cinemaViewController.mparentController = self;
     }
     _cinemaViewController.view.frame = CGRectMake(self.view.bounds.size.width, 0, self.view.bounds.size.width, self.view.bounds.size.height);
@@ -407,7 +407,7 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        [[DataBaseManager sharedInstance] insertMoviesIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+         self.moviesArray = [[DataBaseManager sharedInstance] insertMoviesIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
         
         int tag = [[apiCmd httpRequest] tag];
         [self updateData:tag];
@@ -415,17 +415,13 @@
     
 }
 
-- (void) apiNotifyLocationResult:(id) apiCmd  error:(NSError*) error{
+- (void) apiNotifyLocationResult:(id)apiCmd cacheOneData:(id)cacheData{
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        ABLoggerMethod();
+        self.moviesArray = cacheData;
         int tag = [[apiCmd httpRequest] tag];
-        
-        CFTimeInterval time1 = Elapsed_Time;
         [self updateData:tag];
-        CFTimeInterval time2 = Elapsed_Time;
-        ElapsedTime(time2, time1);
+
         
     });
 }
@@ -441,8 +437,8 @@
         case 0:
         case API_MMovieCmd:
         {
-            NSArray *array = [[DataBaseManager sharedInstance] getAllMoviesListFromCoreData];
-            self.moviesArray = array;
+//            NSArray *array = [[DataBaseManager sharedInstance] getAllMoviesListFromCoreData];
+//            self.moviesArray = array;
             ABLoggerDebug(@"电影 count ==== %d",[self.moviesArray count]);
             
             [self setTableViewDelegate];

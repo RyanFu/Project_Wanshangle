@@ -22,7 +22,7 @@
 }
 
 - (void) dealloc {
-    
+    self.cinemaid = nil;
 	[super dealloc];
 }
 
@@ -37,11 +37,15 @@
     return self.httpRequest;
 }
 
-//http://api.wanshangle.com:10000/api? appId=000001 &api=movie.playing &sign=sign 
+//http://api.wanshangle.com:10000/api? appId=000001 &api=movie.playing&sign=sign 
 - (NSMutableDictionary*) getParamDict {
     
     NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
     [paramDict setObject:@"movie.playing" forKey:@"api"];
+    
+    if (!isEmpty(self.cinemaid)) {
+        [paramDict setObject:self.cinemaid forKey:@"cinemaid"];
+    }
     
     return paramDict;
 }
@@ -50,7 +54,7 @@
 - (void) parseResultData:(NSDictionary*) dictionary {
 
     // get the data
-    //ABLoggerDebug(@"1111 responseJSONObject ======== %@",self.responseJSONObject);
+    ABLoggerDebug(@"电影 responseJSONObject ======== %@",self.responseJSONObject);
     
 }
 

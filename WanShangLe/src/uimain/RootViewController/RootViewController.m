@@ -40,6 +40,8 @@
 - (void)dealloc{
     self.cityPanel = nil;
     self.cityPanelMask = nil;
+    [_cityButton removeObserver:self forKeyPath:@"title"];
+    self.cityButton = nil;
     [super dealloc];
 }
 
@@ -101,6 +103,9 @@
     UIBarButtonItem *settingItem = [[UIBarButtonItem alloc] initWithCustomView:settingButton];
     [self.navigationItem setRightBarButtonItem:settingItem animated:YES];
     [settingItem release];
+    
+    //location user city 定位用户的城市
+    [[LocationManager defaultLocationManager] startLocationUserGPS];
 }
 
 #pragma mark -
@@ -111,7 +116,7 @@
     
     if (![self checkUserCity])return;
     
-    MovieViewController *_movieViewController = [[MovieViewController alloc] initWithNibName:nil bundle:nil];
+    MovieViewController *_movieViewController = [[MovieViewController alloc] initWithNibName:(iPhone5?@"MovieViewController_5":@"MovieViewController") bundle:nil];
     [self.navigationController pushViewController:_movieViewController animated:YES];
     [_movieViewController release];
 }
@@ -153,7 +158,7 @@
 - (void)clickSettingButton:(id)sender{
     
     if (![self checkUserCity])return;
-    SettingViewController* settingController = [[SettingViewController alloc] initWithNibName:@"SettingViewController" bundle:nil];
+    SettingViewController* settingController = [[SettingViewController alloc] initWithNibName:(iPhone5?@"SettingViewController_5":@"SettingViewController") bundle:nil];
     [self.navigationController pushViewController:settingController animated:YES];
     [settingController release];
 }
@@ -189,7 +194,7 @@
     [self.view addSubview:_cityPanelMask];
     [_cityPanelMask release];
     
-    self.cityPanel = [[UIView alloc] initWithFrame:CGRectMake(0, -120, 320, 119)];
+    self.cityPanel = [[[UIView alloc] initWithFrame:CGRectMake(0, -120, 320, 119)] autorelease];
     
     
     UIImageView *bgImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_city_panel@2x"]];
@@ -251,7 +256,6 @@
     [self cleanCityButtonStateWithPanel:_cityPanel];
     [self selectedCityButtonInPanel:_cityPanel];
     [self startAnimationCityPanel];
-    [_cityPanel release];
     [bt4 release];
     [bt3 release];
     [bt2 release];
@@ -360,6 +364,10 @@
     }
     
     userClickStyle = WSLUserClickStyleNone;
+}
+
+- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	return (interfaceOrientation == UIDeviceOrientationPortrait);
 }
 
 - (void)didReceiveMemoryWarning

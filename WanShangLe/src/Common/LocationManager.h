@@ -78,4 +78,7 @@ typedef void (^GetUserGPSLocation)(BOOL isEnableGPS, BOOL isSuccess);
  @returns 距离
  */
 - (double)distanceBetweenCoordinatesFrom:(CLLocation *)from to:(CLLocation *)to;
+
+//打电话
+- (void)callPhoneNumber:(NSString *)phoneNumber;
 @end

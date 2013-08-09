@@ -14,8 +14,10 @@
 #import "BarDetailViewController.h"
 #import "ApiCmdBar_getBarDetail.h"
 #import "ActionState.h"
+#import "SIAlertView.h"
 
-#define IntroduceLabelHeight 213
+#define IntroduceLabelHeight_5 213
+#define IntroduceLabelHeight 130
 @interface BarDetailViewController ()<ApiNotify>{
     ShareType _followType;
     BOOL isRecommended;
@@ -92,6 +94,9 @@
         isRecommended = YES;
     }
     
+    _bar_name.text = _mBar.barName;
+    _bar_address.text = _mBar.address;
+    
     self.mBarDetail = [[DataBaseManager sharedInstance] getBarDetailWithId:_mBar.uid];
 
     if (_mBarDetail==nil) {//酒吧详情为空
@@ -108,8 +113,6 @@
 - (void)initBarDetailData{
     ABLoggerDebug(@"_mBarDetail.detailInfo == %@",_mBarDetail.detailInfo);
     _bar_event.text = [_mBarDetail.detailInfo objectForKey:@"eventname"];
-    _bar_name.text = @"NULL";
-    _bar_address.text = @"NULL";
     NSString *introduceInfo = [_mBarDetail.detailInfo objectForKey:@"description"];
     _bar_introduce.text =  (isEmpty(introduceInfo)?@"该活动暂时没有介绍信息":introduceInfo);
     
@@ -121,8 +124,8 @@
         introFrame.size.height = misize.height;
         _bar_introduce.frame = introFrame;
         
-        if (misize.height>IntroduceLabelHeight) {
-            float extendHeight = misize.height - IntroduceLabelHeight;
+        if (misize.height>(iPhone5?IntroduceLabelHeight_5:IntroduceLabelHeight) ) {
+            float extendHeight = misize.height - (iPhone5?IntroduceLabelHeight_5:IntroduceLabelHeight);
             [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height+extendHeight)];
             CGRect bgImgFrame = _barDetailImg.frame;
             bgImgFrame.size.height += extendHeight;
@@ -135,7 +138,7 @@
 }
 
 - (void)requestRecommendAndWantLookCount{
-    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mBar.uid APIType:WSLRecommendAPITypeBarInteract cType:WSLRecommendLookTypeRecommend delegate:self];
+    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mBar.uid APIType:WSLRecommendAPITypeBarInteract cType:WSLRecommendLookTypeNone delegate:self];
 }
 
 - (void)updateRecommendAndWantLookCount{
@@ -173,7 +176,31 @@
 }
 
 -(IBAction)clickPhoneButton:(id)sender{
+    NSString *message = @"";
+    NSString *phoneNumber = nil;
     
+    if (isEmpty(_mBar.phoneNumber)) {
+        message = @"该影院暂时没有电话号码";
+    }else{
+        phoneNumber = _mBar.phoneNumber;
+    }
+    
+    SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:@"电话号码" andMessage:message];
+    
+    if (!isEmpty(phoneNumber)) {
+        [alertView addButtonWithTitle:phoneNumber
+                                 type:SIAlertViewButtonTypeDefault
+                              handler:^(SIAlertView *alertView) {
+                                  [[LocationManager defaultLocationManager] callPhoneNumber:phoneNumber];
+                              }];
+    }
+    
+    [alertView addButtonWithTitle:@"取消"
+                             type:SIAlertViewButtonTypeCancel
+                          handler:^(SIAlertView *alertView) {
+                          }];
+    [alertView show];
+    [alertView release];
 }
 
 - (void)startAddOneAnimation:(UIButton *)sender{

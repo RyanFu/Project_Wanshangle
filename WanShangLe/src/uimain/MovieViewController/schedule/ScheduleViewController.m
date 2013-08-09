@@ -27,11 +27,11 @@
 }
 @property(nonatomic,retain) NSString *todayWeek;
 @property(nonatomic,retain) NSString *tomorrowWeek;
-@property(nonatomic,retain) ApiCmdMovie_getSchedule *apiCmdMovie_getSchedule;
+@property(nonatomic,retain) ApiCmdMovie_getSchedule *apiCmdMovie_getScheduleToday;
+@property(nonatomic,retain) ApiCmdMovie_getSchedule *apiCmdMovie_getScheduleTomorrow;
 @property(nonatomic,retain) ScheduleTableViewDelegate *scheduleTableViewDelegate;
 @property(nonatomic,retain) NSArray *todaySchedules;
 @property(nonatomic,retain) NSArray *tomorrowSchedules;
-@property(nonatomic,retain) MSchedule *mSchedule;
 
 @end
 
@@ -59,7 +59,7 @@
     self.mTableView = nil;
     self.mTableView.delegate = nil;
     self.mTableView.dataSource = nil;
-
+    
     self.mMovie = nil;
     self.mCinema = nil;
     
@@ -69,16 +69,20 @@
     
     self.todayWeek = nil;
     self.tomorrowButton = nil;
-    self.mSchedule = nil;
     
-    self.apiCmdMovie_getSchedule = nil;
     [super dealloc];
 }
 
 -(void)cancelApiCmd{
-    [self.apiCmdMovie_getSchedule.httpRequest clearDelegatesAndCancel];
-    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdMovie_getSchedule];
-    self.apiCmdMovie_getSchedule.delegate = nil;
+    [self.apiCmdMovie_getScheduleToday.httpRequest clearDelegatesAndCancel];
+    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdMovie_getScheduleToday];
+    self.apiCmdMovie_getScheduleToday.delegate = nil;
+    self.apiCmdMovie_getScheduleToday = nil;
+    
+    [self.apiCmdMovie_getScheduleTomorrow.httpRequest clearDelegatesAndCancel];
+    [[[ApiClient defaultClient] requestArray] removeObject:_apiCmdMovie_getScheduleTomorrow];
+    self.apiCmdMovie_getScheduleTomorrow.delegate = nil;
+    self.apiCmdMovie_getScheduleTomorrow = nil;
 }
 
 #pragma mark -
@@ -86,11 +90,14 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    [_todayButton setTitle:[NSString stringWithFormat:@"今天(%@)",_todayWeek] forState:UIControlStateNormal];
-    [_tomorrowButton setTitle:[NSString stringWithFormat:@"明天(%@)",_tomorrowWeek] forState:UIControlStateNormal];
+    if (_todaySchedules==nil) {
+        [_todayButton setTitle:[NSString stringWithFormat:@"今天(%@)",_todayWeek] forState:UIControlStateNormal];
+    }
     
-    [_todayButton setSelected:NO];
-    [self clickTodayButton:nil];
+    if (_tomorrowSchedules==nil) {
+        [_tomorrowButton setTitle:[NSString stringWithFormat:@"明天(%@)",_tomorrowWeek] forState:UIControlStateNormal];
+    }
+    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
 }
 
 - (void)awakeFromNib{
@@ -106,9 +113,21 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     [self initData];
+    
     [self createBarButtonItem];
+
+}
+
+- (void)initData{
+    self.title = _mMovie.name;
+    
+    [_todayButton setSelected:NO];
+    [self clickTomorrowButton:nil];
+    [self clickTodayButton:nil];
+    
+    [_mTableView setTableHeaderView:_headerView];
     
     if (!_scheduleTableViewDelegate) {
         _scheduleTableViewDelegate = [[ScheduleTableViewDelegate alloc] init];
@@ -116,13 +135,6 @@
     [self setTableViewDelegate];
     
     [_todayButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
-
-}
-
-- (void)initData{
-    self.title = _mMovie.name;
-    
-    [_mTableView setTableHeaderView:_headerView];
     
     //change today tomorrow button title
     DataBaseManager *dbManager = [DataBaseManager sharedInstance];
@@ -238,18 +250,17 @@
     
     if (_todayButton.selected)return;
     
-    [self cancelApiCmd];
     [self cleanUpButtonBackground];
     _tomorrowButton.selected = NO;
     _todayButton.selected = YES;
     [_todayButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
     
-    self.apiCmdMovie_getSchedule =  (ApiCmdMovie_getSchedule *)[[DataBaseManager sharedInstance] getScheduleFromWebWithaMovie:_mMovie andaCinema:_mCinema timedistance:ScheduleToday delegate:self];//每次视图加载刷新排期数据
+    self.apiCmdMovie_getScheduleToday =  (ApiCmdMovie_getSchedule *)[[DataBaseManager sharedInstance] getScheduleFromWebWithaMovie:_mMovie andaCinema:_mCinema timedistance:ScheduleToday delegate:self];//每次视图加载刷新排期数据
 }
 
 - (void)refreshTodaySchedule{
     
-    self.todaySchedules = [[DataBaseManager sharedInstance] deleteUnavailableSchedules:_todaySchedules];
+//    self.todaySchedules = [[DataBaseManager sharedInstance] deleteUnavailableSchedules:_todaySchedules];
     self.schedulesArray = self.todaySchedules;
     if (isNull(self.schedulesArray) || [self.schedulesArray count]==0) {
         [self setTableViewFooterViewHaveData:NO];
@@ -257,8 +268,7 @@
         [self setTableViewFooterViewHaveData:YES];
     }
     
-    [_todayButton setTitle:[NSString stringWithFormat:@"今天(%@)%d场",_todayWeek,[_schedulesArray count]] forState:UIControlStateNormal];
-    [_todayButton setTitle:[NSString stringWithFormat:@"今天(%@)%d场",_todayWeek,[_schedulesArray count]] forState:UIControlStateSelected];
+//    [self refreshTodayButtonTitle];
     [_mTableView reloadData];
 }
 
@@ -266,17 +276,16 @@
     
     if (_tomorrowButton.selected)return;
     
-    [self cancelApiCmd];
     [self cleanUpButtonBackground];
     _tomorrowButton.selected = YES;
     _todayButton.selected = NO;
     [_tomorrowButton setBackgroundColor:[UIColor colorWithRed:0.047 green:0.678 blue:1.000 alpha:1.000]];
     
-    self.apiCmdMovie_getSchedule =  (ApiCmdMovie_getSchedule *)[[DataBaseManager sharedInstance] getScheduleFromWebWithaMovie:_mMovie andaCinema:_mCinema timedistance:ScheduleTomorrow delegate:self];//每次视图加载刷新排期数据
+    self.apiCmdMovie_getScheduleTomorrow =  (ApiCmdMovie_getSchedule *)[[DataBaseManager sharedInstance] getScheduleFromWebWithaMovie:_mMovie andaCinema:_mCinema timedistance:ScheduleTomorrow delegate:self];//每次视图加载刷新排期数据
 }
 
 - (void)refreshTomorrowSchedule{
-//    self.tomorrowSchedules = [[DataBaseManager sharedInstance] deleteUnavailableSchedules:_tomorrowSchedules];
+    //    self.tomorrowSchedules = [[DataBaseManager sharedInstance] deleteUnavailableSchedules:_tomorrowSchedules];
     self.schedulesArray = self.tomorrowSchedules;
     if (isNull(self.schedulesArray) || [self.schedulesArray count]==0) {
         [self setTableViewFooterViewHaveData:NO];
@@ -284,17 +293,35 @@
         [self setTableViewFooterViewHaveData:YES];
     }
     
-    [_tomorrowButton setTitle:[NSString stringWithFormat:@"明天(%@)%d场",_tomorrowWeek,[_schedulesArray count]] forState:UIControlStateSelected];
-    [_tomorrowButton setTitle:[NSString stringWithFormat:@"明天(%@)%d场",_tomorrowWeek,[_schedulesArray count]] forState:UIControlStateNormal];
+//    [self refreshTomorrowButtonTitle];
     [_mTableView reloadData];
+}
+
+
+- (void)refreshTodayButtonTitle{
+    
+//    if ([_todaySchedules count]==0 || _todaySchedules==nil) {
+//        return;
+//    }
+    [_todayButton setTitle:[NSString stringWithFormat:@"今天(%@)%d场",_todayWeek,[_todaySchedules count]] forState:UIControlStateSelected];
+    [_todayButton setTitle:[NSString stringWithFormat:@"今天(%@)%d场",_todayWeek,[_todaySchedules count]] forState:UIControlStateNormal];
+}
+
+- (void)refreshTomorrowButtonTitle{
+    
+//    if ([_tomorrowSchedules count]==0 || _tomorrowSchedules==nil) {
+//        return;
+//    }
+    [_tomorrowButton setTitle:[NSString stringWithFormat:@"明天(%@)%d场",_tomorrowWeek,[_tomorrowSchedules count]] forState:UIControlStateSelected];
+    [_tomorrowButton setTitle:[NSString stringWithFormat:@"明天(%@)%d场",_tomorrowWeek,[_tomorrowSchedules count]] forState:UIControlStateNormal];
 }
 
 - (void)setTableViewFooterViewHaveData:(BOOL)haveData{
     
     UIView *tableViewFooter = nil;
-    if (_mTableView.tableFooterView.tag==100) {
+    if (_mTableView.tableFooterView.tag==100) {//包含常去按钮和无排期笑脸
         tableViewFooter = [[[UIView alloc] init] autorelease];
-//        [tableViewFooter setBackgroundColor:[UIColor redColor]];
+        //        [tableViewFooter setBackgroundColor:[UIColor redColor]];
         tableViewFooter.tag = EmBedFooterView;
         _mTableView.tableFooterView = nil;
         if (!haveData) {
@@ -318,7 +345,7 @@
             [tableViewFooter addSubview:_addFavoriteFooterView];
             _mTableView.tableFooterView = tableViewFooter;
         }
-    }else{
+    }else{//紧紧包含无排期笑脸
         if (!haveData) {
             [_mTableView setTableFooterView:_footerView];
         }else{
@@ -334,44 +361,51 @@
         return;
     }
     
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    
-        self.mSchedule = [[DataBaseManager sharedInstance] insertScheduleIntoCoreDataFromObject:[apiCmd responseJSONObject]
-                                                                    withApiCmd:apiCmd
-                                                                    withaMovie:_mMovie
-                                                                    andaCinema:_mCinema];
-        int tag = [[apiCmd httpRequest] tag];
-         NSString *timedistance = [[[(ApiCmdMovie_getSchedule *)apiCmd timedistance] retain] autorelease];
-        [self updateData:tag timeDistance:timedistance];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-//    });
-    
+        MSchedule *tSchedule = [[DataBaseManager sharedInstance] insertScheduleIntoCoreDataFromObject:[apiCmd responseJSONObject]
+                                                                                     withApiCmd:apiCmd
+                                                                                     withaMovie:_mMovie
+                                                                                     andaCinema:_mCinema
+                                                                                   timedistance:[(ApiCmdMovie_getSchedule *)apiCmd timedistance]];
+        int tag = [[apiCmd httpRequest] tag];
+        NSString *timedistance = [[[(ApiCmdMovie_getSchedule *)apiCmd timedistance] retain] autorelease];
+        [self updateData:tag timeDistance:timedistance dataDic:tSchedule.scheduleInfo];
+        
+    });
 }
 
-- (ApiCmd *)apiGetDelegateApiCmd{
-    return _apiCmdMovie_getSchedule;
+- (ApiCmd *)apiGetDelegateApiCmdWithTag:(int)cmdTag{
+    switch (cmdTag) {
+        case 0:
+            return _apiCmdMovie_getScheduleToday;
+            break;
+            
+        default:
+            return _apiCmdMovie_getScheduleTomorrow;
+            break;
+    }
 }
 
 - (void)apiNotifyLocationResult:(id)apiCmd cacheDictionaryData:(NSDictionary *)cacheData{
     
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         int tag = [[apiCmd httpRequest] tag];
-        self.mSchedule = [cacheData objectForKey:@"schedule"];
+        MSchedule *tSchedule = [cacheData objectForKey:@"schedule"];
         NSString *timedistance = [cacheData objectForKey:@"timedistance"];
-        [self updateData:tag timeDistance:timedistance];
-//    });
+        [self updateData:tag timeDistance:timedistance dataDic:tSchedule.scheduleInfo];
+    });
 }
 
-- (void)updateData:(int)tag timeDistance:(NSString *)timedistance
+- (void)updateData:(int)tag timeDistance:(NSString *)timedistance dataDic:(NSDictionary *)dataDic
 {
     ABLogger_int(tag);
     switch (tag) {
         case 0:
+        case API_MScheduleCmdTomorrow:
         case API_MScheduleCmd:
         {
-            ABLoggerDebug(@"_mSchedule.scheduleInfo === %@",_mSchedule.scheduleInfo);
-            NSDictionary *responseDic = _mSchedule.scheduleInfo;
-            [self formatCinemaData:responseDic timeDistance:timedistance];
+            [self formatCinemaData:dataDic timeDistance:timedistance];
         }
             break;
         default:
@@ -382,26 +416,35 @@
     }
 }
 
-- (void)formatCinemaData:(NSDictionary *)responseDic  timeDistance:(NSString *)timedistance{
+- (void)formatCinemaData:(NSDictionary *)responseDic timeDistance:(NSString *)timedistance{
     ABLoggerMethod();
     NSDictionary *schedules = [responseDic objectForKey:@"scheduling"];
     NSArray *resultArray = [schedules objectForKey:@"starts"];
     
     if ([timedistance intValue]==0) {
-        self.todaySchedules = resultArray;
+        self.todaySchedules = [[DataBaseManager sharedInstance] deleteUnavailableSchedules:resultArray];
+        ABLoggerDebug(@"今天 count ==== %d",[_todaySchedules count]);
     }else{
         self.tomorrowSchedules = resultArray;
+        ABLoggerDebug(@"明天 count ==== %d",[_tomorrowSchedules count]);
     }
     
     [self setTableViewDelegate];
     
-//    dispatch_sync(dispatch_get_main_queue(), ^{
-        if (_todayButton.selected) {
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        
+        if ([timedistance intValue]==0) {
+            [self refreshTodayButtonTitle];
+        }else{
+            [self refreshTomorrowButtonTitle];
+        }
+        
+        if (_todayButton.selected && ([timedistance intValue]==0)) {
             [self refreshTodaySchedule];
         }else if(_tomorrowButton.selected){
             [self refreshTomorrowSchedule];
         }
-//    });
+    });
 }
 
 - (void)shareButtonClick:(id)sender{

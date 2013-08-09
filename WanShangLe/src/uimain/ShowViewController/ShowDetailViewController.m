@@ -16,8 +16,10 @@
 #import "ASIHTTPRequest.h"
 #import "SShow.h"
 #import "SShowDetail.h"
+#import "WebSiteBuyViewController.h"
 
-#define IntroduceLabelHeight 108
+#define IntroduceLabelHeight_5 108
+#define IntroduceLabelHeight 43
 
 @interface ShowDetailViewController()<ApiNotify>{
     BOOL isRecommended;
@@ -70,6 +72,7 @@
     
     [self initBarItem];
     [self initData];
+
 }
 
 - (void)initBarItem{
@@ -136,13 +139,18 @@
     }
     _show_rating.text = [NSString stringWithFormat:@"%@评分: %@ (%d%@)",_mShow.ratingfrom,_mShow.rating,ratingPeople,scopeStr];
     _show_address.text = _mShow.address;
-    _show_time.text = _mShow.beginTime;
+    _theatre_name.text = _mShow.theatrename;
+    _show_time.text = [[DataBaseManager sharedInstance] getYMDFromDate: _mShow.beginTime];
 
 }
 
 - (void)initShowDetailData{
     
     _show_introduce.text = self.mShowDetail.introduce;
+    
+//    [_show_introduce setBackgroundColor:[UIColor redColor]];
+    ABLoggerDebug(@"_show_introduce.text === %@",_show_introduce.text);
+    
     CGSize misize = [_show_introduce.text sizeWithFont:_show_introduce.font constrainedToSize:CGSizeMake(_show_introduce.bounds.size.width, MAXFLOAT)];
     
     if (misize.height>_show_introduce.bounds.size.height) {
@@ -151,8 +159,8 @@
         introFrame.size.height = misize.height;
         _show_introduce.frame = introFrame;
         
-        if (misize.height>IntroduceLabelHeight) {
-            float extendHeight = misize.height - IntroduceLabelHeight;
+        if (misize.height>(iPhone5?IntroduceLabelHeight_5:IntroduceLabelHeight)) {
+            float extendHeight = misize.height - (iPhone5?IntroduceLabelHeight_5:IntroduceLabelHeight);
             [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height+extendHeight)];
             CGRect bgImgFrame = _show_introBgImgView.frame;
             bgImgFrame.size.height += extendHeight;
@@ -172,7 +180,7 @@
 }
 
 - (void)requestRecommendAndWantLookCount{
-    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mShow.uid APIType:WSLRecommendAPITypePerformInteract cType:WSLRecommendLookTypeLook delegate:self];
+    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mShow.uid APIType:WSLRecommendAPITypePerformInteract cType:WSLRecommendLookTypeNone delegate:self];
 }
 
 - (void)updateRecommendAndWantLookCount{
@@ -188,7 +196,10 @@
 }
 
 - (IBAction)clickBuyButton:(id)sender{
-    
+    WebSiteBuyViewController *webViewController = [[WebSiteBuyViewController alloc] initWithNibName:(iPhone5?@"WebSiteBuyViewController_5":@"WebSiteBuyViewController") bundle:nil];
+    webViewController.mURLStr = _mShowDetail.extpayurl;
+    [self.navigationController pushViewController:webViewController animated:YES];
+    [webViewController release];
 }
 
 - (IBAction)clickYesButton:(id)sender{
@@ -203,8 +214,8 @@
     NSMutableDictionary *tDic = [NSMutableDictionary dictionaryWithCapacity:5];
     [tDic setObject:_mShow.uid forKey:@"uid"];
     [tDic setObject:API_RecommendOrLookShowType forKey:@"type"];
-    [tDic setObject:_mShow.beginTime forKey:@"beginTime"];
-    [tDic setObject:_mShow.endTime forKey:@"endTime"];
+    [tDic setObject:(isNull(_mShow.beginTime)?[[DataBaseManager sharedInstance] getNowDate]:_mShow.beginTime) forKey:@"beginTime"];
+    [tDic setObject:(isNull(_mShow.endTime)?[[DataBaseManager sharedInstance] getNowDate]:_mShow.endTime) forKey:@"endTime"];
     [tDic setObject:[NSNumber numberWithBool:YES] forKey:@"recommend"];
     [[DataBaseManager sharedInstance] addActionState:tDic];
 
@@ -224,8 +235,8 @@
     NSMutableDictionary *tDic = [NSMutableDictionary dictionaryWithCapacity:5];
     [tDic setObject:_mShow.uid forKey:@"uid"];
     [tDic setObject:API_RecommendOrLookShowType forKey:@"type"];
-    [tDic setObject:_mShow.beginTime forKey:@"beginTime"];
-    [tDic setObject:_mShow.endTime forKey:@"endTime"];
+    [tDic setObject:(isNull(_mShow.beginTime)?[[DataBaseManager sharedInstance] getNowDate]:_mShow.beginTime) forKey:@"beginTime"];
+    [tDic setObject:(isNull(_mShow.endTime)?[[DataBaseManager sharedInstance] getNowDate]:_mShow.endTime) forKey:@"endTime"];
     [tDic setObject:[NSNumber numberWithBool:YES] forKey:@"wantLook"];
     [[DataBaseManager sharedInstance] addActionState:tDic];
     
@@ -342,8 +353,7 @@
 
 
 - (void)shareButtonClick:(id)sender{
-    
-    AppDelegate *_appDelegate = [AppDelegate appDelegateInstance];
+     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
     //定义菜单分享列表
     NSArray *shareList = [ShareSDK getShareListWithType:ShareTypeWeixiTimeline, ShareTypeWeixiSession, ShareTypeSMS,nil];
@@ -388,7 +398,7 @@
                                                          allowCallback:YES
                                                          authViewStyle:SSAuthViewStyleFullScreenPopup
                                                           viewDelegate:nil
-                                               authManagerViewDelegate:_appDelegate.viewDelegate];
+                                               authManagerViewDelegate:appDelegate.viewDelegate];
     
     //在授权页面中添加关注官方微博
     [authOptions setFollowAccounts:[NSDictionary dictionaryWithObjectsAndKeys:
@@ -410,8 +420,8 @@
                                                     wxSessionButtonHidden:NO
                                                    wxTimelineButtonHidden:NO
                                                      showKeyboardOnAppear:NO
-                                                        shareViewDelegate:_appDelegate.viewDelegate
-                                                      friendsViewDelegate:_appDelegate.viewDelegate
+                                                        shareViewDelegate:appDelegate.viewDelegate
+                                                      friendsViewDelegate:appDelegate.viewDelegate
                                                     picViewerViewDelegate:nil]
                             result:^(ShareType type, SSPublishContentState state, id<ISSStatusInfo> statusInfo, id<ICMErrorInfo> error, BOOL end) {
                                 if (state == SSPublishContentStateSuccess)

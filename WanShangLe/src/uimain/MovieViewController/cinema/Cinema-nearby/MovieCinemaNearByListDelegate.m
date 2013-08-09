@@ -7,12 +7,13 @@
 //
 #import "MovieCinemaNearByListDelegate.h"
 #import "CinemaNearByViewController.h"
-#import "CinemaTableViewCell.h"
+#import "MovieCinemaCell.h"
 #import "MCinema.h"
 
 #import "ScheduleViewController.h"
 #import "CinemaMovieViewController.h"
 #import "CinemaViewController.h"
+#import "UILabel+AFNetworking.h"
 
 #define TagTuan 500
 
@@ -32,7 +33,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if ([_mArray count]<=0) {//每次刷新表的时候检测是否有数据
+    if ([_mArray count]<=0 || _parentViewController.isLoadDone) {//每次刷新表的时候检测是否有数据
         _refreshTailerView.hidden = YES;
     }else{
          _refreshTailerView.hidden = NO;
@@ -50,9 +51,9 @@
 #pragma mark 正常模式Cell
 - (UITableViewCell *)ktvCelltableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     ABLoggerMethod();
-    static NSString *CellIdentifier = @"mCinemaCell";
+    static NSString *CellIdentifier = @"MovieCinemaCell";
 
-    CinemaTableViewCell * cell = (CinemaTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    MovieCinemaCell * cell = (MovieCinemaCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [self createNewMocieCell];
     }
@@ -67,22 +68,22 @@
     return cell;
 }
 
--(CinemaTableViewCell *)createNewMocieCell{
+-(MovieCinemaCell *)createNewMocieCell{
     ABLoggerMethod();
-    CinemaTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"CinemaTableViewCell" owner:self options:nil] objectAtIndex:0];
+    MovieCinemaCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"MovieCinemaCell" owner:self options:nil] objectAtIndex:0];
     [cell setAccessoryType:UITableViewCellAccessoryNone];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
-- (void)configCell:(CinemaTableViewCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (void)configCell:(MovieCinemaCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     MCinema *aCinema = [_mArray objectAtIndex:indexPath.row];
     
     [self configureCell:cell withObject:aCinema];
 }
 
-- (void)configureCell:(CinemaTableViewCell *)cell withObject:(MCinema *)cinema {
+- (void)configureCell:(MovieCinemaCell *)cell withObject:(MCinema *)cinema {
     
     
     cell.cinema_name.text = cinema.name;
@@ -90,6 +91,17 @@
     
     cell.cinema_image_location.hidden = NO;
     cell.cinema_distance.hidden = NO;
+    
+    MMovie *aMovie = [_parentViewController.mParentController mMovie];
+    cell.cinema_price.text = @"";
+    [cell.cinema_scheduleCount setJSONWithWithMovie:aMovie
+                                             cinema:cinema
+                                        placeholder:@"亲,正在加载..."
+                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, NSString *resultString) {
+                                                cell.cinema_price.text = resultString;
+                                            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                                                ABLoggerError(@" error == %@",[error description]);
+                                            }];
     
     NSString *kmStr = nil;
     int distance = [cinema.distance intValue];
@@ -228,7 +240,7 @@
     if (!_refreshHeaderView.hidden) {
         [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
     }
-    if(!_refreshHeaderView.hidden){
+    if(!_refreshTailerView.hidden){
         [_refreshTailerView egoRefreshScrollViewDidScroll:scrollView];
     }
 }
@@ -237,7 +249,7 @@
     if (!_refreshHeaderView.hidden) {
         [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
     }
-    if(!_refreshHeaderView.hidden){
+    if(!_refreshTailerView.hidden){
         [_refreshTailerView egoRefreshScrollViewDidEndDragging:scrollView];
     }
 }

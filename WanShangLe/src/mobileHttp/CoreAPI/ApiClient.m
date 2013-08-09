@@ -140,7 +140,7 @@ static NSString* valuePhoneType = @"iPhone";
     
     // add appId & cookie & phoneType
     [postDict setValue:[ApiConfig getApiAppId] forKey:keyAppId];
-    [postDict setValue:@"1.0" forKey:@"v"];
+    [postDict setValue:AppVersion forKey:@"v"];
     [postDict setValue:@"sign" forKey:@"sign"];
     [postDict setValue:[NSString stringWithFormat:@"%0.0f",[[[DataBaseManager sharedInstance] date] timeIntervalSince1970]] forKey:@"time"];
     

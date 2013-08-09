@@ -27,7 +27,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        
+        _isLoadDone = NO;
     }
     return self;
 }
@@ -169,7 +169,48 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        NSArray *dataArray = [[DataBaseManager sharedInstance] insertBarsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+       NSMutableArray *dataArray  = [[DataBaseManager sharedInstance] insertBarsIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+        
+        if (isNull(dataArray) || [dataArray count]==0) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self reloadPullRefreshData];
+            });
+            return ;
+        }
+        
+        NSMutableArray *removieArray = [NSMutableArray arrayWithCapacity:10];
+        for (BBar *tBar in dataArray) {
+            CLLocationDegrees latitude = [tBar.latitude doubleValue];
+            CLLocationDegrees longitude = [tBar.longitude doubleValue];
+            double distance = [[LocationManager defaultLocationManager] distanceBetweenUserToLatitude:latitude longitude:longitude];
+            if (distance<0) {
+                [removieArray addObject:tBar];
+                _isLoadDone = YES;
+                _refreshNearByTailerView.hidden = YES;
+            }else{
+                tBar.distance = [NSNumber numberWithDouble:distance];
+            }
+        }
+        
+        [dataArray removeObjectsInArray:removieArray];
+        
+//        dataArray = (NSMutableArray *)[dataArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+//            double first =  [[(MCinema*)a distance] doubleValue];
+//            double second = [[(MCinema*)b distance] doubleValue];
+//            
+//            if (first>second) {
+//                return NSOrderedDescending;
+//            }else if(first<second){
+//                return NSOrderedAscending;
+//            }else{
+//                return NSOrderedSame;
+//            }
+//        }];
+        
+        ABLoggerDebug(@"距离 排序 测试");
+        for (MCinema *tcinema in dataArray) {
+            ABLoggerDebug(@"距离 === %d",[[tcinema distance] intValue]);
+        }
         
         if (dataArray==nil || [dataArray count]<=0) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -249,12 +290,18 @@
         return;
     }
     
+    if (_isLoadDone) {
+        [self reloadPullRefreshData];
+        return;
+    }
+    
     [self updateData:0 withData:[self getCacheData]];
 }
 
 - (void)loadNewData{
     ABLoggerMethod();
     isLoadMore = NO;
+    _isLoadDone = NO;
     [_mCacheArray removeAllObjects];
     [_mArray removeAllObjects];
     

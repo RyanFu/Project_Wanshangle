@@ -326,9 +326,10 @@
     NSArray *array_coreData = pageArray;
     ABLoggerDebug(@"KTV店 count ==== %d",[array_coreData count]);
     
-    NSArray *regionOrder = [[DataBaseManager sharedInstance] getRegionOrder];
+//    NSArray *regionOrder = [[DataBaseManager sharedInstance] getRegionOrder];
     
     NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
+    NSMutableArray *districtOrder = [NSMutableArray arrayWithCapacity:DataCount];
     
     for (KKTV *tKTV in array_coreData) {
         NSString *key = tKTV.district;
@@ -337,6 +338,7 @@
             ABLoggerInfo(@"key === %@",key);
             NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:DataCount];
             [districtDic setObject:tarray forKey:key];
+            [districtOrder addObject:key];
             [tarray release];
         }
         [[districtDic objectForKey:key] addObject:tKTV];
@@ -346,7 +348,7 @@
         [_mArray removeAllObjects];
     }
     
-    for (NSString *key in regionOrder) {
+    for (NSString *key in districtOrder) {
         
         if (![districtDic objectForKey:key]) {
             continue;

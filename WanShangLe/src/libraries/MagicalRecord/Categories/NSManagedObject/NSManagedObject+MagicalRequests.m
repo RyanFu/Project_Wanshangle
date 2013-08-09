@@ -130,7 +130,7 @@
 
 //分页
 + (NSFetchRequest *) MR_requestAllSortedBy:(NSString *)sortTerm
-                                 ascending:(BOOL)ascending
+                                 ascendingBy:(NSString *)ascending
                              withPredicate:(NSPredicate *)searchTerm
                                     offset:(int)offset
                                      limit:(int)limit
@@ -147,9 +147,14 @@
 	
     NSMutableArray* sortDescriptors = [[[NSMutableArray alloc] init] autorelease];
     NSArray* sortKeys = [sortTerm componentsSeparatedByString:@","];
-    for (NSString* sortKey in sortKeys)
+    NSArray* ascendingKeys = [ascending componentsSeparatedByString:@","];
+    for (int i=0;i<[sortKeys count];i++)
     {
-        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:sortKey ascending:ascending];
+        NSString* sortKey = [sortKeys objectAtIndex:i];
+        NSString *strBool = [ascendingKeys objectAtIndex:i];
+        BOOL isascending = ([strBool isEqualToString:@"YES"]?YES:NO);
+        ABLogger_bool(isascending);
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:sortKey ascending:isascending];
         [sortDescriptors addObject:sortDescriptor];
         [sortDescriptor release];
     }

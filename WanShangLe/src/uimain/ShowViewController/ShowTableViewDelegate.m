@@ -23,13 +23,12 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
-    if ([_mArray count]<=0 || _mArray==nil) {//每次刷新表的时候检测是否有数据
+    if ([_mArray count]<=0 || _mArray==nil ||_parentViewController.isDone) {//每次刷新表的时候检测是否有数据
         _refreshTailerView.hidden = YES;
     }else{
         _refreshTailerView.hidden = NO;
     }
-    
-    
+
     return [_mArray count];
 }
 
@@ -67,8 +66,8 @@
     
     cell.show_rating.text = [NSString stringWithFormat:@"%@评分: %@ (%d%@)",show.ratingfrom,show.rating,ratingPeople,scopeStr];
     cell.show_price.text =  [NSString stringWithFormat:@"%@元",show.price];
-    cell.show_address.text = show.address;
-    cell.show_time.text = show.beginTime;
+    cell.theatre_name.text = show.theatrename;
+    cell.show_time.text = [[DataBaseManager sharedInstance] getYMDFromDate:show.beginTime];
     
 }
 
@@ -137,7 +136,7 @@
     if (!_refreshHeaderView.hidden) {
         [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
     }
-    if(!_refreshHeaderView.hidden){
+    if(!_refreshTailerView.hidden){
         [_refreshTailerView egoRefreshScrollViewDidScroll:scrollView];
     }
 }
@@ -146,7 +145,7 @@
     if (!_refreshHeaderView.hidden) {
         [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
     }
-    if(!_refreshHeaderView.hidden){
+    if(!_refreshTailerView.hidden){
         [_refreshTailerView egoRefreshScrollViewDidEndDragging:scrollView];
     }
 }

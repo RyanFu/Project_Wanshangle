@@ -13,11 +13,13 @@
 #import "MCinema.h"
 #import "ApiCmd.h"
 #import "CinemaNearByListTableViewDelegate.h"
+#import "MovieCinemaNearByListDelegate.h"
 
 @interface CinemaNearByViewController()<ApiNotify>{
     BOOL isLoadMore;
 }
-@property(nonatomic,retain)CinemaNearByListTableViewDelegate *nearByListDelegate;
+@property(nonatomic,retain)CinemaNearByListTableViewDelegate *cinemaDelegate;
+@property(nonatomic,retain)MovieCinemaNearByListDelegate *movieDelegate;
 @end
 
 @implementation CinemaNearByViewController
@@ -26,7 +28,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        
+        _isLoadDone = NO;
     }
     return self;
 }
@@ -36,7 +38,8 @@
     self.refreshNearByHeaderView = nil;
     self.refreshNearByTailerView = nil;
     
-    self.nearByListDelegate = nil;
+    self.cinemaDelegate = nil;
+    self.movieDelegate = nil;
     
     self.mTableView = nil;
     self.mArray = nil;
@@ -61,6 +64,9 @@
             [self loadNewData];//初始化加载
         }
     }
+    
+    [self setTableViewDelegate];
+    [_mTableView reloadData];
 }
 
 - (void)updatData{
@@ -115,16 +121,48 @@
 
 #pragma mark 设置 TableView Delegate
 - (void)setTableViewDelegate{
-    if (_nearByListDelegate==nil) {
-        _nearByListDelegate = [[CinemaNearByListTableViewDelegate alloc] init];
+    BOOL isMoviePanel = [CacheManager sharedInstance].isMoviePanel;
+    if (isMoviePanel) {
+        self.cinemaDelegate = nil;
+        if (_movieDelegate==nil) {
+            _movieDelegate = [[MovieCinemaNearByListDelegate alloc] init];
+        }
+        
+        _mTableView.dataSource = _movieDelegate;
+        _mTableView.delegate = _movieDelegate;
+        
+        _movieDelegate.mTableView = _mTableView;
+        _movieDelegate.mArray = _mArray;
+        
+        _movieDelegate.parentViewController = self;
+        
+        _refreshNearByHeaderView.delegate = _movieDelegate;
+        _refreshNearByTailerView.delegate = _movieDelegate;
+        
+        _movieDelegate.refreshHeaderView = self.refreshNearByHeaderView;
+        _movieDelegate.refreshTailerView = self.refreshNearByTailerView;
+        
+    }else{
+        self.movieDelegate = nil;
+        if (_cinemaDelegate==nil) {
+            _cinemaDelegate = [[CinemaNearByListTableViewDelegate alloc] init];
+            
+        }
+        
+        _mTableView.dataSource = _cinemaDelegate;
+        _mTableView.delegate = _cinemaDelegate;
+        
+        _cinemaDelegate.mTableView = _mTableView;
+        _cinemaDelegate.mArray = _mArray;
+        
+        _cinemaDelegate.parentViewController = self;
+        
+        _refreshNearByHeaderView.delegate = _cinemaDelegate;
+        _refreshNearByTailerView.delegate = _cinemaDelegate;
+        
+        _cinemaDelegate.refreshHeaderView = self.refreshNearByHeaderView;
+        _cinemaDelegate.refreshTailerView = self.refreshNearByTailerView;
     }
-    _nearByListDelegate.parentViewController = self;
-    _mTableView.dataSource = _nearByListDelegate;
-    _mTableView.delegate = _nearByListDelegate;
-    _nearByListDelegate.mTableView = _mTableView;
-    _nearByListDelegate.mArray = _mArray;
-    _nearByListDelegate.refreshHeaderView = self.refreshNearByHeaderView;
-    _nearByListDelegate.refreshTailerView = self.refreshNearByTailerView;
 }
 
 #pragma mark -
@@ -136,7 +174,6 @@
     
     if (_refreshNearByHeaderView == nil) {
         EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame: CGRectMake(0.0f, _mTableView.bounds.size.height, _mTableView.frame.size.width, _mTableView.bounds.size.height)];
-		view.delegate = self.nearByListDelegate;
         view.tag = EGOBottomView;
         view.backgroundColor = [UIColor clearColor];
 		[_mTableView addSubview:view];
@@ -144,15 +181,12 @@
 		[view release];
         
         view = [[EGORefreshTableHeaderView alloc] initWithFrame: CGRectMake(0.0f, - _mTableView.bounds.size.height, _mTableView.frame.size.width, _mTableView.bounds.size.height)];
-        view.delegate = self.nearByListDelegate;
         view.tag = EGOHeaderView;
         view.backgroundColor = [UIColor clearColor];
         [_mTableView addSubview:view];
         self.refreshNearByHeaderView = view;
         [view release];
     }
-    _nearByListDelegate.refreshHeaderView = self.refreshNearByHeaderView;
-    _nearByListDelegate.refreshTailerView = self.refreshNearByTailerView;
     [_refreshNearByHeaderView refreshLastUpdatedDate];
 }
 
@@ -167,27 +201,36 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        NSArray *dataArray = [[DataBaseManager sharedInstance] insertTemporaryCinemasIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
+        NSMutableArray *dataArray = (NSMutableArray *)[[DataBaseManager sharedInstance] insertTemporaryCinemasIntoCoreDataFromObject:[apiCmd responseJSONObject] withApiCmd:apiCmd];
         
+        NSMutableArray *removieArray = [NSMutableArray arrayWithCapacity:10];
         for (MCinema *tCinema in dataArray) {
             CLLocationDegrees latitude = [tCinema.latitude doubleValue];
             CLLocationDegrees longitude = [tCinema.longitude doubleValue];
             double distance = [[LocationManager defaultLocationManager] distanceBetweenUserToLatitude:latitude longitude:longitude];
-            tCinema.distance = [NSNumber numberWithDouble:distance];
+            if (distance<0) {
+                [removieArray addObject:tCinema];
+                _isLoadDone = YES;
+                _refreshNearByTailerView.hidden = YES;
+            }else{
+                tCinema.distance = [NSNumber numberWithDouble:distance];
+            }
         }
         
-        dataArray = [dataArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-            double first =  [[(MCinema*)a distance] doubleValue];
-            double second = [[(MCinema*)b distance] doubleValue];
-            
-            if (first>second) {
-                return NSOrderedDescending;
-            }else if(first<second){
-                return NSOrderedAscending;
-            }else{
-                return NSOrderedSame;
-            }
-        }];
+        [dataArray removeObjectsInArray:removieArray];
+        
+//        dataArray = (NSMutableArray *)[dataArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+//            double first =  [[(MCinema*)a distance] doubleValue];
+//            double second = [[(MCinema*)b distance] doubleValue];
+//            
+//            if (first>second) {
+//                return NSOrderedDescending;
+//            }else if(first<second){
+//                return NSOrderedAscending;
+//            }else{
+//                return NSOrderedSame;
+//            }
+//        }];
         
         ABLoggerDebug(@"距离 排序 测试");
         for (MCinema *tcinema in dataArray) {
@@ -270,12 +313,17 @@
         return;
     }
     
+    if (_isLoadDone) {
+        [self reloadPullRefreshData];
+        return;
+    }
     [self updateData:0 withData:[self getCacheData]];
 }
 
 - (void)loadNewData{
     ABLoggerMethod();
     isLoadMore = NO;
+    _isLoadDone = NO;
     [_mCacheArray removeAllObjects];
     [_mArray removeAllObjects];
     
@@ -308,15 +356,26 @@
 }
 
 - (void)reloadPullRefreshData{
+    BOOL isMoviePanel = [CacheManager sharedInstance].isMoviePanel;
     [self setTableViewDelegate];
-    if (isLoadMore) {
-        [_nearByListDelegate doneLoadingTableViewData];
-    }else{
-        
-        [_nearByListDelegate doneReLoadingTableViewData];
-    }
     
-    _refreshNearByTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+    if (isMoviePanel) {
+        if (isLoadMore) {
+            [_movieDelegate doneLoadingTableViewData];
+        }else{
+            [_movieDelegate doneReLoadingTableViewData];
+        }
+        _refreshNearByTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+        
+    }else{
+        if (isLoadMore) {
+            [_cinemaDelegate doneLoadingTableViewData];
+        }else{
+            [_cinemaDelegate doneReLoadingTableViewData];
+        }
+        _refreshNearByTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+        
+    }
 }
 
 //添加缓存数据

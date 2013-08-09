@@ -42,6 +42,7 @@ static const NSString* _versionFileName = @"version.data";
     }else{
         // build version file , if it does not exist
         [self syncDiskDataVersion];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:NewApp];
     }
     return diskDataVersion;
 }

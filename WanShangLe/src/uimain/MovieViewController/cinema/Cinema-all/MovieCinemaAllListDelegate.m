@@ -68,6 +68,20 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
+        
+        if (_mArray==nil || [_mArray count]<=0) {
+            _refreshTailerView.hidden = YES;
+        }else{
+            _refreshTailerView.hidden = NO;
+        }
+        
+        //解决上啦刷新箭头错位Bug
+        double delayInSeconds = 1.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^{
+            _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+        });
+        
         return [_mArray count];
     }
     //搜索模式
@@ -77,14 +91,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
-        
-        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
-        if (_mArray==nil || [_mArray count]<=0) {
-            _refreshTailerView.hidden = YES;
-        }else{
-            _refreshTailerView.hidden = NO;
-        }
-        
+            
         return [[[_mArray objectAtIndex:section] objectForKey:@"list"] count];
     }
     
@@ -137,11 +144,13 @@
     cell.cinema_address.text = cinema.address;
     
     MMovie *aMovie = [_parentViewController.mParentController mMovie];
+    cell.cinema_price.text = @"";
     
     [cell.cinema_scheduleCount setJSONWithWithMovie:aMovie
                                              cinema:cinema
                                         placeholder:@"亲,正在加载..."
                                             success:^(NSURLRequest *request, NSHTTPURLResponse *response, NSString *resultString) {
+                                                cell.cinema_price.text = resultString;
                                             } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
                                                 ABLoggerError(@" error == %@",[error description]);
                                             }];
@@ -232,7 +241,7 @@
         
         NSString *name = [[_mArray objectAtIndex:section] objectForKey:@"name"];
         NSArray *list = [[_mArray objectAtIndex:section] objectForKey:@"list"];
-        headerView.text = [NSString stringWithFormat:@"%@  (共%d家)",name,[list count]];
+        headerView.text = [NSString stringWithFormat:@"%@",name];
         
         return [headerView autorelease];
         
@@ -319,7 +328,7 @@
     if (!_refreshHeaderView.hidden) {
         [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
     }
-    if(!_refreshHeaderView.hidden){
+    if(!_refreshTailerView.hidden){
         [_refreshTailerView egoRefreshScrollViewDidScroll:scrollView];
     }
 }
@@ -328,7 +337,7 @@
     if (!_refreshHeaderView.hidden) {
         [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
     }
-    if(!_refreshHeaderView.hidden){
+    if(!_refreshTailerView.hidden){
         [_refreshTailerView egoRefreshScrollViewDidEndDragging:scrollView];
     }
 }

@@ -34,6 +34,7 @@
     if (self) {
         
         self.title = @"Bar";
+         _isLoadDone = NO;
     }
     return self;
 }
@@ -108,18 +109,6 @@
     
     if (_mArray==nil) {
         _mArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
-        
-        NSMutableDictionary *tDic = [[NSMutableDictionary alloc] initWithCapacity:2];
-        [tDic setObject:[NSMutableArray arrayWithCapacity:1] forKey:ListKey];
-        [tDic setObject:TodayKey forKey:@"name"];
-        [_mArray addObject:tDic];
-        [tDic release];
-        
-        tDic = [[NSMutableDictionary alloc] initWithCapacity:2];
-        [tDic setObject:[NSMutableArray arrayWithCapacity:1] forKey:ListKey];
-        [tDic setObject:TomorrowKey forKey:@"name"];
-        [_mArray addObject:tDic];
-        [tDic release];
     }
     if (_mCacheArray==nil) {
         _mCacheArray = [[NSMutableArray alloc] initWithCapacity:DataCount];
@@ -189,6 +178,8 @@
         
         if (dataArray==nil || [dataArray count]<=0) {
             dispatch_async(dispatch_get_main_queue(), ^{
+                _isLoadDone = YES;
+                _refreshTailerView.hidden = YES;
                 [self reloadPullRefreshData];
             });
             return;
@@ -245,24 +236,15 @@
 #pragma mark FilterCinema FormatData
 - (void)formatKTVDataFilterAll:(NSArray*)pageArray{
     
-    NSArray *array_coreData = pageArray;
-    ABLoggerDebug(@"酒吧店 count ==== %d",[array_coreData count]);
-    
-    NSMutableArray *todayArray = [[_mArray objectAtIndex:0] objectForKey:ListKey];
-    NSMutableArray *tomorrowArray = [[_mArray objectAtIndex:1] objectForKey:ListKey];
-    
-    for (BBar *tBar in array_coreData) {
-        if ([[DataBaseManager sharedInstance] isToday:tBar.begintime]) {//今天
-            [todayArray addObject:tBar];
-        }else{
-            [tomorrowArray addObject:tBar];
-        }
-    }
-    
-    _refreshTailerView.hidden = NO;
-    if ([_mArray count]<=0 || _mArray==nil) {
-        _refreshTailerView.hidden = YES;
-        
+    ABLoggerDebug(@"酒吧店 count ==== %d",[pageArray count]);
+
+    if (!isLoadMoreAll) {
+        NSArray *removeArray = nil;
+        removeArray = [NSArray arrayWithArray:_mArray];
+        [_mArray addObjectsFromArray:pageArray];
+        [_mArray removeObjectsInArray:removeArray];
+    }else{
+         [_mArray addObjectsFromArray:pageArray];
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -276,6 +258,12 @@
 - (void)loadMoreData{
     
     isLoadMoreAll = YES;
+    
+    if (_isLoadDone) {
+        [self reloadPullRefreshData];
+        return;
+    }
+    
     [self setTableViewDelegate];
     [self updateData:0 withData:[self getCacheData]];
 }
@@ -283,9 +271,9 @@
 - (void)loadNewData{
     
     isLoadMoreAll = NO;
+    _isLoadDone = NO;
     [_mCacheArray removeAllObjects];
-    [[[_mArray objectAtIndex:0] objectForKey:ListKey] removeAllObjects];
-    [[[_mArray objectAtIndex:1] objectForKey:ListKey] removeAllObjects];
+    [_mArray removeAllObjects];
     
     [self updateData:0 withData:[self getCacheData]];
 }
@@ -298,8 +286,6 @@
     }else{
         [_allListDelegate doneReLoadingTableViewData];
     }
-    _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
-    
 }
 
 //添加缓存数据

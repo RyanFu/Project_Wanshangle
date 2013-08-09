@@ -24,21 +24,20 @@
 #pragma mark UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if ([[[_mArray objectAtIndex:0] objectForKey:ListKey] count]<=0 &&
-        [[[_mArray objectAtIndex:1] objectForKey:ListKey] count]<=0) {//每次刷新表的时候检测是否有数据
+    if (_mArray==nil ||[_mArray count]<=DataCount || _parentViewController.isLoadDone) {//每次刷新表的时候检测是否有数据
         _refreshTailerView.hidden = YES;
     }else{
         _refreshTailerView.hidden = NO;
     }
-    return [_mArray count];
-    
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
     _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
     
-    return [[[_mArray objectAtIndex:section] objectForKey:@"list"] count];
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+
+    return [_mArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -57,10 +56,9 @@
         cell = [self createNewMocieCell];
     }
     
-    if ([[[_mArray objectAtIndex:0] objectForKey:ListKey] count]<=0 &&
-        [[[_mArray objectAtIndex:1] objectForKey:ListKey] count]<=0){
+    if (_mArray==nil || [_mArray count]<=0){
         return cell;
-        }
+    }
     
     [self configCell:cell cellForRowAtIndexPath:indexPath];
     
@@ -83,8 +81,7 @@
     cell.bar_distance.hidden = YES;
     cell.bar_image_location.hidden = YES;
     
-    NSArray *list = [[_mArray objectAtIndex:indexPath.section] objectForKey:@"list"];
-    abar = [list objectAtIndex:row];
+    abar = [_mArray objectAtIndex:row];
     
     [self configureCell:cell withObject:abar];
 }
@@ -93,8 +90,8 @@
     
     cell.bar_event_name.text = abar.name;
     cell.bar_name.text = abar.barName;
-    cell.bar_date.text = abar.begintime;
-    cell.bar_popular.text = [NSString stringWithFormat:@"%d",[abar.popular intValue]];
+    cell.bar_date.text = [[DataBaseManager sharedInstance] getHumanityTimeFromDate:abar.begintime];
+    cell.bar_popular.text = [NSString stringWithFormat:@"%d分",[abar.popular intValue]];
     
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:4];
     if ([abar.zhekou boolValue]) {
@@ -161,32 +158,20 @@
 #pragma mark UITableViewDelegate
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     
-    UILabel *headerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
-    headerView.backgroundColor = [UIColor colorWithWhite:0.829 alpha:1.000];
-    
-    NSString *name = [[_mArray objectAtIndex:section] objectForKey:@"name"];
-    NSArray *list = [[_mArray objectAtIndex:section] objectForKey:@"list"];
-    headerView.text = [NSString stringWithFormat:@"%@  (共%d家)",name,[list count]];
-    
-    return [headerView autorelease];
+    return nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    
-    if ([[[_mArray objectAtIndex:section] objectForKey:ListKey] count]<=0) {
-        return 0;
-    }
-    return 20.0f;
+
+    return 0.0f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    //iPhone5?@"barBuyViewController_5":@"barBuyViewController"
-    NSArray *tArray = [[_mArray objectAtIndex:indexPath.section] objectForKey:@"list"];
-    BBar *tBar = [tArray objectAtIndex:indexPath.row];
-    BarDetailViewController *barDetailController = [[BarDetailViewController alloc] initWithNibName:@"BarDetailViewController" bundle:nil];
+    BBar *tBar = [_mArray objectAtIndex:indexPath.row];
+    BarDetailViewController *barDetailController = [[BarDetailViewController alloc] initWithNibName:(iPhone5?@"BarDetailViewController_5":@"BarDetailViewController") bundle:nil];
     barDetailController.mBar = tBar;
     [[[CacheManager sharedInstance] rootNavController] pushViewController:barDetailController animated:YES];
     [barDetailController release];
@@ -226,13 +211,21 @@
 #pragma mark UIScrollViewDelegate Methods
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
-    [_refreshTailerView egoRefreshScrollViewDidScroll:scrollView];
+    if (!_refreshHeaderView.hidden) {
+        [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    }
+    if(!_refreshTailerView.hidden){
+        [_refreshTailerView egoRefreshScrollViewDidScroll:scrollView];
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
-    [_refreshTailerView egoRefreshScrollViewDidEndDragging:scrollView];
+    if (!_refreshHeaderView.hidden) {
+        [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    }
+    if(!_refreshTailerView.hidden){
+        [_refreshTailerView egoRefreshScrollViewDidEndDragging:scrollView];
+    }
 }
 
 
@@ -241,15 +234,20 @@
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
     
-    if (view.tag == EGOHeaderView) {
+    if (view.tag == EGOHeaderView && !view.hidden) {
         [self reloadTableViewDataSource];
-    } else {
+    } else if(view.tag == EGOBottomView && !view.hidden){
         [self loadMoreTableViewDataSource];
     }
     
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+    
+    if (view.hidden) {
+        return NO;
+    }
+    
 	return _reloading; // should return if data source model is reloading
 }
 

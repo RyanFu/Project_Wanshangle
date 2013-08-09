@@ -21,6 +21,8 @@
 
 @interface CinemaAllViewController()<ApiNotify>{
     BOOL isLoadMoreAll;
+    BOOL iskeepScrollOffset;
+    CGPoint previousScroll;
 }
 @property(nonatomic,retain)CinemaAllListTableViewDelegate *cinemaDelegate;
 @property(nonatomic,retain)MovieCinemaAllListDelegate *movieDelegate;
@@ -82,6 +84,13 @@
     
     [self setTableViewDelegate];
     [_mTableView reloadData];
+    
+    if (iskeepScrollOffset == [CacheManager sharedInstance].isMoviePanel) {
+        [_mTableView setContentOffset:previousScroll];
+    }else{
+        [_mTableView scrollsToTop];
+        iskeepScrollOffset = [CacheManager sharedInstance].isMoviePanel;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -89,6 +98,8 @@
     
     //清除 电影-影院 代理中的排期缓存
     [_movieDelegate clearScheduleCache];
+    
+    previousScroll = _mTableView.contentOffset;
 }
 
 - (void)viewDidLoad
@@ -386,15 +397,17 @@
     NSArray *array_coreData = pageArray;
     ABLoggerDebug(@"影院 count ==== %d",[array_coreData count]);
     
-    NSArray *regionOrder = [[DataBaseManager sharedInstance] getRegionOrder];
+//    NSArray *regionOrder = [[DataBaseManager sharedInstance] getRegionOrder];
     
     NSMutableDictionary *districtDic = [[NSMutableDictionary alloc] initWithCapacity:DataCount];
+    NSMutableArray *districtOrder = [NSMutableArray arrayWithCapacity:DataCount];
     
     for (MCinema *tMcine in array_coreData) {
         NSString *key = tMcine.district;
         
         if (![districtDic objectForKey:key]) {
-            ABLoggerInfo(@"key === %@",key);
+            ABLoggerInfo(@"districtName === %@",key);
+            [districtOrder addObject:key];
             NSMutableArray *tarray = [[NSMutableArray alloc] initWithCapacity:DataCount];
             [districtDic setObject:tarray forKey:key];
             [tarray release];
@@ -406,7 +419,7 @@
         [_mArray removeAllObjects];
     }
     
-    for (NSString *key in regionOrder) {
+    for (NSString *key in districtOrder) {
         
         if (![districtDic objectForKey:key]) {
             continue;
@@ -478,7 +491,7 @@
         }else{
             [_movieDelegate doneReLoadingTableViewData];
         }
-        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+//        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
         
     }else{
         if (isLoadMoreAll) {
@@ -486,7 +499,7 @@
         }else{
             [_cinemaDelegate doneReLoadingTableViewData];
         }
-        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+//        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
         
     }
 

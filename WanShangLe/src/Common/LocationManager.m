@@ -9,6 +9,7 @@
 #import "LocationManager.h"
 #import "UIAlertView+MKBlockAdditions.h"
 #import "SIAlertView.h"
+#import "AppDelegate.h"
 
 @interface LocationManager()<MKMapViewDelegate,UIAlertViewDelegate,CLLocationManagerDelegate>{
     
@@ -184,10 +185,10 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
     // if the location is older than 30s ignore
-    if (fabs([newLocation.timestamp timeIntervalSinceDate:[[DataBaseManager sharedInstance] date]]) > 30)
-    {
-        return;
-    }
+//    if (fabs([newLocation.timestamp timeIntervalSinceDate:[[DataBaseManager sharedInstance] date]]) > 30)
+//    {
+//        return;
+//    }
     
     if (self.getUserGPSLocation) {
         BOOL isSuccess = YES;
@@ -269,15 +270,25 @@
         return NO;
     }
     
-    //    unichar c = [newCity characterAtIndex:0];
-    //    if (c >=0x4E00 && c <=0x9FFF){
-    //        if ([[newCity substringFromIndex:[newCity length]-1] isEqualToString:@"市"]) {
-    //            newCity = [newCity substringToIndex:[newCity length]-1];
-    //            ABLoggerInfo(@"定位信息 == 汉字 == %@",newCity);
-    //        }
-    //    }else{
-    //        ABLoggerInfo(@"定位信息 == 英文");
-    //    }
+    unichar c = [newCity characterAtIndex:0];
+    if (c >=0x4E00 && c <=0x9FFF){
+        if ([[newCity substringFromIndex:[newCity length]-1] isEqualToString:@"市"]) {
+            newCity = [newCity substringToIndex:[newCity length]-1];
+            ABLoggerInfo(@"定位信息 == 汉字 == %@",newCity);
+        }
+    }else{
+        ABLoggerInfo(@"定位信息 == 英文");
+
+        NSArray *cityEnglishStrs = [NSArray arrayWithObjects:@"shanghai",@"beijing",@"guangzhou",@"shenzhen",nil];
+        NSArray *cityZHStrs = [NSArray arrayWithObjects:@"上海",@"北京",@"广州",@"深圳", nil];
+        
+        for (int i=0 ;i<[cityEnglishStrs count];i++) {
+            NSRange range = [newCity rangeOfString:[cityEnglishStrs objectAtIndex:i] options:NSCaseInsensitiveSearch];
+            if (range.location!=NSNotFound) {
+                newCity = [cityZHStrs objectAtIndex:i];
+            }
+        }
+    }
     
     if ([[DataBaseManager sharedInstance] validateCity:newCity]) {
         
@@ -287,7 +298,7 @@
     
     NSString *city = [self getUserCity];
     if (city) {
-        
+
         NSRange range=[newCity rangeOfString:city options:NSCaseInsensitiveSearch];
         if(range.location == NSNotFound){
             
@@ -306,7 +317,7 @@
                                       
                                       [[DataBaseManager sharedInstance] insertCityIntoCoreDataWith:newCity];
                                       
-                                      [_cityLabel setTitle:[NSString stringWithFormat:@"%@%d",newCity,arc4random()%200] forState:UIControlStateNormal];
+                                      [_cityLabel setTitle:[NSString stringWithFormat:@"%@",newCity] forState:UIControlStateNormal];
                                       [_cityLabel setValue:nil forKey:@"title"];
                                       if (_userCityCallBack) {
                                           _userCityCallBack();
@@ -315,7 +326,7 @@
                                       ABLoggerDebug(@"确定切换城市");
                                   }];
             
-            alertView.transitionStyle = SIAlertViewTransitionStyleDropDown;
+            alertView.transitionStyle = SIAlertViewTransitionStyleFade;
             alertView.backgroundStyle = SIAlertViewBackgroundStyleSolid;
             
             [alertView show];
@@ -352,7 +363,7 @@
                                   ABLoggerDebug(@"确定切换城市");
                               }];
         
-        alertView.transitionStyle = SIAlertViewTransitionStyleDropDown;
+        alertView.transitionStyle = SIAlertViewTransitionStyleFade;
         alertView.backgroundStyle = SIAlertViewBackgroundStyleSolid;
         
         [alertView show];
@@ -383,9 +394,31 @@
     
     CLLocationDistance distance = [to distanceFromLocation:from];
     
-    ABLoggerDebug(@"距离 === %.2f m",distance);
+    NSString *limitDistance = [[NSUserDefaults standardUserDefaults] objectForKey:DistanceFilterData];
+    int limitedDistance = (isEmpty(limitDistance)?10:[limitDistance intValue])*1000;
+    if (distance>limitedDistance) {
+         ABLoggerDebug(@"距离 real === %.2f m",distance);
+        distance = -1;
+    }
     
-    return (distance<0?0:distance);
+    ABLoggerDebug(@"距离 === %.2f m",distance);
+        
+    
+    return distance;
 }
 
+//打电话
+- (void)callPhoneNumber:(NSString *)phoneNumber{
+    phoneNumber = [NSString stringWithFormat:@"tel://%@",phoneNumber];
+//    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneNumber]];
+    
+    //可能不能通过审核
+//    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"telprompt://10086"]];
+    
+    UIWebView*callWebview =[[[UIWebView alloc] init] autorelease];
+    NSURL *telURL =[NSURL URLWithString:phoneNumber];// 貌似tel:// 或者 tel: 都行
+    [callWebview loadRequest:[NSURLRequest requestWithURL:telURL]];
+    //记得添加到view上
+    [[AppDelegate appDelegateInstance].window addSubview:callWebview];
+}
 @end

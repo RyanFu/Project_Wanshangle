@@ -8,11 +8,9 @@
 
 #import "ApiCmd.h"
 
-@interface ApiCmdMovie_getAllMovies : ApiCmd
-{
-@private
-    
+@interface ApiCmdMovie_getAllMovies : ApiCmd{
 }
+@property(nonatomic,retain) NSString *cinemaid;
 - (NSMutableDictionary*) getParamDict;
 - (void) parseResultData:(NSDictionary*) dictionary;
 

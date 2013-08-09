@@ -37,11 +37,11 @@
     return self.httpRequest;
 }
 
-//http://api.wanshangle.com:10000/api? appId=000001&api=ktv.info&sign=sign&time=1371988912&v=1.0&ktvid=4
+//http://api.wanshangle.com:10000/api?%20appId=000001&api=ktv.deals&sign=sign&time=1371988912&v=1.0&ktvid=623
 - (NSMutableDictionary*) getParamDict {
     NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
     
-    [paramDict setObject:@"ktv.info" forKey:@"api"];
+    [paramDict setObject:@"ktv.deals" forKey:@"api"];
     [paramDict setObject:self.ktvId forKey:@"ktvid"];
     
     return paramDict;

@@ -32,12 +32,12 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if ([_mArray count]<=0) {//每次刷新表的时候检测是否有数据
-        _refreshTailerView.hidden = YES;
-    }else{
-         _refreshTailerView.hidden = NO;
-    }
-    
+//    if ([_mArray count]<=0) {//每次刷新表的时候检测是否有数据
+//        _refreshTailerView.hidden = YES;
+//    }else{
+//         _refreshTailerView.hidden = NO;
+//    }
+//    
   return [_mArray count];
 }
 
@@ -209,6 +209,13 @@
 	//  model should call this when its done loading
 	_reloading = NO;
     [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_mTableView];
+    
+    if ([_mArray count]<=0 || _parentViewController.isLoadDone) {//每次刷新表的时候检测是否有数据
+        _refreshTailerView.hidden = YES;
+    }else{
+        _refreshTailerView.hidden = NO;
+    }
+    
     [_mTableView reloadData];
 }
 
@@ -216,6 +223,13 @@
 {
     [_refreshTailerView egoRefreshScrollViewDataSourceDidFinishedLoading:_mTableView];
     [_mTableView reloadData];
+    
+    if ([_mArray count]<=0 || _parentViewController.isLoadDone) {//每次刷新表的时候检测是否有数据
+        _refreshTailerView.hidden = YES;
+    }else{
+        _refreshTailerView.hidden = NO;
+    }
+    
     _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
      _reloading = NO;
 }
@@ -228,7 +242,7 @@
     if (!_refreshHeaderView.hidden) {
         [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
     }
-    if(!_refreshHeaderView.hidden){
+    if(!_refreshTailerView.hidden){
         [_refreshTailerView egoRefreshScrollViewDidScroll:scrollView];
     }
 }
@@ -237,7 +251,7 @@
     if (!_refreshHeaderView.hidden) {
         [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
     }
-    if(!_refreshHeaderView.hidden){
+    if(!_refreshTailerView.hidden){
         [_refreshTailerView egoRefreshScrollViewDidEndDragging:scrollView];
     }
 }

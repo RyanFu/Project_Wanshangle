@@ -13,6 +13,7 @@
 @interface CinemaMovieViewController : UIViewController
 
 @property(nonatomic,retain) IBOutlet UIButton *favoriteButton;
+@property(nonatomic,retain) IBOutlet UIButton *phoneButton;
 @property(nonatomic,retain) IBOutlet UIButton *todayButton;
 @property(nonatomic,retain) IBOutlet UIButton *tomorrowButton;
 @property(nonatomic,retain) IBOutlet UIControl *movieDetailControl;
@@ -27,6 +28,7 @@
 @property(nonatomic,retain) NSArray *schedulesArray;
 
 @property(nonatomic,retain)IBOutlet UIImageView *movie_image_new;
+@property(nonatomic,retain)IBOutlet UIImageView *movie_image_hot;
 @property(nonatomic,retain)IBOutlet UIImageView *movie_image_3dimx;
 @property(nonatomic,retain)IBOutlet UIImageView *movie_image_imx;
 @property(nonatomic,retain)IBOutlet UIImageView *movie_image_3d;
@@ -36,4 +38,7 @@
 - (IBAction)clickTodayButton:(id)sender;
 - (IBAction)clickTomorrowButton:(id)sender;
 - (IBAction)clickMovieInfo:(id)sender;
+
+- (IBAction)clickFavoriteButton:(id)sender;
+- (IBAction)clickPhoneButton:(id)sender;
 @end

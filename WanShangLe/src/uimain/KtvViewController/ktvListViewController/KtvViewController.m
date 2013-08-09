@@ -104,11 +104,10 @@
     nearbyButton = bt2;
     allButton = bt3;
     
-    UIImageView *imgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"btn_filter_indicator"]];
+    UIImageView *imgView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"btn_filter_indicator"]] autorelease];
     imgView.frame = CGRectMake(46, 34, 13, 6);
     [_filterHeaderView addSubview:imgView];
-    _filterIndicator = imgView;
-    [imgView release];
+    self.filterIndicator = imgView;
     
     [self.view addSubview:_filterHeaderView];
 }
@@ -118,7 +117,7 @@
 
 - (void)switchToAllTableView{
     if (_allController==nil) {
-        _allController = [[KtvAllViewController alloc] initWithNibName:@"KtvAllViewController" bundle:nil];
+        _allController = [[KtvAllViewController alloc] initWithNibName:(iPhone5?@"KtvAllViewController_5":@"KtvAllViewController") bundle:nil];
         _allController.mParentController = self;
     }
     self.mSelectedController = _allController;
@@ -128,18 +127,18 @@
     
     [self.view addSubview:_allController.view];
     [self.view bringSubviewToFront:_allController.view];
-    _allController.view.frame = CGRectMake(0, KTVVIEW_Y, self.view.bounds.size.width, self.view.bounds.size.height-KTVVIEW_Y);
+    _allController.view.frame = CGRectMake(0, KTVVIEW_Y, self.view.bounds.size.width, iPhoneAppFrame.size.height-navigationBarHeight-KTVVIEW_Y);
 }
 
 - (void)switchToNearByTableView{
     if (_nearByController==nil) {
-        _nearByController = [[KtvNearByViewController alloc] initWithNibName:@"KtvNearByViewController" bundle:nil];
+        _nearByController = [[KtvNearByViewController alloc] initWithNibName:(iPhone5?@"KtvNearByViewController_5":@"KtvNearByViewController") bundle:nil];
     }
     self.mSelectedController = _nearByController;
     UIView *currentActiveView = [self.view viewWithTag:KTVVIEW];
     [currentActiveView removeFromSuperview];
     
-    _nearByController.view.frame = CGRectMake(0, KTVVIEW_Y, self.view.bounds.size.width, self.view.bounds.size.height-KTVVIEW_Y);
+    _nearByController.view.frame = CGRectMake(0, KTVVIEW_Y, self.view.bounds.size.width, iPhoneAppFrame.size.height-navigationBarHeight-KTVVIEW_Y);
     _nearByController.view.tag = KTVVIEW;
     
     [self.view addSubview:_nearByController.view];
@@ -148,13 +147,13 @@
 
 - (void)switchToFavoriteTableView {
     if (_favoriteController==nil) {
-        _favoriteController = [[KtvFavoriteViewController alloc] initWithNibName:@"KtvFavoriteViewController" bundle:nil];
+        _favoriteController = [[KtvFavoriteViewController alloc] initWithNibName:(iPhone5?@"KtvFavoriteViewController_5":@"KtvFavoriteViewController") bundle:nil];
     }
     self.mSelectedController = _favoriteController;
     UIView *currentActiveView = [self.view viewWithTag:KTVVIEW];
     [currentActiveView removeFromSuperview];
 
-    _favoriteController.view.frame = CGRectMake(0, KTVVIEW_Y, self.view.bounds.size.width, self.view.bounds.size.height-KTVVIEW_Y);
+    _favoriteController.view.frame = CGRectMake(0, KTVVIEW_Y, self.view.bounds.size.width, iPhoneAppFrame.size.height-navigationBarHeight-KTVVIEW_Y);
     _favoriteController.view.tag = KTVVIEW;
     
     [self.view addSubview:_favoriteController.view];

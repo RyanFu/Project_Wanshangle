@@ -10,7 +10,7 @@
 @implementation SystemDataUpdater1_0
 
 - (id) init {
-    self = [super initWithVersion:@"1.0"];
+    self = [super initWithVersion:AppVersion];
     return self;
 }
 

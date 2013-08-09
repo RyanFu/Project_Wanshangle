@@ -226,7 +226,7 @@
         
         NSString *name = [[_mArray objectAtIndex:section] objectForKey:@"name"];
         NSArray *list = [[_mArray objectAtIndex:section] objectForKey:@"list"];
-        headerView.text = [NSString stringWithFormat:@"%@  (共%d家)",name,[list count]];
+        headerView.text = [NSString stringWithFormat:@"%@",name];
         
         return [headerView autorelease];
 
@@ -250,10 +250,16 @@
     KTVBuyViewController *ktvBuyController = [[KTVBuyViewController alloc] initWithNibName:iPhone5?@"KTVBuyViewController_5":@"KTVBuyViewController" bundle:nil];
     
     KKTV *aKTV = nil;
-    int row = indexPath.row;
     
-    NSArray *list = [[_mArray objectAtIndex:indexPath.section] objectForKey:@"list"];
-    aKTV = [list objectAtIndex:row];
+    if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
+        
+        NSDictionary *dic = [_mArray objectAtIndex:indexPath.section];
+        NSArray *list = [dic objectForKey:@"list"];
+        aKTV = [list objectAtIndex:indexPath.row];
+        
+    } else {//搜索模式
+        aKTV = [_mSearchArray objectAtIndex:indexPath.row];
+    }
     
     ktvBuyController.mKTV = aKTV;
     [[CacheManager sharedInstance].rootNavController pushViewController:ktvBuyController animated:YES];
@@ -298,7 +304,7 @@
     if (!_refreshHeaderView.hidden) {
         [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
     }
-    if(!_refreshHeaderView.hidden){
+    if(!_refreshTailerView.hidden){
         [_refreshTailerView egoRefreshScrollViewDidScroll:scrollView];
     }
 }
@@ -307,7 +313,7 @@
     if (!_refreshHeaderView.hidden) {
         [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
     }
-    if(!_refreshHeaderView.hidden){
+    if(!_refreshTailerView.hidden){
         [_refreshTailerView egoRefreshScrollViewDidEndDragging:scrollView];
     }
 }

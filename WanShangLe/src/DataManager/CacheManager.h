@@ -24,4 +24,5 @@
 -(void)setCache:(id)obj forKey:(NSString *)key;
 -(id)getCacheForKey:(NSString *)key;
 
+- (void)showAddFavoritePopupView:(NSString *)title objectId:(NSString *)objectId dataType:(int)dataType;
 @end

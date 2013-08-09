@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface KTVBuyCell : UITableViewCell
-@property(nonatomic,retain)IBOutlet UIImageView *bgImgView;
-@property(nonatomic,retain)IBOutlet UIImageView *ktv_imageView_tuan;
-@property(nonatomic,retain)IBOutlet UILabel *ktv_agent_label;
-@property(nonatomic,retain)IBOutlet UILabel *ktv_price_label;
+@property(nonatomic,retain) IBOutlet UIImageView *tuan_imgView;
+@property(nonatomic,retain) IBOutlet UIImageView *lowPriceImg;
+@property(nonatomic,retain) IBOutlet UILabel *vendor_name;
+@property(nonatomic,retain) IBOutlet UILabel *price;
+@property(nonatomic,retain) IBOutlet UIButton *bg_button;
 @end

@@ -11,7 +11,11 @@
 @interface ApiCmdShow_getAllShows : ApiCmd{
     
 }
-@property(nonatomic,retain)NSString *dataType;
+@property(nonatomic,retain)NSString *dataTimeDistance;
+@property(nonatomic,retain)NSString *dataSort;
+@property(nonatomic,retain)NSString *dataOrder;
+@property(nonatomic,readwrite)double latitude;
+@property(nonatomic,readwrite)double longitude;
 - (NSMutableDictionary*) getParamDict;
 - (void) parseResultData:(NSDictionary*) dictionary;
 

@@ -22,7 +22,10 @@
 }
 
 - (void) dealloc {
-    self.dataType = nil;
+    self.dataSort = nil;
+    self.dataTimeDistance = nil;
+    self.dataOrder = nil;
+
 	[super dealloc];
 }
 
@@ -36,22 +39,26 @@
     
     return self.httpRequest;
 }
-
-//http://api.wanshangle.com:10000/api? appId=000001&api=perform.list&sign=sign&token=&cityid=021
+//http://api.wanshangle.com:10000/api? appId=000001&sign=sign&time=1371988912&v=1.0&api=perform.list&cityid=021&offset=0&limit=10&type=&order=4&sort=asc
 - (NSMutableDictionary*) getParamDict {
     NSMutableDictionary* paramDict = [[[NSMutableDictionary alloc] init] autorelease];
     
     [paramDict setObject:@"perform.list" forKey:@"api"];
     [paramDict setObject:self.cityId forKey:@"cityid"];
+    if (![self.dataType isEqualToString:@"全部"]) {
+        [paramDict setObject:self.dataType forKey:@"type"];
+    }
+    [paramDict setObject:self.dataOrder forKey:@"order"];
+    [paramDict setObject:self.dataTimeDistance forKey:@"timedistance"];
+    [paramDict setObject:self.dataSort forKey:@"sort"];
     
     [paramDict setObject:[NSString stringWithFormat:@"%d",self.offset] forKey:@"offset"];
     [paramDict setObject:[NSString stringWithFormat:@"%d",self.limit] forKey:@"limit"];
     
-//    if ([self.dataType intValue]==3) {//3代表附近的酒吧
-//        [paramDict setObject:[NSString stringWithFormat:@"%f",_latitude] forKey:@"lat"];
-//        [paramDict setObject:[NSString stringWithFormat:@"%f",_longitude] forKey:@"lng"];
-//    }
-//    [paramDict setObject:self.dataType forKey:@"order"];
+    if ([self.dataOrder intValue]==3) {//3代表附近的酒吧
+        [paramDict setObject:[NSString stringWithFormat:@"%f",_latitude] forKey:@"lat"];
+        [paramDict setObject:[NSString stringWithFormat:@"%f",_longitude] forKey:@"lng"];
+    }
     
     return paramDict;
 }

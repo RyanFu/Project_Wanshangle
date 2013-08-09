@@ -20,6 +20,7 @@
 #import "MCinema.h"
 #import "MSchedule.h"
 #import "MBuyTicketInfo.h"
+#import "MCinemaDiscount.h"
 #import "ApiCmdMovie_getAllMovies.h"
 #import "ApiCmdMovie_getAllMovieDetail.h"
 #import "ApiCmdMovie_getAllCinemas.h"
@@ -27,6 +28,8 @@
 #import "ApiCmdMovie_getBuyInfo.h"
 #import "ApiCmdMovie_getNearByCinemas.h"
 #import "ApiCmdMovie_getSearchCinemas.h"
+#import "ApiCmdMovie_getCinemaDiscount.h"
+
 //KTV
 #import "KKTV.h"
 #import "KKTVBuyInfo.h"

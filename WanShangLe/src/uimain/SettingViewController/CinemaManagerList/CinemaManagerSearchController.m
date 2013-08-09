@@ -52,7 +52,6 @@
 #pragma mark apiNotiry
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
-    
     if (error!=nil) {
         if (self.searchCallBack) {
             _searchCallBack(_mArray,NO);

@@ -9,13 +9,6 @@
 #import "BuyInfoTableViewCell.h"
 
 @implementation BuyInfoTableViewCell
-@synthesize imgView;
-@synthesize expansionView;
-@synthesize vendorName;
-@synthesize type;
-@synthesize clickCount;
-@synthesize price;
-@synthesize buyInfo_textView;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -41,13 +34,6 @@
 }
 
 - (void)dealloc{
-    self.imgView = nil;
-    self.expansionView = nil;
-    self.vendorName = nil;
-    self.type = nil;
-    self.clickCount = nil;
-    self.price = nil;
-    self.buyInfo_textView = nil;
     [super dealloc];
 }
 

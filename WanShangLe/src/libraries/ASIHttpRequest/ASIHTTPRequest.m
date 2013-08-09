@@ -283,7 +283,7 @@ static NSOperationQueue *sharedQueue = nil;
 
 	[self setRunLoopMode:NSDefaultRunLoopMode];
 	[self setShouldAttemptPersistentConnection:YES];
-	[self setPersistentConnectionTimeoutSeconds:60.0];
+	[self setPersistentConnectionTimeoutSeconds:2*60.0];
 	[self setShouldPresentCredentialsBeforeChallenge:YES];
 	[self setShouldRedirect:YES];
 	[self setShowAccurateProgress:YES];

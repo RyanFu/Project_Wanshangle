@@ -8,10 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-#define TodayKey @"今天"
-#define TomorrowKey @"明天"
-#define ListKey @"list"
-
 @class ApiCmdBar_getAllBars;
 @class EGORefreshTableHeaderView;
 @class BarViewController;
@@ -26,6 +22,9 @@
 @property(nonatomic,retain) UITableView *mTableView;
 @property(nonatomic,retain) NSMutableArray *mArray;
 @property(nonatomic,retain) NSMutableArray *mCacheArray;
+
+@property(nonatomic,readwrite) BOOL isLoadDone;
+
 
 - (void)loadMoreData;
 - (void)loadNewData;

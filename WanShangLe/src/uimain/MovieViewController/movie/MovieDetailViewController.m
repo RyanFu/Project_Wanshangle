@@ -17,7 +17,8 @@
 #import "ApiCmd_recommendOrLook.h"
 #import "ApiCmd_recommendOrLook.h"
 
-#define IntroduceLabelHeight 213
+#define IntroduceLabelHeight_5 213
+#define IntroduceLabelHeight 127
 
 @interface MovieDetailViewController ()<ApiNotify>{
      ShareType _followType;
@@ -120,22 +121,21 @@
         
         self.mMovieDetail = _mMovie.movieDetail;
     }
-
-    [_movie_portImgView setImageWithURL:[NSURL URLWithString:_mMovie.webImg]
-                      placeholderImage:[UIImage imageNamed:@"movie_placeholder_H@2x"]
-                               options:SDWebImageRetryFailed];
 }
 
 - (void)initMovieDetailData{
+    
+    [_movie_portImgView setImageWithURL:[NSURL URLWithString:_mMovieDetail.webImg]
+                       placeholderImage:[UIImage imageNamed:@"movie_placeholder_H@2x"]
+                                options:SDWebImageRetryFailed];
 
     _movie_director.text = [_mMovieDetail.info objectForKey:@"director"];
     _movie_actor.text = [_mMovieDetail.info objectForKey:@"star"];
     _movie_type.text = [_mMovieDetail.info objectForKey:@"type"];
-    _movie_district.text = @"NULL缺少字段";
+    _movie_district.text = [NSString stringWithFormat:@"%@(%@)",_mMovieDetail.productarea,_mMovieDetail.language];
     _movie_timeLong.text = [[_mMovieDetail.info objectForKey:@"duration"] stringByAppendingString:@"分钟"];
     _movie_uptime.text = [_mMovieDetail.info objectForKey:@"startday"];
-    
-    _movie_rating.text = [NSString stringWithFormat:@"%@评分: %@",_mMovie.ratingFrom,_mMovie.rating];
+    _movie_rating.text = [NSString stringWithFormat:@"%@评分: %0.1f",_mMovie.ratingFrom,[_mMovie.rating floatValue]];
     _movie_introduce.text = [_mMovieDetail.info objectForKey:@"description"];
     
     CGSize misize = [_movie_introduce.text sizeWithFont:_movie_introduce.font constrainedToSize:CGSizeMake(_movie_introduce.bounds.size.width, MAXFLOAT)];
@@ -146,8 +146,8 @@
         introFrame.size.height = misize.height;
         _movie_introduce.frame = introFrame;
         
-        if (misize.height>IntroduceLabelHeight) {
-            float extendHeight = misize.height - IntroduceLabelHeight;
+        if (misize.height>(iPhone5?IntroduceLabelHeight_5:IntroduceLabelHeight)) {
+            float extendHeight = misize.height - (iPhone5?IntroduceLabelHeight_5:IntroduceLabelHeight);
              [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, self.view.bounds.size.height+extendHeight)];
             CGRect bgImgFrame = _movie_introBgImgView.frame;
             bgImgFrame.size.height += extendHeight;
@@ -159,7 +159,7 @@
 }
 
 - (void)requestRecommendAndWantLookCount{
-    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mMovie.uid APIType:WSLRecommendAPITypeMovieInteract cType:WSLRecommendLookTypeLook delegate:self];
+    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mMovie.uid APIType:WSLRecommendAPITypeMovieInteract cType:WSLRecommendLookTypeNone delegate:self];
 }
 
 - (void)updateRecommendAndWantLookCount{
