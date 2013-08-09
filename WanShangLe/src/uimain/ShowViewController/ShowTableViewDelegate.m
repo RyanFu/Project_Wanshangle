@@ -56,6 +56,7 @@
     [cell.show_imageView setImageWithURL:[NSURL URLWithString:[show webImg]]
                          placeholderImage:[UIImage imageNamed:@"show_placeholder_S@2x"] options:SDWebImageRetryFailed];
     cell.show_name.text = show.name;
+    cell.show_imageView.frame = CGRectMake(4, 10, 65, 87);
     
     int ratingPeople = [show.ratingpeople intValue];
     NSString *scopeStr = @"人";
@@ -77,7 +78,7 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessoryType = UITableViewCellAccessoryNone;
     
-    cell.show_imageView = [[[UIImageView alloc] initWithFrame:CGRectMake(4, 6, 65, 87)] autorelease];
+    cell.show_imageView = [[[UIImageView alloc] init] autorelease];
     [cell.contentView addSubview:cell.show_imageView];
     
     return cell;
@@ -86,7 +87,7 @@
 #pragma mark -
 #pragma mark UITableViewDelegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 100.0f;
+    return 108.0f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{

@@ -16,7 +16,7 @@
 
 @interface WebSiteBuyViewController ()<UITextViewDelegate>{
     BOOL isShowErrorPanel;
-    BOOL isFirst;
+//    BOOL isFirst;
 }
 
 @property(nonatomic,retain) UIControl *markView;
@@ -29,7 +29,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        isFirst = YES;
+//        isFirst = YES;
     }
     return self;
 }
@@ -39,6 +39,7 @@
     self.mURLStr = nil;
     self.mWebView = nil;
     self.markView = nil;
+    self.supplierName = nil;
     
     [super dealloc];
 }
@@ -49,16 +50,20 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
+    if ([LoadingView superview]!=nil) {
+        [self stopLoadingView];
+    }
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    [self startLoadingView];
+    
     [self initBarItem];
     
     [self initData];
-    
 }
 
 #pragma mark -
@@ -75,6 +80,7 @@
 }
 
 - (void)initData{
+    self.title = _supplierName;
     
     NSURL *url = [NSURL URLWithString:_mURLStr];
     _mWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height-40)];
@@ -285,6 +291,32 @@
         
     });
 }
+
+- (IBAction)clickCancelLoadingView:(id)sender{
+    [self stopLoadingView];
+}
+
+- (void)startLoadingView{
+    LoadingView.alpha = 0;
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         LoadingView.alpha = 1;
+                     } completion:^(BOOL finished) {
+                         [activityIndicator startAnimating];
+                         [self.view addSubview:LoadingView];
+                     }];
+}
+
+- (void)stopLoadingView{
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         LoadingView.alpha = 0;
+                     } completion:^(BOOL finished) {
+                         [activityIndicator stopAnimating];
+                         [LoadingView removeFromSuperview];
+                     }];
+
+}
 #pragma mark -
 #pragma mark UIWebViewDelegate
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
@@ -293,19 +325,22 @@
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView{
-    if (isFirst) {
-        isFirst = NO;
-        [MMProgressHUD setDisplayStyle:MMProgressHUDDisplayStylePlain];
-        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleFade];
-        [[MMProgressHUD sharedHUD] setOverlayMode:MMProgressHUDWindowOverlayModeNone];
-        [MMProgressHUD showWithTitle:@"" status:@"正在加载..."];
-    }
+//    if (isFirst) {
+//        isFirst = NO;
+//        [MMProgressHUD setDisplayStyle:MMProgressHUDDisplayStylePlain];
+//        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleFade];
+//        [[MMProgressHUD sharedHUD] setOverlayMode:MMProgressHUDWindowOverlayModeNone];
+//        [MMProgressHUD showWithTitle:@"" status:@"正在加载..."];
+//    }
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
     [self dismissErrorView];
     [self updateBackForwardButtonState];
-    [MMProgressHUD dismiss];
+    
+    if ([LoadingView superview]!=nil) {
+        [self stopLoadingView];
+    }
 }
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
     

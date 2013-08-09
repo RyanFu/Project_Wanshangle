@@ -77,7 +77,7 @@
 #pragma mark 初始化数据 initData
 - (void)initBarItem{
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [backButton setFrame:CGRectMake(0, 0, 45, 30)];
+    [backButton setFrame:CGRectMake(0, 0, 45, 32)];
     [backButton addTarget:self action:@selector(clickBackButton:) forControlEvents:UIControlEventTouchUpInside];
     [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_n@2x"] forState:UIControlStateNormal];
     [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_f@2x"] forState:UIControlStateHighlighted];
@@ -231,10 +231,10 @@
         if (discountCount>0) {
             _discountNum.text = [NSString stringWithFormat:@"%d项",discountCount];
             _discountButton.enabled = YES;
+            [self addDiscountViewButton];
         }else{
 //            _discountNum.text = @"暂无";
             _discountButton.enabled = NO;
-            [self removieDiscountButton];
         }
     
         
@@ -243,11 +243,18 @@
 }
 #pragma mark -
 #pragma mark 刷新Header View
-- (void)removieDiscountButton{
+- (void)addDiscountViewButton{
     [_discountView removeFromSuperview];
+    
+    CGRect discountFrame = _discountView.frame;
+    discountFrame.origin = CGPointMake(10, 78);
+    _discountView.frame = discountFrame;
+
     CGRect newFrame = _mHeaderView.frame;
-    newFrame.size.height = 80;
+    newFrame.size.height = 133;
     _mHeaderView.frame = newFrame;
+    
+    [_mHeaderView addSubview:_discountView];
     
     _mTableView.tableHeaderView = _mHeaderView;
 }

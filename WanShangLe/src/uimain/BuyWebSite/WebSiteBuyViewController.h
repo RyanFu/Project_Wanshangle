@@ -15,10 +15,15 @@
     IBOutlet UIView *bottomBar;
     IBOutlet UIView *errorPopupView;
     IBOutlet UIView *commitErrorView;
+    
+    IBOutlet UIActivityIndicatorView *activityIndicator;
+    IBOutlet UIButton *cancelLoadingButton;
+    IBOutlet UIView *LoadingView;
 }
 @property(nonatomic,retain)IBOutlet UITextView *adviceTextView;
 @property(nonatomic,retain)IBOutlet UILabel *placeHoldText;
 @property(nonatomic,retain) NSString *mURLStr;
+@property(nonatomic,retain) NSString *supplierName;
 
 - (IBAction)clickcWebBackButton:(id)sender;
 - (IBAction)clickcWebForwardkButton:(id)sender;
@@ -34,4 +39,6 @@
 
 - (IBAction)popViewController:(id)sender;
 - (IBAction)clickSafariButton:(id)sender;
+
+- (IBAction)clickCancelLoadingView:(id)sender;
 @end

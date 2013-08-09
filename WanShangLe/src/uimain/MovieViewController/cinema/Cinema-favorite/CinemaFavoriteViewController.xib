@@ -13,6 +13,7 @@
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IBProxyObject</string>
 			<string>IBUIButton</string>
+			<string>IBUIImageView</string>
 			<string>IBUILabel</string>
 			<string>IBUIView</string>
 		</array>
@@ -175,6 +176,21 @@
 				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">292</int>
 				<array class="NSMutableArray" key="NSSubviews">
+					<object class="IBUIImageView" id="1048079436">
+						<reference key="NSNextResponder" ref="26493609"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{0, 59}, {320, 1}}</string>
+						<reference key="NSSuperview" ref="26493609"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="689449602"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<object class="NSCustomResource" key="IBUIImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">UITableViewCellSeparatorStyle@2x.png</string>
+						</object>
+					</object>
 					<object class="IBUILabel" id="724107698">
 						<reference key="NSNextResponder" ref="26493609"/>
 						<int key="NSvFlags">292</int>
@@ -252,7 +268,7 @@
 				<string key="NSFrameSize">{320, 60}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="689449602"/>
+				<reference key="NSNextKeyView" ref="1048079436"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
@@ -349,6 +365,7 @@
 							<reference ref="689449602"/>
 							<reference ref="724107698"/>
 							<reference ref="710549503"/>
+							<reference ref="1048079436"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -388,6 +405,11 @@
 						<array class="NSMutableArray" key="children"/>
 						<reference key="parent" ref="966625725"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">55</int>
+						<reference key="object" ref="1048079436"/>
+						<reference key="parent" ref="26493609"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -404,12 +426,13 @@
 				<string key="15.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="55.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">54</int>
+			<int key="maxID">55</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -458,6 +481,7 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="UITableViewCellSeparatorStyle@2x.png">{640, 2}</string>
 			<string key="btn_add_favorite_125x125@2x.png">{250, 250}</string>
 			<string key="btn_add_favorite_40x40@2x.png">{80, 80}</string>
 		</dictionary>

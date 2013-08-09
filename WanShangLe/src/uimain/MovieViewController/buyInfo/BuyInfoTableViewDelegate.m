@@ -138,7 +138,7 @@
         [alertView addButtonWithTitle:@"继续"
                                  type:SIAlertViewButtonTypeDefault
                               handler:^(SIAlertView *alertView) {
-                                  [self skipToBuyWebSite:urlstr];
+                                  [self skipToBuyWebSite:urlstr supplierName:cell.vendor_name.text];
                               }];
         //        alertView.titleFont = [UIFont boldSystemFontOfSize:17];
         //        alertView.messageFont = [UIFont systemFontOfSize:12];
@@ -159,7 +159,7 @@
         
         [alertView release];
     }else{
-        [self skipToBuyWebSite:urlstr];
+        [self skipToBuyWebSite:urlstr supplierName:cell.vendor_name.text];
     }
 }
 
@@ -175,9 +175,10 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-- (void)skipToBuyWebSite:(NSString *)wapURL{
+- (void)skipToBuyWebSite:(NSString *)wapURL supplierName:(NSString *)supplierName{
     WebSiteBuyViewController *webViewController = [[WebSiteBuyViewController alloc] initWithNibName:(iPhone5?@"WebSiteBuyViewController_5":@"WebSiteBuyViewController") bundle:nil];
     webViewController.mURLStr = wapURL;
+    webViewController.supplierName =  supplierName;
     [_parentViewController.navigationController pushViewController:webViewController animated:YES];
     [webViewController release];
 }

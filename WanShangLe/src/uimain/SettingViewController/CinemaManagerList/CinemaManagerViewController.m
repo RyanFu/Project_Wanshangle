@@ -89,7 +89,7 @@
 #pragma mark 初始化数据
 - (void)initBarButtonItem{
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [backButton setFrame:CGRectMake(0, 0, 45, 30)];
+    [backButton setFrame:CGRectMake(0, 0, 45, 32)];
     [backButton addTarget:self action:@selector(clickBackButton:) forControlEvents:UIControlEventTouchUpInside];
     [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_n@2x"] forState:UIControlStateNormal];
     [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_f@2x"] forState:UIControlStateHighlighted];
@@ -148,7 +148,7 @@
     
     UITableView *tbView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, iPhoneAppFrame.size.height-navigationBarHeight) style:UITableViewStylePlain];
     tbView.backgroundColor = [UIColor whiteColor];
-    tbView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    tbView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     tbView.tableHeaderView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
     tbView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
