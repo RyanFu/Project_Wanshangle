@@ -227,7 +227,7 @@
         NSString *name = [[_mArray objectAtIndex:section] objectForKey:@"name"];
         NSArray *list = [[_mArray objectAtIndex:section] objectForKey:@"list"];
         headerView.text = [NSString stringWithFormat:@"%@",name];
-        
+        [headerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"UITableViewCellSection_bg"]]];
         return [headerView autorelease];
 
     }

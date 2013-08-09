@@ -43,7 +43,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         
-        self.apiCmdMovie_getAllMovies = (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self cinemaId:nil];
+        [self loadNewData];
         
         [self newCinemaController];
         
@@ -77,15 +77,9 @@
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
     
-    self.apiCmdMovie_getAllMovies =  (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self cinemaId:nil];
-    
     if (_cinemaViewController.view.frame.origin.x == 0) {//当界面处在影院列表的时候才考虑 viewWillAppear
         [_cinemaViewController viewWillAppear:animated];
     }
-#ifdef TestCode
-    [self updatData];//测试代码
-#endif
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -96,14 +90,6 @@
 
 - (void)viewWillDisappear:(BOOL)animated{
     [_cinemaViewController viewWillDisappear:animated];
-}
-
-- (void)updatData{
-    for (int i=0; i<10; i++) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            //            self.apiCmdMovie_getAllMovies = [[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self];
-        });
-    }
 }
 
 - (void)viewDidLoad
@@ -157,7 +143,7 @@
     self.navigationItem.titleView = topView;
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [backButton setFrame:CGRectMake(0, 0, 45, 30)];
+    [backButton setFrame:CGRectMake(0, 0, 45, 32)];
     [backButton addTarget:self action:@selector(clickBackButton:) forControlEvents:UIControlEventTouchUpInside];
     [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_n@2x"] forState:UIControlStateNormal];
     [backButton setBackgroundImage:[UIImage imageNamed:@"bt_back_f@2x"] forState:UIControlStateHighlighted];
@@ -395,6 +381,12 @@
     }
 
     [self switchMovieCinemaAnimation];
+}
+
+#pragma mark -
+#pragma mark 刷新和加载更多
+- (void)loadNewData{
+    self.apiCmdMovie_getAllMovies =  (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self cinemaId:nil];
 }
 
 #pragma mark -

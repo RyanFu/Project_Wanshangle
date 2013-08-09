@@ -61,7 +61,7 @@
     [cell.movie_imageView setImageWithURL:[NSURL URLWithString:movie.webImg]
                          placeholderImage:[UIImage imageNamed:@"movie_placeholder@2x"] options:SDWebImageRetryFailed];
     
-    [cell.movie_imageView setFrame:CGRectMake(5, 1, 65, 87)];//解决图片显示尺寸不正常的Bug
+    [cell.movie_imageView setFrame:CGRectMake(6, 9, 65, 87)];//解决图片显示尺寸不正常的Bug
     
     int ratingPeople = [movie.ratingpeople intValue];
     if (ratingPeople >10000) {
@@ -153,7 +153,7 @@
     [bgView setBackgroundColor:[UIColor colorWithWhite:0.996 alpha:1.000]];
     [cell setBackgroundView:bgView];
     
-    cell.movie_imageView = [[[UIImageView alloc] initWithFrame:CGRectMake(5, 1, 65, 87)] autorelease];
+    cell.movie_imageView = [[[UIImageView alloc] init] autorelease];
     [cell.contentView addSubview:cell.movie_imageView];
     
     return cell;
@@ -162,7 +162,7 @@
 #pragma mark -
 #pragma mark UITableViewDelegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 90.0f;
+    return 107.0f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -181,10 +181,8 @@
 #pragma mark Data Source Loading / Reloading Methods
 
 - (void)reloadTableViewDataSource{
-    
-    //    [_model reload];
 	_reloading = YES;
-	
+	[_parentViewController loadNewData];
 }
 
 - (void)doneReLoadingTableViewData

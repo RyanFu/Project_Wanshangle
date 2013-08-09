@@ -153,14 +153,14 @@
         if (!bt.selected) {
             [[DataBaseManager sharedInstance] addFavoriteCinemaWithId:aCinema.uid];
             bt.selected = YES;
-            [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
+            [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_tag_favorite_f@2x"] forState:UIControlStateNormal];
             [_mFavoriteArray addObject:aCinema];
             [_mTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:[_mFavoriteArray count]-1 inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
             
         }else{
             [[DataBaseManager sharedInstance] deleteFavoriteCinemaWithId:aCinema.uid];
             bt.selected = NO;
-            [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_unFavorite_n@2x"] forState:UIControlStateNormal];
+            [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_tag_favorite_n@2x"] forState:UIControlStateNormal];
             int deleteRow = [_mFavoriteArray indexOfObject:aCinema];
             
             int refreshSection = -1;
@@ -199,7 +199,7 @@
         if (!bt.selected) {
             [[DataBaseManager sharedInstance] addFavoriteCinemaWithId:aCinema.uid];
             bt.selected = YES;
-            [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
+            [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_tag_favorite_f@2x"] forState:UIControlStateNormal];
             ABLoggerDebug(@"添加收藏Cinema ======  %@",aCinema.name);
             [_mFavoriteArray addObject:aCinema];
             
@@ -207,7 +207,7 @@
         }else{
             [[DataBaseManager sharedInstance] deleteFavoriteCinemaWithId:aCinema.uid];
             bt.selected = NO;
-            [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_unFavorite_n@2x"] forState:UIControlStateNormal];
+            [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_tag_favorite_n@2x"] forState:UIControlStateNormal];
             [_mFavoriteArray filterUsingPredicate:[NSPredicate predicateWithFormat:@"uid != %@",aCinema.uid]];//解决了 收藏数组 删除 搜索数组 中取消收藏的影院
         }
     } 
@@ -243,14 +243,14 @@
 - (void)configureCell:(CinemaManagerCell *)cell withObject:(MCinema *)aCinema {
     
     cell.cinemaFavoriteButton.selected = NO;
-    [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_unFavorite_n@2x"] forState:UIControlStateNormal];
+    [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_tag_favorite_n@2x"] forState:UIControlStateNormal];
     
     cell.cinema_name.text = aCinema.name;
     cell.cinema_address.text = aCinema.address;
 
     if ([aCinema.favorite boolValue]) {
         cell.cinemaFavoriteButton.selected = YES;
-        [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
+        [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_tag_favorite_f@2x"] forState:UIControlStateNormal];
     }
 }
 
@@ -275,21 +275,21 @@
     aCinema = [_mSearchArray objectAtIndex:row];
     
     cell.cinemaFavoriteButton.selected = NO;
-    [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_unFavorite_n@2x"] forState:UIControlStateNormal];
+    [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_tag_favorite_n@2x"] forState:UIControlStateNormal];
     
     cell.cinema_name.text = aCinema.name;
     cell.cinema_address.text = aCinema.address;
     
     if ([[DataBaseManager sharedInstance] isFavoriteCinemaWithId:aCinema.uid]) {
         cell.cinemaFavoriteButton.selected = YES;
-        [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_favorite_n@2x"] forState:UIControlStateNormal];
+        [cell.cinemaFavoriteButton setImage:[UIImage imageNamed:@"btn_tag_favorite_f@2x"] forState:UIControlStateNormal];
     }
 }
 
 #pragma mark -
 #pragma mark UITableViewDelegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 70.0f;
+    return 75.0f;
 }
 
 #pragma mark -
@@ -304,6 +304,7 @@
         UILabel *headerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 30.0f)];
         headerView.backgroundColor = [UIColor colorWithWhite:0.502 alpha:1.000];
         headerView.text = [NSString stringWithFormat:@"已收藏的影院"];
+        [headerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_section_view"]]];
         return [headerView autorelease];
     }
     
@@ -317,11 +318,13 @@
         UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(0, 30, 320, 20.0f)];
         label2.backgroundColor = [UIColor colorWithWhite:0.829 alpha:1.000];
         NSString *name = [[_mArray objectAtIndex:section-1] objectForKey:@"name"];
-        NSArray *list = [[_mArray objectAtIndex:section-1] objectForKey:@"list"];
+//        NSArray *list = [[_mArray objectAtIndex:section-1] objectForKey:@"list"];
         label2.text = [NSString stringWithFormat:@"%@",name];
         
         [headerView addSubview:label1];
         [headerView addSubview:label2];
+        [label1 setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_section_view"]]];
+        [label2 setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"UITableViewCellSection_bg"]]];
         [label1 release];
         [label2 release];
         return [headerView autorelease];
@@ -331,9 +334,10 @@
     headerView.backgroundColor = [UIColor colorWithWhite:0.829 alpha:1.000];
     
     NSString *name = [[_mArray objectAtIndex:section-1] objectForKey:@"name"];
-    NSArray *list = [[_mArray objectAtIndex:section-1] objectForKey:@"list"];
+//    NSArray *list = [[_mArray objectAtIndex:section-1] objectForKey:@"list"];
     headerView.text = [NSString stringWithFormat:@"%@",name];
     
+    [headerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"UITableViewCellSection_bg"]]];
     return [headerView autorelease];
 }
 

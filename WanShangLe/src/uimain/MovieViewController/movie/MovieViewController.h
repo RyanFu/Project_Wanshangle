@@ -31,4 +31,6 @@
 - (void)clickCinemaButtonDown:(id)sender;
 - (void)clickMovieButtonUp:(id)sender;
 - (void)clickMovieButtonDown:(id)sender;
+
+- (void)loadNewData;
 @end
