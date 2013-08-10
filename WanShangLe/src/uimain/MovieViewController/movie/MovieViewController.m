@@ -95,6 +95,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:Color4];
     [self.view setBackgroundColor:[UIColor colorWithRed:0.878 green:0.890 blue:0.910 alpha:1.000]];
     
     [self initTopButtonView];

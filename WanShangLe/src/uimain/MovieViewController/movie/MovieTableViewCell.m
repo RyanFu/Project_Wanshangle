@@ -32,9 +32,9 @@
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     [self setAccessoryType:UITableViewCellAccessoryNone];
     
-    UIView *bgView = [[[UIView alloc] initWithFrame:self.bounds] autorelease];
-    [bgView setBackgroundColor:[UIColor colorWithWhite:0.996 alpha:1.000]];
-    [self setBackgroundView:bgView];
+//    UIView *bgView = [[[UIView alloc] initWithFrame:self.bounds] autorelease];
+//    [bgView setBackgroundColor:Color7];
+    [self.contentView setBackgroundColor:Color4];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

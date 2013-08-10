@@ -102,6 +102,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:Color4];
     
     [self initUIBarItem];
     [self initData];
