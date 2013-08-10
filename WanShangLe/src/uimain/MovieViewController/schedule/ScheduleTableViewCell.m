@@ -28,7 +28,8 @@
     ABLoggerMethod();
     [super awakeFromNib];
     
-    [self setSelectionStyle:UITableViewCellSelectionStyleGray];
+    [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+    [self setBackgroundColor:Color4];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

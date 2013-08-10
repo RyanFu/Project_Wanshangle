@@ -65,7 +65,7 @@
         case 0:{
             if (_topCell==nil) {
                 _topCell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, iPhoneAppFrame.size.width, 45)];
-                UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, iPhoneAppFrame.size.width-20, _topCell.bounds.size.height)];
+                UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, iPhoneAppFrame.size.width-20, 45)];
                 imgView.image = [UIImage imageNamed:@"cell_top_n@2x"];
                 [_topCell.contentView addSubview:imgView];
                 [imgView release];
@@ -73,11 +73,12 @@
                 UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 12, 79, 21)];
                 label.backgroundColor = [UIColor clearColor];
                 label.text = @"折扣详情";
+                [label setFont:[UIFont boldSystemFontOfSize:18]];
+                [label setTextColor:Color3];
                 [_topCell.contentView addSubview:label];
                 [label release];
                 
                 _topCell.contentView.backgroundColor = [UIColor clearColor];
-                _topCell.backgroundColor = [UIColor clearColor];
             }
 
             return _topCell;
@@ -86,7 +87,7 @@
         case 2:{
             if (_bottomCell==nil) {
                 _bottomCell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, iPhoneAppFrame.size.width, 45)];
-                UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, iPhoneAppFrame.size.width-20, _topCell.bounds.size.height)];
+                UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, iPhoneAppFrame.size.width-20, 45)];
                 imgView.image = [UIImage imageNamed:@"cell_bottom_n@2x"];
                 [_bottomCell.contentView addSubview:imgView];
                 [imgView release];
@@ -154,13 +155,13 @@
         
         NSDictionary *cellData = [_mArray objectAtIndex:indexPath.row];
         NSString *discountInfo = [cellData objectForKey:@"info"];
-        CGSize size = [discountInfo sizeWithFont:[UIFont systemFontOfSize:17] constrainedToSize:CGSizeMake(280, MAXFLOAT)];
+        CGSize size = [discountInfo sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(280, MAXFLOAT)];
         
         if (size.height>CellInfoLabelHeight) {
             int dHeight = size.height-CellInfoLabelHeight;
-            return (80+dHeight);
+            return (60+dHeight);
         }
-        return 80.0f;
+        return 60.0f;
     }
     
     return 45;

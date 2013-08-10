@@ -123,7 +123,7 @@
     
     cell.discount_info.text = [dataDic objectForKey:@"info"];
     
-    CGSize size = [cell.discount_info.text sizeWithFont:[UIFont systemFontOfSize:17] constrainedToSize:CGSizeMake(280, MAXFLOAT)];
+    CGSize size = [cell.discount_info.text sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(280, MAXFLOAT)];
     if (size.height>CellInfoLabelHeight) {
         int dHeight = size.height-CellInfoLabelHeight;
         CGRect newFrame = cell.discount_info.frame;
