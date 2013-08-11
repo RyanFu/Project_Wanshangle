@@ -133,13 +133,13 @@
     
     _show_name.text = _mShow.name;
     
-    int ratingPeople = [_mShow.ratingpeople intValue];
-    NSString *scopeStr = @"人";
-    if (ratingPeople >10000) {
-        ratingPeople = ratingPeople/10000;
-        scopeStr = @"万人";
-    }
-    _show_rating.text = [NSString stringWithFormat:@"%@评分: %@",_mShow.ratingfrom,_mShow.rating];
+//    int ratingPeople = [_mShow.ratingpeople intValue];
+//    NSString *scopeStr = @"人";
+//    if (ratingPeople >10000) {
+//        ratingPeople = ratingPeople/10000;
+//        scopeStr = @"万人";
+//    }
+//    _show_rating.text = [NSString stringWithFormat:@"%@评分: %@",_mShow.ratingfrom,_mShow.rating];
     _show_address.text = _mShow.address;
     _theatre_name.text = _mShow.theatrename;
     _show_time.text = [[DataBaseManager sharedInstance] getYMDFromDate: _mShow.beginTime];

@@ -28,15 +28,16 @@
     ABLoggerMethod();
     [super awakeFromNib];
     
-    [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     [self setBackgroundColor:Color4];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
+//    if (selected)
+//        [self setBackgroundColor:[UIColor redColor]];
+//    else
+//        [self setBackgroundColor:[UIColor yellowColor]];
 }
 
 -(void)dealloc{

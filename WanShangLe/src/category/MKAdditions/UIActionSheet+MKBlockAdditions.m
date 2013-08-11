@@ -15,14 +15,14 @@ static UIViewController *_presentVC;
 
 @implementation UIActionSheet (MKBlockAdditions)
 
-+(void) actionSheetWithTitle:(NSString*) title
++(UIActionSheet *) actionSheetWithTitle:(NSString*) title
                      message:(NSString*) message
                      buttons:(NSArray*) buttonTitles
                   showInView:(UIView*) view
                    onDismiss:(DismissBlock) dismissed                   
                     onCancel:(CancelBlock) cancelled
 {    
-    [UIActionSheet actionSheetWithTitle:title 
+   return [UIActionSheet actionSheetWithTitle:title
                                 message:message 
                  destructiveButtonTitle:nil 
                                 buttons:buttonTitles 
@@ -31,7 +31,7 @@ static UIViewController *_presentVC;
                                onCancel:cancelled];
 }
 
-+ (void) actionSheetWithTitle:(NSString*) title                     
++ (UIActionSheet *) actionSheetWithTitle:(NSString*) title
                       message:(NSString*) message          
        destructiveButtonTitle:(NSString*) destructiveButtonTitle
                       buttons:(NSArray*) buttonTitles
@@ -54,7 +54,7 @@ static UIViewController *_presentVC;
     for(NSString* thisButtonTitle in buttonTitles)
         [actionSheet addButtonWithTitle:thisButtonTitle];
     
-    [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
+    [actionSheet addButtonWithTitle:NSLocalizedString(@"取消", @"")];
     actionSheet.cancelButtonIndex = [buttonTitles count];
     
     if(destructiveButtonTitle)
@@ -69,7 +69,7 @@ static UIViewController *_presentVC;
     if([view isKindOfClass:[UIBarButtonItem class]])
         [actionSheet showFromBarButtonItem:(UIBarButtonItem*) view animated:YES];
     
-    [actionSheet release];
+   return  [actionSheet autorelease];
     
 }
 

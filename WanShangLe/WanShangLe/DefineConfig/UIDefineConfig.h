@@ -13,6 +13,7 @@
 #define Color5 [UIColor colorWithRed:0.224 green:0.624 blue:0.933 alpha:1.000]//5
 #define Color6 [UIColor colorWithRed:0.149 green:0.518 blue:0.800 alpha:1.000]//6
 #define Color7 [UIColor colorWithRed:1.000 green:0.400 blue:0.000 alpha:1.000]//7
+#define Color8 [UIColor colorWithRed:0.416 green:0.643 blue:0.957 alpha:1.000]//8 cell selected color
 
 /********* UIFontSize ***********/
 #define FontSize1 22

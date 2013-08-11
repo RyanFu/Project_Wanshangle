@@ -336,9 +336,9 @@
 
 - (BOOL)checkGPS{
     BOOL b = [[LocationManager defaultLocationManager] checkGPSEnable];
-    if (!b) {
-        [self displayNOGPS:YES];
-    }
+ 
+    [self displayNOGPS:!b];
+
     
     return b;
 }

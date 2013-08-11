@@ -391,14 +391,15 @@
     [bt setTitleColor:[UIColor colorWithRed:0.230 green:0.705 blue:1.000 alpha:1.000] forState:UIControlStateNormal];
     
     _oldSelectedType = _selectedType;
-    _selectedType = tag-1;
+//    _selectedType = tag-1;
     
     _isDone = NO;
-    [self selectedDataTypeWithTag:_selectedType];
+    [self selectedDataTypeWithTag:tag-1];
 
 }
 
 - (void)selectedDataTypeWithTag:(int)tag{
+    _selectedType = tag;
     switch (tag) {
         case 0:
             self.dataType = API_SShow_Type_All_Cmd;
@@ -452,17 +453,18 @@
     [bt setTitleColor:[UIColor colorWithRed:0.230 green:0.705 blue:1.000 alpha:1.000] forState:UIControlStateNormal];
     
     _oldSelectedTime = _selectedTime;
-    _selectedTime = tag-1;
+//    _selectedTime = tag-1;
     
     _isDone = NO;
     
-    [self selectedDataTimeDistanceWithTag:_selectedTime];
+    [self selectedDataTimeDistanceWithTag:tag-1];
     
 }
 
 - (void)selectedDataTimeDistanceWithTag:(int)tag{
     
      NSString *titleStr = nil;
+     _selectedTime = tag;
     
     switch (tag) {
         case 0:
@@ -507,17 +509,18 @@
     [bt setTitleColor:[UIColor colorWithRed:0.230 green:0.705 blue:1.000 alpha:1.000] forState:UIControlStateNormal];
     
     _oldSelectedOrder = _selectedOrder;
-    _selectedOrder = tag-1;
+//    _selectedOrder = tag-1;
     
     _isDone = NO;
     
-    [self selectedDataOrderAndSortWithTag:_selectedOrder];
+    [self selectedDataOrderAndSortWithTag:tag-1];
 
 }
 
 - (void)selectedDataOrderAndSortWithTag:(int)tag{
     
     NSString *titleStr = nil;
+    _selectedOrder = tag;
     
     switch (tag) {
         case 0:

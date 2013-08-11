@@ -1370,8 +1370,12 @@ static DataBaseManager *_sharedInstance = nil;
     
     //先从数据库里面读取数据
     NSArray *coreData_array = [self getCinemasListFromCoreDataWithCityName:nil offset:offset limit:limit dataType:dataType validDate:validDate];
+   int favoriteCount = [self getFavoriteCountOfCinemasListFromCoreData];
     
-    if ([coreData_array count]>0 && delegate && [delegate respondsToSelector:@selector(apiNotifyLocationResult:cacheData:)]) {
+    if ([coreData_array count]>0 &&
+        delegate &&
+        [delegate respondsToSelector:@selector(apiNotifyLocationResult:cacheData:)] &&
+        [coreData_array count]!=favoriteCount) {
         [delegate apiNotifyLocationResult:nil cacheData:coreData_array];
         return tapiCmd;
     }
@@ -1547,6 +1551,17 @@ static DataBaseManager *_sharedInstance = nil;
         cityName = [[LocationManager defaultLocationManager] getUserCityId];
     }
     int count = [MCinema MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return count;
+}
+
+- (NSUInteger)getFavoriteCountOfCinemasListFromCoreData{
+    return [self getFavoriteCountOfCinemasListFromCoreDataWithCityName:nil];
+}
+- (NSUInteger)getFavoriteCountOfCinemasListFromCoreDataWithCityName:(NSString *)cityName{
+    if (isEmpty(cityName)) {
+        cityName = [[LocationManager defaultLocationManager] getUserCityId];
+    }
+    int count = [MCinema MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and favorite = YES", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     return count;
 }
 
@@ -2047,8 +2062,8 @@ static DataBaseManager *_sharedInstance = nil;
         showDetail = [SShowDetail MR_createInContext:context];
         showDetail.uid = [infoDic objectForKey:@"performid"];
     }
-    showDetail.recommendation = [[infoDic objectForKey:@"recommend"] stringValue];
-    showDetail.wantLook = [[infoDic objectForKey:@"look"] stringValue];
+    showDetail.recommendation = [infoDic objectForKey:@"recommend"];
+    showDetail.wantLook = [infoDic objectForKey:@"look"];
     
     [self saveInManagedObjectContext:context];
     
@@ -2505,7 +2520,11 @@ static DataBaseManager *_sharedInstance = nil;
     
     //先从数据库里面读取数据
     NSArray *coreData_array = [self getKTVsListFromCoreDataWithCityName:nil offset:offset limit:limit dataType:dataType validDate:validDate];
-    if ([coreData_array count]>0 && delegate && [delegate respondsToSelector:@selector(apiNotifyLocationResult:cacheData:)]) {
+    int favoriteCount = [self getFavoriteCountOfKTVsListFromCoreData];
+    if ([coreData_array count]>0 &&
+        delegate &&
+        [delegate respondsToSelector:@selector(apiNotifyLocationResult:cacheData:)] &&
+        [coreData_array count]!=favoriteCount) {
         [delegate apiNotifyLocationResult:nil cacheData:coreData_array];
         return tapiCmd;
     }
@@ -2700,7 +2719,17 @@ static DataBaseManager *_sharedInstance = nil;
     }
     int count = [KKTV MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"cityId = %@", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     return count;
-    
+}
+
+- (NSUInteger)getFavoriteCountOfKTVsListFromCoreData{
+    return [self getFavoriteCountOfKTVsListFromCoreDataWithCityName:nil];
+}
+- (NSUInteger)getFavoriteCountOfKTVsListFromCoreDataWithCityName:(NSString *)cityName{
+    if (isEmpty(cityName)) {
+        cityName = [[LocationManager defaultLocationManager] getUserCityId];
+    }
+    int count = [KKTV MR_countOfEntitiesWithPredicate:[NSPredicate predicateWithFormat:@"cityId = %@ and favorite = YES", cityName] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+    return count;
 }
 
 #pragma mark KTV 插入 数据库

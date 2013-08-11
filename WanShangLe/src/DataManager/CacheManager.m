@@ -81,7 +81,7 @@ static CacheManager *_sharedInstance = nil;
                                  type:SIAlertViewButtonTypeCancel
                               handler:^(SIAlertView *alertView) {
                               }];
-        [alertView addButtonWithTitle:@"收藏"
+        [alertView addButtonWithTitle:@"添加到常去"
                                  type:SIAlertViewButtonTypeDefault
                               handler:^(SIAlertView *alertView) {
                                   switch (dataType) {

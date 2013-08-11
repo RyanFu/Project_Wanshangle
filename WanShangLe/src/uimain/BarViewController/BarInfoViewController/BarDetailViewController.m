@@ -162,7 +162,7 @@
      ABLoggerDebug(@"_mBarDetail.detailInfo 2222== %@",_mBarDetail.detailInfo);
     [_bar_yesButton setBackgroundImage:[UIImage imageNamed:@"bar_btn_yes_blue_n@2x"] forState:UIControlStateNormal];
     isRecommended = YES;
-    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mBar.uid APIType:WSLRecommendAPITypeMovieInteract cType:WSLRecommendLookTypeRecommend delegate:self];
+    [[DataBaseManager sharedInstance] getRecommendOrLookForWeb:_mBar.uid APIType:WSLRecommendAPITypeBarInteract cType:WSLRecommendLookTypeRecommend delegate:self];
     
     NSMutableDictionary *tDic = [NSMutableDictionary dictionaryWithCapacity:5];
     [tDic setObject:_mBar.uid forKey:@"uid"];

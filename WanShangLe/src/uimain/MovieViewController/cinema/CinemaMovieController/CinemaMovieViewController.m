@@ -110,7 +110,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:Color4];
     
     self.title = _mCinema.name;
     
@@ -187,6 +186,7 @@
     if (_mTableView==nil) {
         _mTableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
         [self.view addSubview:_mTableView];
+        [_mTableView setBackgroundColor:Color4];
     }
     [self setTableViewDelegate];
 }
@@ -238,7 +238,7 @@
         [_mTableView setTableFooterView:[[[UIView alloc] initWithFrame:CGRectZero] autorelease]];
     }
 
-    [self refreshTodayButtonTitle];
+//    [self refreshTodayButtonTitle];
     [_mTableView reloadData];
 }
 
@@ -262,7 +262,7 @@
         [_mTableView setTableFooterView:[[[UIView alloc] initWithFrame:CGRectZero] autorelease]];
     }
 
-    [self refreshTomorrowButtonTitle];
+//    [self refreshTomorrowButtonTitle];
     [_mTableView reloadData];
 }
 
@@ -410,7 +410,11 @@
     
     [self changeMovieDisplayData:aMovie];
     
-    [_mTableView setTableFooterView:nil];
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectZero];
+    footerView.backgroundColor = [UIColor clearColor];
+    [_mTableView setTableFooterView:footerView];
+    [footerView release];
+    
     self.schedulesArray = nil;
     [_mTableView reloadData];
     
@@ -590,7 +594,7 @@
             [self refreshTomorrowButtonTitle];
         }
         
-        if (_todayButton.selected) {
+        if (_todayButton.selected && ([timedistance intValue]==0)) {
             [self refreshTodaySchedule];
         }else if(_tomorrowButton.selected){
             [self refreshTomorrowSchedule];

@@ -137,7 +137,9 @@
 #pragma mark 点击按钮 Event
 - (void)clickBackButton:(id)sender{
     
-    [[CacheManager sharedInstance] showAddFavoritePopupView:@"要收藏这个影院吗？" objectId:self.mCinema.uid dataType:MCinemaFavorite];
+    if (![[DataBaseManager sharedInstance] isFavoriteCinemaWithId:_mCinema.uid]) {
+        [[CacheManager sharedInstance] showAddFavoritePopupView:@"要添加这个影院到常去吗？" objectId:self.mCinema.uid dataType:MCinemaFavorite];
+    }
     
     [self.navigationController popViewControllerAnimated:YES];
 }

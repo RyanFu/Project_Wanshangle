@@ -261,7 +261,9 @@
 #pragma mark UIButton Event
 - (void)clickBackButton:(id)sender{
     
-    [[CacheManager sharedInstance] showAddFavoritePopupView:@"要就改KTV添加到常去吗？" objectId:self.mKTV.uid dataType:KKTVFavorite];
+    if (![[DataBaseManager sharedInstance] isFavoriteKTVWithId:_mKTV.uid]) {
+        [[CacheManager sharedInstance] showAddFavoritePopupView:@"要添加这个KTV到常去吗？" objectId:self.mKTV.uid dataType:KKTVFavorite];
+    }
     
     [self.navigationController popViewControllerAnimated:YES];
 }

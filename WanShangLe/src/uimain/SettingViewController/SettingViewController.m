@@ -85,7 +85,9 @@
     [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, 505)];
     
     [self cleanDistanceFilterButtonState];
-    int index = [[userDefault objectForKey:DistanceFilter] intValue];
+    
+    NSString *indexStr = [userDefault objectForKey:DistanceFilter];
+    int index = (isEmpty(indexStr)?2:[indexStr intValue]);
     [(UIButton *)[_distanceFilterBtns objectAtIndex:index] setSelected:YES];
     
     [self updateCacheSize];

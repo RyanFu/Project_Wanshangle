@@ -28,17 +28,17 @@
 #pragma mark UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    if ([_mArray count]<=0 || _parentViewController.isLoadDone) {//每次刷新表的时候检测是否有数据
+        _refreshTailerView.hidden = YES;
+    }else{
+        _refreshTailerView.hidden = NO;
+    }
+    
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if ([_mArray count]<=0 || _parentViewController.isLoadDone) {//每次刷新表的时候检测是否有数据
-        _refreshTailerView.hidden = YES;
-    }else{
-         _refreshTailerView.hidden = NO;
-    }
-    
   return [_mArray count];
 }
 

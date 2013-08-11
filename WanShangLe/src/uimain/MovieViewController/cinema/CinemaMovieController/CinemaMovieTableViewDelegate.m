@@ -91,8 +91,12 @@
     ABLoggerMethod();
     ScheduleTableViewCell * cell = [[[NSBundle mainBundle] loadNibNamed:@"ScheduleTableViewCell" owner:self options:nil] objectAtIndex:0];
     [cell setAccessoryType:UITableViewCellAccessoryNone];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    //    cell.selectedBackgroundView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"history_menu_cell_background"]] autorelease];
+    cell.selectionStyle = UITableViewCellSelectionStyleGray;
+
+    UIView *selectedBgView = [[UIView alloc] initWithFrame:cell.bounds];
+    selectedBgView.backgroundColor = Color8;
+    [cell setSelectedBackgroundView:selectedBgView];
+    
     return cell;
 }
 
