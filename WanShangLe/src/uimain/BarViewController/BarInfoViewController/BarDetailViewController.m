@@ -16,6 +16,7 @@
 #import "ActionState.h"
 #import "SIAlertView.h"
 #import "UIImage+Crop.h"
+#import "UIActionSheet+MKBlockAdditions.h"
 
 #define IntroduceLabelHeight_5 213
 #define IntroduceLabelHeight 130
@@ -26,6 +27,7 @@
 @property(nonatomic,assign) BBarDetail *mBarDetail;
 @property(nonatomic,assign) AppDelegate *appDelegate;
 @property(nonatomic,retain) ApiCmdBar_getBarDetail *apiCmdBar_getBarDetail;
+@property(nonatomic,retain) UIActionSheet *mActionSheet;
 @end
 
 @implementation BarDetailViewController
@@ -50,12 +52,24 @@
     
     self.barDetailImg = nil;
     self.mBar = nil;
+    self.mActionSheet = nil;
     
     [super dealloc];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [self dismissActionSheet];
+}
+
+- (void)dismissActionSheet{
+    if (_mActionSheet.isVisible) {
+        [_mActionSheet dismissWithClickedButtonIndex:1 animated:NO];
+    }
 }
 
 - (void)viewDidLoad
@@ -188,22 +202,28 @@
         phoneNumber = _mBar.phoneNumber;
     }
     
-    SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:@"电话号码" andMessage:message];
-    
-    if (!isEmpty(phoneNumber)) {
-        [alertView addButtonWithTitle:phoneNumber
-                                 type:SIAlertViewButtonTypeDefault
-                              handler:^(SIAlertView *alertView) {
-                                  [[LocationManager defaultLocationManager] callPhoneNumber:phoneNumber];
-                              }];
+    if (isEmpty(phoneNumber)) {
+         phoneNumber = @"暂无号码";
     }
     
-    [alertView addButtonWithTitle:@"取消"
-                             type:SIAlertViewButtonTypeCancel
-                          handler:^(SIAlertView *alertView) {
-                          }];
-    [alertView show];
-    [alertView release];
+    self.mActionSheet = [UIActionSheet actionSheetWithTitle:@"电话号码"
+                                                    message:nil
+                                                    buttons:[NSArray arrayWithObjects:phoneNumber,nil]
+                                                 showInView:self.view
+                                                  onDismiss:^(int buttonIndex) {
+                                                      switch (buttonIndex) {
+                                                          case 0:
+                                                          {
+                                                              [[LocationManager defaultLocationManager] callPhoneNumber:phoneNumber];
+                                                          }
+                                                              break;
+                                                          default:
+                                                              break;
+                                                      }
+                                                      self.mActionSheet = nil;
+                                                  } onCancel:^{
+                                                      
+                                                  }];
 }
 
 - (void)startAddOneAnimation:(UIButton *)sender{

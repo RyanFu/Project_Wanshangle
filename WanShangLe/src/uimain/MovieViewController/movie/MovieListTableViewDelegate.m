@@ -65,7 +65,7 @@
     
     int ratingPeople = [movie.ratingpeople intValue];
     if (ratingPeople >10000) {
-        float tratingPeople = ratingPeople/10000.0f;
+//        float tratingPeople = ratingPeople/10000.0f;
          cell.movie_rating.text = [NSString stringWithFormat:@"%@评分: %0.1f",movie.ratingFrom,[movie.rating floatValue]];
     }else{
          cell.movie_rating.text = [NSString stringWithFormat:@"%@评分: %0.1f",movie.ratingFrom,[movie.rating floatValue]];

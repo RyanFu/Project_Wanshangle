@@ -150,7 +150,7 @@
     
     _show_introduce.text = self.mShowDetail.introduce;
     
-//    [_show_introduce setBackgroundColor:[UIColor redColor]];
+//   [_show_introduce setBackgroundColor:[UIColor redColor]];
     ABLoggerDebug(@"_show_introduce.text === %@",_show_introduce.text);
     
     CGSize misize = [_show_introduce.text sizeWithFont:_show_introduce.font constrainedToSize:CGSizeMake(_show_introduce.bounds.size.width, MAXFLOAT)];
@@ -179,6 +179,8 @@
     
     _show_yes.text = _mShowDetail.recommendation;
     _show_wantLook.text = _mShowDetail.wantLook;
+    
+//    [self.introduceView bringSubviewToFront:_show_introduce];
 }
 
 - (void)requestRecommendAndWantLookCount{

@@ -13,9 +13,11 @@
     IBOutlet UILabel *schedule_view;
     IBOutlet UILabel *schedule_price;
     IBOutlet UILabel *schedule_timeLong;
+   
 }
 @property(nonatomic,retain) UILabel *schedule_time;
 @property(nonatomic,retain) UILabel *schedule_view;
 @property(nonatomic,retain) UILabel *schedule_price;
 @property(nonatomic,retain) UILabel *schedule_timeLong;
+@property(nonatomic,retain)  IBOutlet UIImageView *tuan_seat_imgView;
 @end

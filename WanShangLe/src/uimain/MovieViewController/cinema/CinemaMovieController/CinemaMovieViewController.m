@@ -25,6 +25,7 @@
 #import "SIAlertView.h"
 #import "NSMutableArray+TKCategory.h"
 #import "UIImage+Crop.h"
+#import "UIActionSheet+MKBlockAdditions.h"
 
 #define CoverFlowItemTag 100
 #define TuanViewTag 50
@@ -32,6 +33,7 @@
 @interface CinemaMovieViewController ()<ApiNotify,iCarouselDataSource,iCarouselDelegate>{
     
 }
+@property(nonatomic,assign) UIView *lastSelectedView;
 @property(nonatomic,retain) NSString *todayWeek;
 @property(nonatomic,retain) NSString *tomorrowWeek;
 @property(nonatomic,retain) ApiCmdMovie_getSchedule *apiCmdMovie_getScheduleToday;
@@ -41,6 +43,7 @@
 @property(nonatomic,retain) NSArray *todaySchedules;
 @property(nonatomic,retain) NSArray *tomorrowSchedules;
 @property(nonatomic,retain) NSMutableArray *moviesArray;
+@property(nonatomic,retain) UIActionSheet *mActionSheet;
 @end
 
 @implementation CinemaMovieViewController
@@ -74,6 +77,7 @@
     
     self.todayWeek = nil;
     self.tomorrowButton = nil;
+    self.mActionSheet = nil;
     
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc removeObserver:self];
@@ -101,6 +105,18 @@
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    
+    [self dismissActionSheet];
+}
+
+- (void)dismissActionSheet{
+    if (_mActionSheet.isVisible) {
+        [_mActionSheet dismissWithClickedButtonIndex:1 animated:NO];
+    }
 }
 
 - (void)awakeFromNib{
@@ -138,6 +154,7 @@
     _todayButton.selected =YES;
     
     _coverFlow.type = iCarouselTypeLinear;
+    [_coverFlow insertSubview:_whiteTriangle atIndex:1000];
 //    [_coverFlow reloadData];
     
     self.cinemaName.text = _mCinema.name;
@@ -292,32 +309,31 @@
     
 }
 - (IBAction)clickPhoneButton:(id)sender{
-    
-    NSString *message = @"";
+
     NSString *phoneNumber = nil;
-    
-    if (isEmpty(_mCinema.phoneNumber)) {
-        message = @"该影院暂时没有电话号码";
-    }else{
-        phoneNumber = _mCinema.phoneNumber;
+    phoneNumber = _mCinema.phoneNumber;
+    if (isEmpty(phoneNumber)) {
+        phoneNumber = @"暂无号码";
     }
     
-    SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:@"电话号码" andMessage:message];
-    
-    if (!isEmpty(phoneNumber)) {
-        [alertView addButtonWithTitle:phoneNumber
-                                 type:SIAlertViewButtonTypeDefault
-                              handler:^(SIAlertView *alertView) {
-                                  [[LocationManager defaultLocationManager] callPhoneNumber:phoneNumber];
-                              }];
-    }
-    
-    [alertView addButtonWithTitle:@"取消"
-                             type:SIAlertViewButtonTypeCancel
-                          handler:^(SIAlertView *alertView) {
-                          }];
-    [alertView show];
-    [alertView release];
+    self.mActionSheet = [UIActionSheet actionSheetWithTitle:@"电话号码"
+                                                    message:nil
+                                                    buttons:[NSArray arrayWithObjects:phoneNumber,nil]
+                                                 showInView:self.view
+                                                  onDismiss:^(int buttonIndex) {
+                                                      switch (buttonIndex) {
+                                                          case 0:
+                                                          {
+                                                              [[LocationManager defaultLocationManager] callPhoneNumber:phoneNumber];
+                                                          }
+                                                              break;
+                                                          default:
+                                                              break;
+                                                      }
+                                                      self.mActionSheet = nil;
+                                                  } onCancel:^{
+                                                      
+                                                  }];
 }
 #pragma mark -
 #pragma mark iCarousel methods
@@ -335,10 +351,11 @@
 	if (view == nil)
 	{
         //set up reflection view
-		view = [[[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 80, 120)] autorelease];
+		view = [[[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 70, 110)] autorelease];
         
-        view2 = [[[UIImageView alloc] initWithFrame:view.bounds] autorelease];
+        view2 = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 65, 87)] autorelease];
         view2.backgroundColor = [UIColor clearColor];
+        view2.center = CGPointMake(CGRectGetMidX(view.bounds), CGRectGetMidY(view.bounds));
         [view addSubview:view2];
         [view2 setTag:CoverFlowItemTag];
 	}
@@ -355,6 +372,7 @@
                      //                     [[view2 superview] update];
                  }];
     
+    view.alpha = 0.7;
 	return view;
 }
 
@@ -388,6 +406,13 @@
     if (carousel.currentItemIndex>moviesCount || carousel.currentItemIndex<0) {
         return;
     }
+    
+    if (!isNull(_lastSelectedView)) {
+        _lastSelectedView.alpha = 0.7;
+    }
+    carousel.currentItemView.alpha = 1.0;
+    self.lastSelectedView = carousel.currentItemView;
+    
     MMovie *aMovie = [_moviesArray objectAtIndex:carousel.currentItemIndex];
     self.mMovie = aMovie;
     

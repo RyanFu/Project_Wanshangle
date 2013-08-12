@@ -44,12 +44,15 @@
     
     NSArray *_mArray = _parentViewController.schedulesArray;
     NSDictionary *tDic = [_mArray objectAtIndex:indexPath.row];
+    
+    cell.tuan_seat_imgView.hidden = ![[tDic objectForKey:@"extpay"] boolValue];
+
     cell.schedule_time.text = [[DataBaseManager sharedInstance] getTimeFromDate:[tDic objectForKey:@"time"]];
     cell.schedule_price.text = [NSString stringWithFormat:@"%@元起",[[tDic objectForKey:@"lowestprice"] stringValue]];
     cell.schedule_timeLong.text = [NSString stringWithFormat:@"预计%@结束",
                                    [[DataBaseManager sharedInstance] timeByAddingTimeInterval:[_parentViewController.mMovie.duration intValue] fromDate:[tDic objectForKey:@"time"]]];
     
-    NSString *viewType = @"2D";
+    NSString *viewType = @"3D";
     NSArray *tarray = [tDic objectForKey:@"viewtypes"];
     for (int i=0;i<[tarray count];i++) {
         
@@ -61,7 +64,7 @@
                 viewType = @"3DIMAX";
                 break;
             case 1:
-                viewType = @"IMX";
+                viewType = @"IMAX";
                 break;
                 
             default:
@@ -71,7 +74,7 @@
         
         break;
     }
-    cell.schedule_view.text = [NSString stringWithFormat:@"国语%@",viewType];
+    cell.schedule_view.text = [NSString stringWithFormat:@"%@",viewType];
 }
 
 -(ScheduleTableViewCell *)createNewMocieCell{

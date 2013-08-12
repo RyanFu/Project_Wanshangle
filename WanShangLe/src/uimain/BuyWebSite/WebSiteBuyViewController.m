@@ -136,15 +136,26 @@
                                                   onDismiss:^(int buttonIndex) {
                                                       switch (buttonIndex) {
                                                           case 0:
-                                                          
+                                                          {
+                                                              [self clickErrorPriceButton:nil];
+                                                          }
                                                               break;
                                                           case 1:
+                                                          {
+                                                              [self clickErrorWebButton:nil];
+                                                          }
                                                           
                                                               break;
                                                           case 2:
+                                                          {
+                                                              [self clickErrorInfoButton:nil];
+                                                          }
                                                           
                                                               break;
                                                           case 3:
+                                                          {
+                                                              [self clickErrorOtherButton:nil];
+                                                          }
                                                           
                                                               break;
                                                               
@@ -313,7 +324,7 @@
     [MMProgressHUD setDisplayStyle:MMProgressHUDDisplayStylePlain];
     [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleFade];
     
-    [MMProgressHUD showWithTitle:nil status:@"恭喜,提交成功" image:[UIImage imageNamed:@"tag_smile_face@2x"]];
+    [MMProgressHUD showWithTitle:@"恭喜,提交成功" status:nil image:[UIImage imageNamed:@"tag_smile_face"]];
     [self dismissErrorView];
     
     double delayInSeconds = 1.0;

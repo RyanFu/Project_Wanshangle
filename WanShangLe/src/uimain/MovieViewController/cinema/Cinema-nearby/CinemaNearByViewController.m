@@ -219,7 +219,20 @@
         }
         
         [dataArray removeObjectsInArray:removieArray];
-        
+        //按照由近到远进行排序
+        [dataArray sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            double first =  [[(MCinema*)obj1 distance] doubleValue];
+            double second = [[(MCinema*)obj2 distance] doubleValue];
+            
+            if (first>second) {
+                return NSOrderedDescending;
+            }else if(first<second){
+                return NSOrderedAscending;
+            }else{
+                return NSOrderedSame;
+            }
+
+        }];
 //        dataArray = (NSMutableArray *)[dataArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
 //            double first =  [[(MCinema*)a distance] doubleValue];
 //            double second = [[(MCinema*)b distance] doubleValue];
@@ -346,7 +359,13 @@
 - (void)displayNOGPS:(BOOL)noGPS{
     
     _mTableView.tableFooterView = noGPS?_noGPSView:[[[UIView alloc] initWithFrame:CGRectZero]autorelease];
-    _refreshNearByTailerView.hidden = noGPS;
+    
+    if (_mArray==nil || [_mArray count]<=0 || noGPS) {
+        _refreshNearByTailerView.hidden = YES;
+    }else{
+        _refreshNearByTailerView.hidden = NO;
+    }
+    
     _refreshNearByHeaderView.hidden = noGPS;
     
     if (noGPS) {//没有GPS
@@ -394,15 +413,19 @@
         ABLoggerDebug(@" 数组 number ==  %d",number);
         
         LocationManager *lm = [LocationManager defaultLocationManager];
-        double latitude = lm.userLocation.coordinate.latitude;
-        double longitude = lm.userLocation.coordinate.longitude;
+       double latitude = lm.userLocation.coordinate.latitude;
+       double longitude = lm.userLocation.coordinate.longitude;
         NSString *dataType = [NSString stringWithFormat:@"%d",API_MCinemaNearByCmd];
         
         if (!isLoadMore || lm.userLocation==nil ||
-            latitude==0.0f || longitude==0.0f) {//重新更新附近影院列表
+            latitude<=0.0f || longitude<=0.0f) {//重新更新附近影院列表
             number = 0;
             [lm getUserGPSLocationWithCallBack:^(BOOL isEnableGPS,BOOL isSuccess) {
                 if (isSuccess) {
+                    
+                    double latitude = lm.userLocation.coordinate.latitude;
+                    double longitude = lm.userLocation.coordinate.longitude;
+                    
                     self.apiCmdMovie_getNearByCinemas = (ApiCmdMovie_getNearByCinemas *)[[DataBaseManager sharedInstance]
                                                                                          getNearbyCinemaListFromCoreDataDelegate:self
                                                                                          Latitude:latitude

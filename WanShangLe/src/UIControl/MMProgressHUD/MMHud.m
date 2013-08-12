@@ -102,6 +102,7 @@ NSString * const MMProgressHUDFontNameNormal = @"HelveticaNeue-Light";
 }
 
 - (void)layoutContentAreaForCurrentState {
+    ABLogger_size(self.image.size);
     if ((self.image || self.animationImages.count > 0) &&
         self.completionState == MMProgressHUDCompletionStateNone) {
         self.contentAreaFrame = CGRectMake(0.f,

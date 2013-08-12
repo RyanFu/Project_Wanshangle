@@ -22,6 +22,7 @@
 @property(nonatomic,retain)IBOutlet UILabel *show_wantLook;
 @property(nonatomic,retain)IBOutlet UILabel *show_prices;
 @property(nonatomic,retain)IBOutlet UILabel *show_introduce;
+@property(nonatomic,retain)IBOutlet UIView *introduceView;
 @property(nonatomic,retain)IBOutlet UIImageView *show_introBgImgView;
 @property(nonatomic,retain)IBOutlet UIScrollView *show_priceScrollView;
 @property(nonatomic,retain)IBOutlet UIButton *show_yesButton;

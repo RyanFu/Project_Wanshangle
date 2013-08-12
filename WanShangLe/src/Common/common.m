@@ -13,6 +13,7 @@
 
 #import "RegexKitLite.h"
 #import "common.h"
+#import "mach/mach.h"
 
 static NSString *regrexUrl = @"\\b((?:[\\w-]+://?|www[.])[^\\s()<>]+(?:\\([\\w\\d]+\\)|(?:[^\\p{Punct}\\s]|/))+|\\.com|\\.cn|\\.org|\\.net|\\.hk|\\.int|\\.edu|\\.gov|\\.mil|\\.arpa|\\.biz|\\info|\\.name|\\.pro|\\.coop|\\.aero|\\.museum|\\.cc|\\.tv)";
 
@@ -141,9 +142,17 @@ BOOL validateEmail(NSString* email) {
 }
 
 BOOL validateMobile(NSString* mobile) {
-    NSString *phoneRegex = @"^((13[0-9])|(15[^4,\\D])|(18[0,0-9]))\\d{8}$";
+//    NSString *phoneRegex = @"^((13[0-9])|(15[^4,\\D])|(18[0,0-9]))\\d{8}$";
+    NSString *phoneRegex = @"((\\d{11})|^((\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1})|(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1}))$)";
     NSPredicate *phoneTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",phoneRegex];
     return [phoneTest evaluateWithObject:mobile];
+}
+
+//判断是否为整形：
+BOOL isPureInt(NSString* string){
+    NSScanner* scan = [NSScanner scannerWithString:string];
+    int val;
+    return [scan scanInt:&val] && [scan isAtEnd];
 }
 
 
@@ -325,4 +334,63 @@ NSString* doParseURL(NSString *url){
     }
     ABLoggerDebug(@"strURL ====== %@",strURL);
     return strURL;
+}
+
+//App 内存使用情况
+void report_memory(void) {
+    static unsigned last_resident_size=0;
+    static unsigned greatest = 0;
+    static unsigned last_greatest = 0;
+    
+    struct task_basic_info info;
+    mach_msg_type_number_t size = sizeof(info);
+    kern_return_t kerr = task_info(mach_task_self(),
+                                   TASK_BASIC_INFO,
+                                   (task_info_t)&info,
+                                   &size);
+    if( kerr == KERN_SUCCESS ) {
+        int diff = (int)info.resident_size - (int)last_resident_size;
+        unsigned latest = info.resident_size;
+        if( latest > greatest   )   greatest = latest;  // track greatest mem usage
+        int greatest_diff = greatest - last_greatest;
+        int latest_greatest_diff = latest - greatest;
+        ABLoggerWarn(@"Mem: %10u (%10d) : %10d :   greatest: %10u (%d)", info.resident_size, diff,
+              latest_greatest_diff,
+              greatest, greatest_diff  );
+    } else {
+        ABLoggerWarn(@"Error with task_info(): %s", mach_error_string(kerr));
+    }
+    last_resident_size = info.resident_size;
+    last_greatest = greatest;
+}
+
+vm_size_t usedMemory(void) {
+    struct task_basic_info info;
+    mach_msg_type_number_t size = sizeof(info);
+    kern_return_t kerr = task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&info, &size);
+    return (kerr == KERN_SUCCESS) ? info.resident_size : 0; // size in bytes
+}
+
+vm_size_t freeMemory(void) {
+    mach_port_t host_port = mach_host_self();
+    mach_msg_type_number_t host_size = sizeof(vm_statistics_data_t) / sizeof(integer_t);
+    vm_size_t pagesize;
+    vm_statistics_data_t vm_stat;
+    
+    host_page_size(host_port, &pagesize);
+    (void) host_statistics(host_port, HOST_VM_INFO, (host_info_t)&vm_stat, &host_size);
+    return vm_stat.free_count * pagesize;
+}
+
+void logMemUsage(void) {
+    // compute memory usage and log if different by >= 100k
+    static long prevMemUsage = 0;
+    long curMemUsage = usedMemory();
+    long memUsageDiff = curMemUsage - prevMemUsage;
+    
+    if (memUsageDiff > 100000 || memUsageDiff < -100000) {
+        prevMemUsage = curMemUsage;
+//        ABLoggerWarn(@"Memory used %7.1f (%+5.0f), free %7.1f kb", curMemUsage/1000.0f, memUsageDiff/1000.0f, freeMemory()/1000.0f);
+        ABLoggerWarn(@"Memory used %7.1f (%+5.0f), free %7.1f kb", curMemUsage/1024.0f/1024.0f, memUsageDiff/1024.0f/1024.0f, freeMemory()/1024.0f/1024.0f);
+    }
 }

@@ -447,14 +447,21 @@
          return;
      }
     
+    [self.mSearchArray removeAllObjects];
     [self.msearchController startCinemaSearchForSearchString:searchBar.text complete:^(NSMutableArray *searchArray, BOOL isSuccess) {
         self.mSearchArray = searchArray;
         [self.msearchDisplayController.searchResultsTableView reloadData];
         //搜索模式
         if (_msearchDisplayController.searchResultsTableView.tableFooterView==nil) {
             [self addSearchLoadMoreButton];
-        }else if(!isSuccess){
+        }
+        
+        if([searchArray count]<DataCount){
             [loadMoreButton setTitle:@"已全部加载" forState:UIControlStateNormal];
+        }
+        
+        if(_mSearchArray==nil || [_mSearchArray count]<=0){
+            [loadMoreButton setTitle:@"无结果" forState:UIControlStateNormal];
         }
     }];
 }
@@ -536,8 +543,14 @@
         //搜索模式
         if (_msearchDisplayController.searchResultsTableView.tableFooterView==nil) {
             [self addSearchLoadMoreButton];
-        }else if(!isSuccess){
+        }
+        
+        if([searchArray count]<DataCount){
             [loadMoreButton setTitle:@"已全部加载" forState:UIControlStateNormal];
+        }
+        
+        if(_mSearchArray==nil || [_mSearchArray count]<=0){
+            [loadMoreButton setTitle:@"无结果" forState:UIControlStateNormal];
         }
     }];
 }
@@ -550,7 +563,7 @@
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         for (UIView* v in controller.searchResultsTableView.subviews) {
             if ([v isKindOfClass: [UILabel class]] &&
-                [[(UILabel*)v text] isEqualToString:@"No Results"]) {
+                ([[(UILabel*)v text] isEqualToString:@"No Results"] || [[(UILabel*)v text] isEqualToString:@"无结果"])) {
                 [(UILabel*)v setText:@""];
                 break;
             }

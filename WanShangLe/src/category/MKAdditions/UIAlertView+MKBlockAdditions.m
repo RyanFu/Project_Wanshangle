@@ -66,7 +66,7 @@ static char CANCEL_IDENTIFER;
     
     return [UIAlertView alertViewWithTitle:title 
                                    message:message 
-                         cancelButtonTitle:NSLocalizedString(@"Dismiss", @"")];
+                         cancelButtonTitle:NSLocalizedString(@"取消", @"")];
 }
 
 + (UIAlertView*) alertViewWithTitle:(NSString*) title 

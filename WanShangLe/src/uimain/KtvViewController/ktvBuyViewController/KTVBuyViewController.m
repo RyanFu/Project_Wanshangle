@@ -16,10 +16,12 @@
 #import "SIAlertView.h"
 #import "KKTV.h"
 #import "UIImage+Crop.h"
+#import "UIActionSheet+MKBlockAdditions.h"
 
 @interface KTVBuyViewController ()<ApiNotify>
 @property(nonatomic,retain) KTVBuyTableViewDelegate *ktvBuyTableViewDelegate;
 @property(nonatomic,retain) ApiCmdKTV_getBuyList *apiCmdKTV_getBuyList;
+@property(nonatomic,retain) UIActionSheet *mActionSheet;
 @end
 
 @implementation KTVBuyViewController
@@ -45,6 +47,8 @@
     self.mKTV = nil;
     self.mArray = nil;
     
+    self.mActionSheet = nil;
+    
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc removeObserver:self];
     
@@ -56,8 +60,15 @@
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
 }
 
-- (void)viewDidAppear:(BOOL)animated{
-    
+- (void)viewWillDisappear:(BOOL)animated{
+    [self viewWillDisappear:animated];
+    [self dismissActionSheet];
+}
+
+- (void)dismissActionSheet{
+    if (_mActionSheet.isVisible) {
+        [_mActionSheet dismissWithClickedButtonIndex:1 animated:NO];
+    }
 }
 
 - (void)viewDidLoad
@@ -151,31 +162,30 @@
 }
 
 - (IBAction)clickPhoneButton:(id)sender{
-    NSString *message = @"";
     NSString *phoneNumber = nil;
-    
-    if (isEmpty(_mKTV.phoneNumber)) {
-        message = @"该影院暂时没有电话号码";
-    }else{
-        phoneNumber = _mKTV.phoneNumber;
+    phoneNumber = _mKTV.phoneNumber;
+    if (isEmpty(phoneNumber)) {
+        phoneNumber = @"暂无号码";
     }
     
-    SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:@"电话号码" andMessage:message];
-    
-    if (!isEmpty(phoneNumber)) {
-        [alertView addButtonWithTitle:phoneNumber
-                                 type:SIAlertViewButtonTypeDefault
-                              handler:^(SIAlertView *alertView) {
-                                  [[LocationManager defaultLocationManager] callPhoneNumber:phoneNumber];
-                              }];
-    }
-    
-    [alertView addButtonWithTitle:@"取消"
-                             type:SIAlertViewButtonTypeCancel
-                          handler:^(SIAlertView *alertView) {
-                          }];
-    [alertView show];
-    [alertView release];
+    self.mActionSheet = [UIActionSheet actionSheetWithTitle:@"电话号码"
+                                                    message:nil
+                                                    buttons:[NSArray arrayWithObjects:phoneNumber,nil]
+                                                 showInView:self.view
+                                                  onDismiss:^(int buttonIndex) {
+                                                      switch (buttonIndex) {
+                                                          case 0:
+                                                          {
+                                                              [[LocationManager defaultLocationManager] callPhoneNumber:phoneNumber];
+                                                          }
+                                                              break;
+                                                          default:
+                                                              break;
+                                                      }
+                                                      self.mActionSheet = nil;
+                                                  } onCancel:^{
+                                                      
+                                                  }];
 }
 
 - (IBAction)clickFavoriteButton:(id)sender{

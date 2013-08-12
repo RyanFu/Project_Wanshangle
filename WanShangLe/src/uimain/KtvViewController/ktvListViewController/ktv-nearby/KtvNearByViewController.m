@@ -186,6 +186,20 @@
         }
         [dataArray removeObjectsInArray:removieArray];
         
+        //按照由近到远进行排序
+        [dataArray sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            double first =  [[(KKTV*)obj1 distance] doubleValue];
+            double second = [[(KKTV*)obj2 distance] doubleValue];
+            
+            if (first>second) {
+                return NSOrderedDescending;
+            }else if(first<second){
+                return NSOrderedAscending;
+            }else{
+                return NSOrderedSame;
+            }
+
+        }];
 //        dataArray = [dataArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
 //            double first =  [[(KKTV*)a distance] doubleValue];
 //            double second = [[(KKTV*)b distance] doubleValue];
@@ -357,10 +371,14 @@
         NSString *dataType = [NSString stringWithFormat:@"%d",API_KKTVNearByCmd];
         
         if (!isLoadMore || lm.userLocation==nil ||
-            latitude==0.0f || longitude==0.0f) {//重新更新附近KTV列表
+            latitude<=0.0f || longitude<=0.0f) {//重新更新附近KTV列表
             number = 0;
             [lm getUserGPSLocationWithCallBack:^(BOOL isEnableGPS,BOOL isSuccess) {
                 if (isSuccess) {
+                    
+                    double latitude = lm.userLocation.coordinate.latitude;
+                    double longitude = lm.userLocation.coordinate.longitude;
+                    
                     self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance]
                                                                          getNearbyKTVListFromCoreDataWithCallBack:self
                                                                          Latitude:latitude
