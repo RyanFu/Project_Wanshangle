@@ -4701,8 +4701,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Bin Liu (8CDC34PXA2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bin Liu (8CDC34PXA2)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Shanghai JEPS network technology Inc. (K8BBFZK2YX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shanghai JEPS network technology Inc. (K8BBFZK2YX)";
 				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				COPY_PHASE_STRIP = NO;
@@ -4719,8 +4719,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
+				PROVISIONING_PROFILE = "1251C8DA-2005-4554-8BCA-E64C7BF4B82B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1251C8DA-2005-4554-8BCA-E64C7BF4B82B";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -4736,8 +4736,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Bin Liu (8CDC34PXA2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bin Liu (8CDC34PXA2)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Shanghai JEPS network technology Inc. (K8BBFZK2YX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shanghai JEPS network technology Inc. (K8BBFZK2YX)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = NS_BLOCK_ASSERTIONS;
@@ -4746,8 +4746,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
+				PROVISIONING_PROFILE = "1251C8DA-2005-4554-8BCA-E64C7BF4B82B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1251C8DA-2005-4554-8BCA-E64C7BF4B82B";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -4756,8 +4756,8 @@
 		5A76C4FD175DBE8B0067BC30 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Bin Liu (8CDC34PXA2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bin Liu (8CDC34PXA2)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Shanghai JEPS network technology Inc. (K8BBFZK2YX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shanghai JEPS network technology Inc. (K8BBFZK2YX)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/src/libraries/ShareSDK_v2.2.4/Connection\"",
@@ -4786,8 +4786,8 @@
 				);
 				OTHER_CFLAGS = "-DAB_LOGGER";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
+				PROVISIONING_PROFILE = "1251C8DA-2005-4554-8BCA-E64C7BF4B82B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1251C8DA-2005-4554-8BCA-E64C7BF4B82B";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -4795,8 +4795,8 @@
 		5A76C4FE175DBE8B0067BC30 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Bin Liu (8CDC34PXA2)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bin Liu (8CDC34PXA2)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Shanghai JEPS network technology Inc. (K8BBFZK2YX)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shanghai JEPS network technology Inc. (K8BBFZK2YX)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/src/libraries/ShareSDK_v2.2.4/Connection\"",
@@ -4829,8 +4829,8 @@
 					"-DNS_BLOCK_ASSERTIONS=1",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E5EC4564-E631-4FAC-AFC3-3FA8C5B1713C";
+				PROVISIONING_PROFILE = "1251C8DA-2005-4554-8BCA-E64C7BF4B82B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "1251C8DA-2005-4554-8BCA-E64C7BF4B82B";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

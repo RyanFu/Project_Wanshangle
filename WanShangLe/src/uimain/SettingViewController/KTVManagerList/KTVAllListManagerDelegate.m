@@ -556,7 +556,7 @@
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         for (UIView* v in controller.searchResultsTableView.subviews) {
             if ([v isKindOfClass: [UILabel class]] &&
-                [[(UILabel*)v text] isEqualToString:@"No Results"]) {
+                ([[(UILabel*)v text] isEqualToString:@"No Results"] || [[(UILabel*)v text] isEqualToString:@"无结果"])) {
                 [(UILabel*)v setText:@""];
                 break;
             }
