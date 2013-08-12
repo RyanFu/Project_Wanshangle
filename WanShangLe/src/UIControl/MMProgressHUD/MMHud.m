@@ -102,6 +102,7 @@ NSString * const MMProgressHUDFontNameNormal = @"HelveticaNeue-Light";
 }
 
 - (void)layoutContentAreaForCurrentState {
+    ABLogger_size(self.image.size);
     if ((self.image || self.animationImages.count > 0) &&
         self.completionState == MMProgressHUDCompletionStateNone) {
         self.contentAreaFrame = CGRectMake(0.f,
@@ -601,7 +602,7 @@ NSString * const MMProgressHUDFontNameNormal = @"HelveticaNeue-Light";
 - (UIView *)progressViewContainer{
     if (_progressViewContainer == nil) {
         _progressViewContainer = [[UIView alloc] initWithFrame:self.contentAreaFrame];
-        _progressViewContainer.backgroundColor = [UIColor clearColor];
+        _progressViewContainer.backgroundColor = [UIColor redColor];
         
 #ifdef MM_HUD_FRAME_DEBUG
         CGColorRef yellowColor = CGColorRetain([UIColor yellowColor].CGColor);

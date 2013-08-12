@@ -17,6 +17,7 @@
 #import <ShareSDK/ShareSDK.h>
 #import "AppDelegate.h"
 #import "UIImage+Crop.h"
+#import "UIAlertView+MKBlockAdditions.h"
 
 #define DisplayTime 1
 
@@ -274,31 +275,71 @@
         dispatch_sync(dispatch_get_main_queue(), ^{
             
             if ([isUpdate boolValue]) {
-                SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"有可更新的版本 %@",newestversion]
-                                                                 andMessage:content];
                 
+                [UIAlertView alertViewWithTitle:[NSString stringWithFormat:@"有可更新的版本 %@",newestversion]
+                                        message:content
+                              cancelButtonTitle:@"取消"
+                              otherButtonTitles:[NSArray arrayWithObjects:@"更新", nil]
+                                      onDismiss:^(int buttonIndex) {
+                                          switch (buttonIndex) {
+                                              case 0:{
+                                                  [[UIApplication sharedApplication] openURL:[NSURL URLWithString:uri]];
+                                              }
+                                                  break;
+                                                  
+                                              default:
+                                                  break;
+                                          }
+                                      }
+                                       onCancel:^{
+                                           
+                                       }];
                 
-                [alertView addButtonWithTitle:@"取消"
-                                         type:SIAlertViewButtonTypeCancel
-                                      handler:^(SIAlertView *alertView) {
-                                          
-                                      }];
-                [alertView addButtonWithTitle:@"更新"
-                                         type:SIAlertViewButtonTypeDefault
-                                      handler:^(SIAlertView *alertView) {
-                                          [[UIApplication sharedApplication] openURL:[NSURL URLWithString:uri]];
-                                      }];
-                [alertView show];
-                [alertView release];
+//                SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"有可更新的版本 %@",newestversion]
+//                                                                 andMessage:content];
+//                
+//                
+//                [alertView addButtonWithTitle:@"取消"
+//                                         type:SIAlertViewButtonTypeCancel
+//                                      handler:^(SIAlertView *alertView) {
+//                                          
+//                                      }];
+//                [alertView addButtonWithTitle:@"更新"
+//                                         type:SIAlertViewButtonTypeDefault
+//                                      handler:^(SIAlertView *alertView) {
+//                                          [[UIApplication sharedApplication] openURL:[NSURL URLWithString:uri]];
+//                                      }];
+//                [alertView show];
+//                [alertView release];
             }else {
-                SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"你的版本已经是最新的了"]
-                                                                 andMessage:@""];
-                [alertView addButtonWithTitle:@"确定"
-                                         type:SIAlertViewButtonTypeDefault
-                                      handler:^(SIAlertView *alertView) {
-                                      }];
-                [alertView show];
-                [alertView release];
+                
+                [UIAlertView alertViewWithTitle:[NSString stringWithFormat:@"你的版本已经是最新的了"]
+                                        message:@""
+                              cancelButtonTitle:@"确定"
+                              otherButtonTitles:nil
+                                      onDismiss:^(int buttonIndex) {
+                                          switch (buttonIndex) {
+                                              case 0:{
+                                                  [[UIApplication sharedApplication] openURL:[NSURL URLWithString:uri]];
+                                              }
+                                                  break;
+                                                  
+                                              default:
+                                                  break;
+                                          }
+                                      }
+                                       onCancel:^{
+                                           
+                                       }];
+                
+//                SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"你的版本已经是最新的了"]
+//                                                                 andMessage:@""];
+//                [alertView addButtonWithTitle:@"确定"
+//                                         type:SIAlertViewButtonTypeDefault
+//                                      handler:^(SIAlertView *alertView) {
+//                                      }];
+//                [alertView show];
+//                [alertView release];
             }
         });
     });
@@ -319,15 +360,15 @@
     id<ISSContent> publishContent = [ShareSDK content:Recommend_SMS_Content
                                        defaultContent:nil
                                                 image:[ShareSDK jpegImageWithImage:shareImg quality:1]
-                                                title:nil
+                                                title:Recommend_WeiXin_Title
                                                   url:SHARE_URL
                                           description:nil
-                                            mediaType:SSPublishContentMediaTypeImage];
+                                            mediaType:SSPublishContentMediaTypeText];
     
     //定制微信好友信息
     [publishContent addWeixinSessionUnitWithType:INHERIT_VALUE
                                          content:INHERIT_VALUE
-                                           title:@"Hello 微信好友!"
+                                           title:INHERIT_VALUE
                                              url:INHERIT_VALUE
                                            image:INHERIT_VALUE
                                     musicFileUrl:nil
@@ -338,7 +379,7 @@
     //定制微信朋友圈信息
     [publishContent addWeixinTimelineUnitWithType:INHERIT_VALUE
                                           content:INHERIT_VALUE
-                                            title:@"Hello 微信朋友圈!"
+                                            title:INHERIT_VALUE
                                               url:nil
                                             image:INHERIT_VALUE
                                      musicFileUrl:nil

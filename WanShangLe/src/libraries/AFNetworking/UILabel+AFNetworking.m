@@ -167,7 +167,14 @@ static char kAFJSONRequestOperationObjectKey;
     
     if (!isNull(cachedJson)) {
         if (success) {
-            NSString *price = [NSString stringWithFormat:@"%d元",[[cachedJson objectForKey:@"lowestPrice"] intValue]];
+            int priceInt = [[cachedJson objectForKey:@"lowestPrice"] intValue];
+            NSString *price = nil;
+            if (priceInt<0) {
+                price = @"暂无";
+            }else{
+                price = [NSString stringWithFormat:@"%d元",priceInt];
+            }
+           
             success(nil, nil, price);
         }
         NSString *rounds = [NSString stringWithFormat:@"还剩%d场 %@",[[cachedJson objectForKey:@"rounds"] intValue],[cachedJson objectForKey:@"type"]];
@@ -198,8 +205,16 @@ static char kAFJSONRequestOperationObjectKey;
             ABLoggerDebug(@"今天排期 总数 是 ===== %@",responseObject);
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 int rounds = [[[responseObject objectForKey:@"data"] objectForKey:@"rounds"] intValue];
-                NSString *resultString = [NSString stringWithFormat:@"还剩%d场 %@",rounds,[[responseObject objectForKey:@"data"] objectForKey:@"type"]] ;
-                NSString *priceString = [NSString stringWithFormat:@"%d元",[[[responseObject objectForKey:@"data"] objectForKey:@"lowestPrice"] intValue]];
+                NSString *resultString = [NSString stringWithFormat:@"还剩%d场 %@",rounds,[[responseObject objectForKey:@"data"] objectForKey:@"type"]];
+                
+                int priceInt = [[[responseObject objectForKey:@"data"] objectForKey:@"lowestPrice"] intValue];
+                NSString *priceString = nil;
+                if (priceInt<0) {
+                    priceString = @"暂无";
+                }else{
+                    priceString = [NSString stringWithFormat:@"%d元",priceInt];
+                }
+
                 if ([urlRequest isEqual:[self.af_jsonRequestOperation request]]) {
                     if (success) {
                         dispatch_async(dispatch_get_main_queue(), ^{

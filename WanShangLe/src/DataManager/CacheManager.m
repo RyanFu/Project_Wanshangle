@@ -129,5 +129,8 @@ static CacheManager *_sharedInstance = nil;
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-
+- (UIImage *)imageNamed:(NSString *)name{
+    NSString *path = [[NSBundle mainBundle] pathForResource:name ofType:@"png"];
+    return [UIImage imageWithContentsOfFile:path];
+}
 @end

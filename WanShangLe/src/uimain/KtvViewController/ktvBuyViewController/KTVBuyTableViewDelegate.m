@@ -85,44 +85,45 @@
     NSIndexPath *indexPath = [_mTableView indexPathForCell:cell];
     NSDictionary *dataDic = [_mArray objectAtIndex:indexPath.row];
     NSString *urlstr = [dataDic objectForKey:@"murl"];
+    [self skipToBuyWebSite:urlstr];
     
-    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
-    NSNumber *buy_hint_bool = [userDefault objectForKey:BuyInfo_HintType];
-    
-    if(isNull(buy_hint_bool) || ![buy_hint_bool boolValue]){
-        NSString *supplierName = [dataDic objectForKey:@"supplierName"];
-        SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"你将被跳转到%@完成购买",supplierName]
-                                                         andMessage:@"\n\n\n"];
-        [alertView addButtonWithTitle:@"取消"
-                                 type:SIAlertViewButtonTypeCancel
-                              handler:^(SIAlertView *alertView) {
-                              }];
-        [alertView addButtonWithTitle:@"继续"
-                                 type:SIAlertViewButtonTypeDefault
-                              handler:^(SIAlertView *alertView) {
-                                  [self skipToBuyWebSite:urlstr];
-                              }];
-        //        alertView.titleFont = [UIFont boldSystemFontOfSize:17];
-        //        alertView.messageFont = [UIFont systemFontOfSize:12];
-        UILabel *promptLabel = [[[UILabel alloc] initWithFrame:CGRectMake(115, 60, 110, 22)] autorelease];
-        promptLabel.backgroundColor = [UIColor clearColor];
-        promptLabel.text = @"下次不再提醒";
-        promptLabel.textColor = [UIColor colorWithWhite:0.400 alpha:1.000];
-        
-        UIButton *checkBox = [UIButton buttonWithType:UIButtonTypeCustom];
-        [checkBox setImage:[UIImage imageNamed:@"btn_checkBox_n@2x"] forState:UIControlStateNormal];
-        [checkBox setImage:[UIImage imageNamed:@"btn_checkBox_f@2x"] forState:UIControlStateSelected];
-        [checkBox addTarget:self action:@selector(clickCheckBox:) forControlEvents:UIControlEventTouchUpInside];
-        checkBox.frame = CGRectMake(85, 62, 20, 20);
-        
-        [alertView show];
-        [alertView.containerView addSubview:checkBox];
-        [alertView.containerView addSubview:promptLabel];
-        
-        [alertView release];
-    }else{
-        [self skipToBuyWebSite:urlstr];
-    }
+//    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+//    NSNumber *buy_hint_bool = [userDefault objectForKey:BuyInfo_HintType];
+//    
+//    if(isNull(buy_hint_bool) || ![buy_hint_bool boolValue]){
+//        NSString *supplierName = [dataDic objectForKey:@"supplierName"];
+//        SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"你将被跳转到%@完成购买",supplierName]
+//                                                         andMessage:@"\n\n\n"];
+//        [alertView addButtonWithTitle:@"取消"
+//                                 type:SIAlertViewButtonTypeCancel
+//                              handler:^(SIAlertView *alertView) {
+//                              }];
+//        [alertView addButtonWithTitle:@"继续"
+//                                 type:SIAlertViewButtonTypeDefault
+//                              handler:^(SIAlertView *alertView) {
+//                                  [self skipToBuyWebSite:urlstr];
+//                              }];
+//        //        alertView.titleFont = [UIFont boldSystemFontOfSize:17];
+//        //        alertView.messageFont = [UIFont systemFontOfSize:12];
+//        UILabel *promptLabel = [[[UILabel alloc] initWithFrame:CGRectMake(115, 60, 110, 22)] autorelease];
+//        promptLabel.backgroundColor = [UIColor clearColor];
+//        promptLabel.text = @"下次不再提醒";
+//        promptLabel.textColor = [UIColor colorWithWhite:0.400 alpha:1.000];
+//        
+//        UIButton *checkBox = [UIButton buttonWithType:UIButtonTypeCustom];
+//        [checkBox setImage:[UIImage imageNamed:@"btn_checkBox_n@2x"] forState:UIControlStateNormal];
+//        [checkBox setImage:[UIImage imageNamed:@"btn_checkBox_f@2x"] forState:UIControlStateSelected];
+//        [checkBox addTarget:self action:@selector(clickCheckBox:) forControlEvents:UIControlEventTouchUpInside];
+//        checkBox.frame = CGRectMake(85, 62, 20, 20);
+//        
+//        [alertView show];
+//        [alertView.containerView addSubview:checkBox];
+//        [alertView.containerView addSubview:promptLabel];
+//        
+//        [alertView release];
+//    }else{
+//        [self skipToBuyWebSite:urlstr];
+//    }
 }
 
 - (void)clickCheckBox:(id)sender{

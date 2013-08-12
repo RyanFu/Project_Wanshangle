@@ -87,6 +87,17 @@
 		5A429517176EFBC000D9B987 /* ApiCmdBar_getAllBars.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A429516176EFBC000D9B987 /* ApiCmdBar_getAllBars.m */; };
 		5A4342371769A27300F2C66F /* ApiCmdMovie_getSchedule.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4342361769A27300F2C66F /* ApiCmdMovie_getSchedule.m */; };
 		5A4342561769FB2C00F2C66F /* ApiCmdMovie_getBuyInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4342551769FB2C00F2C66F /* ApiCmdMovie_getBuyInfo.m */; };
+		5A4BAC3D17B8A74A000F6935 /* tag_white_triangle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A4BAC3C17B8A74A000F6935 /* tag_white_triangle@2x.png */; };
+		5A4BAC5117B8AED3000F6935 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 5A4BAC3F17B8AED3000F6935 /* .gitignore */; };
+		5A4BAC5217B8AED3000F6935 /* MMHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BAC4117B8AED3000F6935 /* MMHud.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5A4BAC5317B8AED3000F6935 /* MMProgressHUD+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BAC4317B8AED3000F6935 /* MMProgressHUD+Animations.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5A4BAC5417B8AED3000F6935 /* MMProgressHUD+Class.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BAC4417B8AED3000F6935 /* MMProgressHUD+Class.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5A4BAC5517B8AED3000F6935 /* MMProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BAC4617B8AED3000F6935 /* MMProgressHUD.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5A4BAC5617B8AED3000F6935 /* MMProgressHUDOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BAC4817B8AED3000F6935 /* MMProgressHUDOverlayView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5A4BAC5717B8AED3000F6935 /* MMProgressHUDViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BAC4A17B8AED3000F6935 /* MMProgressHUDViewController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5A4BAC5817B8AED3000F6935 /* MMProgressHUDWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BAC4C17B8AED3000F6935 /* MMProgressHUDWindow.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5A4BAC5917B8AED3000F6935 /* MMRadialProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BAC4E17B8AED3000F6935 /* MMRadialProgressView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		5A4BAC5A17B8AED3000F6935 /* MMVectorImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BAC5017B8AED3000F6935 /* MMVectorImage.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		5A507F39176B0000001D673D /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A507F35176B0000001D673D /* iCarousel.m */; };
 		5A507F3A176B0000001D673D /* ReflectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A507F38176B0000001D673D /* ReflectionView.m */; };
 		5A540C9317B5E452002B8BDD /* DouBanConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A540C6017B5E452002B8BDD /* DouBanConnection.framework */; };
@@ -275,7 +286,6 @@
 		5A78EB4217B1F3C6004AC603 /* tag_3Dimx@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A78EA3E17B1F3C6004AC603 /* tag_3Dimx@2x.png */; };
 		5A78EB4317B1F3C6004AC603 /* tag_IMX@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A78EA3F17B1F3C6004AC603 /* tag_IMX@2x.png */; };
 		5A78EB4417B1F3C6004AC603 /* tag_NEW@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A78EA4017B1F3C6004AC603 /* tag_NEW@2x.png */; };
-		5A78EB4517B1F3C6004AC603 /* bg_cinema_movies@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A78EA4217B1F3C6004AC603 /* bg_cinema_movies@2x.png */; };
 		5A78EB4617B1F3C6004AC603 /* tag_no_schedule@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A78EA4317B1F3C6004AC603 /* tag_no_schedule@2x.png */; };
 		5A78EB4717B1F3C6004AC603 /* blueDownArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A78EA4517B1F3C6004AC603 /* blueDownArrow.png */; };
 		5A78EB4817B1F3C6004AC603 /* blueDownArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5A78EA4617B1F3C6004AC603 /* blueDownArrow@2x.png */; };
@@ -640,16 +650,6 @@
 		5AB6306417B09D5E00A5455B /* CinemaNearByViewController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AB6306317B09D5E00A5455B /* CinemaNearByViewController_5.xib */; };
 		5AB6307317B0DEB800A5455B /* NSDate-Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB6306F17B0DEB800A5455B /* NSDate-Utilities.m */; };
 		5AB6307417B0DEB800A5455B /* UIImage+Crop.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB6307217B0DEB800A5455B /* UIImage+Crop.m */; };
-		5AC376BD17A89FE4009B06DF /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 5AC376AB17A89FE4009B06DF /* .gitignore */; };
-		5AC376BE17A89FE4009B06DF /* MMHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376AD17A89FE4009B06DF /* MMHud.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		5AC376BF17A89FE4009B06DF /* MMProgressHUD+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376AF17A89FE4009B06DF /* MMProgressHUD+Animations.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		5AC376C017A89FE4009B06DF /* MMProgressHUD+Class.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376B017A89FE4009B06DF /* MMProgressHUD+Class.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		5AC376C117A89FE4009B06DF /* MMProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376B217A89FE4009B06DF /* MMProgressHUD.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		5AC376C217A89FE4009B06DF /* MMProgressHUDOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376B417A89FE4009B06DF /* MMProgressHUDOverlayView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		5AC376C317A89FE4009B06DF /* MMProgressHUDViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376B617A89FE4009B06DF /* MMProgressHUDViewController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		5AC376C417A89FE4009B06DF /* MMProgressHUDWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376B817A89FE4009B06DF /* MMProgressHUDWindow.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		5AC376C517A89FE4009B06DF /* MMRadialProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376BA17A89FE4009B06DF /* MMRadialProgressView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		5AC376C617A89FE4009B06DF /* MMVectorImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376BC17A89FE4009B06DF /* MMVectorImage.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		5AC376CD17A8A664009B06DF /* CinemaDiscountInfoController_5.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AC376C917A8A664009B06DF /* CinemaDiscountInfoController_5.xib */; };
 		5AC376CE17A8A664009B06DF /* CinemaDiscountInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AC376CB17A8A664009B06DF /* CinemaDiscountInfoController.m */; };
 		5AC376CF17A8A664009B06DF /* CinemaDiscountInfoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5AC376CC17A8A664009B06DF /* CinemaDiscountInfoController.xib */; };
@@ -864,6 +864,25 @@
 		5A4342361769A27300F2C66F /* ApiCmdMovie_getSchedule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmdMovie_getSchedule.m; sourceTree = "<group>"; };
 		5A4342541769FB2C00F2C66F /* ApiCmdMovie_getBuyInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApiCmdMovie_getBuyInfo.h; sourceTree = "<group>"; };
 		5A4342551769FB2C00F2C66F /* ApiCmdMovie_getBuyInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApiCmdMovie_getBuyInfo.m; sourceTree = "<group>"; };
+		5A4BAC3C17B8A74A000F6935 /* tag_white_triangle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tag_white_triangle@2x.png"; sourceTree = "<group>"; };
+		5A4BAC3F17B8AED3000F6935 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		5A4BAC4017B8AED3000F6935 /* MMHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHud.h; sourceTree = "<group>"; };
+		5A4BAC4117B8AED3000F6935 /* MMHud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHud.m; sourceTree = "<group>"; };
+		5A4BAC4217B8AED3000F6935 /* MMProgressHUD+Animations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMProgressHUD+Animations.h"; sourceTree = "<group>"; };
+		5A4BAC4317B8AED3000F6935 /* MMProgressHUD+Animations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MMProgressHUD+Animations.m"; sourceTree = "<group>"; };
+		5A4BAC4417B8AED3000F6935 /* MMProgressHUD+Class.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MMProgressHUD+Class.m"; sourceTree = "<group>"; };
+		5A4BAC4517B8AED3000F6935 /* MMProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMProgressHUD.h; sourceTree = "<group>"; };
+		5A4BAC4617B8AED3000F6935 /* MMProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMProgressHUD.m; sourceTree = "<group>"; };
+		5A4BAC4717B8AED3000F6935 /* MMProgressHUDOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMProgressHUDOverlayView.h; sourceTree = "<group>"; };
+		5A4BAC4817B8AED3000F6935 /* MMProgressHUDOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMProgressHUDOverlayView.m; sourceTree = "<group>"; };
+		5A4BAC4917B8AED3000F6935 /* MMProgressHUDViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMProgressHUDViewController.h; sourceTree = "<group>"; };
+		5A4BAC4A17B8AED3000F6935 /* MMProgressHUDViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMProgressHUDViewController.m; sourceTree = "<group>"; };
+		5A4BAC4B17B8AED3000F6935 /* MMProgressHUDWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMProgressHUDWindow.h; sourceTree = "<group>"; };
+		5A4BAC4C17B8AED3000F6935 /* MMProgressHUDWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMProgressHUDWindow.m; sourceTree = "<group>"; };
+		5A4BAC4D17B8AED3000F6935 /* MMRadialProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRadialProgressView.h; sourceTree = "<group>"; };
+		5A4BAC4E17B8AED3000F6935 /* MMRadialProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRadialProgressView.m; sourceTree = "<group>"; };
+		5A4BAC4F17B8AED3000F6935 /* MMVectorImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMVectorImage.h; sourceTree = "<group>"; };
+		5A4BAC5017B8AED3000F6935 /* MMVectorImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMVectorImage.m; sourceTree = "<group>"; };
 		5A507F34176B0000001D673D /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
 		5A507F35176B0000001D673D /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
 		5A507F37176B0000001D673D /* ReflectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReflectionView.h; sourceTree = "<group>"; };
@@ -1093,7 +1112,6 @@
 		5A78EA3E17B1F3C6004AC603 /* tag_3Dimx@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tag_3Dimx@2x.png"; sourceTree = "<group>"; };
 		5A78EA3F17B1F3C6004AC603 /* tag_IMX@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tag_IMX@2x.png"; sourceTree = "<group>"; };
 		5A78EA4017B1F3C6004AC603 /* tag_NEW@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tag_NEW@2x.png"; sourceTree = "<group>"; };
-		5A78EA4217B1F3C6004AC603 /* bg_cinema_movies@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg_cinema_movies@2x.png"; sourceTree = "<group>"; };
 		5A78EA4317B1F3C6004AC603 /* tag_no_schedule@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tag_no_schedule@2x.png"; sourceTree = "<group>"; };
 		5A78EA4517B1F3C6004AC603 /* blueDownArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueDownArrow.png; sourceTree = "<group>"; };
 		5A78EA4617B1F3C6004AC603 /* blueDownArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blueDownArrow@2x.png"; sourceTree = "<group>"; };
@@ -1620,24 +1638,6 @@
 		5AB6306F17B0DEB800A5455B /* NSDate-Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate-Utilities.m"; sourceTree = "<group>"; };
 		5AB6307117B0DEB800A5455B /* UIImage+Crop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Crop.h"; sourceTree = "<group>"; };
 		5AB6307217B0DEB800A5455B /* UIImage+Crop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Crop.m"; sourceTree = "<group>"; };
-		5AC376AB17A89FE4009B06DF /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
-		5AC376AC17A89FE4009B06DF /* MMHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHud.h; sourceTree = "<group>"; };
-		5AC376AD17A89FE4009B06DF /* MMHud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHud.m; sourceTree = "<group>"; };
-		5AC376AE17A89FE4009B06DF /* MMProgressHUD+Animations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMProgressHUD+Animations.h"; sourceTree = "<group>"; };
-		5AC376AF17A89FE4009B06DF /* MMProgressHUD+Animations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MMProgressHUD+Animations.m"; sourceTree = "<group>"; };
-		5AC376B017A89FE4009B06DF /* MMProgressHUD+Class.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MMProgressHUD+Class.m"; sourceTree = "<group>"; };
-		5AC376B117A89FE4009B06DF /* MMProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMProgressHUD.h; sourceTree = "<group>"; };
-		5AC376B217A89FE4009B06DF /* MMProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMProgressHUD.m; sourceTree = "<group>"; };
-		5AC376B317A89FE4009B06DF /* MMProgressHUDOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMProgressHUDOverlayView.h; sourceTree = "<group>"; };
-		5AC376B417A89FE4009B06DF /* MMProgressHUDOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMProgressHUDOverlayView.m; sourceTree = "<group>"; };
-		5AC376B517A89FE4009B06DF /* MMProgressHUDViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMProgressHUDViewController.h; sourceTree = "<group>"; };
-		5AC376B617A89FE4009B06DF /* MMProgressHUDViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMProgressHUDViewController.m; sourceTree = "<group>"; };
-		5AC376B717A89FE4009B06DF /* MMProgressHUDWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMProgressHUDWindow.h; sourceTree = "<group>"; };
-		5AC376B817A89FE4009B06DF /* MMProgressHUDWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMProgressHUDWindow.m; sourceTree = "<group>"; };
-		5AC376B917A89FE4009B06DF /* MMRadialProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRadialProgressView.h; sourceTree = "<group>"; };
-		5AC376BA17A89FE4009B06DF /* MMRadialProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRadialProgressView.m; sourceTree = "<group>"; };
-		5AC376BB17A89FE4009B06DF /* MMVectorImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMVectorImage.h; sourceTree = "<group>"; };
-		5AC376BC17A89FE4009B06DF /* MMVectorImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMVectorImage.m; sourceTree = "<group>"; };
 		5AC376C917A8A664009B06DF /* CinemaDiscountInfoController_5.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CinemaDiscountInfoController_5.xib; sourceTree = "<group>"; };
 		5AC376CA17A8A664009B06DF /* CinemaDiscountInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CinemaDiscountInfoController.h; sourceTree = "<group>"; };
 		5AC376CB17A8A664009B06DF /* CinemaDiscountInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CinemaDiscountInfoController.m; sourceTree = "<group>"; };
@@ -1852,6 +1852,7 @@
 		5A1746F2176057E400E155AB /* UIControl */ = {
 			isa = PBXGroup;
 			children = (
+				5A4BAC3E17B8AED3000F6935 /* MMProgressHUD */,
 				5A78EBEA17B1FD7E004AC603 /* PageScrollView */,
 				5A1261F8177D42D80018E21A /* pullRefresh */,
 				5A83CF2B177BEC1F00E86F72 /* JSButton */,
@@ -2121,6 +2122,31 @@
 				5AAE4DA417A77DD500914B3D /* UncaughtExceptions */,
 			);
 			path = ExceptionsHandle;
+			sourceTree = "<group>";
+		};
+		5A4BAC3E17B8AED3000F6935 /* MMProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				5A4BAC3F17B8AED3000F6935 /* .gitignore */,
+				5A4BAC4017B8AED3000F6935 /* MMHud.h */,
+				5A4BAC4117B8AED3000F6935 /* MMHud.m */,
+				5A4BAC4217B8AED3000F6935 /* MMProgressHUD+Animations.h */,
+				5A4BAC4317B8AED3000F6935 /* MMProgressHUD+Animations.m */,
+				5A4BAC4417B8AED3000F6935 /* MMProgressHUD+Class.m */,
+				5A4BAC4517B8AED3000F6935 /* MMProgressHUD.h */,
+				5A4BAC4617B8AED3000F6935 /* MMProgressHUD.m */,
+				5A4BAC4717B8AED3000F6935 /* MMProgressHUDOverlayView.h */,
+				5A4BAC4817B8AED3000F6935 /* MMProgressHUDOverlayView.m */,
+				5A4BAC4917B8AED3000F6935 /* MMProgressHUDViewController.h */,
+				5A4BAC4A17B8AED3000F6935 /* MMProgressHUDViewController.m */,
+				5A4BAC4B17B8AED3000F6935 /* MMProgressHUDWindow.h */,
+				5A4BAC4C17B8AED3000F6935 /* MMProgressHUDWindow.m */,
+				5A4BAC4D17B8AED3000F6935 /* MMRadialProgressView.h */,
+				5A4BAC4E17B8AED3000F6935 /* MMRadialProgressView.m */,
+				5A4BAC4F17B8AED3000F6935 /* MMVectorImage.h */,
+				5A4BAC5017B8AED3000F6935 /* MMVectorImage.m */,
+			);
+			path = MMProgressHUD;
 			sourceTree = "<group>";
 		};
 		5A507F33176B0000001D673D /* iCarousel */ = {
@@ -2651,6 +2677,7 @@
 		5A78EA3617B1F3C6004AC603 /* cinema */ = {
 			isa = PBXGroup;
 			children = (
+				5A4BAC3C17B8A74A000F6935 /* tag_white_triangle@2x.png */,
 				5A78EA3717B1F3C6004AC603 /* btn_filter_bts@2x.png */,
 			);
 			path = cinema;
@@ -2674,7 +2701,6 @@
 		5A78EA4117B1F3C6004AC603 /* schedule */ = {
 			isa = PBXGroup;
 			children = (
-				5A78EA4217B1F3C6004AC603 /* bg_cinema_movies@2x.png */,
 				5A78EA4317B1F3C6004AC603 /* tag_no_schedule@2x.png */,
 			);
 			path = schedule;
@@ -3244,7 +3270,6 @@
 			children = (
 				5A540C5E17B5E452002B8BDD /* ShareSDK_v2.3.0 */,
 				5AC376D317A8E49B009B06DF /* MKBlockTimer */,
-				5AC376AA17A89FE4009B06DF /* MMProgressHUD */,
 				5A202B6A17A36655001D11F7 /* ExceptionsHandle */,
 				5A7D5F591798DD400013D742 /* AFNetworking */,
 				5AA75FEC1797A07B002891CC /* TouchJSON */,
@@ -3645,31 +3670,6 @@
 			path = UIImage;
 			sourceTree = "<group>";
 		};
-		5AC376AA17A89FE4009B06DF /* MMProgressHUD */ = {
-			isa = PBXGroup;
-			children = (
-				5AC376AB17A89FE4009B06DF /* .gitignore */,
-				5AC376AC17A89FE4009B06DF /* MMHud.h */,
-				5AC376AD17A89FE4009B06DF /* MMHud.m */,
-				5AC376AE17A89FE4009B06DF /* MMProgressHUD+Animations.h */,
-				5AC376AF17A89FE4009B06DF /* MMProgressHUD+Animations.m */,
-				5AC376B017A89FE4009B06DF /* MMProgressHUD+Class.m */,
-				5AC376B117A89FE4009B06DF /* MMProgressHUD.h */,
-				5AC376B217A89FE4009B06DF /* MMProgressHUD.m */,
-				5AC376B317A89FE4009B06DF /* MMProgressHUDOverlayView.h */,
-				5AC376B417A89FE4009B06DF /* MMProgressHUDOverlayView.m */,
-				5AC376B517A89FE4009B06DF /* MMProgressHUDViewController.h */,
-				5AC376B617A89FE4009B06DF /* MMProgressHUDViewController.m */,
-				5AC376B717A89FE4009B06DF /* MMProgressHUDWindow.h */,
-				5AC376B817A89FE4009B06DF /* MMProgressHUDWindow.m */,
-				5AC376B917A89FE4009B06DF /* MMRadialProgressView.h */,
-				5AC376BA17A89FE4009B06DF /* MMRadialProgressView.m */,
-				5AC376BB17A89FE4009B06DF /* MMVectorImage.h */,
-				5AC376BC17A89FE4009B06DF /* MMVectorImage.m */,
-			);
-			path = MMProgressHUD;
-			sourceTree = "<group>";
-		};
 		5AC376C817A8A613009B06DF /* cinemaDiscount */ = {
 			isa = PBXGroup;
 			children = (
@@ -4025,7 +4025,6 @@
 				5A1C811117A2649D007F7434 /* CinemaViewController.xib in Resources */,
 				5A1C811217A2649D007F7434 /* CinemaViewController_5.xib in Resources */,
 				5A1C811417A2649D007F7434 /* MovieCinemaCell.xib in Resources */,
-				5AC376BD17A89FE4009B06DF /* .gitignore in Resources */,
 				5AC376CD17A8A664009B06DF /* CinemaDiscountInfoController_5.xib in Resources */,
 				5AC376CF17A8A664009B06DF /* CinemaDiscountInfoController.xib in Resources */,
 				5AB6303C17AF552D00A5455B /* SettingViewController_5.xib in Resources */,
@@ -4124,7 +4123,6 @@
 				5A78EB4217B1F3C6004AC603 /* tag_3Dimx@2x.png in Resources */,
 				5A78EB4317B1F3C6004AC603 /* tag_IMX@2x.png in Resources */,
 				5A78EB4417B1F3C6004AC603 /* tag_NEW@2x.png in Resources */,
-				5A78EB4517B1F3C6004AC603 /* bg_cinema_movies@2x.png in Resources */,
 				5A78EB4617B1F3C6004AC603 /* tag_no_schedule@2x.png in Resources */,
 				5A78EB4717B1F3C6004AC603 /* blueDownArrow.png in Resources */,
 				5A78EB4817B1F3C6004AC603 /* blueDownArrow@2x.png in Resources */,
@@ -4324,6 +4322,8 @@
 				5A540CB517B5E453002B8BDD /* ShareSDKiPadSimpleShareViewUI.bundle in Resources */,
 				5A540CB817B5E453002B8BDD /* ShareSDKiPhoneDefaultShareViewUI.bundle in Resources */,
 				5A540CBA17B5E453002B8BDD /* ShareSDKiPhoneSimpleShareViewUI.bundle in Resources */,
+				5A4BAC3D17B8A74A000F6935 /* tag_white_triangle@2x.png in Resources */,
+				5A4BAC5117B8AED3000F6935 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4621,15 +4621,6 @@
 				5A1C811017A2649D007F7434 /* CinemaViewController.m in Sources */,
 				5A1C811317A2649D007F7434 /* MovieCinemaCell.m in Sources */,
 				5AAE4DA717A77DD500914B3D /* UncaughtExceptionHandler.m in Sources */,
-				5AC376BE17A89FE4009B06DF /* MMHud.m in Sources */,
-				5AC376BF17A89FE4009B06DF /* MMProgressHUD+Animations.m in Sources */,
-				5AC376C017A89FE4009B06DF /* MMProgressHUD+Class.m in Sources */,
-				5AC376C117A89FE4009B06DF /* MMProgressHUD.m in Sources */,
-				5AC376C217A89FE4009B06DF /* MMProgressHUDOverlayView.m in Sources */,
-				5AC376C317A89FE4009B06DF /* MMProgressHUDViewController.m in Sources */,
-				5AC376C417A89FE4009B06DF /* MMProgressHUDWindow.m in Sources */,
-				5AC376C517A89FE4009B06DF /* MMRadialProgressView.m in Sources */,
-				5AC376C617A89FE4009B06DF /* MMVectorImage.m in Sources */,
 				5AC376CE17A8A664009B06DF /* CinemaDiscountInfoController.m in Sources */,
 				5AC376D217A8A736009B06DF /* ApiCmdMovie_getCinemaDiscount.m in Sources */,
 				5AC376D617A8E49C009B06DF /* NSObject+MKBlockTimer.m in Sources */,
@@ -4648,6 +4639,15 @@
 				5A88846F17B22ECF00F9082E /* MCinemaDiscount.m in Sources */,
 				5A12D1FF17B3333400D46770 /* KTVDiscountInfoDelegate.m in Sources */,
 				5A12D20017B3333400D46770 /* KTVDiscountTableViewCell.m in Sources */,
+				5A4BAC5217B8AED3000F6935 /* MMHud.m in Sources */,
+				5A4BAC5317B8AED3000F6935 /* MMProgressHUD+Animations.m in Sources */,
+				5A4BAC5417B8AED3000F6935 /* MMProgressHUD+Class.m in Sources */,
+				5A4BAC5517B8AED3000F6935 /* MMProgressHUD.m in Sources */,
+				5A4BAC5617B8AED3000F6935 /* MMProgressHUDOverlayView.m in Sources */,
+				5A4BAC5717B8AED3000F6935 /* MMProgressHUDViewController.m in Sources */,
+				5A4BAC5817B8AED3000F6935 /* MMProgressHUDWindow.m in Sources */,
+				5A4BAC5917B8AED3000F6935 /* MMRadialProgressView.m in Sources */,
+				5A4BAC5A17B8AED3000F6935 /* MMVectorImage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

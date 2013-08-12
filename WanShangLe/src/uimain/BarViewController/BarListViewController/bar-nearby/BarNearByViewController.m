@@ -195,18 +195,19 @@
         
         [dataArray removeObjectsInArray:removieArray];
         
-//        dataArray = (NSMutableArray *)[dataArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
-//            double first =  [[(MCinema*)a distance] doubleValue];
-//            double second = [[(MCinema*)b distance] doubleValue];
-//            
-//            if (first>second) {
-//                return NSOrderedDescending;
-//            }else if(first<second){
-//                return NSOrderedAscending;
-//            }else{
-//                return NSOrderedSame;
-//            }
-//        }];
+        //按照由近到远进行排序
+        dataArray = (NSMutableArray *)[dataArray sortedArrayUsingComparator:^NSComparisonResult(id a, id b) {
+            double first =  [[(MCinema*)a distance] doubleValue];
+            double second = [[(MCinema*)b distance] doubleValue];
+            
+            if (first>second) {
+                return NSOrderedDescending;
+            }else if(first<second){
+                return NSOrderedAscending;
+            }else{
+                return NSOrderedSame;
+            }
+        }];
         
         ABLoggerDebug(@"距离 排序 测试");
         for (MCinema *tcinema in dataArray) {
@@ -365,10 +366,13 @@
         double longitude = lm.userLocation.coordinate.longitude;
         
         if (!isLoadMore || lm.userLocation==nil ||
-            latitude==0.0f || longitude==0.0f) {//重新更新附近KTV列表
+            latitude<=0.0f || longitude<=0.0f) {//重新更新附近KTV列表
             number = 0;
             [lm getUserGPSLocationWithCallBack:^(BOOL isEnableGPS,BOOL isSuccess) {
                 if (isSuccess) {
+                    
+                    double latitude = lm.userLocation.coordinate.latitude;
+                    double longitude = lm.userLocation.coordinate.longitude;
                     self.apiCmdBar_getAllBars = (ApiCmdBar_getAllBars *)[[DataBaseManager sharedInstance]
                                                                          getBarsNearByListFromWeb:self
                                                                          offset:number

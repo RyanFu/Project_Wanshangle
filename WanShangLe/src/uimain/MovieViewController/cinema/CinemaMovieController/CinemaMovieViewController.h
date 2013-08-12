@@ -22,6 +22,7 @@
 @property(nonatomic,retain) IBOutlet iCarousel *coverFlow;
 @property(nonatomic,retain) IBOutlet UILabel *movieName;
 @property(nonatomic,retain) IBOutlet UILabel *movieRating;
+@property(nonatomic,retain) IBOutlet UIImageView *whiteTriangle;
 @property(nonatomic,retain) UITableView *mTableView;
 @property(nonatomic,retain) MCinema *mCinema;
 @property(nonatomic,retain) MMovie *mMovie;

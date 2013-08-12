@@ -10,6 +10,7 @@
 #import "UIAlertView+MKBlockAdditions.h"
 #import "SIAlertView.h"
 #import "AppDelegate.h"
+#import "UIAlertView+MKBlockAdditions.h"
 
 @interface LocationManager()<MKMapViewDelegate,UIAlertViewDelegate,CLLocationManagerDelegate>{
     
@@ -190,18 +191,24 @@
 //        return;
 //    }
     
+//    self.userLocation = newLocation;
+//    if (_getUserGPSLocation) {
+//        _getUserGPSLocation(YES,YES);
+//        self.getUserGPSLocation = nil;
+//    }
+    
     if (self.getUserGPSLocation) {
-        BOOL isSuccess = YES;
-        if (self.userLocation) {
-            if (self.userLocation.coordinate.latitude == newLocation.coordinate.latitude &&
-                self.userLocation.coordinate.longitude == newLocation.coordinate.longitude) {
-                isSuccess = YES;
-            }
-        }
+//        BOOL isSuccess = YES;
+//        if (self.userLocation) {
+//            if (self.userLocation.coordinate.latitude == newLocation.coordinate.latitude &&
+//                self.userLocation.coordinate.longitude == newLocation.coordinate.longitude) {
+//                isSuccess = YES;
+//            }
+//        }
         
         self.userLocation = newLocation;
         if (_getUserGPSLocation) {
-            _getUserGPSLocation(YES,isSuccess);
+            _getUserGPSLocation(YES,YES);
             self.getUserGPSLocation = nil;
         }
     }
@@ -304,33 +311,63 @@
             
             ABLoggerWarn(@"切换城市 from %@ to %@",city,newCity);
             
-            SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"确定要切换城市为%@吗?,亲!",newCity] andMessage:nil];
-            [alertView addButtonWithTitle:@"取消"
-                                     type:SIAlertViewButtonTypeCancel
-                                  handler:^(SIAlertView *alertView) {
-                                      ABLoggerDebug(@"取消换城市");
-                                  }];
-            [alertView addButtonWithTitle:@"确定"
-                                     type:SIAlertViewButtonTypeDefault
-                                  handler:^(SIAlertView *alertView) {
-                                      [[DataBaseManager sharedInstance] cleanUp];
-                                      
-                                      [[DataBaseManager sharedInstance] insertCityIntoCoreDataWith:newCity];
-                                      
-                                      [_cityLabel setTitle:[NSString stringWithFormat:@"%@",newCity] forState:UIControlStateNormal];
-                                      [_cityLabel setValue:nil forKey:@"title"];
-                                      if (_userCityCallBack) {
-                                          _userCityCallBack();
-                                          self.userCityCallBack = nil;
+            [UIAlertView alertViewWithTitle:[NSString stringWithFormat:@"确定要切换城市为%@吗?,亲!",newCity]
+                                    message:@""
+                          cancelButtonTitle:@"取消"
+                          otherButtonTitles:[NSArray arrayWithObjects:@"确定", nil]
+                                  onDismiss:^(int buttonIndex) {
+                                      switch (buttonIndex) {
+                                          case 0:{
+                                              [[DataBaseManager sharedInstance] cleanUp];
+                                              
+                                              [[DataBaseManager sharedInstance] insertCityIntoCoreDataWith:newCity];
+                                              
+                                              [_cityLabel setTitle:[NSString stringWithFormat:@"%@",newCity] forState:UIControlStateNormal];
+                                              [_cityLabel setValue:nil forKey:@"title"];
+                                              if (_userCityCallBack) {
+                                                  _userCityCallBack();
+                                                  self.userCityCallBack = nil;
+                                              }
+                                              ABLoggerDebug(@"确定切换城市");
+
+                                          }
+                                              break;
+                                              
+                                          default:
+                                              break;
                                       }
-                                      ABLoggerDebug(@"确定切换城市");
-                                  }];
+                                  }
+                                   onCancel:^{
+                                       ABLoggerDebug(@"取消换城市");
+                                   }];
             
-            alertView.transitionStyle = SIAlertViewTransitionStyleFade;
-            alertView.backgroundStyle = SIAlertViewBackgroundStyleSolid;
-            
-            [alertView show];
-            [alertView release];
+//            SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"确定要切换城市为%@吗?,亲!",newCity] andMessage:nil];
+//            [alertView addButtonWithTitle:@"取消"
+//                                     type:SIAlertViewButtonTypeCancel
+//                                  handler:^(SIAlertView *alertView) {
+//                                      ABLoggerDebug(@"取消换城市");
+//                                  }];
+//            [alertView addButtonWithTitle:@"确定"
+//                                     type:SIAlertViewButtonTypeDefault
+//                                  handler:^(SIAlertView *alertView) {
+//                                      [[DataBaseManager sharedInstance] cleanUp];
+//                                      
+//                                      [[DataBaseManager sharedInstance] insertCityIntoCoreDataWith:newCity];
+//                                      
+//                                      [_cityLabel setTitle:[NSString stringWithFormat:@"%@",newCity] forState:UIControlStateNormal];
+//                                      [_cityLabel setValue:nil forKey:@"title"];
+//                                      if (_userCityCallBack) {
+//                                          _userCityCallBack();
+//                                          self.userCityCallBack = nil;
+//                                      }
+//                                      ABLoggerDebug(@"确定切换城市");
+//                                  }];
+//            
+//            alertView.transitionStyle = SIAlertViewTransitionStyleFade;
+//            alertView.backgroundStyle = SIAlertViewBackgroundStyleSolid;
+//            
+//            [alertView show];
+//            [alertView release];
         }else{
             [_cityLabel setTitle:newCity forState:UIControlStateNormal];
             [_cityLabel setValue:nil forKey:@"title"];
@@ -341,33 +378,64 @@
         }
     }else{
         ABLoggerInfo(@"第一次选择城市");
-        SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"第一次选择城市%@,亲!",newCity] andMessage:nil];
-        [alertView addButtonWithTitle:@"取消"
-                                 type:SIAlertViewButtonTypeCancel
-                              handler:^(SIAlertView *alertView) {
-                                  ABLoggerDebug(@"取消换城市");
-                              }];
-        [alertView addButtonWithTitle:@"确定"
-                                 type:SIAlertViewButtonTypeDefault
-                              handler:^(SIAlertView *alertView) {
-                                  [[DataBaseManager sharedInstance] cleanUp];
-                                  
-                                  [[DataBaseManager sharedInstance] insertCityIntoCoreDataWith:newCity];
-                                  
-                                  [_cityLabel setTitle:newCity forState:UIControlStateNormal];
-                                  [_cityLabel setValue:nil forKey:@"title"];
-                                  if (_userCityCallBack) {
-                                      _userCityCallBack();
-                                      self.userCityCallBack = nil;
+        
+        [UIAlertView alertViewWithTitle:[NSString stringWithFormat:@"第一次选择城市%@,亲!",newCity]
+                                message:@""
+                      cancelButtonTitle:@"取消"
+                      otherButtonTitles:[NSArray arrayWithObjects:@"确定", nil]
+                              onDismiss:^(int buttonIndex) {
+                                  switch (buttonIndex) {
+                                      case 0:{
+                                          [[DataBaseManager sharedInstance] cleanUp];
+                                          
+                                          [[DataBaseManager sharedInstance] insertCityIntoCoreDataWith:newCity];
+                                          
+                                          [_cityLabel setTitle:newCity forState:UIControlStateNormal];
+                                          [_cityLabel setValue:nil forKey:@"title"];
+                                          if (_userCityCallBack) {
+                                              _userCityCallBack();
+                                              self.userCityCallBack = nil;
+                                          }
+                                          ABLoggerDebug(@"确定切换城市");
+                                          
+                                      }
+                                          break;
+                                          
+                                      default:
+                                          break;
                                   }
-                                  ABLoggerDebug(@"确定切换城市");
-                              }];
+                              }
+                               onCancel:^{
+                                   ABLoggerDebug(@"取消换城市");
+                               }];
         
-        alertView.transitionStyle = SIAlertViewTransitionStyleFade;
-        alertView.backgroundStyle = SIAlertViewBackgroundStyleSolid;
-        
-        [alertView show];
-        [alertView release];
+//        SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"第一次选择城市%@,亲!",newCity] andMessage:nil];
+//        [alertView addButtonWithTitle:@"取消"
+//                                 type:SIAlertViewButtonTypeCancel
+//                              handler:^(SIAlertView *alertView) {
+//                                  ABLoggerDebug(@"取消换城市");
+//                              }];
+//        [alertView addButtonWithTitle:@"确定"
+//                                 type:SIAlertViewButtonTypeDefault
+//                              handler:^(SIAlertView *alertView) {
+//                                  [[DataBaseManager sharedInstance] cleanUp];
+//                                  
+//                                  [[DataBaseManager sharedInstance] insertCityIntoCoreDataWith:newCity];
+//                                  
+//                                  [_cityLabel setTitle:newCity forState:UIControlStateNormal];
+//                                  [_cityLabel setValue:nil forKey:@"title"];
+//                                  if (_userCityCallBack) {
+//                                      _userCityCallBack();
+//                                      self.userCityCallBack = nil;
+//                                  }
+//                                  ABLoggerDebug(@"确定切换城市");
+//                              }];
+//        
+//        alertView.transitionStyle = SIAlertViewTransitionStyleFade;
+//        alertView.backgroundStyle = SIAlertViewBackgroundStyleSolid;
+//        
+//        [alertView show];
+//        [alertView release];
     }
     
     return YES;
@@ -409,6 +477,11 @@
 
 //打电话
 - (void)callPhoneNumber:(NSString *)phoneNumber{
+    
+    if (!validateMobile(phoneNumber)) {
+        return;
+    }
+    
     phoneNumber = [NSString stringWithFormat:@"tel://%@",phoneNumber];
 //    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneNumber]];
     

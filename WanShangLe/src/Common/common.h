@@ -54,6 +54,9 @@ NSString* defaultEmptyString(id object);
 BOOL validateEmail(NSString* email);
 BOOL validateMobile(NSString* mobile);
 
+//判断是否为整形：
+BOOL isPureInt(NSString* string);
+
 NSString* convertToHexStr(const char* buffer, int length);
 
 int convertStingEncoding(const char* toEncoding, const char* fromEncoding, 
@@ -78,3 +81,8 @@ NSString* doParseURL(NSString *url);
 
 BOOL checkIsURL(NSString* str);
 
+//app 内存使用情况
+void report_memory(void);
+vm_size_t usedMemory(void);
+vm_size_t freeMemory(void);
+void logMemUsage(void);

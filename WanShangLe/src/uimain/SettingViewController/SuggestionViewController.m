@@ -11,7 +11,7 @@
 #import "ASIHTTPRequest.h"
 #import "ASIFormDataRequest.h"
 #import "SIAlertView.h"
-//#import "MMProgressHUD.h"
+#import "UIAlertView+MKBlockAdditions.h"
 
 @interface SuggestionViewController ()
 
@@ -88,14 +88,24 @@
 	[request setFailedBlock:^{
         ABLoggerWarn(@"检查 软件 更新 失败");
         
-        SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"提交失败"]
-                                                         andMessage:@""];
-        [alertView addButtonWithTitle:@"确定"
-                                 type:SIAlertViewButtonTypeDefault
-                              handler:^(SIAlertView *alertView) {
-                              }];
-        [alertView show];
-        [alertView release];
+        [UIAlertView alertViewWithTitle:[NSString stringWithFormat:@"提交失败"]
+                                message:@""
+                      cancelButtonTitle:@"确定"
+                      otherButtonTitles:nil
+                              onDismiss:^(int buttonIndex) {
+                                  switch (buttonIndex) {
+                                      case 0:{
+                                      }
+                                          break;
+                                          
+                                      default:
+                                          break;
+                                  }
+                              }
+                               onCancel:^{
+                                   
+                               }];
+    
 	}];
 	
     [request setRequestMethod:@"POST"];
@@ -161,27 +171,57 @@
         dispatch_sync(dispatch_get_main_queue(), ^{
             
             if ([record boolValue]) {
-                SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"提交成功"]
-                                                                 andMessage:@""];
                 
-                [alertView show];
-                [alertView release];
+               UIAlertView *alert = [UIAlertView alertViewWithTitle:@"提交成功"
+                                        message:@"感谢你给我们的反馈，我们会尽快改进完善产品。"
+                              cancelButtonTitle:@"确定"
+                              otherButtonTitles:nil
+                                      onDismiss:^(int buttonIndex) {
+                                          switch (buttonIndex) {
+                                              case 0:{
+                                              }
+                                                  break;
+                                                  
+                                              default:
+                                                  break;
+                                          }
+                                      }
+                                       onCancel:^{
+                                           
+                                       }];
                 
-                double delayInSeconds = 1.0;
+//                SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"提交成功"]
+//                                                                 andMessage:@""];
+//                
+//                [alertView show];
+//                [alertView release];
+                
+                double delayInSeconds = 3.0;
                 dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
                 dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                    [alert dismissWithClickedButtonIndex:0 animated:YES];
                     [self.navigationController popViewControllerAnimated:YES];
-                    [alertView dismissAnimated:YES];
+//                    [alertView dismissAnimated:YES];
                 });
             }else {
-                SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"提交失败"]
-                                                                 andMessage:@""];
-                [alertView addButtonWithTitle:@"确定"
-                                         type:SIAlertViewButtonTypeDefault
-                                      handler:^(SIAlertView *alertView) {
-                                      }];
-                [alertView show];
-                [alertView release];
+                
+                [UIAlertView alertViewWithTitle:@"提交失败"
+                                        message:nil
+                              cancelButtonTitle:@"确定"
+                              otherButtonTitles:nil
+                                      onDismiss:^(int buttonIndex) {
+                                          switch (buttonIndex) {
+                                              case 0:{
+                                              }
+                                                  break;
+                                                  
+                                              default:
+                                                  break;
+                                          }
+                                      }
+                                       onCancel:^{
+                                           
+                                       }];
             }
         });
     });

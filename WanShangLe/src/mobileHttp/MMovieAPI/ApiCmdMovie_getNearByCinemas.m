@@ -65,7 +65,7 @@
 - (void) parseResultData:(NSDictionary*) dictionary {
 
     // get the data
-    //ABLoggerDebug(@"影院 responseJSONObject ======== %@",self.responseJSONObject);
+    ABLoggerDebug(@"获取附近影院 ======== %@",self.responseJSONObject);
 }
 
 -(void) notifyDelegate:(NSDictionary*) dictionary{

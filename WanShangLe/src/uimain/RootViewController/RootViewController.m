@@ -78,10 +78,10 @@
     
     [LocationManager defaultLocationManager].cityLabel = _cityButton;
     
-    [[SIAlertView appearance] setMessageFont:[UIFont systemFontOfSize:20]];
-    [[SIAlertView appearance] setTitleFont:[UIFont systemFontOfSize:20]];
-    [[SIAlertView appearance] setTitleColor: [UIColor colorWithRed:0.199 green:0.731 blue:1.000 alpha:1.000]];
-    [[SIAlertView appearance] setMessageColor:[UIColor colorWithRed:0.090 green:0.481 blue:0.905 alpha:1.000]];
+    [[SIAlertView appearance] setMessageFont:[UIFont systemFontOfSize:18]];
+    [[SIAlertView appearance] setTitleFont:[UIFont systemFontOfSize:15]];
+    [[SIAlertView appearance] setTitleColor: Color3];
+    [[SIAlertView appearance] setMessageColor:Color2];
     [[SIAlertView appearance] setCornerRadius:5];
     [[SIAlertView appearance] setShadowRadius:20];
     

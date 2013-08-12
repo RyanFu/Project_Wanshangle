@@ -25,4 +25,6 @@
 -(id)getCacheForKey:(NSString *)key;
 
 - (void)showAddFavoritePopupView:(NSString *)title objectId:(NSString *)objectId dataType:(int)dataType;
+
+- (UIImage *)imageNamed:(NSString *)name;
 @end

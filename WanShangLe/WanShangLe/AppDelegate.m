@@ -266,6 +266,10 @@
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
 {
     ABLoggerWarn(@"AppDelegate 接受到内存警告了");
+    
+    report_memory();
+    
+    logMemUsage();
 }
 
 @end
