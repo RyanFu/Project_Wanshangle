@@ -260,6 +260,10 @@
         cell = [self createNewMocieCell];
     }
     
+    if (_mSearchArray==nil || [_mSearchArray count]<=0) {
+        return cell;
+    }
+    
     [self configSearchCell:cell cellForRowAtIndexPath:indexPath];
     
     return cell;
@@ -436,14 +440,21 @@
          return;
      }
     
+    [self.mSearchArray removeAllObjects];
     [self.msearchController startKTVSearchForSearchString:searchBar.text complete:^(NSMutableArray *searchArray, BOOL isSuccess) {
         self.mSearchArray = searchArray;
         [self.msearchDisplayController.searchResultsTableView reloadData];
         //搜索模式
         if (_msearchDisplayController.searchResultsTableView.tableFooterView==nil) {
             [self addSearchLoadMoreButton];
-        }else if(!isSuccess){
+        }
+        
+        if([searchArray count]<DataCount){
             [loadMoreButton setTitle:@"已全部加载" forState:UIControlStateNormal];
+        }
+        
+        if(_mSearchArray==nil || [_mSearchArray count]<=0){
+            [loadMoreButton setTitle:@"无结果" forState:UIControlStateNormal];
         }
     }];
 }
@@ -525,8 +536,14 @@
         //搜索模式
         if (_msearchDisplayController.searchResultsTableView.tableFooterView==nil) {
             [self addSearchLoadMoreButton];
-        }else if(!isSuccess){
+        }
+        
+        if([searchArray count]<DataCount){
             [loadMoreButton setTitle:@"已全部加载" forState:UIControlStateNormal];
+        }
+        
+        if(_mSearchArray==nil || [_mSearchArray count]<=0){
+            [loadMoreButton setTitle:@"无结果" forState:UIControlStateNormal];
         }
     }];
 }

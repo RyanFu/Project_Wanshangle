@@ -602,7 +602,7 @@ NSString * const MMProgressHUDFontNameNormal = @"HelveticaNeue-Light";
 - (UIView *)progressViewContainer{
     if (_progressViewContainer == nil) {
         _progressViewContainer = [[UIView alloc] initWithFrame:self.contentAreaFrame];
-        _progressViewContainer.backgroundColor = [UIColor redColor];
+        _progressViewContainer.backgroundColor = [UIColor clearColor];
         
 #ifdef MM_HUD_FRAME_DEBUG
         CGColorRef yellowColor = CGColorRetain([UIColor yellowColor].CGColor);

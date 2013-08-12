@@ -13,6 +13,7 @@
 @synthesize schedule_view;
 @synthesize schedule_price;
 @synthesize schedule_timeLong;
+@synthesize tuan_seat_imgView;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

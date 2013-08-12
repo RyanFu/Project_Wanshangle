@@ -170,7 +170,7 @@ static char kAFJSONRequestOperationObjectKey;
             int priceInt = [[cachedJson objectForKey:@"lowestPrice"] intValue];
             NSString *price = nil;
             if (priceInt<0) {
-                price = @"暂无";
+                price = @"暂无价格";
             }else{
                 price = [NSString stringWithFormat:@"%d元",priceInt];
             }
@@ -210,7 +210,7 @@ static char kAFJSONRequestOperationObjectKey;
                 int priceInt = [[[responseObject objectForKey:@"data"] objectForKey:@"lowestPrice"] intValue];
                 NSString *priceString = nil;
                 if (priceInt<0) {
-                    priceString = @"暂无";
+                    priceString = @"暂无价格";
                 }else{
                     priceString = [NSString stringWithFormat:@"%d元",priceInt];
                 }
