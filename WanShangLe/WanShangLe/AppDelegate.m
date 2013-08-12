@@ -46,6 +46,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+   
     
     CFTimeInterval time1 = Elapsed_Time;
     
@@ -96,7 +97,7 @@
     // 异常捕获 exception caught
     [self performSelector:@selector(installUncaughtExceptionHandler) withObject:nil afterDelay:0];
     
-    self.window.backgroundColor = [UIColor whiteColor];
+    self.window.backgroundColor = Color4;
     [self.window makeKeyAndVisible];
     
     [self showGuidePage];//显示引导页面

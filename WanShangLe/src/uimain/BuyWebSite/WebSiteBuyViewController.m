@@ -13,14 +13,16 @@
 #import "ASIHTTPRequest.h"
 #import "ASIFormDataRequest.h"
 #import "AppDelegate.h"
+#import "UIActionSheet+MKBlockAdditions.h"
 
 @interface WebSiteBuyViewController ()<UITextViewDelegate>{
     BOOL isShowErrorPanel;
+    
 //    BOOL isFirst;
 }
-
 @property(nonatomic,retain) UIControl *markView;
 @property(nonatomic,retain) UIWebView *mWebView;
+@property(nonatomic,retain) UIActionSheet *mActionSheet;
 @end
 
 @implementation WebSiteBuyViewController
@@ -40,6 +42,7 @@
     self.mWebView = nil;
     self.markView = nil;
     self.supplierName = nil;
+    self.mActionSheet = nil;
     
     [super dealloc];
 }
@@ -47,17 +50,24 @@
 #pragma mark -
 #pragma mark UIView Recycle
 - (void)viewWillAppear:(BOOL)animated{
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
+    
+    [super viewWillDisappear:animated];
+    
     if ([LoadingView superview]!=nil) {
         [self stopLoadingView];
     }
+    
+    [self dismissActionSheet];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:Color4];
     
     [self startLoadingView];
     
@@ -118,10 +128,46 @@
 }
 
 - (IBAction)clickcWebPostErrorButton:(id)sender{
-    if (!isShowErrorPanel) {
-        [self popupErrorView];
-    }else{
-        [self dismissErrorView];
+    
+    self.mActionSheet = [UIActionSheet actionSheetWithTitle:@"请点击选项给我们报错"
+                                                    message:nil
+                                                    buttons:[NSArray arrayWithObjects:@"价格错误",@"网页无效",@"信息有误",@"其他错误", nil]
+                                                 showInView:self.view
+                                                  onDismiss:^(int buttonIndex) {
+                                                      switch (buttonIndex) {
+                                                          case 0:
+                                                          
+                                                              break;
+                                                          case 1:
+                                                          
+                                                              break;
+                                                          case 2:
+                                                          
+                                                              break;
+                                                          case 3:
+                                                          
+                                                              break;
+                                                              
+                                                          default:
+                                                              break;
+                                                      }
+                         self.mActionSheet = nil;
+                                                  } onCancel:^{
+                                                      
+                                                  }];
+    
+//    [self performSelector:@selector(dismissActionSheet) withObject:nil afterDelay:3];
+//    if (!isShowErrorPanel) {
+//        [self popupErrorView];
+//    }else{
+//        [self dismissErrorView];
+//    }
+}
+
+- (void)dismissActionSheet{
+    ABLoggerDebug(@"hahhah =====");
+    if (_mActionSheet.isVisible) {
+        [_mActionSheet dismissWithClickedButtonIndex:4 animated:NO];
     }
 }
 

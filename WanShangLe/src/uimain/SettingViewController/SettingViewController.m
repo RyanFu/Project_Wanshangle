@@ -16,6 +16,7 @@
 #import "ASIHTTPRequest.h"
 #import <ShareSDK/ShareSDK.h>
 #import "AppDelegate.h"
+#import "UIImage+Crop.h"
 
 #define DisplayTime 1
 
@@ -53,6 +54,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:Color4];
     
     [self initBarButtonItem];
     
@@ -83,7 +85,9 @@
     [_mScrollView setContentSize:CGSizeMake(self.view.bounds.size.width, 505)];
     
     [self cleanDistanceFilterButtonState];
-    int index = [[userDefault objectForKey:DistanceFilter] intValue];
+    
+    NSString *indexStr = [userDefault objectForKey:DistanceFilter];
+    int index = (isEmpty(indexStr)?2:[indexStr intValue]);
     [(UIButton *)[_distanceFilterBtns objectAtIndex:index] setSelected:YES];
     
     [self updateCacheSize];
@@ -303,26 +307,27 @@
 - (void)shareButtonClick:(id)sender{
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
+    //    AppDelegate *_appDelegate = [AppDelegate appDelegateInstance];
+    //    [CacheManager sharedInstance].rootNavController.view
+    UIImage *shareImg = [self.view imageWithView:appDelegate.window];
+    
     //定义菜单分享列表
     NSArray *shareList = [ShareSDK getShareListWithType:ShareTypeWeixiTimeline, ShareTypeWeixiSession, ShareTypeSMS,nil];
     
     //创建分享内容
-//    NSString *imagePath = [[NSBundle mainBundle] pathForResource:IMAGE_NAME ofType:IMAGE_EXT];
+    //    NSString *imagePath = [[NSBundle mainBundle] pathForResource:IMAGE_NAME ofType:IMAGE_EXT];
     id<ISSContent> publishContent = [ShareSDK content:Recommend_SMS_Content
                                        defaultContent:nil
-                                                image:[ShareSDK jpegImageWithImage:[UIImage imageNamed:DefaultImage] quality:1]
-                                                title:Recommend_WeiXin_Title
+                                                image:[ShareSDK jpegImageWithImage:shareImg quality:1]
+                                                title:nil
                                                   url:SHARE_URL
                                           description:nil
-                                            mediaType:SSPublishContentMediaTypeNews];
-    
-    //定制短信信息
-//    [publishContent addSMSUnitWithContent:@"Hello SMS"];
+                                            mediaType:SSPublishContentMediaTypeImage];
     
     //定制微信好友信息
     [publishContent addWeixinSessionUnitWithType:INHERIT_VALUE
-                                         content:Recommend_WeiXin_Content
-                                           title:Recommend_WeiXin_Title
+                                         content:INHERIT_VALUE
+                                           title:@"Hello 微信好友!"
                                              url:INHERIT_VALUE
                                            image:INHERIT_VALUE
                                     musicFileUrl:nil
@@ -332,15 +337,14 @@
     
     //定制微信朋友圈信息
     [publishContent addWeixinTimelineUnitWithType:INHERIT_VALUE
-                                          content:Recommend_WeiXinFriend_Content
-                                            title:nil
-                                              url:INHERIT_VALUE
+                                          content:INHERIT_VALUE
+                                            title:@"Hello 微信朋友圈!"
+                                              url:nil
                                             image:INHERIT_VALUE
                                      musicFileUrl:nil
                                           extInfo:nil
                                          fileData:nil
                                      emoticonData:nil];
-    
     //创建容器
     id<ISSContainer> container = [ShareSDK container];
     [container setIPadContainerWithView:sender arrowDirect:UIPopoverArrowDirectionUp];

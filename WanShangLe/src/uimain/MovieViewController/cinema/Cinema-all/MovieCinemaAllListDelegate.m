@@ -237,7 +237,8 @@
     
     if ([_parentViewController.searchBar.text length] <= 0) {//正常模式
         UILabel *headerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
-        headerView.backgroundColor = [UIColor colorWithWhite:0.829 alpha:1.000];
+        [headerView setTextColor:Color3];
+        [headerView setFont:[UIFont systemFontOfSize:15]];
         
         NSString *name = [[_mArray objectAtIndex:section] objectForKey:@"name"];
         NSArray *list = [[_mArray objectAtIndex:section] objectForKey:@"list"];

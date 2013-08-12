@@ -395,7 +395,7 @@
     CLLocationDistance distance = [to distanceFromLocation:from];
     
     NSString *limitDistance = [[NSUserDefaults standardUserDefaults] objectForKey:DistanceFilterData];
-    int limitedDistance = (isEmpty(limitDistance)?10:[limitDistance intValue])*1000;
+    int limitedDistance = (isEmpty(limitDistance)?5:[limitDistance intValue])*1000;
     if (distance>limitedDistance) {
          ABLoggerDebug(@"距离 real === %.2f m",distance);
         distance = -1;

@@ -62,6 +62,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:Color4];
     
     [self initBarButtonItem];
     [self initFilterButtonHeaderView];

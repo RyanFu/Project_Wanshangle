@@ -68,11 +68,11 @@
 
 - (void)configureCell:(KTVBuyCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath withObject:(NSDictionary *)dataDic {
     
-    if (indexPath.row==0) {
-        cell.lowPriceImg.hidden = NO;
-    }else{
-        cell.lowPriceImg.hidden = YES;
-    }
+//    if (indexPath.row==0) {
+//        cell.lowPriceImg.hidden = NO;
+//    }else{
+//        cell.lowPriceImg.hidden = YES;
+//    }
     cell.tuan_imgView.image = [UIImage imageNamed:@"tag_tuan@2x"];
     cell.vendor_name.text = [dataDic objectForKey:@"supplierName"];
     cell.price.text = [NSString stringWithFormat:@"%@元",[dataDic objectForKey:@"price"]];

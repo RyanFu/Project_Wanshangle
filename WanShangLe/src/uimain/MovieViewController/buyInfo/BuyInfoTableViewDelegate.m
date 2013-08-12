@@ -80,11 +80,11 @@
 
 - (void)configureCell:(BuyInfoTableViewCell *)cell cellForRowAtIndexPath:(NSIndexPath *)indexPath withObject:(NSDictionary *)dataDic {
     
-    if (indexPath.row==0) {
-        cell.lowPriceImg.hidden = NO;
-    }else{
-        cell.lowPriceImg.hidden = YES;
-    }
+//    if (indexPath.row==0) {
+//        cell.lowPriceImg.hidden = NO;
+//    }else{
+//        cell.lowPriceImg.hidden = YES;
+//    }
     
     UIImage *tuanTypeImg = nil;
     switch ([[dataDic objectForKey:@"type"] intValue]) {

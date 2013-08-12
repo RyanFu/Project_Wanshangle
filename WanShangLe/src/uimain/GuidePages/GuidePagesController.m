@@ -92,6 +92,8 @@
 }
 
 - (void)viewDidLoad{
+    [super viewDidLoad];
+    [self.view setBackgroundColor:Color4];
 }
 
 -(void)skip:(id)sender{

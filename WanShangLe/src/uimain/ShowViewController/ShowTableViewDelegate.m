@@ -65,7 +65,7 @@
         scopeStr = @"万人";
     }
     
-    cell.show_rating.text = [NSString stringWithFormat:@"%@评分: %@ (%d%@)",show.ratingfrom,show.rating,ratingPeople,scopeStr];
+    cell.show_rating.text = [NSString stringWithFormat:@"%@评分: %@",show.ratingfrom,show.rating];
     cell.show_price.text =  [NSString stringWithFormat:@"%@元",show.price];
     cell.theatre_name.text = show.theatrename;
     cell.show_time.text = [[DataBaseManager sharedInstance] getYMDFromDate:show.beginTime];

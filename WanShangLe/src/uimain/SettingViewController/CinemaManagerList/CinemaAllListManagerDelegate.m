@@ -302,8 +302,10 @@
     
     if (section==0) {
         UILabel *headerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 30.0f)];
-        headerView.backgroundColor = [UIColor colorWithWhite:0.502 alpha:1.000];
+//        headerView.backgroundColor = [UIColor colorWithWhite:0.502 alpha:1.000];
         headerView.text = [NSString stringWithFormat:@"已收藏的影院"];
+        [headerView setTextColor:Color3];
+        [headerView setFont:[UIFont boldSystemFontOfSize:FontSize2]];
         [headerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_section_view"]]];
         return [headerView autorelease];
     }
@@ -312,14 +314,16 @@
         UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50.0f)];
         
         UILabel *label1 = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 30.0f)];
-        label1.backgroundColor = [UIColor colorWithWhite:0.502 alpha:1.000];
         label1.text = [NSString stringWithFormat:@"全部影院"];
+        [label1 setTextColor:Color3];
+        [label1 setFont:[UIFont boldSystemFontOfSize:FontSize2]];
         
         UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(0, 30, 320, 20.0f)];
-        label2.backgroundColor = [UIColor colorWithWhite:0.829 alpha:1.000];
         NSString *name = [[_mArray objectAtIndex:section-1] objectForKey:@"name"];
 //        NSArray *list = [[_mArray objectAtIndex:section-1] objectForKey:@"list"];
         label2.text = [NSString stringWithFormat:@"%@",name];
+        [label2 setTextColor:Color3];
+        [label2 setFont:[UIFont systemFontOfSize:FontSize3]];
         
         [headerView addSubview:label1];
         [headerView addSubview:label2];
@@ -331,11 +335,12 @@
     }
     
     UILabel *headerView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 20.0f)];
-    headerView.backgroundColor = [UIColor colorWithWhite:0.829 alpha:1.000];
     
     NSString *name = [[_mArray objectAtIndex:section-1] objectForKey:@"name"];
 //    NSArray *list = [[_mArray objectAtIndex:section-1] objectForKey:@"list"];
     headerView.text = [NSString stringWithFormat:@"%@",name];
+    [headerView setTextColor:Color3];
+    [headerView setFont:[UIFont systemFontOfSize:FontSize3]];
     
     [headerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"UITableViewCellSection_bg"]]];
     return [headerView autorelease];

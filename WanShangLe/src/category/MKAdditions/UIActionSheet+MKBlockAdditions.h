@@ -10,7 +10,7 @@
 #import "MKBlockAdditions.h"
 
 @interface UIActionSheet (MKBlockAdditions) <UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
-+(void) actionSheetWithTitle:(NSString*) title
++(UIActionSheet *) actionSheetWithTitle:(NSString*) title
                      message:(NSString*) message
                      buttons:(NSArray*) buttonTitles
                   showInView:(UIView*) view
@@ -18,7 +18,7 @@
                     onCancel:(CancelBlock) cancelled;
 
 
-+ (void) actionSheetWithTitle:(NSString*) title                     
++ (UIActionSheet *) actionSheetWithTitle:(NSString*) title
                       message:(NSString*) message          
        destructiveButtonTitle:(NSString*) destructiveButtonTitle
                       buttons:(NSArray*) buttonTitles

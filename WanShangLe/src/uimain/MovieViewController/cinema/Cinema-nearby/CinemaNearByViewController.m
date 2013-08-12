@@ -77,6 +77,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:Color4];
     [self.view addSubview:self.mTableView];
     
 }
@@ -113,7 +114,7 @@
 
 - (UITableView *)createTableView{
     UITableView *tbView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height) style:UITableViewStylePlain];
-    tbView.backgroundColor = [UIColor whiteColor];
+    tbView.backgroundColor = Color4;
     tbView.separatorStyle = UITableViewCellSeparatorStyleNone;
     tbView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
     return [tbView autorelease];
@@ -335,9 +336,9 @@
 
 - (BOOL)checkGPS{
     BOOL b = [[LocationManager defaultLocationManager] checkGPSEnable];
-    if (!b) {
-        [self displayNOGPS:YES];
-    }
+ 
+    [self displayNOGPS:!b];
+
     
     return b;
 }

@@ -24,6 +24,7 @@
 #import <ShareSDK/ShareSDK.h>
 #import "SIAlertView.h"
 #import "NSMutableArray+TKCategory.h"
+#import "UIImage+Crop.h"
 
 #define CoverFlowItemTag 100
 #define TuanViewTag 50
@@ -185,6 +186,7 @@
     if (_mTableView==nil) {
         _mTableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
         [self.view addSubview:_mTableView];
+        [_mTableView setBackgroundColor:Color4];
     }
     [self setTableViewDelegate];
 }
@@ -236,7 +238,7 @@
         [_mTableView setTableFooterView:[[[UIView alloc] initWithFrame:CGRectZero] autorelease]];
     }
 
-    [self refreshTodayButtonTitle];
+//    [self refreshTodayButtonTitle];
     [_mTableView reloadData];
 }
 
@@ -260,7 +262,7 @@
         [_mTableView setTableFooterView:[[[UIView alloc] initWithFrame:CGRectZero] autorelease]];
     }
 
-    [self refreshTomorrowButtonTitle];
+//    [self refreshTomorrowButtonTitle];
     [_mTableView reloadData];
 }
 
@@ -403,11 +405,16 @@
         ratingCount = ratingCount/10000;
         countLevel = @"万人";
     }
-    _movieRating.text = [NSString stringWithFormat:@"%@评分:%0.1f(%d%@)",aMovie.ratingFrom,[aMovie.rating floatValue],ratingCount,countLevel];
+    _movieRating.text = [NSString stringWithFormat:@"%@评分:%0.1f",aMovie.ratingFrom,[aMovie.rating floatValue]];
+//    _movieRating.text = [NSString stringWithFormat:@"%@评分:%0.1f(%d%@)",aMovie.ratingFrom,[aMovie.rating floatValue],ratingCount,countLevel];
     
     [self changeMovieDisplayData:aMovie];
     
-    [_mTableView setTableFooterView:nil];
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectZero];
+    footerView.backgroundColor = [UIColor clearColor];
+    [_mTableView setTableFooterView:footerView];
+    [footerView release];
+    
     self.schedulesArray = nil;
     [_mTableView reloadData];
     
@@ -587,7 +594,7 @@
             [self refreshTomorrowButtonTitle];
         }
         
-        if (_todayButton.selected) {
+        if (_todayButton.selected && ([timedistance intValue]==0)) {
             [self refreshTodaySchedule];
         }else if(_tomorrowButton.selected){
             [self refreshTomorrowSchedule];
@@ -612,18 +619,22 @@
     
     AppDelegate *_appDelegate = [AppDelegate appDelegateInstance];
     
+    //    AppDelegate *_appDelegate = [AppDelegate appDelegateInstance];
+    //    [CacheManager sharedInstance].rootNavController.view
+    UIImage *shareImg = [self.view imageWithView:_appDelegate.window];
+    
     //定义菜单分享列表
     NSArray *shareList = [ShareSDK getShareListWithType:ShareTypeWeixiTimeline, ShareTypeWeixiSession, ShareTypeSMS,nil];
     
     //创建分享内容
-    NSString *imagePath = [[NSBundle mainBundle] pathForResource:IMAGE_NAME ofType:IMAGE_EXT];
-    id<ISSContent> publishContent = [ShareSDK content:CONTENT
-                                       defaultContent:@"hello"
-                                                image:[ShareSDK imageWithPath:imagePath]
-                                                title:@"ShareSDK"
-                                                  url:@"http://www.sharesdk.cn"
-                                          description:@"这是一条测试信息"
-                                            mediaType:SSPublishContentMediaTypeNews];
+    //    NSString *imagePath = [[NSBundle mainBundle] pathForResource:IMAGE_NAME ofType:IMAGE_EXT];
+    id<ISSContent> publishContent = [ShareSDK content:Recommend_SMS_Content
+                                       defaultContent:nil
+                                                image:[ShareSDK jpegImageWithImage:shareImg quality:1]
+                                                title:nil
+                                                  url:SHARE_URL
+                                          description:nil
+                                            mediaType:SSPublishContentMediaTypeImage];
     
     //定制微信好友信息
     [publishContent addWeixinSessionUnitWithType:INHERIT_VALUE
@@ -637,12 +648,12 @@
                                     emoticonData:nil];
     
     //定制微信朋友圈信息
-    [publishContent addWeixinTimelineUnitWithType:[NSNumber numberWithInteger:SSPublishContentMediaTypeMusic]
+    [publishContent addWeixinTimelineUnitWithType:INHERIT_VALUE
                                           content:INHERIT_VALUE
                                             title:@"Hello 微信朋友圈!"
-                                              url:@"http://y.qq.com/i/song.html#p=7B22736F6E675F4E616D65223A22E4BDA0E4B88DE698AFE79C9FE6ADA3E79A84E5BFABE4B990222C22736F6E675F5761704C69766555524C223A22687474703A2F2F74736D7573696332342E74632E71712E636F6D2F586B303051563558484A645574315070536F4B7458796931667443755A68646C2F316F5A4465637734356375386355672B474B304964794E6A3770633447524A574C48795333383D2F3634363232332E6D34613F7569643D32333230303738313038266469723D423226663D312663743D3026636869643D222C22736F6E675F5769666955524C223A22687474703A2F2F73747265616D31382E71716D757369632E71712E636F6D2F33303634363232332E6D7033222C226E657454797065223A2277696669222C22736F6E675F416C62756D223A22E5889BE980A0EFBC9AE5B08FE5B7A8E89B8B444E414C495645EFBC81E6BC94E594B1E4BC9AE5889BE7BAAAE5BD95E99FB3222C22736F6E675F4944223A3634363232332C22736F6E675F54797065223A312C22736F6E675F53696E676572223A22E4BA94E69C88E5A4A9222C22736F6E675F576170446F776E4C6F616455524C223A22687474703A2F2F74736D757369633132382E74632E71712E636F6D2F586C464E4D31354C5569396961495674593739786D436534456B5275696879366A702F674B65356E4D6E684178494C73484D6C6A307849634A454B394568572F4E3978464B316368316F37636848323568413D3D2F33303634363232332E6D70333F7569643D32333230303738313038266469723D423226663D302663743D3026636869643D2673747265616D5F706F733D38227D"
+                                              url:nil
                                             image:INHERIT_VALUE
-                                     musicFileUrl:@"http://mp3.mwap8.com/destdir/Music/2009/20090601/ZuiXuanMinZuFeng20090601119.mp3"
+                                     musicFileUrl:nil
                                           extInfo:nil
                                          fileData:nil
                                      emoticonData:nil];

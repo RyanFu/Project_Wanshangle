@@ -27,6 +27,13 @@
 #pragma mark UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    
+    if ([_mArray count]<=0 || _parentViewController.isLoadDone) {//每次刷新表的时候检测是否有数据
+        _refreshTailerView.hidden = YES;
+    }else{
+        _refreshTailerView.hidden = NO;
+    }
+    
     return 1;
 }
 
@@ -210,12 +217,6 @@
 	_reloading = NO;
     [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_mTableView];
     
-    if ([_mArray count]<=0 || _parentViewController.isLoadDone) {//每次刷新表的时候检测是否有数据
-        _refreshTailerView.hidden = YES;
-    }else{
-        _refreshTailerView.hidden = NO;
-    }
-    
     [_mTableView reloadData];
 }
 
@@ -223,12 +224,6 @@
 {
     [_refreshTailerView egoRefreshScrollViewDataSourceDidFinishedLoading:_mTableView];
     [_mTableView reloadData];
-    
-    if ([_mArray count]<=0 || _parentViewController.isLoadDone) {//每次刷新表的时候检测是否有数据
-        _refreshTailerView.hidden = YES;
-    }else{
-        _refreshTailerView.hidden = NO;
-    }
     
     _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
      _reloading = NO;

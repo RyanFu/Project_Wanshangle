@@ -78,6 +78,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:Color4];
     
     [self initBarButtonItem];
     [self initTableView];
@@ -148,7 +149,7 @@
 - (UITableView *)createTableView{
     
     UITableView *tbView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, iPhoneAppFrame.size.height-navigationBarHeight) style:UITableViewStylePlain];
-    tbView.backgroundColor = [UIColor whiteColor];
+    tbView.backgroundColor = Color4;
     tbView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     tbView.tableHeaderView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];

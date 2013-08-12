@@ -135,14 +135,12 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (NSArray *)getAllCinemasListFromCoreDataWithCityName:(NSString *)cityName;
 - (BOOL)getNearbyCinemasListFromCoreDataWithCallBack:(GetCinemaNearbyList)callback;
 
-//获取 分页 影院数据
+//获取--分页--影院数据
 - (ApiCmd *)getCinemasListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit dataType:(NSString *)dataType isNewData:(BOOL)isNewData;
 - (NSArray *)getCinemasListFromCoreDataOffset:(int)offset limit:(int)limit dataType:(NSString *)dataType validDate:(NSString *)validDate;
 - (NSArray *)getCinemasListFromCoreDataWithCityName:(NSString *)cityId offset:(int)offset limit:(int)limit dataType:(NSString *)dataType validDate:(NSString *)validDate;
-
-//获取 搜索 影院列表
+//搜索影院列表
 - (ApiCmd *)getCinemasSearchListFromWeb:(id<ApiNotify>)delegate offset:(int)offset limit:(int)limit dataType:(NSString *)dataType searchString:(NSString *)searchString;
-
 //影院附近分页
 - (ApiCmd *)getNearbyCinemaListFromCoreDataDelegate:(id<ApiNotify>)delegate Latitude:(CLLocationDegrees)latitude longitude:(CLLocationDegrees)longitude offset:(int)offset limit:(int)limit dataType:(NSString *)dataType isNewData:(BOOL)isNewData;
 //影院收藏分页
@@ -152,6 +150,8 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 //影院数量
 - (NSUInteger)getCountOfCinemasListFromCoreData;
 - (NSUInteger)getCountOfCinemasListFromCoreDataWithCityName:(NSString *)cityName;
+- (NSUInteger)getFavoriteCountOfCinemasListFromCoreData;
+- (NSUInteger)getFavoriteCountOfCinemasListFromCoreDataWithCityName:(NSString *)cityName;
 
 //插入数据库
 - (NSArray *)insertCinemasIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;
@@ -169,6 +169,8 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 - (BOOL)addFavoriteCinemaWithId:(NSString *)uid;
 - (BOOL)deleteFavoriteCinemaWithId:(NSString *)uid;
 - (BOOL)isFavoriteCinemaWithId:(NSString *)uid;
+
+//获取分区排序--本地
 - (NSArray *)getRegionOrder;
 
 /************************ 演出 ************************************************************************************************/
@@ -322,6 +324,8 @@ typedef void (^GetKTVNearbyList)(NSArray *ktvs, BOOL isSuccess);
 
 - (NSUInteger)getCountOfKTVsListFromCoreData;
 - (NSUInteger)getCountOfKTVsListFromCoreDataWithCityName:(NSString *)cityName;
+- (NSUInteger)getFavoriteCountOfKTVsListFromCoreData;
+- (NSUInteger)getFavoriteCountOfKTVsListFromCoreDataWithCityName:(NSString *)cityName;
 
 //KTV 插入 数据库
 - (NSArray *)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd;

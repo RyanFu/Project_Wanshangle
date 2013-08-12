@@ -26,6 +26,7 @@
     
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     [self setAccessoryType:UITableViewCellAccessoryNone];
+    [self.contentView setBackgroundColor:Color4];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

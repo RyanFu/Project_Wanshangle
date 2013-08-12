@@ -63,6 +63,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:Color4];
     
     _city_arrow_imgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"btn_city_arrow_f@2x"] highlightedImage:[UIImage imageNamed:@"btn_city_arrow_n@2x"]];
     NSString *title = @"选择城市";
