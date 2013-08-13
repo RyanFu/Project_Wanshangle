@@ -138,6 +138,10 @@
 
 - (void)initData{
     
+    if (isEmpty( _mCinema.phoneNumber)) {
+        _phoneButton.enabled = NO;
+    }
+    
     DataBaseManager *dbManager = [DataBaseManager sharedInstance];
     self.todayWeek = [dbManager getTodayWeek];
     self.tomorrowWeek = [dbManager getTomorrowWeek];

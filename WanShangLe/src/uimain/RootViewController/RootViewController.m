@@ -17,6 +17,7 @@
 #import "SIAlertView.h"
 #import "UIImageView+WebCache.h"
 #import "City.h"
+#import "WSLProgressHUD.h"
 
 @interface RootViewController (){
     WSLUserClickStyle userClickStyle;
@@ -104,8 +105,17 @@
     UIBarButtonItem *settingItem = [[UIBarButtonItem alloc] initWithCustomView:settingButton];
     [self.navigationItem setRightBarButtonItem:settingItem animated:YES];
     [settingItem release];
+    
+    [WSLProgressHUD showWithTitle:@"hello" status:nil cancelBlock:^{
+        ABLoggerDebug(@"弹出框取消了");
+    }];
+    
+    [self performSelector:@selector(dismiss) withObject:nil afterDelay:14];
 }
 
+- (void)dismiss{
+    [WSLProgressHUD dismiss];
+}
 #pragma mark -
 #pragma mark 按钮点击事件
 //电影

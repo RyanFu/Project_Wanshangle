@@ -19,6 +19,7 @@
 @property(nonatomic,retain) IBOutlet UILabel *bar_introduce;
 @property(nonatomic,retain) IBOutlet UIImageView *barDetailImg;
 @property(nonatomic,retain) IBOutlet UIButton *bar_yesButton;
+@property(nonatomic,retain) IBOutlet UIButton *phoneButton;
 -(IBAction)clickYESButton:(id)sender;
 -(IBAction)clickPhoneButton:(id)sender;
 @end

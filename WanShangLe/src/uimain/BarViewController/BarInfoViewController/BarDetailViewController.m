@@ -74,7 +74,7 @@
 
 - (void)viewDidLoad
 {
-    [self.view setBackgroundColor:Color4];
+//    [self.view setBackgroundColor:Color4];
     
     [super viewDidLoad];
     
@@ -104,6 +104,11 @@
 }
 
 - (void)initData{
+    
+    if (isEmpty(_mBar.phoneNumber)) {
+        _phoneButton.enabled = NO;
+    }
+    
     _appDelegate = [AppDelegate appDelegateInstance];
     
     if ([[DataBaseManager sharedInstance] isSelectedLike:_mBar.uid withType:API_RecommendOrLookBarType]) {
@@ -196,11 +201,8 @@
     NSString *message = @"";
     NSString *phoneNumber = nil;
     
-    if (isEmpty(_mBar.phoneNumber)) {
-        message = @"该影院暂时没有电话号码";
-    }else{
-        phoneNumber = _mBar.phoneNumber;
-    }
+
+    phoneNumber = _mBar.phoneNumber;
     
     if (isEmpty(phoneNumber)) {
          phoneNumber = @"暂无号码";

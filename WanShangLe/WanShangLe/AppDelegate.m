@@ -15,6 +15,7 @@
 #import "AFHTTPRequestOperation.h"
 #import "ASIHTTPRequest.h"
 #import "GuidePagesController.h"
+#import "WSLProgressHUD.h"
 
 @interface AppDelegate(){
     
@@ -271,6 +272,8 @@
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
 {
     ABLoggerWarn(@"AppDelegate 接受到内存警告了");
+    
+    [WSLProgressHUD cleanCache];
     
     report_memory();
     

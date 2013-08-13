@@ -90,6 +90,10 @@
 }
 
 - (void)initDisplayData{
+
+    if (isEmpty(_mKTV.phoneNumber)) {
+        _phoneButton.enabled = NO;
+    }
     
     self.ktvNameLabel.text = _mKTV.name;
     self.ktvAddressLabel.text = _mKTV.address;
