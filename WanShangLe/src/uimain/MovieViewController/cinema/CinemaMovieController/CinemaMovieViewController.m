@@ -650,10 +650,18 @@
     
     //定义菜单分享列表
     NSArray *shareList = [ShareSDK getShareListWithType:ShareTypeWeixiTimeline, ShareTypeWeixiSession, ShareTypeSMS,nil];
+    NSMutableString *allTime = [NSMutableString stringWithCapacity:100];
+    for (NSDictionary *tDic in _schedulesArray) {
+        [allTime appendFormat:@"/%@",[[DataBaseManager sharedInstance] getTimeFromDate:[tDic objectForKey:@"time"]]];
+    }
+    NSString *shareContent = [NSString stringWithFormat:@"你选哪一场？%@-%@:%@"
+                              ,_mCinema.name
+                              ,_mMovie.name
+                              ,allTime];
     
     //创建分享内容
     //    NSString *imagePath = [[NSBundle mainBundle] pathForResource:IMAGE_NAME ofType:IMAGE_EXT];
-    id<ISSContent> publishContent = [ShareSDK content:Recommend_SMS_Content
+    id<ISSContent> publishContent = [ShareSDK content:shareContent
                                        defaultContent:nil
                                                 image:[ShareSDK jpegImageWithImage:shareImg quality:1]
                                                 title:nil

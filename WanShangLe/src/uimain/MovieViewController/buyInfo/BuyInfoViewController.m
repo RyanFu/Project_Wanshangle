@@ -276,9 +276,16 @@
     //定义菜单分享列表
     NSArray *shareList = [ShareSDK getShareListWithType:ShareTypeWeixiTimeline, ShareTypeWeixiSession, ShareTypeSMS,nil];
     
+    NSString *shareContent = [NSString stringWithFormat:@"《晚上了》的电影票比价的功能超级赞啊，%@的%@在%@,最低票价是%@:%@！一起去看吗？"
+                              ,[[DataBaseManager sharedInstance] getTimeFromDate:_mSchedule]
+                              ,_mMovie.name
+                              , _mCinema.name
+                              ,[[_marray objectAtIndex:0] objectForKey:@"supplierName"]
+                              ,[NSString stringWithFormat:@"%@元",[[_marray objectAtIndex:0] objectForKey:@"price"]]];
+    
     //创建分享内容
     //    NSString *imagePath = [[NSBundle mainBundle] pathForResource:IMAGE_NAME ofType:IMAGE_EXT];
-    id<ISSContent> publishContent = [ShareSDK content:Recommend_SMS_Content
+    id<ISSContent> publishContent = [ShareSDK content:shareContent
                                        defaultContent:nil
                                                 image:[ShareSDK jpegImageWithImage:shareImg quality:1]
                                                 title:nil

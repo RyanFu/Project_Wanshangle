@@ -368,7 +368,12 @@
     
     //创建分享内容
     //    NSString *imagePath = [[NSBundle mainBundle] pathForResource:IMAGE_NAME ofType:IMAGE_EXT];
-    id<ISSContent> publishContent = [ShareSDK content:Recommend_SMS_Content
+    NSString *shareContent = [NSString stringWithFormat:@"晚上了，去看个演出？%@/ %@/ %@, %@"
+                              ,[[DataBaseManager sharedInstance] getTimeFromDate:_mShow.beginTime]
+                              ,_mShow.name
+                              , _mShow.theatrename
+                              ,[_mShowDetail.introduce substringToIndex:20]];
+    id<ISSContent> publishContent = [ShareSDK content:shareContent
                                        defaultContent:nil
                                                 image:[ShareSDK jpegImageWithImage:shareImg quality:1]
                                                 title:nil

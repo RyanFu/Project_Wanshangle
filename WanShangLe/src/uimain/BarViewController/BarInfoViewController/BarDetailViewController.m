@@ -395,6 +395,13 @@
     //定义菜单分享列表
     NSArray *shareList = [ShareSDK getShareListWithType:ShareTypeWeixiTimeline, ShareTypeWeixiSession, ShareTypeSMS,nil];
     
+    NSString *shareContent = [NSString stringWithFormat:@"晚上了，一起去？%@/ %@/ %@, %@"
+                              ,[[DataBaseManager sharedInstance] getTimeFromDate:_mBar.begintime]
+                              ,_mBar.barName
+                              , _mBar.name
+                              ,[_bar_introduce.text substringToIndex:20]];
+
+    
     //创建分享内容
     //    NSString *imagePath = [[NSBundle mainBundle] pathForResource:IMAGE_NAME ofType:IMAGE_EXT];
     id<ISSContent> publishContent = [ShareSDK content:Recommend_SMS_Content

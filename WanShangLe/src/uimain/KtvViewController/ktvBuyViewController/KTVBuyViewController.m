@@ -30,7 +30,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = @"KTV团购";
+        self.title = @"KTV店详情";
     }
     return self;
 }
@@ -294,9 +294,13 @@
     //定义菜单分享列表
     NSArray *shareList = [ShareSDK getShareListWithType:ShareTypeWeixiTimeline, ShareTypeWeixiSession, ShareTypeSMS,nil];
     
+    NSString *shareContent = [NSString stringWithFormat:@"晚上了，一起唱歌去？%@/ %@"
+                              ,_mKTV.name
+                              ,_mKTV.address];
+    
     //创建分享内容
     //    NSString *imagePath = [[NSBundle mainBundle] pathForResource:IMAGE_NAME ofType:IMAGE_EXT];
-    id<ISSContent> publishContent = [ShareSDK content:Recommend_SMS_Content
+    id<ISSContent> publishContent = [ShareSDK content:shareContent
                                        defaultContent:nil
                                                 image:[ShareSDK jpegImageWithImage:shareImg quality:1]
                                                 title:nil

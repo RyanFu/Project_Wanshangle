@@ -1614,8 +1614,8 @@ static DataBaseManager *_sharedInstance = nil;
             totalCount++;
             
             /*折扣和团购*/
-            mCinema.tuan = [[dynamic_dic objectForKey:@"channel"] objectAtIndex:0];
-            mCinema.zhekou = [[dynamic_dic objectForKey:@"channel"] objectAtIndex:1];
+            mCinema.zhekou = [[dynamic_dic objectForKey:@"channel"] objectAtIndex:0];
+            mCinema.tuan = [[dynamic_dic objectForKey:@"channel"] objectAtIndex:1];
             mCinema.seat = [[dynamic_dic objectForKey:@"channel"] objectAtIndex:2];
             [self importCinema:mCinema ValuesForKeysWithObject:cinema_dic];
             

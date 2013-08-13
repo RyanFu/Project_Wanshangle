@@ -113,9 +113,9 @@
 #pragma mark 初始化数据
 - (void)initTopButtonView{
     //创建TopView
-    topView = [[UIView alloc] initWithFrame:CGRectMake(0, 7, 150, 30)];
+    topView = [[UIView alloc] initWithFrame:CGRectMake(0, 10, 145, 32)];
     UIImageView *bgImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_M_switch_C@2x"]];
-    bgImg.frame = CGRectMake(0, 0, 150, 30);
+    bgImg.frame = CGRectMake(0, 0, 145, 32);
     [topView addSubview:bgImg];
     [bgImg release];
     
@@ -137,8 +137,8 @@
     [moviebt addTarget:self action:@selector(clickMovieButtonDown:) forControlEvents:UIControlEventTouchDown];
     [cinemabt addTarget:self action:@selector(clickCinemaButtonDown:) forControlEvents:UIControlEventTouchDown];
     [moviebt setBackgroundImage:[UIImage imageNamed:@"btn_switch@2x"] forState:UIControlStateNormal];
-    [moviebt setFrame:CGRectMake(0, 0, 75, 30)];
-    [cinemabt setFrame:CGRectMake(75, 0, 75, 30)];
+    [moviebt setFrame:CGRectMake(0, 0, 70, 32)];
+    [cinemabt setFrame:CGRectMake(75, 0, 70, 32)];
     [topView addSubview:moviebt];
     [topView addSubview:cinemabt];
     self.navigationItem.titleView = topView;

@@ -63,12 +63,13 @@
     
     [cell.movie_imageView setFrame:CGRectMake(6, 9, 65, 87)];//解决图片显示尺寸不正常的Bug
     
+    cell.rating_from = [NSString stringWithFormat:@"%@评分: ",movie.ratingFrom];
     int ratingPeople = [movie.ratingpeople intValue];
     if (ratingPeople >10000) {
 //        float tratingPeople = ratingPeople/10000.0f;
-         cell.movie_rating.text = [NSString stringWithFormat:@"%@评分: %0.1f",movie.ratingFrom,[movie.rating floatValue]];
+         cell.movie_rating.text = [NSString stringWithFormat:@"%0.1f",[movie.rating floatValue]];
     }else{
-         cell.movie_rating.text = [NSString stringWithFormat:@"%@评分: %0.1f",movie.ratingFrom,[movie.rating floatValue]];
+         cell.movie_rating.text = [NSString stringWithFormat:@"%0.1f",[movie.rating floatValue]];
     }
     
    

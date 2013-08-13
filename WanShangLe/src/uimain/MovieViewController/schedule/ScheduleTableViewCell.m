@@ -41,6 +41,17 @@
 //        [self setBackgroundColor:[UIColor yellowColor]];
 }
 
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
+    [super setHighlighted:highlighted animated:animated];
+    
+    if (highlighted) {
+        [self.schedule_time setTextColor:[UIColor whiteColor]];
+    }else{
+       [self.schedule_time setTextColor:Color8];
+    }
+    ABLoggerInfo(@"setHighlighted:%@ animated:%@", (highlighted?@"YES":@"NO"), (animated?@"YES":@"NO"));
+}
+
 -(void)dealloc{
     self.schedule_price = nil;
     self.schedule_time = nil;

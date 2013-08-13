@@ -56,7 +56,14 @@
 - (void)configureCell:(ScheduleTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     
     _mArray = _parentViewController.schedulesArray;
+    
     NSDictionary *tDic = [_mArray objectAtIndex:indexPath.row];
+    
+    cell.tuan_seat_imgView.hidden = YES;
+    if ([[tDic objectForKey:@"extpay"] boolValue]) {
+        cell.tuan_seat_imgView.hidden = NO;
+    }
+    
     cell.schedule_time.text = [[DataBaseManager sharedInstance] getTimeFromDate:[tDic objectForKey:@"time"]];
     cell.schedule_price.text = [NSString stringWithFormat:@"%@元起",[[tDic objectForKey:@"lowestprice"] stringValue]];
     cell.schedule_timeLong.text = [NSString stringWithFormat:@"预计%@结束",

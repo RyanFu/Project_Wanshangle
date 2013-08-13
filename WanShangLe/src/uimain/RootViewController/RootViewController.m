@@ -104,9 +104,6 @@
     UIBarButtonItem *settingItem = [[UIBarButtonItem alloc] initWithCustomView:settingButton];
     [self.navigationItem setRightBarButtonItem:settingItem animated:YES];
     [settingItem release];
-    
-    //location user city 定位用户的城市
-    [[LocationManager defaultLocationManager] startLocationUserGPS];
 }
 
 #pragma mark -

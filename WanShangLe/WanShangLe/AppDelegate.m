@@ -117,11 +117,16 @@
         [_rootController.view addSubview:guidePagesController.view];
 
         [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:NO] forKey:NewApp];
+    }else{
+        //location user city 定位用户的城市
+        [[LocationManager defaultLocationManager] startLocationUserGPS];
     }
 }
 
 - (void)guidePageComplete:(GuidePagesController *)guidePageController{
     [guidePageController release];
+    //location user city 定位用户的城市
+    [[LocationManager defaultLocationManager] startLocationUserGPS];
 }
 
 - (void)initializePlat{

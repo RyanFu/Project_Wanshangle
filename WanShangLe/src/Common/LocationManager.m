@@ -311,7 +311,7 @@
             
             ABLoggerWarn(@"切换城市 from %@ to %@",city,newCity);
             
-            [UIAlertView alertViewWithTitle:[NSString stringWithFormat:@"确定要切换城市为%@吗?,亲!",newCity]
+            [UIAlertView alertViewWithTitle:[NSString stringWithFormat:@"确定要切换城市为%@吗?",newCity]
                                     message:@""
                           cancelButtonTitle:@"取消"
                           otherButtonTitles:[NSArray arrayWithObjects:@"确定", nil]
@@ -379,7 +379,7 @@
     }else{
         ABLoggerInfo(@"第一次选择城市");
         
-        [UIAlertView alertViewWithTitle:[NSString stringWithFormat:@"第一次选择城市%@,亲!",newCity]
+        [UIAlertView alertViewWithTitle:[NSString stringWithFormat:@"选择当前城市%@",newCity]
                                 message:@""
                       cancelButtonTitle:@"取消"
                       otherButtonTitles:[NSArray arrayWithObjects:@"确定", nil]
