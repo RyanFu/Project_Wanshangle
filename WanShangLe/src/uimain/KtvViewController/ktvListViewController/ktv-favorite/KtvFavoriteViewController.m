@@ -128,10 +128,13 @@
                                      bundle:nil];
         }
         _ktvBuyViewController.mKTV = [array_coreData lastObject];
-        _ktvBuyViewController.view.frame = _mTableView.frame;
         [self.view addSubview:_ktvBuyViewController.view];
         _ktvBuyViewController.mTableView.tableFooterView=_ktvBuyViewController.addFavoriteFooterView;
         [_ktvBuyViewController.addFavoriteButton addTarget:self action:@selector(clickAddFavoriteButton:) forControlEvents:UIControlEventTouchUpInside];
+        
+        //修复了Bug，self.view原本是Height=376，但是在这=322的bug，所以用原始计算来计算ktvbuycontroller的Height
+        _ktvBuyViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, iPhoneAppFrame.size.height-navigationBarHeight-40);
+        _ktvBuyViewController.mTableView.frame = _ktvBuyViewController.view.frame;
     }else{
         [self cleanFavoriteKTVBuyViewController];
     }

@@ -37,7 +37,6 @@
 				<int key="NSvFlags">274</int>
 				<string key="NSFrame">{{0, 20}, {320, 464}}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">1</int>
 					<bytes key="NSRGB">MC45NTI5NDExNzY1IDAuOTU2ODYyNzQ1MSAwLjk2MDc4NDMxMzcAA</bytes>
@@ -58,7 +57,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{30, 249}, {261, 21}}</string>
 						<reference key="NSSuperview" ref="1071120003"/>
-						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -88,7 +86,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{68, 220}, {184, 21}}</string>
 						<reference key="NSSuperview" ref="1071120003"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="760531462"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -119,7 +116,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{110, 71}, {100, 130}}</string>
 						<reference key="NSSuperview" ref="1071120003"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="553760281"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -155,7 +151,6 @@
 				</array>
 				<string key="NSFrameSize">{320, 370}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="856385219"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
@@ -255,29 +250,7 @@
 			<nil key="sourceID"/>
 			<int key="maxID">52</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes">
-			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
-				<object class="IBPartialClassDescription">
-					<string key="className">BarNearByViewController</string>
-					<string key="superclassName">UIViewController</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">noGPSView</string>
-						<string key="NS.object.0">UIView</string>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">noGPSView</string>
-						<object class="IBToOneOutletInfo" key="NS.object.0">
-							<string key="name">noGPSView</string>
-							<string key="candidateClassName">UIView</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/BarNearByViewController.h</string>
-					</object>
-				</object>
-			</array>
-		</object>
+		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>

@@ -32,6 +32,6 @@
 
 -(IBAction)clickTodayButton:(id)sender;
 -(IBAction)clickTomorrowButton:(id)sender;
--(IBAction)clickIntroduceButton:(id)sender;
+//-(IBAction)clickIntroduceButton:(id)sender;
 - (void)expandDiscountTableView;
 @end

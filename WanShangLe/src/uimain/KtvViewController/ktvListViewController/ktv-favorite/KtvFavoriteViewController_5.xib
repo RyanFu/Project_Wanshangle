@@ -38,7 +38,6 @@
 				<int key="NSvFlags">274</int>
 				<string key="NSFrame">{{0, 20}, {320, 464}}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">1</int>
 					<bytes key="NSRGB">MC45NTI5NDExNzY1IDAuOTU2ODYyNzQ1MSAwLjk2MDc4NDMxMzcAA</bytes>
@@ -59,7 +58,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{65, 243}, {191, 21}}</string>
 						<reference key="NSSuperview" ref="966625725"/>
-						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -89,7 +87,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{113, 214}, {95, 21}}</string>
 						<reference key="NSSuperview" ref="966625725"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="158640639"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -120,7 +117,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{98, 71}, {125, 125}}</string>
 						<reference key="NSSuperview" ref="966625725"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="607787332"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -156,7 +152,6 @@
 				</array>
 				<string key="NSFrameSize">{320, 370}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="772162942"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
@@ -175,7 +170,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{72, 29}, {177, 21}}</string>
 						<reference key="NSSuperview" ref="26493609"/>
-						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -198,7 +192,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{73, 8}, {177, 21}}</string>
 						<reference key="NSSuperview" ref="26493609"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="759052073"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -222,7 +215,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 9}, {40, 40}}</string>
 						<reference key="NSSuperview" ref="26493609"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="724107698"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -247,7 +239,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{0, 59}, {320, 1}}</string>
 						<reference key="NSSuperview" ref="26493609"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="689449602"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -260,7 +251,6 @@
 				</array>
 				<string key="NSFrameSize">{320, 60}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="710549503"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
@@ -426,48 +416,7 @@
 			<nil key="sourceID"/>
 			<int key="maxID">55</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes">
-			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
-				<object class="IBPartialClassDescription">
-					<string key="className">KtvFavoriteViewController</string>
-					<string key="superclassName">UIViewController</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">clickAddFavoriteButton:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">clickAddFavoriteButton:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">clickAddFavoriteButton:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
-					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="addFavoriteButton">UIButton</string>
-						<string key="addFavoriteFooterView">UIView</string>
-						<string key="noFavoriteFooterView">UIView</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="addFavoriteButton">
-							<string key="name">addFavoriteButton</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="addFavoriteFooterView">
-							<string key="name">addFavoriteFooterView</string>
-							<string key="candidateClassName">UIView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="noFavoriteFooterView">
-							<string key="name">noFavoriteFooterView</string>
-							<string key="candidateClassName">UIView</string>
-						</object>
-					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/KtvFavoriteViewController.h</string>
-					</object>
-				</object>
-			</array>
-		</object>
+		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>

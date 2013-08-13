@@ -91,7 +91,7 @@
     cell.bar_event_name.text = abar.name;
     cell.bar_name.text = abar.barName;
     cell.bar_date.text = [[DataBaseManager sharedInstance] getHumanityTimeFromDate:abar.begintime];
-    cell.bar_popular.text = [NSString stringWithFormat:@"%d分",[abar.popular intValue]];
+    cell.bar_popular.text = [NSString stringWithFormat:@"%0.1f",[abar.popular floatValue]];
     
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:4];
     if ([abar.zhekou boolValue]) {

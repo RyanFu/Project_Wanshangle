@@ -30,7 +30,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        self.title = @"KTV团购";
     }
     return self;
 }
@@ -61,7 +61,6 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
-    [self viewWillDisappear:animated];
     [self dismissActionSheet];
 }
 
@@ -138,10 +137,9 @@
     _mTableView = [[UITableView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:_mTableView];
     _mTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _mTableView.backgroundColor = [UIColor clearColor];
+    _mTableView.backgroundColor =[UIColor clearColor];
     _mTableView.tableHeaderView = _headerView;
     UIView *view = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)] autorelease];
-//    view.backgroundColor = [UIColor redColor];
     _mTableView.tableFooterView = view;
 }
 
@@ -152,6 +150,7 @@
     _mTableView.delegate = _ktvBuyTableViewDelegate;
     _mTableView.dataSource = _ktvBuyTableViewDelegate;
     _ktvBuyTableViewDelegate.mArray = self.mArray;
+    _ktvBuyTableViewDelegate.mTableView = self.mTableView;
     _ktvBuyTableViewDelegate.parentViewController = self;
 }
 

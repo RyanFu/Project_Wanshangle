@@ -24,7 +24,7 @@
 #define TableHeaderViewHeight 315
 #define TailerView_Y 245
 
-#define DiscountTableView_Height 93
+#define DiscountTableView_Height 80
 
 @interface KTVPriceListViewController ()<ApiNotify>{
     BOOL isCanExpand;
@@ -145,6 +145,18 @@
 - (void)updateKTVPriceInfo{
     
     self.mDiscountArray = [_mKTVPriceInfo.priceInfoDic objectForKey:@"specialoffers"];
+    
+    /* 测试展开数据*/
+//    NSMutableArray *tarray = [NSMutableArray arrayWithCapacity:5];
+//    for (int i=0;i<5;i++) {
+//        NSDictionary *dic = @{@"endtime": @"2013-08-12 00:00:00"
+//                              ,@"starttime":@"2013-08-11 00:00:00"
+//                              ,@"longterm":[NSNumber numberWithBool:YES]
+//                              ,@"info":@"折扣优惠，金卡会员打五折，银卡会员打六折，通卡会员打八折，周二全天半价，周三女士半价，快来快来"};
+//        [tarray addObject:dic];
+//    }
+//    self.mDiscountArray = tarray;
+     /**/
     if (!isNull(self.mDiscountArray) && [self.mDiscountArray count]>0) {
         [self addDiscountPanelView];
     }
@@ -152,14 +164,14 @@
 }
 
 - (void)addDiscountPanelView{
-    _discountHeaderView.frame = CGRectMake(10, 0, 300, 45);
-    _mDiscountTableView.frame = CGRectMake(0, 123, 320, 93);
-    _discountFooterView.frame = CGRectMake(10, 0, 320, 20);
+    _discountHeaderView.frame = CGRectMake(10, 80, 300, 45);
+    _mDiscountTableView.frame = CGRectMake(0, 125, 320, DiscountTableView_Height);
+    _discountFooterView.frame = CGRectMake(10, 203, 300, 20);
     [_mTableHeaderView addSubview:_discountHeaderView];
     [_mTableHeaderView addSubview:_mDiscountTableView];
     [_mTableHeaderView addSubview:_discountFooterView];
 
-    _mHeaderTailerView.frame = CGRectMake(0, 246, 320, 70);
+    _mHeaderTailerView.frame = CGRectMake(0, 245, 320, 70);
     
     CGRect headerFrame = _mTableHeaderView.frame;
     headerFrame.size.height = TableHeaderViewHeight;
@@ -205,11 +217,11 @@
             
             
             CGRect footerFrame = _discountFooterView.frame;
-            footerFrame.origin.y = 215;
+            footerFrame.origin.y = 203;
             _discountFooterView.frame = footerFrame;
             
             CGRect tableFrame = _mDiscountTableView.frame;
-            tableFrame.size.height = 105;
+            tableFrame.size.height = DiscountTableView_Height;
             _mDiscountTableView.frame = tableFrame;
             
             CGRect tailerFrame = _mHeaderTailerView.frame;

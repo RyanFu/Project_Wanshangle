@@ -75,7 +75,13 @@
 //    }
     cell.tuan_imgView.image = [UIImage imageNamed:@"tag_tuan@2x"];
     cell.vendor_name.text = [dataDic objectForKey:@"supplierName"];
-    cell.price.text = [NSString stringWithFormat:@"%@元",[dataDic objectForKey:@"price"]];
+    float tprice = [[dataDic objectForKey:@"price"] floatValue];
+    if (tprice<0) {
+         cell.price.text = [NSString stringWithFormat:@"暂无价格"];
+    }else{
+        cell.price.text = [NSString stringWithFormat:@"%0.0f元",tprice];
+    }
+   
 }
 
 - (void)clickCellButton:(id)sender{
