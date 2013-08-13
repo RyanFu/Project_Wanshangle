@@ -16,6 +16,7 @@
 #import <ShareSDK/ShareSDK.h>
 #import "AppDelegate.h"
 #import "UIImage+Crop.h"
+#import "WSLProgressHUD.h"
 
 @interface BuyInfoViewController ()<ApiNotify>
 @property(nonatomic,retain)BuyInfoTableViewDelegate *buyInfoTableViewDelegate;
@@ -105,6 +106,10 @@
     _schedule_label.text = _mSchedule;
    _discountButton.enabled = NO;
     
+    [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+        
+    }];
+    
     self.apiCmdMovie_getBuyInfo =  (ApiCmdMovie_getBuyInfo *)[[DataBaseManager sharedInstance]
                                                               getBuyInfoFromWebWithaMovie:_mMovie
                                                               aCinema:_mCinema
@@ -161,6 +166,7 @@
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
     if (error) {
+        [WSLProgressHUD dismiss];
         return;
     }
     
@@ -203,6 +209,8 @@
         }
             break;
     }
+    
+    [WSLProgressHUD dismiss];
 }
 
 - (void)formatCinemaData:(NSDictionary *)responseDic{

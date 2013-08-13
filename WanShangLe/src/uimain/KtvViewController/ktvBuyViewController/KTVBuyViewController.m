@@ -17,6 +17,7 @@
 #import "KKTV.h"
 #import "UIImage+Crop.h"
 #import "UIActionSheet+MKBlockAdditions.h"
+#import "WSLProgressHUD.h"
 
 @interface KTVBuyViewController ()<ApiNotify>
 @property(nonatomic,retain) KTVBuyTableViewDelegate *ktvBuyTableViewDelegate;
@@ -86,6 +87,9 @@
 #pragma mark -
 #pragma mark init Data
 - (void)requestWebData{
+    [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+        
+    }];
     self.apiCmdKTV_getBuyList = (ApiCmdKTV_getBuyList*)[[DataBaseManager sharedInstance] getKTVTuanGouListFromWebWithaKTV:_mKTV delegate:self];
 }
 
@@ -215,6 +219,7 @@
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
     if (error) {
+        [WSLProgressHUD dismiss];
         return;
     }
     
@@ -256,6 +261,8 @@
         }
             break;
     }
+    
+    [WSLProgressHUD dismiss];
 }
 
 - (void)formatKTVData:(NSDictionary *)responseDic{

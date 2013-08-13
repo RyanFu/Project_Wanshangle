@@ -14,6 +14,7 @@
 #import "ASIHTTPRequest.h"
 #import "KKTV.h"
 #import "ApiCmd.h"
+#import "WSLProgressHUD.h"
 
 #import "KTVAllListTableViewDelegate.h"
 
@@ -73,6 +74,11 @@
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
 
+    if (isNullArray(_mArray)) {
+        [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+            
+        }];
+    }
     [self hiddenSearchBar];
 }
 
@@ -404,7 +410,11 @@
     [self setTableViewDelegate];
     
     
-    [self updateData:0 withData:[self getCacheData]];
+    NSArray *cachArray = [self getCacheData];
+    if (isNullArray(cachArray)) {
+        return;
+    }
+    [self updateData:0 withData:cachArray];
 }
 
 - (void)loadNewData{
@@ -412,7 +422,11 @@
     isLoadMoreAll = NO;
     [_mCacheArray removeAllObjects];
     
-    [self updateData:0 withData:[self getCacheData]];
+    NSArray *cachArray = [self getCacheData];
+    if (isNullArray(cachArray)) {
+        return;
+    }
+    [self updateData:0 withData:cachArray];
 }
 
 - (void)reloadPullRefreshData{
@@ -425,6 +439,7 @@
     }
     _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
     
+    [WSLProgressHUD dismiss];
 }
 
 //添加缓存数据

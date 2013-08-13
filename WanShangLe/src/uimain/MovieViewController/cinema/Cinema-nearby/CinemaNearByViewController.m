@@ -14,6 +14,7 @@
 #import "ApiCmd.h"
 #import "CinemaNearByListTableViewDelegate.h"
 #import "MovieCinemaNearByListDelegate.h"
+#import "WSLProgressHUD.h"
 
 @interface CinemaNearByViewController()<ApiNotify>{
     BOOL isLoadMore;
@@ -60,7 +61,10 @@
 - (void)viewWillAppear:(BOOL)animated{
     
     if ([self checkGPS]) {
-        if (_mArray==nil || [_mArray count]<=0) {
+        if (isNullArray(_mArray)) {
+            [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+                
+            }];
             [self loadNewData];//初始化加载
         }
     }
@@ -331,7 +335,12 @@
         [self reloadPullRefreshData];
         return;
     }
-    [self updateData:0 withData:[self getCacheData]];
+    
+    NSArray *cachArray = [self getCacheData];
+    if (isNullArray(cachArray)) {
+        return;
+    }
+    [self updateData:0 withData:cachArray];
 }
 
 - (void)loadNewData{
@@ -344,7 +353,12 @@
     if (![self checkGPS]) {
         return;
     }
-    [self updateData:0 withData:[self getCacheData]];
+    
+    NSArray *cachArray = [self getCacheData];
+    if (isNullArray(cachArray)) {
+        return;
+    }
+    [self updateData:0 withData:cachArray];
 }
 
 - (BOOL)checkGPS{
@@ -360,7 +374,7 @@
     
     _mTableView.tableFooterView = noGPS?_noGPSView:[[[UIView alloc] initWithFrame:CGRectZero]autorelease];
     
-    if (_mArray==nil || [_mArray count]<=0 || noGPS) {
+    if (isNullArray(_mArray) || noGPS) {
         _refreshNearByTailerView.hidden = YES;
     }else{
         _refreshNearByTailerView.hidden = NO;
@@ -372,6 +386,11 @@
         [_mCacheArray removeAllObjects];
         [_mArray removeAllObjects];
         [self reloadPullRefreshData];
+    }else{
+        UIView *footerView = [[UIView alloc] initWithFrame:CGRectZero];
+        [footerView setBackgroundColor:[UIColor clearColor]];
+        _mTableView.tableFooterView = footerView;
+        [footerView release];
     }
 }
 
@@ -396,6 +415,8 @@
         _refreshNearByTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
         
     }
+    
+    [WSLProgressHUD dismiss];
 }
 
 //添加缓存数据

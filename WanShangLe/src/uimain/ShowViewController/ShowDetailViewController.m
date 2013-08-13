@@ -18,6 +18,7 @@
 #import "SShowDetail.h"
 #import "WebSiteBuyViewController.h"
 #import "UIImage+Crop.h"
+#import "WSLProgressHUD.h"
 
 #define IntroduceLabelHeight_5 108
 #define IntroduceLabelHeight 43
@@ -61,6 +62,12 @@
 #pragma mark UIView Cycle
 - (void)viewWillAppear:(BOOL)animated{
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
+    
+    if (self.mShowDetail==nil) {
+        [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+            
+        }];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -124,6 +131,8 @@
         
         _show_yes.text = _mShowDetail.recommendation;
         _show_wantLook.text = _mShowDetail.wantLook;
+        
+        [WSLProgressHUD dismiss];
     }
     
     [_show_portImgView setImageWithURL:[NSURL URLWithString:_mShow.webImg]
@@ -274,6 +283,7 @@
 #pragma mark -
 #pragma mark apiNotiry
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
+    [WSLProgressHUD dismiss];
     
     if (error!=nil) {
         return;
@@ -307,7 +317,7 @@
 }
 
 - (void) apiNotifyLocationResult:(id)apiCmd cacheData:(NSArray*)cacheData{
-    
+    [WSLProgressHUD dismiss];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self updateData:0];
     });

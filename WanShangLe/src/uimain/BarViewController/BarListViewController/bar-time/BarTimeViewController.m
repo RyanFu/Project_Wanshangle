@@ -12,7 +12,7 @@
 #import "EGORefreshTableHeaderView.h"
 #import "ApiCmdBar_getAllBars.h"
 #import "BarTimeListTableViewDelegate.h"
-
+#import "WSLProgressHUD.h"
 #import "ASIHTTPRequest.h"
 #import "ApiCmd.h"
 #import "BBar.h"
@@ -64,17 +64,10 @@
 #pragma mark -
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
-    
-#ifdef TestCode
-    [self updatData];//测试代码
-#endif
-    
-}
-- (void)updatData{
-    for (int i=0; i<10; i++) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            //            self.apiCmdBar_getAllBars = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
-        });
+    if (isNullArray(_mArray)) {
+        [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+        
+        }];
     }
 }
 
@@ -266,7 +259,12 @@
     }
     
     [self setTableViewDelegate];
-    [self updateData:0 withData:[self getCacheData]];
+    
+    NSArray *cachArray = [self getCacheData];
+    if (isNullArray(cachArray)) {
+        return;
+    }
+    [self updateData:0 withData:cachArray];
 }
 
 - (void)loadNewData{
@@ -276,7 +274,11 @@
     [_mCacheArray removeAllObjects];
     [_mArray removeAllObjects];
     
-    [self updateData:0 withData:[self getCacheData]];
+    NSArray *cachArray = [self getCacheData];
+    if (isNullArray(cachArray)) {
+        return;
+    }
+    [self updateData:0 withData:cachArray];
 }
 
 - (void)reloadPullRefreshData{
@@ -287,6 +289,8 @@
     }else{
         [_allListDelegate doneReLoadingTableViewData];
     }
+    
+    [WSLProgressHUD dismiss];
 }
 
 //添加缓存数据

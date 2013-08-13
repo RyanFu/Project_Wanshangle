@@ -120,11 +120,22 @@
 + (void)showWithTitle:(NSString *)title
                status:(NSString *)status
           cancelBlock:(void(^)(void))cancelBlock{
-    [[WSLProgressHUD sharedHUD] showWithTitle:title
-                                       status:status
-                          confirmationMessage:nil
-                                  cancelBlock:cancelBlock
-                                       images:nil];
+    
+    if ([NSThread isMainThread] == NO) {
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [[WSLProgressHUD sharedHUD] showWithTitle:title
+                                               status:status
+                                  confirmationMessage:nil
+                                          cancelBlock:cancelBlock
+                                               images:nil];
+        });
+    }else{
+        [[WSLProgressHUD sharedHUD] showWithTitle:title
+                                           status:status
+                              confirmationMessage:nil
+                                      cancelBlock:cancelBlock
+                                           images:nil];
+    }
 }
 
 - (void)showWithTitle:(NSString *)title
@@ -202,7 +213,7 @@
 
 - (void)clickCancelButton:(id)sender{
     
-    [UIView animateWithDuration:0.3 animations:^{
+    [UIView animateWithDuration:1 animations:^{
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
         self.alpha = 0;
     } completion:^(BOOL finished) {
@@ -219,12 +230,26 @@
 }
 
 + (void)dismiss{
-    [[WSLProgressHUD sharedHUD] dismiss];
+    
+    if ([NSThread isMainThread] == NO) {
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [[WSLProgressHUD sharedHUD] dismiss];
+        });
+    }else{
+        [[WSLProgressHUD sharedHUD] dismiss];
+    }
+    
 }
 
 - (void)dismiss{
+    
+    
+    
+    if ([self superview]==nil && ![self.imageView isAnimating]) {
+        return;
+    }
 
-    [UIView animateWithDuration:0.3 animations:^{
+    [UIView animateWithDuration:1 animations:^{
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
         self.alpha = 0;
     } completion:^(BOOL finished) {
@@ -237,7 +262,14 @@
 }
 
 +(void)cleanCache{
-    [[WSLProgressHUD sharedHUD] cleanCache];
+    
+    if ([NSThread isMainThread] == NO) {
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [[WSLProgressHUD sharedHUD] cleanCache];
+        });
+    }else{
+        [[WSLProgressHUD sharedHUD] cleanCache];
+    }
 }
 
 -(void)cleanCache{

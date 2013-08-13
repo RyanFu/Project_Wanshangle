@@ -14,6 +14,7 @@
 #import "ASIFormDataRequest.h"
 #import "AppDelegate.h"
 #import "UIActionSheet+MKBlockAdditions.h"
+#import "WSLProgressHUD.h"
 
 @interface WebSiteBuyViewController ()<UITextViewDelegate>{
     BOOL isShowErrorPanel;
@@ -57,10 +58,6 @@
     
     [super viewWillDisappear:animated];
     
-    if ([LoadingView superview]!=nil) {
-        [self stopLoadingView];
-    }
-    
     [self dismissActionSheet];
 }
 
@@ -69,7 +66,9 @@
     [super viewDidLoad];
     [self.view setBackgroundColor:Color4];
     
-    [self startLoadingView];
+    [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+        
+    }];
     
     [self initBarItem];
     
@@ -80,7 +79,7 @@
 #pragma mark 初始化数据
 - (void)initBarItem{
     UIButton *backBt = [UIButton buttonWithType:UIButtonTypeCustom];
-    [backBt setFrame:CGRectMake(0, 0, 45, 30)];
+    [backBt setFrame:CGRectMake(0, 0, 45, 32)];
     [backBt addTarget:self action:@selector(popViewController:) forControlEvents:UIControlEventTouchUpInside];
     [backBt setBackgroundImage:[UIImage imageNamed:@"bt_back_n@2x"] forState:UIControlStateNormal];
     [backBt setBackgroundImage:[UIImage imageNamed:@"bt_back_f@2x"] forState:UIControlStateHighlighted];
@@ -114,14 +113,12 @@
 }
 
 - (IBAction)clickcWebBackButton:(id)sender{
-    [errorPopupView removeFromSuperview];
     if(_mWebView.canGoBack){
         [_mWebView goBack];
     }
     
 }
 - (IBAction)clickcWebForwardkButton:(id)sender{
-    [errorPopupView removeFromSuperview];
     if(_mWebView.canGoForward){
         [_mWebView goForward];
     }
@@ -177,7 +174,7 @@
 
 - (void)dismissActionSheet{
     ABLoggerDebug(@"hahhah =====");
-    if (_mActionSheet.isVisible) {
+    if (_mActionSheet!=nil || _mActionSheet.isVisible) {
         [_mActionSheet dismissWithClickedButtonIndex:4 animated:NO];
     }
 }
@@ -188,47 +185,47 @@
 }
 
 
-- (void)popupErrorView{
-    if (isShowErrorPanel==YES) {
-        return;
-    }
-    isShowErrorPanel = YES;
-    CGRect orginFrame = errorPopupView.frame;
-    orginFrame.origin.x = self.view.bounds.size.width-errorPopupView.bounds.size.width-10;
-    orginFrame.origin.y = self.view.bounds.size.height-errorPopupView.bounds.size.height-bottomBar.bounds.size.height+10;
-    errorPopupView.frame = orginFrame;
-    errorPopupView.alpha = 0.3;
-    [self.view addSubview:errorPopupView];
-    
-    [UIView animateWithDuration:0.3 animations:^{
-        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-        
-        CGRect newFrame = errorPopupView.frame;
-        newFrame.origin.y = self.view.bounds.size.height-errorPopupView.bounds.size.height-bottomBar.bounds.size.height-10;
-        errorPopupView.frame = newFrame;
-        errorPopupView.alpha = 1.0;
-    } completion:^(BOOL finished) {
-        
-    }];
-}
+//- (void)popupErrorView{
+//    if (isShowErrorPanel==YES) {
+//        return;
+//    }
+//    isShowErrorPanel = YES;
+//    CGRect orginFrame = errorPopupView.frame;
+//    orginFrame.origin.x = self.view.bounds.size.width-errorPopupView.bounds.size.width-10;
+//    orginFrame.origin.y = self.view.bounds.size.height-errorPopupView.bounds.size.height-bottomBar.bounds.size.height+10;
+//    errorPopupView.frame = orginFrame;
+//    errorPopupView.alpha = 0.3;
+//    [self.view addSubview:errorPopupView];
+//    
+//    [UIView animateWithDuration:0.3 animations:^{
+//        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+//        
+//        CGRect newFrame = errorPopupView.frame;
+//        newFrame.origin.y = self.view.bounds.size.height-errorPopupView.bounds.size.height-bottomBar.bounds.size.height-10;
+//        errorPopupView.frame = newFrame;
+//        errorPopupView.alpha = 1.0;
+//    } completion:^(BOOL finished) {
+//        
+//    }];
+//}
 
-- (void)dismissErrorView{
-    if (isShowErrorPanel==NO) {
-        return;
-    }
-    isShowErrorPanel = NO;
-    [UIView animateWithDuration:0.3 animations:^{
-        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-        
-        CGRect orginFrame = errorPopupView.frame;
-        orginFrame.origin.y = self.view.bounds.size.height-errorPopupView.bounds.size.height-bottomBar.bounds.size.height+10;
-        errorPopupView.frame = orginFrame;
-        errorPopupView.alpha = 0.3;
-        
-    } completion:^(BOOL finished) {
-        [errorPopupView removeFromSuperview];
-    }];
-}
+//- (void)dismissErrorView{
+//    if (isShowErrorPanel==NO) {
+//        return;
+//    }
+//    isShowErrorPanel = NO;
+//    [UIView animateWithDuration:0.3 animations:^{
+//        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+//        
+//        CGRect orginFrame = errorPopupView.frame;
+//        orginFrame.origin.y = self.view.bounds.size.height-errorPopupView.bounds.size.height-bottomBar.bounds.size.height+10;
+//        errorPopupView.frame = orginFrame;
+//        errorPopupView.alpha = 0.3;
+//        
+//    } completion:^(BOOL finished) {
+//        [errorPopupView removeFromSuperview];
+//    }];
+//}
 
 - (IBAction)clickErrorPriceButton:(id)sender{
     [self commitErrorToserver:[NSString stringWithFormat:@"价格错误 %@",_mURLStr]];
@@ -248,7 +245,7 @@
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
         [self.view addSubview:commitErrorView];
     } completion:^(BOOL finished) {
-        [self dismissErrorView];
+//        [self dismissErrorView];
     }];
 }
 
@@ -325,7 +322,7 @@
     [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleFade];
     
     [MMProgressHUD showWithTitle:@"恭喜,提交成功" status:nil image:[UIImage imageNamed:@"tag_smile_face"]];
-    [self dismissErrorView];
+//    [self dismissErrorView];
     
     double delayInSeconds = 1.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
@@ -339,7 +336,7 @@
     [MMProgressHUD setDisplayStyle:MMProgressHUDDisplayStylePlain];
     [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleFade];
     [MMProgressHUD showWithTitle:@"抱歉，提交失败" status:@"请重新提交" image:[UIImage imageNamed:@"tag_cry_face"]];
-    [self dismissErrorView];
+//    [self dismissErrorView];
     
     double delayInSeconds = 1.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
@@ -349,31 +346,31 @@
     });
 }
 
-- (IBAction)clickCancelLoadingView:(id)sender{
-    [self stopLoadingView];
-}
+//- (IBAction)clickCancelLoadingView:(id)sender{
+//    [self stopLoadingView];
+//}
 
-- (void)startLoadingView{
-    LoadingView.alpha = 0;
-    [UIView animateWithDuration:0.3
-                     animations:^{
-                         LoadingView.alpha = 1;
-                     } completion:^(BOOL finished) {
-                         [activityIndicator startAnimating];
-                         [self.view addSubview:LoadingView];
-                     }];
-}
+//- (void)startLoadingView{
+//    LoadingView.alpha = 0;
+//    [UIView animateWithDuration:0.3
+//                     animations:^{
+//                         LoadingView.alpha = 1;
+//                     } completion:^(BOOL finished) {
+//                         [activityIndicator startAnimating];
+//                         [self.view addSubview:LoadingView];
+//                     }];
+//}
 
-- (void)stopLoadingView{
-    [UIView animateWithDuration:0.3
-                     animations:^{
-                         LoadingView.alpha = 0;
-                     } completion:^(BOOL finished) {
-                         [activityIndicator stopAnimating];
-                         [LoadingView removeFromSuperview];
-                     }];
-
-}
+//- (void)stopLoadingView{
+//    [UIView animateWithDuration:0.3
+//                     animations:^{
+//                         LoadingView.alpha = 0;
+//                     } completion:^(BOOL finished) {
+//                         [activityIndicator stopAnimating];
+//                         [LoadingView removeFromSuperview];
+//                     }];
+//
+//}
 #pragma mark -
 #pragma mark UIWebViewDelegate
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
@@ -382,29 +379,21 @@
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView{
-//    if (isFirst) {
-//        isFirst = NO;
-//        [MMProgressHUD setDisplayStyle:MMProgressHUDDisplayStylePlain];
-//        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleFade];
-//        [[MMProgressHUD sharedHUD] setOverlayMode:MMProgressHUDWindowOverlayModeNone];
-//        [MMProgressHUD showWithTitle:@"" status:@"正在加载..."];
-//    }
+
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView{
-    [self dismissErrorView];
+
     [self updateBackForwardButtonState];
     
-    if ([LoadingView superview]!=nil) {
-        [self stopLoadingView];
-    }
+    [WSLProgressHUD dismiss];
 }
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
     
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    [self dismissErrorView];
+
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{

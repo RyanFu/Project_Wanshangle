@@ -16,6 +16,7 @@
 #import "ASIHTTPRequest.h"
 #import "ApiCmd.h"
 #import "MMovie.h"
+#import "WSLProgressHUD.h"
 
 #define MovieButtonTag 10
 #define CinemaButtonTag 11
@@ -76,6 +77,12 @@
 #pragma mark -
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
+    
+    if (isNullArray(_moviesArray)) {
+        [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+            
+        }];
+    }
     
     if (_cinemaViewController.view.frame.origin.x == 0) {//当界面处在影院列表的时候才考虑 viewWillAppear
         [_cinemaViewController viewWillAppear:animated];
@@ -395,6 +402,7 @@
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
     if (error) {
+        [WSLProgressHUD dismiss];
         return;
     }
     
@@ -454,6 +462,8 @@
         }
             break;
     }
+    
+    [WSLProgressHUD dismiss];
 }
 
 #pragma mark -

@@ -13,7 +13,7 @@
 #import "BarPopularListTableViewDelegate.h"
 #import "EGORefreshTableHeaderView.h"
 #import "ApiCmdBar_getAllBars.h"
-
+#import "WSLProgressHUD.h"
 #import "ASIHTTPRequest.h"
 #import "ApiCmd.h"
 
@@ -62,7 +62,11 @@
 #pragma mark -
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
-    
+    if (isNullArray(_mArray)) {
+        [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+            
+        }];
+    }
 }
 
 - (void)viewDidLoad
@@ -275,7 +279,7 @@
         [_favoriteListDelegate doneReLoadingTableViewData];
     }
     _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
-    
+    [WSLProgressHUD dismiss];
 }
 
 //添加缓存数据

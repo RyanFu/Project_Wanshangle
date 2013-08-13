@@ -17,6 +17,7 @@
 #import <ShareSDK/ShareSDK.h>
 #import "ApiCmd.h"
 #import "UIImage+Crop.h"
+#import "WSLProgressHUD.h"
 
 #define IntroduceLabelHeight 90
 #define IntroduceLabelWidth 302
@@ -115,7 +116,10 @@
     }
     
     self.mKTVPriceInfo = [[DataBaseManager sharedInstance] getKTVPriceInfoFromCoreDataWithId:_mKTV.uid];
-    if (self.mKTVPriceInfo==nil) {
+    if (self.mKTVPriceInfo==nil) {//数据为空，要从服务器抓数据
+        [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+            
+        }];
         self.apiCmdKTV_getPriceList = (ApiCmdKTV_getPriceList *)[[DataBaseManager sharedInstance] getKTVPriceListFromWebWithaKTV:_mKTV delegate:self];
     }else{
         [self formatKTVPriceInfo];
@@ -320,6 +324,7 @@
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
     if (error){
+        [WSLProgressHUD dismiss];
         return;
     }
     
@@ -338,7 +343,7 @@
 }
 
 - (void)apiNotifyLocationResult:(id)apiCmd cacheDictionaryData:(NSDictionary *)cacheData{
-    
+    [WSLProgressHUD dismiss];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     });
 }
@@ -359,6 +364,8 @@
         }
             break;
     }
+    
+    [WSLProgressHUD dismiss];
 }
 
 - (void)formatKTVPriceInfo{

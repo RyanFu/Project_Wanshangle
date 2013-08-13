@@ -26,6 +26,7 @@
 #import "NSMutableArray+TKCategory.h"
 #import "UIImage+Crop.h"
 #import "UIActionSheet+MKBlockAdditions.h"
+#import "WSLProgressHUD.h"
 
 #define CoverFlowItemTag 100
 #define TuanViewTag 50
@@ -452,6 +453,10 @@
     [self cancelApiCmd];
     [self clickTomorrowButton:nil];
     [self clickTodayButton:nil];
+    
+    [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+        
+    }];
 }
 
 - (void)changeMovieDisplayData:(MMovie*)aMovie{
@@ -624,6 +629,9 @@
         }
         
         if (_todayButton.selected && ([timedistance intValue]==0)) {
+            
+            [WSLProgressHUD dismiss];
+            
             [self refreshTodaySchedule];
         }else if(_tomorrowButton.selected){
             [self refreshTomorrowSchedule];

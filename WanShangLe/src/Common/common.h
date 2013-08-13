@@ -45,6 +45,8 @@ NSString* trimString (NSString* input);
 
 BOOL isNull(id object);
 
+BOOL isNullArray(id object);
+
 BOOL isEmpty(NSString* str);
 
 id defaultNilObject(id object);

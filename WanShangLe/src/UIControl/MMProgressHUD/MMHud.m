@@ -27,7 +27,7 @@ CGFloat    const MMProgressHUDAnimateOutDurationLong    = 0.75f;
 CGFloat    const MMProgressHUDAnimateOutDurationMedium  = 0.55f;
 CGFloat    const MMProgressHUDAnimateOutDurationShort   = 0.35f;
 
-CGSize const MMProgressHUDDefaultContentAreaSize = { 100.f, 100.f };
+CGSize const MMProgressHUDDefaultContentAreaSize = { 40.f, 40.f };
 CGSize const MMProgressHUDProgressContentAreaSize = { 40.f, 40.f };
 
 NSString * const MMProgressHUDFontNameBold = @"HelveticaNeue-Bold";

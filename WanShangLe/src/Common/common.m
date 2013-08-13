@@ -99,6 +99,10 @@ BOOL isNull(id object) {
     return (nil == object || [object isKindOfClass:[NSNull class]]);
 }
 
+BOOL isNullArray(id object){
+    return (nil == object || [object count]<=0 ||[object isKindOfClass:[NSNull class]]);
+}
+
 id defaultNilObject(id object) {
     
     if (isNull(object)) {

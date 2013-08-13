@@ -16,6 +16,7 @@
 #import <ShareSDK/ShareSDK.h>
 #import "AppDelegate.h"
 #import "UIImage+Crop.h"
+#import "WSLProgressHUD.h"
 
 #define IntroduceLabelHeight 213
 
@@ -58,6 +59,7 @@
 #pragma mark -
 #pragma mark UIView lifeCycle
 - (void)viewWillAppear:(BOOL)animated{
+    
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"bg_navigationBar"] forBarMetrics:UIBarMetricsDefault];
 }
 
@@ -104,6 +106,11 @@
     self.mCinemaDiscount = [[DataBaseManager sharedInstance] getCinemaDiscountFromCoreData:_mCinema];
     
     if (_mCinemaDiscount.discountInfo==nil) {//影院折扣详情空
+        
+            [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+                
+            }];
+        
            self.apiCmdMovie_getCinemaDiscount =  (ApiCmdMovie_getCinemaDiscount *)[[DataBaseManager sharedInstance] getCinemaDiscountFromWebDelegate:self cinema:_mCinema];
         
     }else{
@@ -143,6 +150,7 @@
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
     if (error) {
+        [WSLProgressHUD dismiss];
         return;
     }
     
@@ -182,6 +190,8 @@
         }
             break;
     }
+    
+     [WSLProgressHUD dismiss];
 }
 
 - (void)formatCinemaData:(NSDictionary *)responseDic{

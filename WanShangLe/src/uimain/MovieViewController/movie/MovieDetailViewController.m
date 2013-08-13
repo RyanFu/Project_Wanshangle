@@ -16,6 +16,7 @@
 #import "ApiCmdMovie_getAllMovieDetail.h"
 #import "ApiCmd_recommendOrLook.h"
 #import "UIImage+Crop.h"
+#import "WSLProgressHUD.h"
 
 #define IntroduceLabelHeight_5 213
 #define IntroduceLabelHeight 127
@@ -63,7 +64,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:Color4];
+//    [self.view setBackgroundColor:Color4];
     
     _appDelegate = [AppDelegate appDelegateInstance];
     
@@ -111,6 +112,11 @@
     self.mMovieDetail = [[DataBaseManager sharedInstance] getMovieDetailWithId:_mMovie.uid];
     
     if (_mMovieDetail==nil) {//电影详情为空
+        
+        [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+            
+        }];
+        
         self.apiCmdMovie_getAllMovieDetail = (ApiCmdMovie_getAllMovieDetail *)[[DataBaseManager sharedInstance] getMovieDetailFromWeb:self movieId:_mMovie.uid];
         
     }else{
@@ -247,6 +253,7 @@
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
     if (error) {
+        [WSLProgressHUD dismiss];
         return;
     }
     
@@ -313,6 +320,8 @@
             }
                 break;
         }
+        
+         [WSLProgressHUD dismiss];
     });
 
 }

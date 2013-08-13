@@ -20,6 +20,7 @@
 #import "AppDelegate.h"
 #import <ShareSDK/ShareSDK.h>
 #import "UIImage+Crop.h"
+#import "WSLProgressHUD.h"
 
 #define EmBedFooterView 100
 
@@ -123,6 +124,11 @@
 }
 
 - (void)initData{
+    
+    [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+        
+    }];
+    
     self.title = _mMovie.name;
     
     [_todayButton setSelected:NO];
@@ -360,6 +366,7 @@
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
     if (error){
+        [WSLProgressHUD dismiss];
         return;
     }
     
@@ -442,6 +449,9 @@
         }
         
         if (_todayButton.selected && ([timedistance intValue]==0)) {
+            
+            [WSLProgressHUD dismiss];//因为先选择的是今天的排气
+            
             [self refreshTodaySchedule];
         }else if(_tomorrowButton.selected){
             [self refreshTomorrowSchedule];

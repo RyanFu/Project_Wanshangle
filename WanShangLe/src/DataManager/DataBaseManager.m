@@ -894,8 +894,8 @@ static DataBaseManager *_sharedInstance = nil;
     aMovieDetail.recommendation = [amovieDetailData objectForKey:@"recommendadded"];
     aMovieDetail.info = amovieDetailData;
     aMovieDetail.uid = [amovieDetailData objectForKey:@"id"];
-    aMovieDetail.language = [amovieDetailData objectForKey:@"language"];
-    aMovieDetail.productarea = [amovieDetailData objectForKey:@"productarea"];
+    aMovieDetail.language = [amovieDetailData objectForKey:@"lang"];
+    aMovieDetail.productarea = [amovieDetailData objectForKey:@"region"];
     aMovieDetail.locationDate = [self getTodayTimeStamp];
     aMovieDetail.webImg = [amovieDetailData objectForKey:@"coverurl_thumbnail_1"];
 }
@@ -2024,8 +2024,8 @@ static DataBaseManager *_sharedInstance = nil;
     showDetail.extpayurl = [infoDic objectForKey:@"extpayurl"];
     showDetail.locationDate = [self getTodayTimeStamp];
     showDetail.uid = [infoDic objectForKey:@"id"];
-    showDetail.recommendation = [infoDic objectForKey:@"recommend"];
-    showDetail.wantLook = [infoDic objectForKey:@"like"];
+    showDetail.recommendation = [[infoDic objectForKey:@"recommend"] stringValue];
+    showDetail.wantLook = [[infoDic objectForKey:@"like"] stringValue];
     showDetail.name = [infoDic objectForKey:@"name"];
     NSString *prices = [[infoDic objectForKey:@"prices"] componentsJoinedByString:@","];
     showDetail.prices = prices;
@@ -2062,8 +2062,8 @@ static DataBaseManager *_sharedInstance = nil;
         showDetail = [SShowDetail MR_createInContext:context];
         showDetail.uid = [infoDic objectForKey:@"performid"];
     }
-    showDetail.recommendation = [infoDic objectForKey:@"recommend"];
-    showDetail.wantLook = [infoDic objectForKey:@"look"];
+    showDetail.recommendation = [[infoDic objectForKey:@"recommend"] stringValue];
+    showDetail.wantLook = [[infoDic objectForKey:@"look"] stringValue];
     
     [self saveInManagedObjectContext:context];
     

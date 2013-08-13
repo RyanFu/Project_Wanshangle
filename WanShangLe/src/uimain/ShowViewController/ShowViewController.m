@@ -11,6 +11,7 @@
 #import "ShowTableViewDelegate.h"
 #import "EGORefreshTableHeaderView.h"
 #import "ASIHTTPRequest.h"
+#import "WSLProgressHUD.h"
 
 @interface ShowViewController ()<ApiNotify>{
     BOOL isLoadMoreAll;
@@ -373,9 +374,10 @@
         _oldSelectedTime = _selectedTime;
         _oldSelectedType = _selectedType;
         
-        [_mCacheArray removeAllObjects];
-        [_mArray removeAllObjects];
-        [self loadMoreData];
+//        [_mCacheArray removeAllObjects];
+//        [_mArray removeAllObjects];
+//        [self loadMoreData];
+        [self loadNewData];
         
         [_mTableView setContentOffset:CGPointMake(0, 0) animated:NO];
     }
@@ -562,9 +564,10 @@
 #pragma mark -
 #pragma mark apiNotiry
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
-    
+   
     if (error!=nil) {
         [self reloadPullRefreshData];
+        [WSLProgressHUD dismiss];
         return;
     }
     
@@ -575,7 +578,9 @@
         if (dataArray==nil || [dataArray count]<=0) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self reloadPullRefreshData];
+                [WSLProgressHUD dismiss];
             });
+            
             return;
         }
         int tag = [[apiCmd httpRequest] tag];
@@ -601,6 +606,7 @@
 {
     if (dataArray==nil || [dataArray count]<=0) {
 //        [self reloadPullRefreshData];
+         [WSLProgressHUD dismiss];
         return;
     }
 
@@ -623,6 +629,7 @@
 
     dispatch_async(dispatch_get_main_queue(), ^{
         [self reloadPullRefreshData];
+         [WSLProgressHUD dismiss];
     });
     
 }
@@ -631,6 +638,12 @@
 #pragma mark -
 #pragma mark 刷新和加载更多
 - (void)loadMoreData{
+    
+    if (_mArray==nil || [_mArray count]==0) {
+        [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+            
+        }];
+    }
     
     isLoadMoreAll = YES;
     [self setTableViewDelegate];
@@ -641,10 +654,19 @@
         }
     }
     
-    [self updateData:0 withData:[self getCacheData]];
+    NSArray *cachArray = [self getCacheData];
+    if (cachArray==nil || [cachArray count]==0) {
+        return;
+    }
+    
+    [self updateData:0 withData:cachArray];
 }
 
 - (void)loadNewData{
+    
+    [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+        
+    }];
     
     isLoadMoreAll = NO;
     [_mCacheArray removeAllObjects];
@@ -656,7 +678,12 @@
         }
     }
     
-    [self updateData:0 withData:[self getCacheData]];
+    NSArray *cachArray = [self getCacheData];
+    if (cachArray==nil || [cachArray count]==0) {
+        return;
+    }
+    
+    [self updateData:0 withData:cachArray];
 }
 
 - (BOOL)checkGPS{

@@ -196,13 +196,21 @@
 #pragma mark UIScrollViewDelegate Methods
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
-    [_refreshTailerView egoRefreshScrollViewDidScroll:scrollView];
+    if (!_refreshHeaderView.hidden) {
+        [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    }
+    if(!_refreshTailerView.hidden){
+        [_refreshTailerView egoRefreshScrollViewDidScroll:scrollView];
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
-    [_refreshTailerView egoRefreshScrollViewDidEndDragging:scrollView];
+    if (!_refreshHeaderView.hidden) {
+        [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    }
+    if(!_refreshTailerView.hidden){
+        [_refreshTailerView egoRefreshScrollViewDidEndDragging:scrollView];
+    }
 }
 
 
@@ -211,15 +219,20 @@
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
     
-    if (view.tag == EGOHeaderView) {
+    if (view.tag == EGOHeaderView && !view.hidden) {
         [self reloadTableViewDataSource];
-    } else {
+    } else if(view.tag == EGOBottomView && !view.hidden){
         [self loadMoreTableViewDataSource];
     }
     
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+    
+    if (view.hidden) {
+        return NO;
+    }
+    
 	return _reloading; // should return if data source model is reloading
 }
 

@@ -11,6 +11,7 @@
 #import "KtvFavoriteViewController.h"
 #import "KtvManagerViewController.h"
 #import "KTVFavoriteListTableViewDelegate.h"
+#import "WSLProgressHUD.h"
 
 @interface KtvFavoriteViewController(){
 }

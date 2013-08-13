@@ -13,12 +13,8 @@
     IBOutlet UIButton *forwardButton;
     IBOutlet UIButton *postErrorButton;
     IBOutlet UIView *bottomBar;
-    IBOutlet UIView *errorPopupView;
     IBOutlet UIView *commitErrorView;
-    
-    IBOutlet UIActivityIndicatorView *activityIndicator;
-    IBOutlet UIButton *cancelLoadingButton;
-    IBOutlet UIView *LoadingView;
+
 }
 @property(nonatomic,retain)IBOutlet UITextView *adviceTextView;
 @property(nonatomic,retain)IBOutlet UILabel *placeHoldText;

@@ -17,6 +17,7 @@
 #import "SIAlertView.h"
 #import "UIImage+Crop.h"
 #import "UIActionSheet+MKBlockAdditions.h"
+#import "WSLProgressHUD.h"
 
 #define IntroduceLabelHeight_5 213
 #define IntroduceLabelHeight 130
@@ -36,7 +37,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        
+        self.title = @"酒吧详情";
     }
     return self;
 }
@@ -122,6 +123,10 @@
     self.mBarDetail = [[DataBaseManager sharedInstance] getBarDetailWithId:_mBar.uid];
 
     if (_mBarDetail==nil) {//酒吧详情为空
+        
+        [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+            
+        }];
         self.apiCmdBar_getBarDetail = (ApiCmdBar_getBarDetail *)[[DataBaseManager sharedInstance] getBarDetailFromWeb:self barId:_mBar.uid];
         
     }else{
@@ -256,6 +261,7 @@
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
     
     if (error) {
+        [WSLProgressHUD dismiss];
         return;
     }
     
@@ -327,6 +333,8 @@
             }
                 break;
         }
+        
+         [WSLProgressHUD dismiss];
     });
 }
 

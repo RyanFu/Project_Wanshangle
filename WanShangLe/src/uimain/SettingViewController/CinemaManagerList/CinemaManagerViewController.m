@@ -13,6 +13,7 @@
 #import "MCinema.h"
 #import "ApiCmd.h"
 #import "JSButton.h"
+#import "WSLProgressHUD.h"
 
 #import "CinemaAllListManagerDelegate.h"
 
@@ -69,6 +70,12 @@
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
     [self hiddenRefreshTailerView];
+    
+    if (_mArray==nil || [_mArray count]==0) {
+        [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+            
+        }];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -405,6 +412,7 @@
 #pragma mark -
 #pragma mark apiNotiry
 -(void)apiNotifyResult:(id)apiCmd error:(NSError *)error{
+    [WSLProgressHUD dismiss];
     
     if (error!=nil) {
         [self reloadPullRefreshData];
@@ -425,6 +433,7 @@
 }
 
 - (void) apiNotifyLocationResult:(id)apiCmd cacheData:(NSArray*)cacheData{
+    [WSLProgressHUD dismiss];
     [self addDataIntoCacheData:cacheData];
     [self updateData:API_MCinemaCmd withData:[self getCacheData]];
 }

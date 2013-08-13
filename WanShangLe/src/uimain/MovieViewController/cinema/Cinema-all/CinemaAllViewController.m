@@ -13,7 +13,7 @@
 #import "ASIHTTPRequest.h"
 #import "MCinema.h"
 #import "ApiCmd.h"
-
+#import "WSLProgressHUD.h"
 #import "MovieCinemaAllListDelegate.h"
 #import "CinemaAllListTableViewDelegate.h"
 
@@ -76,6 +76,13 @@
 #pragma mark -
 #pragma mark UIView cycle
 - (void)viewWillAppear:(BOOL)animated{
+    
+    if (isNullArray(_mArray)) {
+        [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+            
+        }];
+    }
+    
     [self hiddenSearchBar];
     
     if ([_mArray count]<=0) {
@@ -470,7 +477,11 @@
     [self setTableViewDelegate];
     
     
-    [self updateData:0 withData:[self getCacheData]];
+    NSArray *cachArray = [self getCacheData];
+    if (isNullArray(cachArray)) {
+        return;
+    }
+    [self updateData:0 withData:cachArray];
 }
 
 - (void)loadNewData{
@@ -478,7 +489,11 @@
     isLoadMoreAll = NO;
     [_mCacheArray removeAllObjects];
     
-    [self updateData:0 withData:[self getCacheData]];
+    NSArray *cachArray = [self getCacheData];
+    if (isNullArray(cachArray)) {
+        return;
+    }
+    [self updateData:0 withData:cachArray];
 }
 
 - (void)reloadPullRefreshData{
@@ -492,7 +507,6 @@
         }else{
             [_movieDelegate doneReLoadingTableViewData];
         }
-//        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
         
     }else{
         if (isLoadMoreAll) {
@@ -500,10 +514,10 @@
         }else{
             [_cinemaDelegate doneReLoadingTableViewData];
         }
-//        _refreshTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
         
     }
 
+    [WSLProgressHUD dismiss];
 
 }
 

@@ -14,6 +14,7 @@
 #import "ApiCmd.h"
 #import "BarViewController.h"
 #import "BarNearByListTableViewDelegate.h"
+#import "WSLProgressHUD.h"
 
 @interface BarNearByViewController()<ApiNotify>{
     BOOL isLoadMore;
@@ -57,16 +58,13 @@
     
     if ([self checkGPS]) {
         if (_mArray==nil || [_mArray count]<=0) {
+            if (isNullArray(_mArray)) {
+                [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+                    
+                }];
+            }
             [self loadNewData];//初始化加载
         }
-    }
-}
-
-- (void)updatData{
-    for (int i=0; i<10; i++) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            //            self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
-        });
     }
 }
 
@@ -345,6 +343,8 @@
     }
     
     _refreshNearByTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+    
+    [WSLProgressHUD dismiss];
 }
 
 //添加缓存数据

@@ -13,6 +13,7 @@
 #import "KKTV.h"
 #import "ApiCmd.h"
 #import "KTVNearByListTableViewDelegate.h"
+#import "WSLProgressHUD.h"
 
 @interface KtvNearByViewController()<ApiNotify>{
     BOOL isLoadMore;
@@ -56,16 +57,13 @@
     
     if ([self checkGPS]) {
         if (_mArray==nil || [_mArray count]<=0) {
+            if (isNullArray(_mArray)) {
+                [WSLProgressHUD showWithTitle:nil status:nil cancelBlock:^{
+                    
+                }];
+            }
             [self loadNewData];//初始化加载
         }
-    }
-}
-
-- (void)updatData{
-    for (int i=0; i<DataCount; i++) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            self.apiCmdKTV_getAllKTVs = (ApiCmdKTV_getAllKTVs *)[[DataBaseManager sharedInstance] getAllKTVsListFromWeb:self];
-        });
     }
 }
 
@@ -301,7 +299,11 @@
         return;
     }
     
-    [self updateData:0 withData:[self getCacheData]];
+    NSArray *cachArray = [self getCacheData];
+    if (isNullArray(cachArray)) {
+        return;
+    }
+    [self updateData:0 withData:cachArray];
 }
 
 - (void)loadNewData{
@@ -314,14 +316,18 @@
     if (![self checkGPS]) {
         return;
     }
-    [self updateData:0 withData:[self getCacheData]];
+    
+    NSArray *cachArray = [self getCacheData];
+    if (isNullArray(cachArray)) {
+        return;
+    }
+    [self updateData:0 withData:cachArray];
 }
 
 - (BOOL)checkGPS{
     BOOL b = [[LocationManager defaultLocationManager] checkGPSEnable];
-    if (!b) {
-        [self displayNOGPS:YES];
-    }
+
+    [self displayNOGPS:!b];
     
     return b;
 }
@@ -336,7 +342,16 @@
         [_mCacheArray removeAllObjects];
         [_mArray removeAllObjects];
         [self reloadPullRefreshData];
-    }  
+    }else{
+        UIView *footerView = [[UIView alloc] initWithFrame:CGRectZero];
+        footerView.backgroundColor = [UIColor clearColor];
+        _mTableView.tableFooterView = footerView;
+        [footerView release];
+    }
+    
+    if (isNullArray(_mArray)) {
+        _refreshNearByTailerView.hidden = YES;
+    }
 }
 
 - (void)reloadPullRefreshData{
@@ -349,6 +364,8 @@
     }
     
     _refreshNearByTailerView.frame = CGRectMake(0.0f, _mTableView.contentSize.height, _mTableView.frame.size.width, _mTableView.bounds.size.height);
+    
+    [WSLProgressHUD dismiss];
 }
 
 //添加缓存数据
