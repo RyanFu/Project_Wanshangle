@@ -24,7 +24,7 @@ struct SysConfig {
     char currentVersonNumber[16];
 //    char umengStatisticAppkey[128];
 //    char flurryAppkey[128];
-    NSMutableDictionary * settingDict;
+//    NSMutableDictionary * settingDict;
 };
 
 
@@ -37,7 +37,7 @@ struct SysConfig  _configureArray[SysEnvEnd] = {
         .barcodeServerUrl = "http://dev-barcode.huishow.net/barcode/barcode/",
         .shortServerUrl = "http://hs8.cn",
         .reviewUrl = "http://dev-www.huishow.net/contact.php",
-        .settingDict = nil,
+//        .settingDict = nil,
         .umengSNSAppkey = "4fa9df4c52701547c600002b",
         .currentVersonNumber = "2.1",
 //        .umengStatisticAppkey = "4fa9df4c52701547c600002b",
@@ -50,7 +50,7 @@ struct SysConfig  _configureArray[SysEnvEnd] = {
         .barcodeServerUrl = "http://barcode.huishow.net/barcode/barcode/",
         .shortServerUrl = "http://hs8.cn",
         .reviewUrl = "http://dev-www.huishow.net/contact.php",
-        .settingDict = nil,
+//        .settingDict = nil,
         .umengSNSAppkey = "4fa9df4c52701547c600002b",
         .currentVersonNumber = "2.1",
 //        .umengStatisticAppkey = "4fa9df4c52701547c600002b",
@@ -63,7 +63,7 @@ struct SysConfig  _configureArray[SysEnvEnd] = {
         .barcodeServerUrl = "http://barcode.huishow.com/barcode/barcode/",
         .shortServerUrl = "http://hs8.cn",
         .reviewUrl = "http://www.huishow.com/contact.php",
-        .settingDict = nil,
+//        .settingDict = nil,
         .umengSNSAppkey = "4fa9df4c52701547c600002b",
         .currentVersonNumber = "2.1",
 //        .umengStatisticAppkey = "4fa9df4c52701547c600002b",
@@ -91,30 +91,30 @@ struct SysConfig  _configureArray[SysEnvEnd] = {
 
 + (void) doSystemInit {
     
-    // init the setting dictionary
-    NSString* homePath = [NSHomeDirectory() stringByAppendingPathComponent:@"/Documents"];
-    _settingFile = [[homePath stringByAppendingPathComponent:@"setting.set"] retain];
-    
-    if([[NSFileManager defaultManager] fileExistsAtPath:_settingFile]){
-        [self getCurrentConfigPointer]->settingDict = [[NSMutableDictionary alloc] initWithContentsOfFile:_settingFile];
-    }
-    else{
-        [self getCurrentConfigPointer]->settingDict = [[NSMutableDictionary alloc] init];
-        NSDictionary* dict = [self getCurrentConfig].settingDict;
-        [dict setValue:@"1" forKey:@"sounds"];
-        [dict setValue:@"0" forKey:@"shock"];
-        [dict setValue:@"1" forKey:@"camera"];
-        [dict setValue:@"1" forKey:@"shake"];
-        [dict setValue:@"0" forKey:@"autourl"];
-        [dict setValue:@"0" forKey:@"copyboard"];
-        [dict setValue:@"1" forKey:@"30day"];
-        [dict setValue:@"1" forKey:@"genImageversion"];
-        [dict writeToFile:_settingFile atomically:YES];
-    }
+//    // init the setting dictionary
+//    NSString* homePath = [NSHomeDirectory() stringByAppendingPathComponent:@"/Documents"];
+//    _settingFile = [[homePath stringByAppendingPathComponent:@"setting.set"] retain];
+//    
+//    if([[NSFileManager defaultManager] fileExistsAtPath:_settingFile]){
+//        [self getCurrentConfigPointer]->settingDict = [[NSMutableDictionary alloc] initWithContentsOfFile:_settingFile];
+//    }
+//    else{
+//        [self getCurrentConfigPointer]->settingDict = [[NSMutableDictionary alloc] init];
+//        NSDictionary* dict = [self getCurrentConfig].settingDict;
+//        [dict setValue:@"1" forKey:@"sounds"];
+//        [dict setValue:@"0" forKey:@"shock"];
+//        [dict setValue:@"1" forKey:@"camera"];
+//        [dict setValue:@"1" forKey:@"shake"];
+//        [dict setValue:@"0" forKey:@"autourl"];
+//        [dict setValue:@"0" forKey:@"copyboard"];
+//        [dict setValue:@"1" forKey:@"30day"];
+//        [dict setValue:@"1" forKey:@"genImageversion"];
+//        [dict writeToFile:_settingFile atomically:YES];
+//    }
 }
 
 + (void) doSystemDestroy {
-    [[self getCurrentConfig].settingDict release];
+//    [[self getCurrentConfig].settingDict release];
     [_settingFile release];
 }
 
@@ -129,12 +129,12 @@ struct SysConfig  _configureArray[SysEnvEnd] = {
                               encoding:NSUTF8StringEncoding];
 }
 + (NSString*) getSetting:(NSString*) key{
-    return [[self getCurrentConfig].settingDict valueForKey:key];
+//    return [[self getCurrentConfig].settingDict valueForKey:key];
 }
 
 + (void) setSetting:(NSString*) value key:(NSString*) key{
-    [[self getCurrentConfig].settingDict setValue:value forKey:key];
-    [[self getCurrentConfig].settingDict writeToFile:_settingFile atomically:YES];
+//    [[self getCurrentConfig].settingDict setValue:value forKey:key];
+//    [[self getCurrentConfig].settingDict writeToFile:_settingFile atomically:YES];
 }
 +(NSString*)getUmengSNSAppkey
 {

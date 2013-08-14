@@ -14,11 +14,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UncaughtExceptionHandler : NSObject
+@interface WSLUncaughtExceptionHandler : NSObject
 {
 	BOOL dismissed;
 }
 
 @end
 
-void InstallUncaughtExceptionHandler();
+void InstallWSLUncaughtExceptionHandler();

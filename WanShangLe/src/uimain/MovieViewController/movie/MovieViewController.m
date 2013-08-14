@@ -394,7 +394,10 @@
 #pragma mark -
 #pragma mark 刷新和加载更多
 - (void)loadNewData{
-    self.apiCmdMovie_getAllMovies =  (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self cinemaId:nil];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        self.apiCmdMovie_getAllMovies =  (ApiCmdMovie_getAllMovies *)[[DataBaseManager sharedInstance] getAllMoviesListFromWeb:self cinemaId:nil];
+    });
 }
 
 #pragma mark -
@@ -438,13 +441,10 @@
         case 0:
         case API_MMovieCmd:
         {
-//            NSArray *array = [[DataBaseManager sharedInstance] getAllMoviesListFromCoreData];
-//            self.moviesArray = array;
+
             ABLoggerDebug(@"电影 count ==== %d",[self.moviesArray count]);
-            
             [self setTableViewDelegate];
             dispatch_sync(dispatch_get_main_queue(), ^{
-                
                 [self.movieTableView reloadData];
             });
         }
@@ -452,8 +452,8 @@
             
         case API_MCinemaCmd:
         {
-            NSArray *array = [[DataBaseManager sharedInstance] getAllCinemasListFromCoreData];
-            ABLoggerDebug(@"影院 count ==== %d",[array count]);
+//            NSArray *array = [[DataBaseManager sharedInstance] getAllCinemasListFromCoreData];
+//            ABLoggerDebug(@"影院 count ==== %d",[array count]);
         }
             break;
         default:
