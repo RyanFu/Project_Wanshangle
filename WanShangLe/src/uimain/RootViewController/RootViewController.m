@@ -98,7 +98,7 @@
     
     //设置按钮配置
     UIButton *settingButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    settingButton.frame = CGRectMake(0, 0, 45, 30);
+    settingButton.frame = CGRectMake(0, 0, 45, 32);
     [settingButton setBackgroundImage:[UIImage imageNamed:@"btn_setting_n@2x"] forState:UIControlStateNormal];
     [settingButton setBackgroundImage:[UIImage imageNamed:@"btn_setting_f@2x"] forState:UIControlStateHighlighted];
     [settingButton addTarget:self action:@selector(clickSettingButton:) forControlEvents:UIControlEventTouchUpInside];
