@@ -94,6 +94,15 @@
     cell.cinema_image_location.hidden = NO;
     cell.cinema_distance.hidden = NO;
     
+    NSString *kmStr = nil;
+    int distance = [cinema.distance intValue];
+    if (distance>1000) {
+        kmStr = [NSString stringWithFormat:@"%0.2fkm",distance/1000.0f];
+    }else{
+        kmStr = [NSString stringWithFormat:@"%dm",distance];
+    }
+     cell.cinema_distance.text = kmStr;
+    
     MMovie *aMovie = [_parentViewController.mParentController mMovie];
     cell.cinema_price.text = @"";
     [cell.cinema_scheduleCount setJSONWithWithMovie:aMovie
