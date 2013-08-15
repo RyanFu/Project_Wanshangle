@@ -142,6 +142,8 @@
     
     cell.cinema_name.text = cinema.name;
     cell.cinema_address.text = cinema.address;
+    cell.cinema_name.text = cinema.name;
+    [[cell viewWithTag:TagTuan] removeFromSuperview];
     
     MMovie *aMovie = [_parentViewController.mParentController mMovie];
     cell.cinema_price.text = @"";
@@ -149,62 +151,72 @@
     [cell.cinema_scheduleCount setJSONWithWithMovie:aMovie
                                              cinema:cinema
                                         placeholder:@"亲,正在加载..."
-                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, NSString *resultString) {
-                                                cell.cinema_price.text = resultString;
+                                            success:^(NSURLRequest *request, NSHTTPURLResponse *response, NSDictionary *resultDic) {
+                                                int priceInt = [[resultDic objectForKey:@"lowestPrice"] intValue];
+                                                NSString *price = nil;
+                                                if (priceInt<0) {
+                                                    price = @"暂无价格";
+                                                }else{
+                                                    price = [NSString stringWithFormat:@"%d元",priceInt];
+                                                }
+                                                cell.cinema_price.text = price;
+                                                
+                                                NSMutableArray *array = [NSMutableArray arrayWithCapacity:3];
+                                                NSArray *flagArray = [resultDic objectForKey:@"pricetype"];
+                                                if ([[flagArray objectAtIndex:2] boolValue]) {
+                                                    [array addObject:cell.cinema_image_juan];
+                                                }
+                                                if ([[flagArray objectAtIndex:0] boolValue]) {
+                                                    [array addObject:cell.cinema_image_seat];
+                                                }
+                                                if ([[flagArray objectAtIndex:1] boolValue]) {
+                                                    [array addObject:cell.cinema_image_tuan];
+                                                }
+                                                
+                                                int twidth = 0;
+                                                UIView *view = [[UIView alloc] init];
+                                                for (int i=0;i<[array count];i++) {
+                                                    
+                                                    UIView *tview = [array objectAtIndex:i];
+                                                    CGRect tframe = tview.frame;
+                                                    
+                                                    tframe.origin.x = twidth;
+                                                    twidth += tframe.size.width + 5;
+                                                    
+                                                    tview.frame = tframe;
+                                                    [view addSubview:tview];
+                                                }
+                                                
+                                                CGRect tFrame = [(UIView *)[array lastObject] frame];
+                                                int width = (int)tFrame.origin.x+ tFrame.size.width;
+                                                ABLoggerInfo(@"view frame ===== %d",width);
+                                                [cell addSubview:view];
+                                                view.tag = TagTuan;
+                                                [view release];
+                                                
+                                                int nameSize_width = (cell.bounds.size.width-width-cell.cinema_name.frame.origin.x);
+                                                ABLoggerDebug(@"cinema.name = %@",cinema.name);
+                                                
+                                                CGSize nameSize = [cinema.name sizeWithFont:cell.cinema_name.font
+                                                                          constrainedToSize:CGSizeMake(nameSize_width,MAXFLOAT)];
+                                                
+                                                CGRect cell_newFrame = cell.cinema_name.frame;
+                                                cell_newFrame.size.width = nameSize.width;
+                                                cell.cinema_name.frame = cell_newFrame;
+                                                
+                                                int view_x = cell.cinema_name.frame.origin.x+cell.cinema_name.frame.size.width +10;
+                                                [view setFrame:CGRectMake(view_x, 0, width, 15)];
+                                                CGPoint newCenter = view.center;
+                                                newCenter.y = cell.cinema_name.center.y;
+                                                view.center = newCenter;
+                                                cell.cinema_name.text = cinema.name;
+
+                                                
                                             } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
                                                 ABLoggerError(@" error == %@",[error description]);
                                             }];
 
-    NSMutableArray *array = [NSMutableArray arrayWithCapacity:4];
-    if ([cinema.zhekou boolValue]) {
-        [array addObject:cell.cinema_image_zhekou];
-    }
-    if ([cinema.juan boolValue]) {
-        [array addObject:cell.cinema_image_juan];
-    }
-    if ([cinema.seat boolValue]) {
-        [array addObject:cell.cinema_image_seat];
-    }
-    if ([cinema.tuan boolValue]) {
-        [array addObject:cell.cinema_image_tuan];
-    }
     
-    int twidth = 0;
-    UIView *view = [[UIView alloc] init];
-    for (int i=0;i<[array count];i++) {
-        
-        UIView *tview = [array objectAtIndex:i];
-        CGRect tframe = tview.frame;
-        
-        tframe.origin.x = twidth;
-        twidth += tframe.size.width + 5;
-        
-        tview.frame = tframe;
-        [view addSubview:tview];
-    }
-    
-    CGRect tFrame = [(UIView *)[array lastObject] frame];
-    int width = (int)tFrame.origin.x+ tFrame.size.width;
-    ABLoggerInfo(@"view frame ===== %d",width);
-    [cell addSubview:view];
-    [view release];
-    
-    int nameSize_width = (cell.bounds.size.width-width-cell.cinema_name.frame.origin.x);
-    ABLoggerDebug(@"cinema.name = %@",cinema.name);
-    
-    CGSize nameSize = [cinema.name sizeWithFont:cell.cinema_name.font
-                              constrainedToSize:CGSizeMake(nameSize_width,MAXFLOAT)];
-    
-    CGRect cell_newFrame = cell.cinema_name.frame;
-    cell_newFrame.size.width = nameSize.width;
-    cell.cinema_name.frame = cell_newFrame;
-    
-    int view_x = cell.cinema_name.frame.origin.x+cell.cinema_name.frame.size.width +10;
-    [view setFrame:CGRectMake(view_x, 0, width, 15)];
-    CGPoint newCenter = view.center;
-    newCenter.y = cell.cinema_name.center.y;
-    view.center = newCenter;
-    cell.cinema_name.text = cinema.name;
 }
 
 #pragma mark -

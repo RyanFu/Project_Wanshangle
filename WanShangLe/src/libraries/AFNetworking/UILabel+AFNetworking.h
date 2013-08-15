@@ -45,7 +45,7 @@
 - (void)setJSONWithWithMovie:(MMovie *)aMovie
                       cinema:(MCinema *)aCinema
                  placeholder:(NSString *)placeholderString
-                     success:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSString *resultString))success
+                     success:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSDictionary *resultDic))success
                      failure:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error))failure;
 
 /**

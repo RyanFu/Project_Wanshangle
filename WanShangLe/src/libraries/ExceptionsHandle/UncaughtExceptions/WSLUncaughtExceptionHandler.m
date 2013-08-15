@@ -12,22 +12,22 @@
 //  appreciated but not required.
 //
 
-#import "UncaughtExceptionHandler.h"
+#import "WSLUncaughtExceptionHandler.h"
 #import "SIAlertView.h"
 #include <libkern/OSAtomic.h>
 #include <execinfo.h>
 
-NSString * const UncaughtExceptionHandlerSignalExceptionName = @"UncaughtExceptionHandlerSignalExceptionName";
-NSString * const UncaughtExceptionHandlerSignalKey = @"UncaughtExceptionHandlerSignalKey";
-NSString * const UncaughtExceptionHandlerAddressesKey = @"UncaughtExceptionHandlerAddressesKey";
+NSString * const WSLUncaughtExceptionHandlerSignalExceptionName = @"WSLUncaughtExceptionHandlerSignalExceptionName";
+NSString * const WSLUncaughtExceptionHandlerSignalKey = @"WSLUncaughtExceptionHandlerSignalKey";
+NSString * const WSLUncaughtExceptionHandlerAddressesKey = @"WSLUncaughtExceptionHandlerAddressesKey";
 
-volatile int32_t UncaughtExceptionCount = 0;
-const int32_t UncaughtExceptionMaximum = 10;
+volatile int32_t WSLUncaughtExceptionCount = 0;
+const int32_t WSLUncaughtExceptionMaximum = 10;
 
-const NSInteger UncaughtExceptionHandlerSkipAddressCount = 4;
-const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
+const NSInteger WSLUncaughtExceptionHandlerSkipAddressCount = 4;
+const NSInteger WSLUncaughtExceptionHandlerReportAddressCount = 5;
 
-@implementation UncaughtExceptionHandler
+@implementation WSLUncaughtExceptionHandler
 
 + (NSArray *)backtrace
 {
@@ -38,9 +38,9 @@ const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
     int i;
     NSMutableArray *backtrace = [NSMutableArray arrayWithCapacity:frames];
     for (
-         i = UncaughtExceptionHandlerSkipAddressCount;
-         i < UncaughtExceptionHandlerSkipAddressCount +
-         UncaughtExceptionHandlerReportAddressCount;
+         i = WSLUncaughtExceptionHandlerSkipAddressCount;
+         i < WSLUncaughtExceptionHandlerSkipAddressCount +
+         WSLUncaughtExceptionHandlerReportAddressCount;
          i++)
     {
 	 	[backtrace addObject:[NSString stringWithUTF8String:strs[i]]];
@@ -75,7 +75,7 @@ const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
 //                                                           @"You can try to continue but the application may be unstable.\n\n"
 //                                                           @"Debug details follow:\n%@\n%@", nil),
 //               [exception reason],
-//               [[exception userInfo] objectForKey:UncaughtExceptionHandlerAddressesKey]]
+//               [[exception userInfo] objectForKey:WSLUncaughtExceptionHandlerAddressesKey]]
 //      delegate:self
 //      cancelButtonTitle:NSLocalizedString(@"Quit", nil)
 //      otherButtonTitles:NSLocalizedString(@"Continue", nil), nil]
@@ -85,7 +85,7 @@ const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
     SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"程序崩溃了"]
                                                      andMessage:[NSString stringWithFormat:NSLocalizedString(@"You can try to continue but the application may be unstable.\n\n"@"Debug details follow:\n%@\n%@", nil),
                                                                  [exception reason],
-                                                                 [[exception userInfo] objectForKey:UncaughtExceptionHandlerAddressesKey]]];
+                                                                 [[exception userInfo] objectForKey:WSLUncaughtExceptionHandlerAddressesKey]]];
     [alertView addButtonWithTitle:@"退出"
                              type:SIAlertViewButtonTypeCancel
                           handler:^(SIAlertView *alertView) {
@@ -124,9 +124,9 @@ const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
 	signal(SIGBUS, SIG_DFL);
 	signal(SIGPIPE, SIG_DFL);
 	
-	if ([[exception name] isEqual:UncaughtExceptionHandlerSignalExceptionName])
+	if ([[exception name] isEqual:WSLUncaughtExceptionHandlerSignalExceptionName])
 	{
-		kill(getpid(), [[[exception userInfo] objectForKey:UncaughtExceptionHandlerSignalKey] intValue]);
+		kill(getpid(), [[[exception userInfo] objectForKey:WSLUncaughtExceptionHandlerSignalKey] intValue]);
 	}
 	else
 	{
@@ -138,20 +138,20 @@ const NSInteger UncaughtExceptionHandlerReportAddressCount = 5;
 
 void HandleException(NSException *exception)
 {
-	int32_t exceptionCount = OSAtomicIncrement32(&UncaughtExceptionCount);
-	if (exceptionCount > UncaughtExceptionMaximum)
+	int32_t exceptionCount = OSAtomicIncrement32(&WSLUncaughtExceptionCount);
+	if (exceptionCount > WSLUncaughtExceptionMaximum)
 	{
 		return;
 	}
 	
-	NSArray *callStack = [UncaughtExceptionHandler backtrace];
+	NSArray *callStack = [WSLUncaughtExceptionHandler backtrace];
 	NSMutableDictionary *userInfo =
     [NSMutableDictionary dictionaryWithDictionary:[exception userInfo]];
 	[userInfo
      setObject:callStack
-     forKey:UncaughtExceptionHandlerAddressesKey];
+     forKey:WSLUncaughtExceptionHandlerAddressesKey];
 	
-	[[[[UncaughtExceptionHandler alloc] init] autorelease]
+	[[[[WSLUncaughtExceptionHandler alloc] init] autorelease]
      performSelectorOnMainThread:@selector(handleException:)
      withObject:
      [NSException
@@ -163,8 +163,8 @@ void HandleException(NSException *exception)
 
 void SignalHandler(int signal)
 {
-	int32_t exceptionCount = OSAtomicIncrement32(&UncaughtExceptionCount);
-	if (exceptionCount > UncaughtExceptionMaximum)
+	int32_t exceptionCount = OSAtomicIncrement32(&WSLUncaughtExceptionCount);
+	if (exceptionCount > WSLUncaughtExceptionMaximum)
 	{
 		return;
 	}
@@ -172,18 +172,18 @@ void SignalHandler(int signal)
 	NSMutableDictionary *userInfo =
     [NSMutableDictionary
      dictionaryWithObject:[NSNumber numberWithInt:signal]
-     forKey:UncaughtExceptionHandlerSignalKey];
+     forKey:WSLUncaughtExceptionHandlerSignalKey];
     
-	NSArray *callStack = [UncaughtExceptionHandler backtrace];
+	NSArray *callStack = [WSLUncaughtExceptionHandler backtrace];
 	[userInfo
      setObject:callStack
-     forKey:UncaughtExceptionHandlerAddressesKey];
+     forKey:WSLUncaughtExceptionHandlerAddressesKey];
 	
-	[[[[UncaughtExceptionHandler alloc] init] autorelease]
+	[[[[WSLUncaughtExceptionHandler alloc] init] autorelease]
      performSelectorOnMainThread:@selector(handleException:)
      withObject:
      [NSException
-      exceptionWithName:UncaughtExceptionHandlerSignalExceptionName
+      exceptionWithName:WSLUncaughtExceptionHandlerSignalExceptionName
       reason:
       [NSString stringWithFormat:
        NSLocalizedString(@"Signal %d was raised.", nil),
@@ -191,11 +191,11 @@ void SignalHandler(int signal)
       userInfo:
       [NSDictionary
        dictionaryWithObject:[NSNumber numberWithInt:signal]
-       forKey:UncaughtExceptionHandlerSignalKey]]
+       forKey:WSLUncaughtExceptionHandlerSignalKey]]
      waitUntilDone:YES];
 }
 
-void InstallUncaughtExceptionHandler()
+void InstallWSLUncaughtExceptionHandler()
 {
 	NSSetUncaughtExceptionHandler(&HandleException);
     signal(SIGQUIT, SignalHandler);

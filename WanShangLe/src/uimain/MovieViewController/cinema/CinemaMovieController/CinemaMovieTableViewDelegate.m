@@ -91,7 +91,7 @@
         
         break;
     }
-    cell.schedule_view.text = [NSString stringWithFormat:@"国语%@",viewType];
+    cell.schedule_view.text = [NSString stringWithFormat:@"%@",viewType];
 }
 
 -(ScheduleTableViewCell *)createNewMocieCell{

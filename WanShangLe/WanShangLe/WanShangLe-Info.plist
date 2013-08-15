@@ -52,12 +52,18 @@
 	<string>1.0-Dev</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>SBUsesNetwork</key>
+	<integer>3</integer>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 	<key>UIPrerenderedIcon</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIRequiresPersistentWiFi</key>
+	<true/>
 	<key>UIStatusBarHidden</key>
 	<false/>
 	<key>UIStatusBarStyle</key>

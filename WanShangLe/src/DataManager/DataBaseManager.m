@@ -704,9 +704,6 @@ static DataBaseManager *_sharedInstance = nil;
  */
 - (NSMutableArray *)insertMoviesIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd
 {
-    
-    CFTimeInterval time1 = Elapsed_Time;
-    
     NSArray *array = [[objectData objectForKey:@"data"] objectForKey:@"movies"];
     NSArray *array_dynamic = [[objectData objectForKey:@"data"] objectForKey:@"dynamic"];
     NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:20];
@@ -732,9 +729,6 @@ static DataBaseManager *_sharedInstance = nil;
         ABLoggerDebug(@"电影保存是否成功 ========= %d",success);
         ABLoggerDebug(@"错误信息 ========= %@",[error description]);
     }];
-    
-    CFTimeInterval time2 = Elapsed_Time;
-    ElapsedTime(time2, time1);
     
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
     ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
@@ -1568,9 +1562,6 @@ static DataBaseManager *_sharedInstance = nil;
 #pragma mark 插入 影院 到数据库
 - (NSArray *)insertCinemasIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd
 {
-    //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-    
-    CFTimeInterval time1 = Elapsed_Time;
     
     NSArray *info_array = [[objectData objectForKey:@"data"] objectForKey:@"list"];
     NSArray *errors = [objectData objectForKey:@"errors"];
@@ -1628,21 +1619,15 @@ static DataBaseManager *_sharedInstance = nil;
         ABLoggerDebug(@"错误信息 ========= %@",[error description]);
     }];
     
-    //    [cinemas release];
-    
-    CFTimeInterval time2 = Elapsed_Time;
-    ElapsedTime(time2, time1);
-    
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
     ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
-    
-    //    });
+
     return returnArray;
 }
 
 #pragma mark 将搜索和附近的数据插入到数据库里
 - (NSMutableArray *)insertTemporaryCinemasIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
-    CFTimeInterval time1 = Elapsed_Time;
+
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     NSArray *info_array = [[objectData objectForKey:@"data"] objectForKey:@"list"];
     NSMutableArray *returnArray = [[NSMutableArray alloc] initWithCapacity:DataLimit];
@@ -1681,11 +1666,6 @@ static DataBaseManager *_sharedInstance = nil;
         ABLoggerDebug(@"影院保存是否成功 ========= %d",success);
         ABLoggerDebug(@"错误信息 ========= %@",[error description]);
     }];
-    
-    //    [cinemas release];
-    
-    CFTimeInterval time2 = Elapsed_Time;
-    ElapsedTime(time2, time1);
     
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
     ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
@@ -1825,7 +1805,6 @@ static DataBaseManager *_sharedInstance = nil;
 #pragma mark -
 #pragma mark 演出 插入数据
 - (NSArray *)insertShowsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
-    CFTimeInterval time1 = Elapsed_Time;
     
     NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"perform"];
     
@@ -1862,10 +1841,7 @@ static DataBaseManager *_sharedInstance = nil;
         ABLoggerDebug(@"演出 保存是否成功 ========= %d",success);
         ABLoggerDebug(@"错误信息 ========= %@",[error description]);
     }];
-    
-    CFTimeInterval time2 = Elapsed_Time;
-    ElapsedTime(time2, time1);
-    
+
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
     ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
@@ -2280,7 +2256,6 @@ static DataBaseManager *_sharedInstance = nil;
 
 #pragma mark 酒吧 插入数据
 - (NSMutableArray *)insertBarsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
-    CFTimeInterval time1 = Elapsed_Time;
     
     NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"events"];
     
@@ -2318,10 +2293,7 @@ static DataBaseManager *_sharedInstance = nil;
         ABLoggerDebug(@"酒吧 保存是否成功 ========= %d",success);
         ABLoggerDebug(@"错误信息 ========= %@",[error description]);
     }];
-    
-    CFTimeInterval time2 = Elapsed_Time;
-    ElapsedTime(time2, time1);
-    
+
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
     ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
@@ -2734,7 +2706,6 @@ static DataBaseManager *_sharedInstance = nil;
 
 #pragma mark KTV 插入 数据库
 - (NSArray *)insertKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
-    CFTimeInterval time1 = Elapsed_Time;
     
     NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"list"];
     
@@ -2779,9 +2750,6 @@ static DataBaseManager *_sharedInstance = nil;
         ABLoggerDebug(@"错误信息 ========= %@",[error description]);
     }];
     
-    CFTimeInterval time2 = Elapsed_Time;
-    ElapsedTime(time2, time1);
-    
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
     ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     
@@ -2790,7 +2758,7 @@ static DataBaseManager *_sharedInstance = nil;
 
 #pragma mark  KTV 搜索和附近 结果数据 插入 数据库
 - (NSMutableArray *)insertTemporaryKTVsIntoCoreDataFromObject:(NSDictionary *)objectData withApiCmd:(ApiCmd*)apiCmd{
-    CFTimeInterval time1 = Elapsed_Time;
+    
     NSManagedObjectContext *dataBaseContext = [NSManagedObjectContext MR_contextForCurrentThread];
     NSArray *array = [[objectData objectForKey:@"data"]objectForKey:@"list"];
     
@@ -2828,10 +2796,7 @@ static DataBaseManager *_sharedInstance = nil;
         ABLoggerDebug(@"KTV 保存是否成功 ========= %d",success);
         ABLoggerDebug(@"错误信息 ========= %@",[error description]);
     }];
-    
-    CFTimeInterval time2 = Elapsed_Time;
-    ElapsedTime(time2, time1);
-    
+
     [[[ApiClient defaultClient] requestArray] removeObject:apiCmd];
     ABLoggerWarn(@"remove request array count === %d",[[[ApiClient defaultClient] requestArray] count]);
     

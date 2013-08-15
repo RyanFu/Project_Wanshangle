@@ -237,7 +237,13 @@
     
     dispatch_sync(dispatch_get_main_queue(), ^{
         
-        _price_label.text = [NSString stringWithFormat:@"现场价 %0.0f元",[[responseDic objectForKey:@"origprice"] floatValue]];
+        
+        int originPrice = [[responseDic objectForKey:@"origprice"] intValue];
+        if (originPrice<0) {
+            _price_label.text = @"暂无价格";
+        }else{
+            _price_label.text = [NSString stringWithFormat:@"现场价 %d元",originPrice];
+        }
         
         int discountCount = [[responseDic objectForKey:@"specialpfferscount"] intValue];
         if (discountCount>0) {

@@ -249,7 +249,7 @@
         return;
     }
 
-    [UIView animateWithDuration:1 animations:^{
+    [UIView animateWithDuration:1.5 animations:^{
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
         self.alpha = 0;
     } completion:^(BOOL finished) {

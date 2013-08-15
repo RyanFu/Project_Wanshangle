@@ -56,7 +56,7 @@
     cell.schedule_timeLong.text = [NSString stringWithFormat:@"预计%@结束",
                                    [[DataBaseManager sharedInstance] timeByAddingTimeInterval:[_parentViewController.mMovie.duration intValue] fromDate:[tDic objectForKey:@"time"]]];
     
-    NSString *viewType = @"3D";
+    NSString *viewType = @"2D";
     NSArray *tarray = [tDic objectForKey:@"viewtypes"];
     for (int i=0;i<[tarray count];i++) {
         

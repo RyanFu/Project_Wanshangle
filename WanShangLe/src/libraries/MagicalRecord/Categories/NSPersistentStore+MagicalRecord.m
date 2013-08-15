@@ -40,7 +40,6 @@ static NSPersistentStore *defaultPersistentStore_ = nil;
     NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] valueForKey:(NSString *)kCFBundleNameKey];
     ABLoggerDebug(@"MR_applicationStorageDirectory = %@",[[self MR_directory:NSApplicationSupportDirectory] stringByAppendingPathComponent:applicationName]);
     return [[self MR_directory:NSApplicationSupportDirectory] stringByAppendingPathComponent:applicationName];
-    //return [[self MR_directory:NSCachesDirectory] stringByAppendingPathComponent:applicationName];
 }
 
 + (NSURL *) MR_urlForStoreName:(NSString *)storeFileName

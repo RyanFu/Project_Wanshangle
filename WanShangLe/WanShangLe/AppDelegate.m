@@ -10,7 +10,7 @@
 #import "RootViewController.h"
 #import "ApiConfig.h"
 #import <ShareSDK/ShareSDK.h>
-#import "UncaughtExceptionHandler.h"
+#import "WSLUncaughtExceptionHandler.h"
 #import "AFJSONRequestOperation.h"
 #import "AFHTTPRequestOperation.h"
 #import "ASIHTTPRequest.h"
@@ -47,43 +47,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-   
-    
     CFTimeInterval time1 = Elapsed_Time;
     
-    ABLogger_rect(iPhoneAppFrame);
-    ABLogger_rect(iPhoneScreenBounds);
-    if (iPhone5) {
-        ABLoggerInfo(@"运行在iphone5设备上 === %0.2f",[[UIScreen mainScreen] currentMode].size.height);
-    }else{
-        ABLoggerInfo(@"运行在非iphone5设备上");
-    }
-    
-    /**
-     注册SDK应用，此应用请到http://www.sharesdk.cn中进行注册申请。
-     此方法必须在启动时调用，否则会限制SDK的使用。
-     **/
-    [ShareSDK registerApp:@"api20"];
-    [ShareSDK convertUrlEnabled:NO];
-    [self initializePlat];
-    
-    // set Dev Env
-    [ApiConfig setEnv:APIDEV];
-    // enable API Debug
-    [ApiConfig setApiMessageDebug:YES];
-    
-    //configure coredata
-    [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:@"DataStore.sqlite"];
-    //[MagicalRecord setupCoreDataStackWithStoreNamed:@"DataStore.sqlite"];
-    
-    //inset all citys into coreData
-    /*
-     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-     
-     [[DataBaseManager sharedInstance] insertAllCitysIntoCoreData];
-     
-     });*/
-    
+    /*应用异步程序初始化*/
+    [self applicationconfigrationInit];
+        
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     // Override point for customization after application launch.
     
@@ -94,9 +62,6 @@
     
     self.window.rootViewController = _rootController;
     [CacheManager sharedInstance].rootNavController = _rootController;
-    
-    // 异常捕获 exception caught
-    [self performSelector:@selector(installUncaughtExceptionHandler) withObject:nil afterDelay:0];
     
     self.window.backgroundColor = Color4;
     [self.window makeKeyAndVisible];
@@ -109,6 +74,114 @@
     return YES;
 }
 
+- (void)applicationWillResignActive:(UIApplication *)application
+{
+    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
+    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
+    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    
+    //获取服务器的时间用来校对本地时间
+    [self getServerCurrentTime];
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application
+{
+    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
+    [MagicalRecord cleanUp];
+}
+
+/**
+	应用程序接受到内存警告
+	@param application App对象
+ */
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
+{
+    ABLoggerWarn(@"AppDelegate 接受到内存警告了");
+    
+    [WSLProgressHUD cleanCache];
+    
+    report_memory();
+    
+    logMemUsage();
+}
+
+- (void)applicationconfigrationInit{
+    
+    ABLogger_rect(iPhoneAppFrame);
+    ABLogger_rect(iPhoneScreenBounds);
+    if (iPhone5) {
+        ABLoggerInfo(@"运行在iphone5设备上 === %0.2f",[[UIScreen mainScreen] currentMode].size.height);
+    }else{
+        ABLoggerInfo(@"运行在非iphone5设备上");
+    }
+    
+    ABLoggerDebug(@"开始 异步 初始化");
+    dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        
+        ABLoggerDebug(@"运行 异步 初始化");
+        /**********************************************/
+        //   we need to do data update here
+        /**********************************************/
+        // data updator for version 1.0
+        NSArray* updaterArray = [[[NSArray alloc] initWithObjects:
+                                  [[[SystemDataUpdater1_0 alloc] init] autorelease],
+                                  // add other updaters here for such as version 1.1, 1.2, 1.3 2.0...
+                                  nil]
+                                 autorelease];
+        
+        SystemDataUpdater* systemDataUpdater = [[[SystemDataUpdater alloc] initWithUpdaterArray:updaterArray] autorelease];
+        [systemDataUpdater doUpdate];
+        
+        /***************** we do system init here ************************/
+        [SysConfig doSystemInit];
+        /***************** we do systemInfo init here ************************/
+        [SysInfo  doInit];
+        // set Dev Env
+        [ApiConfig setEnv:APIDEV];
+        // enable API Debug
+        [ApiConfig setApiMessageDebug:YES];
+        
+        /**
+         注册SDK应用，此应用请到http://www.sharesdk.cn中进行注册申请。
+         此方法必须在启动时调用，否则会限制SDK的使用。
+         **/
+        [ShareSDK registerApp:@"387cdf313f8"];
+        [ShareSDK convertUrlEnabled:NO];
+        [self initializePlat];
+        
+        //友盟初始化
+        [[Statistics defaultStatistics] statisticsTraceLog];
+        
+        //configure coredata
+        [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:@"DataStore.sqlite"];
+        //[MagicalRecord setupCoreDataStackWithStoreNamed:@"DataStore.sqlite"];
+        
+        // 异常捕获 exception caught
+        [self performSelector:@selector(installUncaughtExceptionHandler) withObject:nil afterDelay:0];
+        
+    });
+    
+    ABLoggerDebug(@"结束 异步 初始化");
+}
+
+/**
+ 第一次显示App 引导页面
+ */
 - (void)showGuidePage{
     if (isNull([[NSUserDefaults standardUserDefaults] objectForKey:NewApp]) || [[[NSUserDefaults standardUserDefaults] objectForKey:NewApp] boolValue]) {
         GuidePagesController* guidePagesController = [[GuidePagesController alloc] init];
@@ -116,7 +189,7 @@
         guidePagesController.selector = @selector(guidePageComplete:);
         
         [_rootController.view addSubview:guidePagesController.view];
-
+        
         [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:NO] forKey:NewApp];
     }else{
         //location user city 定位用户的城市
@@ -124,12 +197,19 @@
     }
 }
 
+/**
+ 引导页面完成后的回调方法
+ @param guidePageController 引导页对象
+ */
 - (void)guidePageComplete:(GuidePagesController *)guidePageController{
     [guidePageController release];
     //location user city 定位用户的城市
     [[LocationManager defaultLocationManager] startLocationUserGPS];
 }
 
+/**
+ 微信初始化
+ */
 - (void)initializePlat{
     
     /**
@@ -170,37 +250,6 @@
     
 }
 
-- (void)applicationWillResignActive:(UIApplication *)application
-{
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    
-    //获取服务器的时间用来校对本地时间
-    [self getServerCurrentTime];
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application
-{
-    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
-    [MagicalRecord cleanUp];
-}
-
 + (instancetype)appDelegateInstance{
 	return (AppDelegate *)[UIApplication sharedApplication].delegate;
 }
@@ -210,45 +259,21 @@
     _window.rootViewController = _rootController;
     [_window makeKeyWindow];
 }
+
+
+/**
+	添加友好崩溃提示
+ */
 - (void)installUncaughtExceptionHandler
 {
-	InstallUncaughtExceptionHandler();
+	InstallWSLUncaughtExceptionHandler();
 }
 
-/*
- {
- httpCode: 200,
- errors: [ ],
- data: {
- timestamp: 1375238669,
- datetime: "2013-07-31 10:44:29"
- },
- token: null,
- timestamp: "1375238669"
- }
+/**
+	获取服务器当前时间用来校对本地时间误差
  */
 - (void)getServerCurrentTime{
-//    __block AFJSONRequestOperation *requestOperation = [[AFJSONRequestOperation alloc]
-//                                                        initWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://api.wanshangle.com:10000/api?appId=000001&sign=sign&time=1&v=1.0&api=server.currenttime"]]];
-//    
-//    [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-//        
-//        NSNumber *timeStamp = [[responseObject objectForKey:@"data"] objectForKey:@"timestamp"];
-//        [DataBaseManager sharedInstance].missTime = [timeStamp doubleValue];
-//         ABLoggerInfo(@"获取服务器时间 ======= %@",responseObject);
-//        
-//        [requestOperation release];
-//        requestOperation = nil;
-//        
-//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//        [requestOperation release];
-//        requestOperation = nil;
-//    }];
-//    
-//    
-//    [[[ApiClient defaultClient] networkQueue] addOperation:requestOperation];
-    
-    
+
      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
          NSData *timeData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://api.wanshangle.com:10000/api?appId=000001&sign=sign&time=1&v=1.0&api=server.currenttime"]];
          NSError *error = nil;
@@ -267,17 +292,6 @@
         [DataBaseManager sharedInstance].missTime = timeStamp-localTime;
          ABLoggerInfo(@"获取服务器时间 ======= %@",timeDic);
      });
-}
-
-- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application
-{
-    ABLoggerWarn(@"AppDelegate 接受到内存警告了");
-    
-    [WSLProgressHUD cleanCache];
-    
-    report_memory();
-    
-    logMemUsage();
 }
 
 @end

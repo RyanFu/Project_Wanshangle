@@ -155,7 +155,7 @@ static char kAFJSONRequestOperationObjectKey;
 - (void)setJSONWithWithMovie:(MMovie *)aMovie
                       cinema:(MCinema *)aCinema
                  placeholder:(NSString *)placeholderString
-                     success:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSString *resultString))success
+                     success:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSDictionary *resultDic))success
                      failure:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error))failure;
 {
     [self cancelJSONRequestOperation];
@@ -167,15 +167,7 @@ static char kAFJSONRequestOperationObjectKey;
     
     if (!isNull(cachedJson)) {
         if (success) {
-            int priceInt = [[cachedJson objectForKey:@"lowestPrice"] intValue];
-            NSString *price = nil;
-            if (priceInt<0) {
-                price = @"暂无价格";
-            }else{
-                price = [NSString stringWithFormat:@"%d元",priceInt];
-            }
-           
-            success(nil, nil, price);
+            success(nil, nil, cachedJson);
         }
         NSString *rounds = [NSString stringWithFormat:@"还剩%d场 %@",[[cachedJson objectForKey:@"rounds"] intValue],[cachedJson objectForKey:@"type"]];
         self.text = rounds;
@@ -196,6 +188,11 @@ static char kAFJSONRequestOperationObjectKey;
              lowestPrice: 120,
              language: "原版",
              type: "2D"
+             pricetype =         (
+             1,选座
+             1,团购
+             0，劵
+             );
              },
              token: null,
              timestamp: "1375251080"
@@ -204,10 +201,12 @@ static char kAFJSONRequestOperationObjectKey;
             
             ABLoggerDebug(@"今天排期 总数 是 ===== %@",responseObject);
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                int rounds = [[[responseObject objectForKey:@"data"] objectForKey:@"rounds"] intValue];
-                NSString *resultString = [NSString stringWithFormat:@"还剩%d场 %@",rounds,[[responseObject objectForKey:@"data"] objectForKey:@"type"]];
                 
-                int priceInt = [[[responseObject objectForKey:@"data"] objectForKey:@"lowestPrice"] intValue];
+                NSDictionary *resultDic = [responseObject objectForKey:@"data"];
+                int rounds = [[resultDic objectForKey:@"rounds"] intValue];
+                NSString *resultString = [NSString stringWithFormat:@"还剩%d场 %@",rounds,[resultDic objectForKey:@"type"]];
+                
+                int priceInt = [[resultDic objectForKey:@"lowestPrice"] intValue];
                 NSString *priceString = nil;
                 if (priceInt<0) {
                     priceString = @"暂无价格";
@@ -219,7 +218,7 @@ static char kAFJSONRequestOperationObjectKey;
                     if (success) {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             self.text = resultString;
-                            success(operation.request, operation.response, priceString);
+                            success(operation.request, operation.response, resultDic);
                         });
                     } else if (resultString) {
                         dispatch_async(dispatch_get_main_queue(), ^{
@@ -231,7 +230,7 @@ static char kAFJSONRequestOperationObjectKey;
                         self.af_jsonRequestOperation = nil;
                     }
                 }
-                [[[self class] af_sharedJsonCache] cacheJson:[responseObject objectForKey:@"data"] forRequest:key];
+                [[[self class] af_sharedJsonCache] cacheJson:resultDic forRequest:key];
             });
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             if ([urlRequest isEqual:[self.af_jsonRequestOperation request]]) {
@@ -360,7 +359,7 @@ static char kAFJSONRequestOperationObjectKey;
 }
 
 
-- (void)cacheJson:(NSString *)Json
+- (void)cacheJson:(NSDictionary *)Json
        forRequest:(NSString *)request
 {
     if (Json && request) {

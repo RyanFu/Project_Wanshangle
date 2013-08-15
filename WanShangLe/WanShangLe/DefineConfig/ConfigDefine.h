@@ -9,6 +9,9 @@
 //分享文案
 #import "ShareDefine.h"
 
+//友盟和Flurry统计
+#import "Statistics.h"
+
 //UI界面规范
 #import "UIDefineConfig.h"
 
