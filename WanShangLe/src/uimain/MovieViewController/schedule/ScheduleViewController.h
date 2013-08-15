@@ -38,4 +38,5 @@
 - (IBAction)clickCinemaButton:(id)sender;
 - (IBAction)clickTodayButton:(id)sender;
 - (IBAction)clickTomorrowButton:(id)sender;
+- (void)displaySchedules;
 @end

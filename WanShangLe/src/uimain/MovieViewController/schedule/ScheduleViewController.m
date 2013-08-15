@@ -131,10 +131,8 @@
     
     self.title = _mMovie.name;
     
-    [_todayButton setSelected:NO];
-    [self clickTomorrowButton:nil];
-    [self clickTodayButton:nil];
-    
+    [self displaySchedules];
+        
     [_mTableView setTableHeaderView:_headerView];
     
     if (!_scheduleTableViewDelegate) {
@@ -208,6 +206,15 @@
     view.center = newCenter;
 }
 
+- (void)displaySchedules{
+    
+    self.schedulesArray = nil;
+    [_mTableView reloadData];
+    
+    [_todayButton setSelected:NO];
+    [self clickTomorrowButton:nil];
+    [self clickTodayButton:nil];
+}
 #pragma mark -
 #pragma mark init Data
 - (void)createBarButtonItem{

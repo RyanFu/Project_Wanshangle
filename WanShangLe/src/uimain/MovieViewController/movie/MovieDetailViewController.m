@@ -141,7 +141,7 @@
     _movie_type.text = [_mMovieDetail.info objectForKey:@"type"];
     _movie_district.text = [NSString stringWithFormat:@"%@(%@)",_mMovieDetail.productarea,_mMovieDetail.language];
     _movie_timeLong.text = [[_mMovieDetail.info objectForKey:@"duration"] stringByAppendingString:@"分钟"];
-    _movie_uptime.text = [_mMovieDetail.info objectForKey:@"startday"];
+    _movie_uptime.text = [[DataBaseManager sharedInstance] getYMDFromDate:[_mMovieDetail.info objectForKey:@"startday"]];
     _movie_rating.text = [NSString stringWithFormat:@"%@评分: %0.1f",_mMovie.ratingFrom,[_mMovie.rating floatValue]];
     _movie_introduce.text = [_mMovieDetail.info objectForKey:@"description"];
     

@@ -123,12 +123,12 @@
     
     if ([array_coreData count]==1) {
         
-        if (_ktvBuyViewController==nil) {
-            _ktvBuyViewController = [[KTVBuyViewController alloc]
+//        if (self.ktvBuyViewController==nil) {
+           self.ktvBuyViewController = [[KTVBuyViewController alloc]
                                      initWithNibName:(iPhone5?@"KTVBuyViewController_5":@"KTVBuyViewController")
                                      bundle:nil];
-        }
-        _ktvBuyViewController.mKTV = [array_coreData lastObject];
+//        }
+        self.ktvBuyViewController.mKTV = [array_coreData lastObject];
         [self.view addSubview:_ktvBuyViewController.view];
         _ktvBuyViewController.mTableView.tableFooterView=_ktvBuyViewController.addFavoriteFooterView;
         [_ktvBuyViewController.addFavoriteButton addTarget:self action:@selector(clickAddFavoriteButton:) forControlEvents:UIControlEventTouchUpInside];

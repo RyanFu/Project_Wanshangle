@@ -17,6 +17,11 @@
 #pragma mark -
 #pragma mark UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    
+    if (isNullArray(_parentViewController.schedulesArray)) {
+        return 0;
+    }
+    
     return [_parentViewController.schedulesArray count];
 }
 

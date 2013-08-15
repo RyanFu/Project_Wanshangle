@@ -12,6 +12,7 @@
 #import "ASIFormDataRequest.h"
 #import "SIAlertView.h"
 #import "UIAlertView+MKBlockAdditions.h"
+#import "WSLProgressHUD.h"
 
 @interface SuggestionViewController ()
 
@@ -74,6 +75,12 @@
 
 - (void)clickCommitButton:(id)sender{
 //    NSData *dataToSend = [_adviceTextView.text dataUsingEncoding:NSUTF8StringEncoding];
+    
+    
+    [WSLProgressHUD showWithTitle:nil status:@"正在提交..." cancelBlock:^{
+        
+    }];
+    
     NSMutableData *dataReceived = [NSMutableData data];
     __block ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[ApiCmd_app_suggestion getRequestURL]];
     
@@ -87,7 +94,7 @@
     
 	[request setFailedBlock:^{
         ABLoggerWarn(@"检查 软件 更新 失败");
-        
+        [WSLProgressHUD dismiss];
         [UIAlertView alertViewWithTitle:[NSString stringWithFormat:@"提交失败"]
                                 message:@""
                       cancelButtonTitle:@"确定"
@@ -171,7 +178,7 @@
         dispatch_sync(dispatch_get_main_queue(), ^{
             
             if ([record boolValue]) {
-                
+               [WSLProgressHUD dismiss]; 
                UIAlertView *alert = [UIAlertView alertViewWithTitle:@"提交成功"
                                         message:@"感谢你给我们的反馈，我们会尽快改进完善产品。"
                               cancelButtonTitle:@"确定"
@@ -196,7 +203,7 @@
 //                [alertView show];
 //                [alertView release];
                 
-                double delayInSeconds = 3.0;
+                double delayInSeconds = 5.0;
                 dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
                 dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
                     [alert dismissWithClickedButtonIndex:0 animated:YES];
@@ -204,7 +211,7 @@
 //                    [alertView dismissAnimated:YES];
                 });
             }else {
-                
+                [WSLProgressHUD dismiss];
                 [UIAlertView alertViewWithTitle:@"提交失败"
                                         message:nil
                               cancelButtonTitle:@"确定"

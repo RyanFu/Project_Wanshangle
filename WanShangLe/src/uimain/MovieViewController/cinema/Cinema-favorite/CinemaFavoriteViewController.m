@@ -176,9 +176,14 @@
         _scheduleViewController.mCinema = [array_coreData lastObject];
         _scheduleViewController.mMovie = [_mParentController mMovie];
         _scheduleViewController.view.frame = _mTableView.frame;
+        [_scheduleViewController.view removeFromSuperview];
         [self.view addSubview:_scheduleViewController.view];
         _scheduleViewController.mTableView.tableFooterView=_scheduleViewController.addFavoriteFooterView;
         [_scheduleViewController.addFavoriteButton addTarget:self action:@selector(clickAddFavoriteButton:) forControlEvents:UIControlEventTouchUpInside];
+        
+        if (_scheduleViewController!=nil) {            
+            [_scheduleViewController displaySchedules];
+        }
     }else{
         [self cleanFavoriteCinemaBuyViewController];
     }

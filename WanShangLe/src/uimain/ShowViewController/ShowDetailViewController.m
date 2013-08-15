@@ -151,7 +151,7 @@
 //    _show_rating.text = [NSString stringWithFormat:@"%@评分: %@",_mShow.ratingfrom,_mShow.rating];
     _show_address.text = _mShow.address;
     _theatre_name.text = _mShow.theatrename;
-    _show_time.text = [[DataBaseManager sharedInstance] getYMDFromDate: _mShow.beginTime];
+    _show_time.text = _mShow.beginTime;
 
 }
 

@@ -44,6 +44,7 @@
 						<string key="NSFrameSize">{320, 460}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -109,6 +110,7 @@
 						<string key="NSFrame">{{122, 124}, {76, 21}}</string>
 						<reference key="NSSuperview" ref="653374625"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -289,6 +291,7 @@
 						<string key="NSFrame">{{170, 70}, {140, 35}}</string>
 						<reference key="NSSuperview" ref="347734099"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="105614923"/>
 						<bool key="IBUIOpaque">NO</bool>
@@ -330,6 +333,7 @@
 						<string key="NSFrame">{{72, 29}, {177, 21}}</string>
 						<reference key="NSSuperview" ref="542136312"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="976879145"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -350,17 +354,17 @@
 					<object class="IBUILabel" id="976879145">
 						<reference key="NSNextResponder" ref="542136312"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{73, 8}, {177, 21}}</string>
+						<string key="NSFrame">{{73, 8}, {177, 22}}</string>
 						<reference key="NSSuperview" ref="542136312"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="379909071"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<int key="IBUIContentMode">7</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<string key="IBUIText">添加常去影院</string>
+						<string key="IBUIText">添加影院</string>
 						<object class="NSColor" key="IBUITextColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC41MDE5NjA3ODQzIDAuNTI5NDExNzY0NyAwLjU3MjU0OTAxOTYAA</bytes>
@@ -371,13 +375,29 @@
 						<reference key="IBUIFont" ref="853231367"/>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 					</object>
-					<object class="IBUIButton" id="524111311">
+					<object class="IBUIImageView" id="6309125">
 						<reference key="NSNextResponder" ref="542136312"/>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 9}, {40, 40}}</string>
 						<reference key="NSSuperview" ref="542136312"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="976879145"/>
+						<reference key="NSNextKeyView" ref="379909071"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<reference key="IBUIBackgroundColor" ref="105614923"/>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<object class="NSCustomResource" key="IBUIImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">btn_add_favorite_40x40@2x.png</string>
+						</object>
+					</object>
+					<object class="IBUIButton" id="524111311">
+						<reference key="NSNextResponder" ref="542136312"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrameSize">{320, 60}</string>
+						<reference key="NSSuperview" ref="542136312"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="6309125"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -389,10 +409,6 @@
 							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 						</object>
 						<reference key="IBUINormalTitleShadowColor" ref="993148378"/>
-						<object class="NSCustomResource" key="IBUINormalImage">
-							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">btn_add_favorite_40x40@2x.png</string>
-						</object>
 						<reference key="IBUIFontDescription" ref="245916343"/>
 						<reference key="IBUIFont" ref="739114254"/>
 					</object>
@@ -748,6 +764,7 @@
 							<reference ref="524111311"/>
 							<reference ref="379909071"/>
 							<reference ref="976879145"/>
+							<reference ref="6309125"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -764,6 +781,11 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">57</int>
 						<reference key="object" ref="976879145"/>
+						<reference key="parent" ref="542136312"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">60</int>
+						<reference key="object" ref="6309125"/>
 						<reference key="parent" ref="542136312"/>
 					</object>
 				</array>
@@ -795,13 +817,14 @@
 				<string key="55.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="56.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="57.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="60.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="7.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">59</int>
+			<int key="maxID">60</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
