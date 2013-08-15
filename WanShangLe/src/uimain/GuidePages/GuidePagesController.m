@@ -93,7 +93,7 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
-    [self.view setBackgroundColor:Color4];
+    [self.view setBackgroundColor:[UIColor blackColor]];
 }
 
 -(void)skip:(id)sender{
